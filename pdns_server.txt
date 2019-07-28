@@ -1,0 +1,1 @@
+pdns_server --disable-syslog --launch=remote --local-address=127.0.0.1 --local-port=5300 --no-config=true --remote-connection-string=unix:path=/var/run/dns-telemeter.sock
