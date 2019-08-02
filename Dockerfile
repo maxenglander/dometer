@@ -19,7 +19,7 @@ RUN apt-get install -yq --no-install-recommends --no-install-suggests \
     libjsoncpp-dev
 
 RUN apt-get install -yq --no-install-recommends --no-install-suggests \
-    ca-certificates curl
+    ca-certificates curl socat
 
 RUN apt-get install -yq --no-install-recommends --no-install-suggests \
     universal-ctags git
