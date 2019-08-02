@@ -13,7 +13,10 @@ RUN apt-get install -yq --no-install-recommends --no-install-suggests \
     pkg-config zip g++ zlib1g-dev unzip python3
 
 RUN apt-get install -yq --no-install-recommends --no-install-suggests \
-    libsocket++-dev
+    pdns-server pdns-backend-remote
+
+RUN apt-get install -yq --no-install-recommends --no-install-suggests \
+    libjsoncpp-dev
 
 RUN apt-get install -yq --no-install-recommends --no-install-suggests \
     ca-certificates curl
