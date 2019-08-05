@@ -1,11 +1,67 @@
-#include "dns/answer.h"
-#include "dns/result.h"
-#include "dns/query.h"
+#include <arpa/inet.h>
+#include <arpa/nameser.h>
+#include <cstdio>
+#include <cstring>
+#include <resolv.h>
+#include <string>
 
-namespace DnsTelemeter {
-    namespace Dns {
-        Result lookup(Query query) {
-            return Result(std::vector<Answer>());
+#include "dns/answer.h"
+#include "dns/resolver.h"
+#include "dns/result.h"
+
+namespace DnsTelemeter::Dns {
+    Result Resolver::lookupA(std::string name) {
+        std::vector<Answer> answers;
+        int len;
+
+        unsigned char nsbuf[NS_PACKETSZ];
+
+        /*************************************************/
+        /* Perform a DNS lookup using any search domains */
+        /* defined in /etc/resolv.conf. See resolv(2).   */
+        /*************************************************/
+        len = res_search(name.c_str(), C_IN, T_A, nsbuf, sizeof(nsbuf));
+        if(len < 0) {
+            return Result::failure();
         }
+
+        /*************************************************/
+        /* Parse the DNS response.                       */
+        /*************************************************/
+        ns_msg handle;
+        ns_initparse(nsbuf, len, &handle);
+
+        /*************************************************/
+        /* Iterate over each answer.                     */
+        /*************************************************/
+        for(int rrnum = 0; rrnum < ns_msg_count(handle, ns_s_an); rrnum++) {
+            ns_rr rr;
+
+            /*************************************************/
+            /* Parse the answer section into a record.       */
+            /*************************************************/
+            if(ns_parserr(&handle, ns_s_an, rrnum, &rr) < 0) {
+                return Result::failure();
+            }
+
+            if(ns_rr_type(rr) != ns_t_a) {
+                continue;
+            }
+
+            /*************************************************/
+            /* Extract the IP address and TTL.               */
+            /*************************************************/
+            char ip[INET_ADDRSTRLEN];
+            u_int32_t ttl;
+            inet_ntop(AF_INET, ns_rr_rdata(rr), ip, INET_ADDRSTRLEN);
+            ttl = ns_rr_ttl(rr);
+
+            /*************************************************/
+            /* Append the IP and TTL to the answers vector.  */
+            /*************************************************/
+            answers.push_back(Answer("A", name, ip, ttl));
+        }
+
+        return Result::success(answers);
     }
 }

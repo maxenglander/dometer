@@ -2,15 +2,18 @@
 #include <cstdlib>
 #include <cstring>
 #include <errno.h>
-#include <resolv.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
 
 #include <jsoncpp/json/json.h>
 
+#include "dns/resolver.h"
+
 #define MAX_LINE      4096
 #define SRV_BACKLOG   100
+
+using namespace DnsTelemeter;
 
 ssize_t
 readline(int fd, void *vbuf, size_t n);
@@ -30,14 +33,6 @@ main(int argc, char **argv) {
     Json::FastWriter writer;
 
     memset(&srvaddr, 0, sizeof(srvaddr));
-
-    /******************************************/
-    /* Initialize resolver system.            */
-    /******************************************/
-    if(res_init() < 0) {
-        fprintf(stderr, "Failed to initialize resolver system with res_init(): %s (%d)\n",
-                strerror(errno), errno);
-    }
 
     /******************************************/
     /* Create a UNIX domain stream socket.    */
@@ -103,21 +98,21 @@ main(int argc, char **argv) {
                 }
 
                 if(jsonin["method"] == "lookup") {
-                    unsigned char answer[NS_PACKETSZ];
-                    int anslen;
-                    char *qname = &(jsonin["parameters"]["qname"].asString()[0]);
+                    std::string qname = jsonin["parameters"]["qname"].asString();
                     std::string qtype = jsonin["parameters"]["qtype"].asString();
+                    Dns::Resolver resolver;
 
                     if(qtype == "A") {
-                        fprintf(stdout, "Looking up A record %s\n", qname);
-                        if(anslen = res_search(qname, C_IN, T_A, answer, NS_PACKETSZ) < 0) {
-                            fprintf(stderr, "Lookup of A record %s failed: %s (%d)\n", qname, strerror(errno), errno);
-                        } else {
-                            ns_msg handle;
-                            ns_initparse(answer, anslen, &handle);
-                            if(ns_msg_count(handle, ns_s_an) == 0) {
-                            } else {
-                            }
+                        Dns::Result result = resolver.lookupA(qname);
+                        std::vector<Dns::Answer> answers = result.getAnswers();
+                        jsonout["result"] = Json::Value(Json::arrayValue);
+                        for(std::vector<Dns::Answer>::iterator it = answers.begin(); it != answers.end(); ++it) {
+                            Json::Value jsonanswer(Json::objectValue);
+                            jsonanswer["qtype"] = qtype;
+                            jsonanswer["qname"] = qname;
+                            jsonanswer["content"] = (*it).getContent();
+                            jsonanswer["ttl"] = (*it).getTtl();
+                            jsonout["result"].append(jsonanswer);
                         }
                     }
                 }

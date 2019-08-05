@@ -15,6 +15,8 @@ cc_library(
     hdrs = ["resolver.h"],
     srcs = ["resolver.cc"],
     deps = [":query", ":result"],
+    linkopts = ["-lresolv"],
+    visibility = ["//visibility:public"]
 )
 
 cc_library(

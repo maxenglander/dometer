@@ -4,13 +4,16 @@
 
 #include "dns/answer.h"
 
-namespace DnsTelemeter {
-    namespace Dns {
-        class Result {
-            public:
-                Result(std::vector<Answer> answers);
-            private:
-                std::vector<Answer> answers;
-        };
-    }
+namespace DnsTelemeter::Dns {
+    class Result {
+        public:
+            static Result failure();
+            std::vector<Answer> getAnswers();
+            bool succeeded();
+            static Result success(std::vector<Answer> answers);
+        private:
+            Result(std::vector<Answer> answers, bool succeeded);
+            std::vector<Answer> answers;
+            bool _succeeded;
+    };
 }
