@@ -10,8 +10,12 @@
 
 #include "dns/resolver.h"
 
+#include "std/experimental/expected.h"
+
 #define MAX_LINE      4096
 #define SRV_BACKLOG   100
+
+using namespace std::experimental;
 
 using namespace DnsTelemeter;
 
@@ -103,16 +107,18 @@ main(int argc, char **argv) {
                     Dns::Resolver resolver;
 
                     if(qtype == "A") {
-                        Dns::Result result = resolver.lookupA(qname);
-                        std::vector<Dns::Answer> answers = result.getAnswers();
-                        jsonout["result"] = Json::Value(Json::arrayValue);
-                        for(std::vector<Dns::Answer>::iterator it = answers.begin(); it != answers.end(); ++it) {
-                            Json::Value jsonanswer(Json::objectValue);
-                            jsonanswer["qtype"] = qtype;
-                            jsonanswer["qname"] = qname;
-                            jsonanswer["content"] = (*it).getContent();
-                            jsonanswer["ttl"] = (*it).getTtl();
-                            jsonout["result"].append(jsonanswer);
+                        expected<Dns::Result, int> result = resolver.lookupA(qname);
+                        if(result) {
+                            std::vector<Dns::Answer> answers = (*result).getAnswers();
+                            jsonout["result"] = Json::Value(Json::arrayValue);
+                            for(std::vector<Dns::Answer>::iterator it = answers.begin(); it != answers.end(); ++it) {
+                                Json::Value jsonanswer(Json::objectValue);
+                                jsonanswer["qtype"] = qtype;
+                                jsonanswer["qname"] = qname;
+                                jsonanswer["content"] = (*it).getContent();
+                                jsonanswer["ttl"] = (*it).getTtl();
+                                jsonout["result"].append(jsonanswer);
+                            }
                         }
                     }
                 }

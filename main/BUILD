@@ -1,5 +1,5 @@
 cc_binary(
-    name = "dns-telemeter",
+    name = "main",
     srcs = ["main.cc"],
-    deps = ["@jsoncpp//:jsoncpp", "//dns:resolver"],
+    deps = ["@jsoncpp//:jsoncpp", "//dns:resolver", "//std/experimental:expected"],
 )

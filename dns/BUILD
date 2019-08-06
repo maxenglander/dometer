@@ -14,7 +14,7 @@ cc_library(
     name = "resolver",
     hdrs = ["resolver.h"],
     srcs = ["resolver.cc"],
-    deps = [":query", ":result"],
+    deps = ["//std/experimental:expected", ":query", ":result"],
     linkopts = ["-lresolv"],
     visibility = ["//visibility:public"]
 )

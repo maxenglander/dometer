@@ -5,11 +5,15 @@
 #include "dns/query.h"
 #include "dns/result.h"
 
+#include "std/experimental/expected.h"
+
+using namespace std::experimental;
+
 namespace DnsTelemeter {
     namespace Dns {
         class Resolver {
             public:
-                Result lookupA(std::string name);
+                expected<Result, int> lookupA(std::string name);
         };
     }
 }
