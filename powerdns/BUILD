@@ -1,5 +1,6 @@
 cc_library(
-  name = "remote_pipe_backend",
-  hdrs = ["remote_pipe_backend.h"],
-  srcs = ["remote_pipe_backend.cc"],
+  name = "unix_socket_backend",
+  hdrs = ["unix_socket_backend.h"],
+  srcs = ["unix_socket_backend.cc"],
+  deps = ["//std/experimental:expected"]
 )
