@@ -3,7 +3,7 @@ cc_binary(
     srcs = ["main.cc"],
     deps = [
         "@jsoncpp//:jsoncpp",
-        "//dns:resolver",
+        "//network/dns:resolver",
         "//powerdns:unix_socket_backend",
         "//std/experimental:expected"
     ],

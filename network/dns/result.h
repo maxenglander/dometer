@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "dns/answer.h"
+#include "network/dns/answer.h"
 
-namespace DnsTelemeter::Dns {
+namespace DnsTelemeter::Network::Dns {
     class Result {
         public:
             static Result failure();

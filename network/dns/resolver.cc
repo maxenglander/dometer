@@ -5,15 +5,15 @@
 #include <resolv.h>
 #include <string>
 
-#include "dns/answer.h"
-#include "dns/resolver.h"
-#include "dns/result.h"
+#include "network/dns/answer.h"
+#include "network/dns/resolver.h"
+#include "network/dns/result.h"
 
 #include "std/experimental/expected.h"
 
 using namespace std::experimental;
 
-namespace DnsTelemeter::Dns {
+namespace DnsTelemeter::Network::Dns {
     expected<Result, int> Resolver::lookupA(std::string name) {
         std::vector<Answer> answers;
         int len;

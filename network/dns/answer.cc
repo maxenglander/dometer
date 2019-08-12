@@ -1,6 +1,6 @@
-#include "dns/answer.h"
+#include "network/dns/answer.h"
 
-namespace DnsTelemeter::Dns {
+namespace DnsTelemeter::Network::Dns {
     Answer::Answer(std::string type, std::string name, std::string content, unsigned int ttl) {
         this->type = type;
         this->name = name;

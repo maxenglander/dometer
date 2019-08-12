@@ -8,7 +8,7 @@
 
 #include <jsoncpp/json/json.h>
 
-#include "dns/resolver.h"
+#include "network/dns/resolver.h"
 
 #include "std/experimental/expected.h"
 
@@ -104,14 +104,14 @@ main(int argc, char **argv) {
                 if(jsonin["method"] == "lookup") {
                     std::string qname = jsonin["parameters"]["qname"].asString();
                     std::string qtype = jsonin["parameters"]["qtype"].asString();
-                    Dns::Resolver resolver;
+                    Network::Dns::Resolver resolver;
 
                     if(qtype == "A") {
-                        expected<Dns::Result, int> result = resolver.lookupA(qname);
+                        expected<Network::Dns::Result, int> result = resolver.lookupA(qname);
                         if(result) {
-                            std::vector<Dns::Answer> answers = (*result).getAnswers();
+                            std::vector<Network::Dns::Answer> answers = (*result).getAnswers();
                             jsonout["result"] = Json::Value(Json::arrayValue);
-                            for(std::vector<Dns::Answer>::iterator it = answers.begin(); it != answers.end(); ++it) {
+                            for(std::vector<Network::Dns::Answer>::iterator it = answers.begin(); it != answers.end(); ++it) {
                                 Json::Value jsonanswer(Json::objectValue);
                                 jsonanswer["qtype"] = qtype;
                                 jsonanswer["qname"] = qname;
