@@ -1,21 +1,26 @@
 #include <cstring>
+#include <memory>
 #include <string>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
 
-#include "std/experimental/expected.h"
-
 #include "powerdns/unix_socket_backend.h"
+#include "std/experimental/expected.h"
+#include "util/readline.h"
 
 #define MAX_LINE 4096
 
 using namespace std::experimental;
 
 namespace DnsTelemeter::PowerDns {
-    UnixSocketBackend::UnixSocketBackend(std::string socketPath, unsigned int maxConnections) {
+    UnixSocketBackend::UnixSocketBackend(
+            unsigned int maxConnections,
+            unsigned int maxMessageSize,
+            std::string socketPath) {
         this->socketPath = socketPath;
         this->maxConnections = maxConnections;
+        this->maxMessageSize = maxMessageSize;
     }
 
     std::string makeSocketError(std::string description) {
@@ -76,6 +81,12 @@ namespace DnsTelemeter::PowerDns {
                 close(srvsockfd);
                 return unexpected(this->makeSocketError("Failed to listen fo client connections"));
             }
+
+            while((linelen = readline(clisockfd, line, this->maxMessageSize)) > 0) {
+            }
+
+            close(clisockfd);
+            return unexpected(this->makeSocketError("Failed to read message from client socket"));
         }
     }
 }

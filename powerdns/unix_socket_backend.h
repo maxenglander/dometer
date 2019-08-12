@@ -7,11 +7,16 @@ using namespace std::experimental;
 namespace DnsTelemeter::PowerDns {
     class UnixSocketBackend {
         public:
-            UnixSocketBackend(std::string path, unsigned int maxConnections);
+            UnixSocketBackend() : UnixSocketBackend(100, 4096, "/var/run/dns-telemeter.sock") {};
+            UnixSocketBackend(
+                    unsigned int maxConnections,
+                    unsigned int maxMessageSize,
+                    std::string socketPath);
             expected<void, std::string> serve();
         private:
             std::string makeSocketError(std::string description);
-            std::string socketPath;
             unsigned int maxConnections;
+            unsigned int maxMessageSize;
+            std::string socketPath;
     };
 }
