@@ -10,7 +10,7 @@
 #include "network/socket/unix_socket.h"
 #include "powerdns/unix_socket_backend.h"
 #include "std/experimental/expected.h"
-#include "util/readline.h"
+#include "util/read_until.h"
 
 #define MAX_LINE 4096
 
@@ -85,7 +85,7 @@ namespace DnsTelemeter::PowerDns {
                 return unexpected(this->makeSocketError("Failed to listen fo client connections"));
             }
 
-            while((linelen = readline(clisockfd, line, this->maxMessageSize)) > 0) {
+            while((linelen = readUntil(clisockfd, line, '\n', this->maxMessageSize)) > 0) {
             }
 
             close(clisockfd);

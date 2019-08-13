@@ -5,6 +5,7 @@
 #include "network/socket/unix_socket.h"
 #include "std/experimental/expected.h"
 #include "util/error/system_exception.h"
+#include "util/read_until.h"
 
 using DnsTelemeter::Error;
 using std::experimental;
@@ -21,7 +22,7 @@ namespace DnsTelemeter::Network::Socket {
         int fd = accept(this->fd, NULL, NULL);
         if(fd < 0) {
             close(fd);
-            return "Failed to accept client connection";
+            return unexpected("Failed to accept client connection");
         } else {
             return UnixSocket(fd);
         }
@@ -49,16 +50,25 @@ namespace DnsTelemeter::Network::Socket {
         unlink(path);
 
         if(bind(addr, (struct sockaddr *) addr, sizeof(addr)) < 0) {
-            return "Failed to bind socket";
+            return unexpected("Failed to bind socket");
         }
     }
 
-    expected<void, std::string> UnixSocket::listen(unsigned int maxConnections) {
+    expected<void, std::string> UnixSocket::listen(size_t maxConnections) {
         /******************************************/
         /* Listen for any client sockets          */
         /******************************************/
         if(listen(this->fd, maxConnections) < 0) {
-            return "Failed to listen";
+            return unexpected("Failed to listen");
+        }
+    }
+
+    expected<std::string, std::string> UnixSocket::readUntil(char delimiter, size_t maxBytes) {
+        char buffer[maxBytes];
+        if(readUntil(this->fd, buffer, delimiter, maxBytes) < 0) {
+            return unexpected("Failed to read delimited line from socket");
+        } else {
+            return std::string(buffer);
         }
     }
 }

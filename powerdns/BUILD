@@ -6,7 +6,7 @@ cc_library(
       "//network/socket:socket_factory",
       "//network/socket:unix_socket",
       "//std/experimental:expected",
-      "//util:readline"
+      "//util:read_until",
   ],
   visibility = ["//visibility:public"],
 )

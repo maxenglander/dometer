@@ -1,6 +1,6 @@
 cc_library(
-    name = "readline",
-    hdrs = ["readline.c"],
-    srcs = ["readline.h"],
+    name = "read_until",
+    hdrs = ["read_until.cc"],
+    srcs = ["read_until.h"],
     visibility = ["//visibility:public"],
 )

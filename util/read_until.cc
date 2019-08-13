@@ -1,4 +1,4 @@
-ssize_t readline(int fd, void *vbuf, size_t n) {
+ssize_t readUntil(int fd, void *vbuf, char delimiter, size_t n) {
     ssize_t num_read;
     ssize_t tot_read;
     char *buf;
@@ -29,11 +29,11 @@ ssize_t readline(int fd, void *vbuf, size_t n) {
                 *buf++ = ch;
             }
 
-            if(ch == '\n')
+            if(ch == delimiter)
                 break;
         }
 
-        *buf = '\0';
+        *buf = delimiter;
         return tot_read;
     }
 }

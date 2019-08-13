@@ -8,6 +8,10 @@ cc_library(
 cc_library(
     name = "unix_socket",
     hdrs = ["unix_socket.h"],
-    deps = ["//std/experimental:expected", "//util/error:system_exception"],
+    deps = [
+        "//std/experimental:expected",
+        "//util/error:system_exception",
+        "//util:read_until"
+    ],
     visibility = ["//visibility:public"],
 )
