@@ -9,7 +9,6 @@ namespace DnsTelemeter::Network::Socket {
     class SocketFactory {
         public:
             static expected<UnixSocket, std::string> makeUnixSocket();
-            static UnixSocket makeUnixSocket(unsigned int fd);
         private:
             SocketFactory() {};
     };

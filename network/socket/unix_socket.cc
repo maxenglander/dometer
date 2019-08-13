@@ -1,6 +1,7 @@
 #include <cstring>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <unistd.h>
 
 #include "network/socket/unix_socket.h"
 #include "std/experimental/expected.h"
@@ -13,6 +14,10 @@ using std::experimental;
 namespace DnsTelemeter::Network::Socket {
     UnixSocket::UnixSocket(unsigned int fd) {
         this->fd = fd;
+    }
+
+    UnixSocket::~UnixSocket() {
+        close(this->fd);
     }
 
     expected<UnixSocket, std::string> UnixSocket::accept() {
@@ -60,6 +65,15 @@ namespace DnsTelemeter::Network::Socket {
         /******************************************/
         if(listen(this->fd, maxConnections) < 0) {
             return unexpected("Failed to listen");
+        }
+    }
+
+    expected<UnixSocket, std::string> UnixSocket::makeUnixSocket() {
+        int fd = socket(AF_INET, SOCK_STREAM, 0);
+        if(fd < 0) {
+            return "Failed to create socket";
+        } else {
+            return UnixSocket(fd);
         }
     }
 
