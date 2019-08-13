@@ -6,15 +6,16 @@
 
 using namespace std::experimental;
 
-namespace DnsTelemeter::Network {
+namespace DnsTelemeter::Network::Socket {
     class UnixSocket {
         public:
-            UnixSocket();
-            expected<std::unique_ptr<UnixSocket>, std::string> accept();
+            UnixSocket(unsigned int fd);
+            expected<UnixSocket, std::string> accept();
             expected<void, std::string> close();
             expected<void, std::string> bind(std::string address);
             expected<void, std::string> listen(unsigned int maxConnections);
+            static expected<UnixSocket, std::string> makeUnixSocket();
         private:
-            int fd;
+            unsigned int fd;
     };
 }

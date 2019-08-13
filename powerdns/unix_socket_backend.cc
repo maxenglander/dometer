@@ -6,6 +6,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+#include "network/socket/socket_factory.h"
 #include "network/socket/unix_socket.h"
 #include "powerdns/unix_socket_backend.h"
 #include "std/experimental/expected.h"
@@ -13,7 +14,7 @@
 
 #define MAX_LINE 4096
 
-using namespace DnsTelemeter::Network;
+using namespace DnsTelemeter::Network::Socket;
 using namespace std::experimental;
 
 namespace DnsTelemeter::PowerDns {
@@ -31,21 +32,13 @@ namespace DnsTelemeter::PowerDns {
     }
 
     expected<void, std::string> UnixSocketBackend::serve() {
-        std::unique_ptr<UnixSocket> socket_;
-        try {
-            socket_ = std::make_unique<UnixSocket>();
-        } catch(std::exception& e) {
-            return unexpected(std::string("failed to create a new socket"));
-        }
+        expected<UnixSocket, std::string> socket_ = SocketFactory::makeUnixSocket();
 
         struct sockaddr_un srvaddr;
         int clisockfd, srvsockfd;
         char line[MAX_LINE];
         int linelen;
 
-        /******************************************/
-        /* Zero out the server socket address.    */
-        /******************************************/
         memset(&srvaddr, 0, sizeof(srvaddr));
 
         /******************************************/
