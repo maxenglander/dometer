@@ -1,5 +1,6 @@
 #pragma once
 
+#include "network/socket/socket_factory.h"
 #include "network/socket/unix_socket.h"
 #include "std/experimental/expected.h"
 

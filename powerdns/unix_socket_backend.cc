@@ -15,6 +15,7 @@
 #define MAX_LINE 4096
 
 using namespace DnsTelemeter::Network::Socket;
+using namespace DnsTelemeter::Util;
 using namespace std::experimental;
 
 namespace DnsTelemeter::PowerDns {
@@ -27,12 +28,8 @@ namespace DnsTelemeter::PowerDns {
         this->maxMessageSize = maxMessageSize;
     }
 
-    std::string makeSocketError(std::string description) {
-        return description + ": " + std::string(strerror(errno)) + "(" + std::to_string(errno) + ")";
-    }
-
     expected<void, std::string> UnixSocketBackend::serve() {
-        expected<UnixSocket, std::string> socket_ = SocketFactory::makeUnixSocket();
+        expected<UnixSocket, std::string> socket_ = DnsTelemeter::Network::Socket::SocketFactory::makeUnixSocket();
 
         struct sockaddr_un srvaddr;
         int clisockfd, srvsockfd;
@@ -46,7 +43,7 @@ namespace DnsTelemeter::PowerDns {
         /******************************************/
         srvsockfd = socket(AF_UNIX, SOCK_STREAM, 0);
         if(srvsockfd < 0) {
-            return unexpected(this->makeSocketError("Failed to create unix domain socket"));
+            return unexpected(std::string("Failed to create unix domain socket"));
         }
 
         /******************************************/
@@ -63,7 +60,7 @@ namespace DnsTelemeter::PowerDns {
         unlink(this->socketPath.c_str());
         if(bind(srvsockfd, (struct sockaddr *) &srvaddr, sizeof(srvaddr)) < 0) {
             close(srvsockfd);
-            return unexpected(this->makeSocketError("Failed to bind socket"));
+            return unexpected(std::string("Failed to bind socket"));
         }
 
         /******************************************/
@@ -71,7 +68,7 @@ namespace DnsTelemeter::PowerDns {
         /******************************************/
         if(listen(srvsockfd, this->maxConnections) < 0) {
             close(srvsockfd);
-            return unexpected(this->makeSocketError("Failed to listen fo client connections"));
+            return unexpected(std::string("Failed to listen fo client connections"));
         }
 
         /******************************************/
@@ -82,14 +79,14 @@ namespace DnsTelemeter::PowerDns {
             if(clisockfd < 0) {
                 close(clisockfd);
                 close(srvsockfd);
-                return unexpected(this->makeSocketError("Failed to listen fo client connections"));
+                return unexpected(std::string("Failed to listen fo client connections"));
             }
 
             while((linelen = readUntil(clisockfd, line, '\n', this->maxMessageSize)) > 0) {
             }
 
             close(clisockfd);
-            return unexpected(this->makeSocketError("Failed to read message from client socket"));
+            return unexpected(std::string("Failed to read message from client socket"));
         }
     }
 }

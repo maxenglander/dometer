@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 #include "std/experimental/expected.h"
@@ -14,7 +16,6 @@ namespace DnsTelemeter::PowerDns {
                     std::string socketPath);
             expected<void, std::string> serve();
         private:
-            std::string makeSocketError(std::string description);
             unsigned int maxConnections;
             unsigned int maxMessageSize;
             std::string socketPath;

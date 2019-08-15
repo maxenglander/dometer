@@ -8,8 +8,8 @@
 #include "util/error/system_exception.h"
 #include "util/read_until.h"
 
-using DnsTelemeter::Error;
-using std::experimental;
+using namespace DnsTelemeter::Util::Error;
+using namespace std::experimental;
 
 namespace DnsTelemeter::Network::Socket {
     UnixSocket::UnixSocket(unsigned int fd) {
@@ -17,17 +17,17 @@ namespace DnsTelemeter::Network::Socket {
     }
 
     UnixSocket::~UnixSocket() {
-        close(this->fd);
+        ::close(this->fd);
     }
 
     expected<UnixSocket, std::string> UnixSocket::accept() {
         /******************************************/
         /* Accept an incoming connection          */
         /******************************************/
-        int fd = accept(this->fd, NULL, NULL);
+        int fd = ::accept(this->fd, NULL, NULL);
         if(fd < 0) {
-            close(fd);
-            return unexpected("Failed to accept client connection");
+            ::close(fd);
+            return unexpected(std::string("Failed to accept client connection"));
         } else {
             return UnixSocket(fd);
         }
@@ -50,28 +50,32 @@ namespace DnsTelemeter::Network::Socket {
         /* succeed, then bind to that file.       */
         /******************************************/
         addr.sun_family = AF_UNIX;
-        strncat(addr.sun_path, address.c_str(), sizeof(addr.sun_path) - 1);
+        strncat(addr.sun_path, path.c_str(), sizeof(addr.sun_path) - 1);
 
-        unlink(path);
+        unlink(path.c_str());
 
-        if(bind(addr, (struct sockaddr *) addr, sizeof(addr)) < 0) {
-            return unexpected("Failed to bind socket");
+        if(::bind(this->fd, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
+            return unexpected(std::string("Failed to bind socket"));
         }
+
+        return {};
     }
 
     expected<void, std::string> UnixSocket::listen(size_t maxConnections) {
         /******************************************/
         /* Listen for any client sockets          */
         /******************************************/
-        if(listen(this->fd, maxConnections) < 0) {
-            return unexpected("Failed to listen");
+        if(::listen(this->fd, maxConnections) < 0) {
+            return unexpected(std::string("Failed to listen"));
         }
+
+        return {};
     }
 
     expected<UnixSocket, std::string> UnixSocket::makeUnixSocket() {
         int fd = socket(AF_INET, SOCK_STREAM, 0);
         if(fd < 0) {
-            return "Failed to create socket";
+            return unexpected(std::string("Failed to create socket"));
         } else {
             return UnixSocket(fd);
         }
@@ -79,10 +83,9 @@ namespace DnsTelemeter::Network::Socket {
 
     expected<std::string, std::string> UnixSocket::readUntil(char delimiter, size_t maxBytes) {
         char buffer[maxBytes];
-        if(readUntil(this->fd, buffer, delimiter, maxBytes) < 0) {
-            return unexpected("Failed to read delimited line from socket");
-        } else {
-            return std::string(buffer);
+        if(DnsTelemeter::Util::readUntil(this->fd, buffer, delimiter, maxBytes) < 0) {
+            return unexpected(std::string("Failed to read delimited line from socket"));
         }
+        return std::string(buffer);
     }
 }

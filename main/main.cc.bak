@@ -6,25 +6,24 @@
 #include <sys/un.h>
 #include <unistd.h>
 
-#include "jsoncpp/json/json.h"
+#include <jsoncpp/json/json.h>
+
 #include "network/dns/resolver.h"
-#include "powerdns/unix_socket_backend.h"
+
 #include "std/experimental/expected.h"
 
 #define MAX_LINE      4096
 #define SRV_BACKLOG   100
 
-using namespace DnsTelemeter;
-using namespace DnsTelemeter::PowerDns;
 using namespace std::experimental;
+
+using namespace DnsTelemeter;
 
 ssize_t
 readline(int fd, void *vbuf, size_t n);
 
 int
 main(int argc, char **argv) {
-    UnixSocketBackend pdnsBackend;
-
     const char *srvsockpath = "/var/run/dns-telemeter.sock";
 
     struct sockaddr_un srvaddr;

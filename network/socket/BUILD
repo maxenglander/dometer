@@ -1,13 +1,19 @@
 cc_library(
     name = "socket_factory",
     hdrs = ["socket_factory.h"],
-    deps = ["//std/experimental:expected", "//util/error:system_exception"],
+    srcs = ["socket_factory.cc"],
+    deps = [
+        "//network/socket:unix_socket",
+        "//std/experimental:expected",
+        "//util/error:system_exception"
+    ],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
     name = "unix_socket",
     hdrs = ["unix_socket.h"],
+    srcs = ["unix_socket.cc"],
     deps = [
         "//std/experimental:expected",
         "//util/error:system_exception",
