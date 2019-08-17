@@ -4,6 +4,7 @@ cc_binary(
     deps = [
         "@jsoncpp//:jsoncpp",
         "//network/dns:resolver",
+        "//network/socket:unix_socket",
         "//powerdns:unix_socket_backend",
         "//std/experimental:expected",
     ],

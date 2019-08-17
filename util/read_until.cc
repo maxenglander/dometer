@@ -43,5 +43,7 @@ namespace DnsTelemeter::Util {
             *buf = delimiter;
             return tot_read;
         }
+
+        return {};
     }
 }

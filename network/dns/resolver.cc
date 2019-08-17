@@ -26,7 +26,7 @@ namespace DnsTelemeter::Network::Dns {
         /*************************************************/
         len = res_search(name.c_str(), C_IN, T_A, nsbuf, sizeof(nsbuf));
         if(len < 0) {
-            return unexpected(0);
+            return unexpected<int>(-1);
         }
 
         /*************************************************/
@@ -45,7 +45,7 @@ namespace DnsTelemeter::Network::Dns {
             /* Parse the answer section into a record.       */
             /*************************************************/
             if(ns_parserr(&handle, ns_s_an, rrnum, &rr) < 0) {
-                return unexpected(0);
+                return unexpected<int>(-1);
             }
 
             if(ns_rr_type(rr) != ns_t_a) {

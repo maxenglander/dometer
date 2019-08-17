@@ -1,4 +1,5 @@
 #include <cstring>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -29,64 +30,22 @@ namespace DnsTelemeter::PowerDns {
     }
 
     expected<void, std::string> UnixSocketBackend::serve() {
-        expected<UnixSocket, std::string> socket_ = DnsTelemeter::Network::Socket::SocketFactory::makeUnixSocket();
+        auto serverSocket
+            = DnsTelemeter::Network::Socket::SocketFactory::makeUnixSocket();
 
-        struct sockaddr_un srvaddr;
-        int clisockfd, srvsockfd;
-        char line[MAX_LINE];
-        int linelen;
-
-        memset(&srvaddr, 0, sizeof(srvaddr));
-
-        /******************************************/
-        /* Create a UNIX domain stream socket.    */
-        /******************************************/
-        srvsockfd = socket(AF_UNIX, SOCK_STREAM, 0);
-        if(srvsockfd < 0) {
-            return unexpected(std::string("Failed to create unix domain socket"));
+        if(!serverSocket) {
+            return unexpected<std::string>(std::string("Failed to create server socket"));
         }
 
-        /******************************************/
-        /* Set up the UNIX sockaddr structure.    */
-        /* by using AF_UNIX for the family and    */
-        /* giving it a filepath to bind to.       */
-        /*                                        */
-        /* Unlink the file so that the bind will  */
-        /* succeed, then bind to that file.       */
-        /******************************************/
-        srvaddr.sun_family = AF_UNIX;
-        strncat(srvaddr.sun_path, this->socketPath.c_str(), sizeof(srvaddr.sun_path) - 1);
+        (*serverSocket).bind(this->socketPath);
+        (*serverSocket).listen(this->maxConnections);
 
-        unlink(this->socketPath.c_str());
-        if(bind(srvsockfd, (struct sockaddr *) &srvaddr, sizeof(srvaddr)) < 0) {
-            close(srvsockfd);
-            return unexpected(std::string("Failed to bind socket"));
-        }
-
-        /******************************************/
-        /* Listen for any client sockets          */
-        /******************************************/
-        if(listen(srvsockfd, this->maxConnections) < 0) {
-            close(srvsockfd);
-            return unexpected(std::string("Failed to listen fo client connections"));
-        }
-
-        /******************************************/
-        /* Accept incoming connections            */
-        /******************************************/
         for(;;) {
-            clisockfd = accept(srvsockfd, NULL, NULL);
-            if(clisockfd < 0) {
-                close(clisockfd);
-                close(srvsockfd);
-                return unexpected(std::string("Failed to listen fo client connections"));
+            auto clientSocket = (*serverSocket).accept();
+            if(!clientSocket) continue;
+            while(auto message = (*serverSocket).readLine(this->maxMessageSize)) {
+                std::cout << "Got a message from the client";
             }
-
-            while((linelen = readUntil(clisockfd, line, '\n', this->maxMessageSize)) > 0) {
-            }
-
-            close(clisockfd);
-            return unexpected(std::string("Failed to read message from client socket"));
         }
     }
 }
