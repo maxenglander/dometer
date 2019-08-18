@@ -6,7 +6,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 
-#include "jsoncpp/json/json.h"
+#include "json/json.h"
 #include "network/dns/resolver.h"
 #include "network/socket/unix_socket.h"
 #include "powerdns/unix_socket_backend.h"

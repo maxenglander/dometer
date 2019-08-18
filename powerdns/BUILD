@@ -3,6 +3,7 @@ cc_library(
   hdrs = ["unix_socket_backend.h"],
   srcs = ["unix_socket_backend.cc"],
   deps = [
+      "@jsoncpp//:jsoncpp",
       "//network/socket:socket_factory",
       "//network/socket:unix_socket",
       "//std/experimental:expected",

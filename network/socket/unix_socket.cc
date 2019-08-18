@@ -1,5 +1,4 @@
 #include <cstring>
-#include <iostream>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
@@ -16,13 +15,12 @@ namespace DnsTelemeter::Network::Socket {
     UnixSocket::UnixSocket(int fd) : fd(fd) {}
     UnixSocket::UnixSocket(unsigned int fd) : UnixSocket((int)fd) {}
     UnixSocket::UnixSocket(const UnixSocket &s) : UnixSocket(s.fd) {}
-    UnixSocket::UnixSocket(UnixSocket &&s) : UnixSocket(s.fd) {
+    UnixSocket::UnixSocket(UnixSocket &&s) : UnixSocket((unsigned int)s.fd) {
         s.fd = -1;
     }
 
     UnixSocket::~UnixSocket() {
-        if(fd > 0) {
-            std::cout << "Closing socket file descriptor " + std::to_string(fd) + "\n";
+        if(fd > -1) {
             ::close(fd);
         }
     }
@@ -31,14 +29,11 @@ namespace DnsTelemeter::Network::Socket {
         /******************************************/
         /* Accept an incoming connection          */
         /******************************************/
-        std::cout << "Accepting a client connection on file descriptor " + std::to_string(fd) + "\n";
         int clientfd = ::accept(fd, NULL, NULL);
         if(clientfd < 0) {
             ::close(clientfd);
-            std::cout << "Failed to accept client connection: " + std::string(strerror(errno)) + "(" + std::to_string(errno) + ")\n";
             return unexpected<std::string>(std::string("Failed to accept client connection"));
         } else {
-            std::cout << "Accepted a client connection on file descriptor " + std::to_string(clientfd) + "\n";
             return UnixSocket(clientfd);
         }
     }
@@ -62,7 +57,6 @@ namespace DnsTelemeter::Network::Socket {
 
         unlink(path.c_str());
 
-        std::cout << "Binding socket to " + std::string(path.c_str()) + "\n";
         if(::bind(fd, (struct sockaddr *) &(addr), sizeof(addr)) < 0) {
             return unexpected<std::string>(std::string("Failed to bind socket"));
         }
@@ -75,7 +69,6 @@ namespace DnsTelemeter::Network::Socket {
         /* Listen for any client sockets          */
         /******************************************/
 
-        std::cout << "Listening for up to " + std::to_string(maxConnections) + " connections\n";
         if(::listen(fd, maxConnections) < 0) {
             return unexpected<std::string>(std::string("Failed to listen"));
         }
@@ -89,13 +82,12 @@ namespace DnsTelemeter::Network::Socket {
             ::close(fd);
             return unexpected<std::string>(std::string("Failed to create socket"));
         } else {
-            std::cout << "Creating UnixSocket from file descriptor  " + std::to_string(fd) + "\n";
             return UnixSocket(fd);
         }
     }
 
     expected<std::string, std::string> UnixSocket::readLine(size_t maxBytes) {
-        return this->readUntil('\n', maxBytes);
+        return readUntil('\n', maxBytes);
     }
 
     expected<std::string, std::string> UnixSocket::readUntil(char delimiter, size_t maxBytes) {
@@ -104,5 +96,13 @@ namespace DnsTelemeter::Network::Socket {
             return unexpected<std::string>(std::string("Failed to read delimited line from socket"));
         }
         return std::string(buffer);
+    }
+
+    expected<void, std::string> UnixSocket::write(std::string message) {
+        if(send(fd, message.data(), message.size(), 0) < 0) {
+            return unexpected<std::string>(std::string("Failed to send message to client"));
+        }
+
+        return {};
     }
 }

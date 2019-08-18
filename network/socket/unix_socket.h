@@ -21,7 +21,7 @@ namespace DnsTelemeter::Network::Socket {
             static expected<UnixSocket, std::string> makeUnixSocket();
             expected<std::string, std::string> readLine(size_t maxBytes);
             expected<std::string, std::string> readUntil(char delimiter, size_t maxBytes);
-
+            expected<void, std::string> write(std::string message);
         private:
             UnixSocket(unsigned int fd);
             UnixSocket(int fd);
