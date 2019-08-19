@@ -22,7 +22,6 @@ namespace DnsTelemeter::Network::Socket {
 
     UnixSocket::~UnixSocket() {
         if(fd > -1) {
-            std::cerr << "Closing socket with file descriptor " + std::to_string(fd) + "\n";
             ::close(fd);
         }
     }
@@ -94,8 +93,11 @@ namespace DnsTelemeter::Network::Socket {
 
     expected<std::string, std::string> UnixSocket::readUntil(char delimiter, size_t maxBytes) {
         char buffer[maxBytes];
-        if(recvUntil(fd, buffer, delimiter, maxBytes) < 0) {
+        int recvCount = recvUntil(fd, buffer, delimiter, maxBytes);
+        if(recvCount < 0) {
             return unexpected<std::string>(std::string("Failed to read delimited line from socket"));
+        } else if(recvCount == 0) {
+            return unexpected<std::string>(std::string("Ignoring empty message from socket"));
         }
         return std::string(buffer);
     }

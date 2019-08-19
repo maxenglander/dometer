@@ -51,14 +51,12 @@ namespace DnsTelemeter::PowerDns {
                 Json::Value reply;
                 reply["result"] = Json::Value(false);
 
-                std::cout << "Got request: " + *request;
                 expected<Json::Value, std::string> query = jsonSerde.deserialize(*request);
                 if(!query) {
                 }
 
                 (*clientSocket).write(jsonSerde.serialize(reply));
             }
-            std::cerr << "No more lines to be read from client socket\n";
         }
     }
 }
