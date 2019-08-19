@@ -1,6 +1,10 @@
 cc_library(
-    name = "read_until",
-    hdrs = ["read_until.h"],
-    srcs = ["read_until.cc"],
+    name = "json_serde",
+    hdrs = ["json_serde.h"],
+    srcs = ["json_serde.cc"],
+    deps = [
+        "@jsoncpp//:jsoncpp",
+        "//std/experimental:expected",
+    ],
     visibility = ["//visibility:public"],
 )

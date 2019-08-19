@@ -6,17 +6,15 @@
 #include <sys/un.h>
 #include <unistd.h>
 
-#include "json/json.h"
 #include "network/dns/resolver.h"
 #include "network/socket/unix_socket.h"
-#include "powerdns/unix_socket_backend.h"
+#include "powerdns/unix_socket_remote_backend.h"
 #include "std/experimental/expected.h"
 
 #define MAX_LINE      4096
 #define SRV_BACKLOG   100
 
 using namespace DnsTelemeter;
-using namespace DnsTelemeter::PowerDns;
 using namespace DnsTelemeter::Network::Socket;
 using namespace std::experimental;
 
@@ -25,8 +23,8 @@ readline(int fd, void *vbuf, size_t n);
 
 int
 main(int argc, char **argv) {
-    UnixSocketBackend backend;
-    backend.serve();
+    PowerDns::UnixSocketRemoteBackend pdnsBackend;
+    pdnsBackend.serve();
 
     /**
     Json::Reader reader;

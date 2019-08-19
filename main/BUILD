@@ -5,7 +5,7 @@ cc_binary(
         "@jsoncpp//:jsoncpp",
         "//network/dns:resolver",
         "//network/socket:unix_socket",
-        "//powerdns:unix_socket_backend",
+        "//powerdns:unix_socket_remote_backend",
         "//std/experimental:expected",
     ],
 )

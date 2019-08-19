@@ -1,4 +1,10 @@
 cc_library(
+    name = "recv_until",
+    hdrs = ["recv_until.h"],
+    srcs = ["recv_until.cc"],
+)
+
+cc_library(
     name = "socket_factory",
     hdrs = ["socket_factory.h"],
     srcs = ["socket_factory.cc"],
@@ -17,7 +23,7 @@ cc_library(
     deps = [
         "//std/experimental:expected",
         "//util/error:system_exception",
-        "//util:read_until"
+        ":recv_until"
     ],
     visibility = ["//visibility:public"],
 )

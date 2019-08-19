@@ -16,13 +16,7 @@ RUN apt-get install -yq --no-install-recommends --no-install-suggests \
     pdns-server pdns-backend-remote
 
 RUN apt-get install -yq --no-install-recommends --no-install-suggests \
-    libjsoncpp-dev
-
-RUN apt-get install -yq --no-install-recommends --no-install-suggests \
-    ca-certificates curl socat
-
-RUN apt-get install -yq --no-install-recommends --no-install-suggests \
-    universal-ctags git
+    ca-certificates curl git socat ps
 
 RUN apt-get install -yq --no-install-recommends --no-install-suggests vim \
  && mkdir -p $HOME/.vim/autoload $HOME/.vim/bundle \

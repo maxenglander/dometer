@@ -1,12 +1,13 @@
 #include <cerrno>
 #include <cstring>
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <unistd.h>
 
-#include "util/read_until.h"
+#include "network/socket/recv_until.h"
 
-namespace DnsTelemeter::Util {
-    ssize_t readUntil(unsigned int fd, void *vbuf, char delimiter, size_t n) {
+namespace DnsTelemeter::Network::Socket {
+    ssize_t recvUntil(unsigned int fd, void *vbuf, char delimiter, size_t n) {
         ssize_t num_read;
         size_t tot_read;
         char *buf;
@@ -20,7 +21,8 @@ namespace DnsTelemeter::Util {
         buf = (char *)vbuf;                 /* No pointer arithmetic on "void *" */
         tot_read = 0;
         for(;;) {
-            num_read = read(fd, &ch, 1);    /* Read a single character from fd   */
+            num_read = recv(fd, &ch, 1,
+                            MSG_NOSIGNAL);  /* Read a single character from fd   */
             if(num_read == -1) {
                 if(errno == EINTR)          /* Interrupted -> restart read()     */
                     continue;

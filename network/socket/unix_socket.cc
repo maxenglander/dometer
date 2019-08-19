@@ -1,12 +1,13 @@
 #include <cstring>
+#include <iostream>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
 
+#include "network/socket/recv_until.h"
 #include "network/socket/unix_socket.h"
 #include "std/experimental/expected.h"
 #include "util/error/system_exception.h"
-#include "util/read_until.h"
 
 using namespace DnsTelemeter::Util::Error;
 using namespace std::experimental;
@@ -21,6 +22,7 @@ namespace DnsTelemeter::Network::Socket {
 
     UnixSocket::~UnixSocket() {
         if(fd > -1) {
+            std::cerr << "Closing socket with file descriptor " + std::to_string(fd) + "\n";
             ::close(fd);
         }
     }
@@ -92,14 +94,14 @@ namespace DnsTelemeter::Network::Socket {
 
     expected<std::string, std::string> UnixSocket::readUntil(char delimiter, size_t maxBytes) {
         char buffer[maxBytes];
-        if(DnsTelemeter::Util::readUntil(fd, buffer, delimiter, maxBytes) < 0) {
+        if(recvUntil(fd, buffer, delimiter, maxBytes) < 0) {
             return unexpected<std::string>(std::string("Failed to read delimited line from socket"));
         }
         return std::string(buffer);
     }
 
     expected<void, std::string> UnixSocket::write(std::string message) {
-        if(send(fd, message.data(), message.size(), 0) < 0) {
+        if(send(fd, message.data(), message.size(), MSG_NOSIGNAL) < 0) {
             return unexpected<std::string>(std::string("Failed to send message to client"));
         }
 
