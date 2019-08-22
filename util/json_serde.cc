@@ -19,10 +19,11 @@ namespace DnsTelemeter::Util {
 
     expected<Json::Value, std::string> JsonSerde::deserialize(std::string value) {
         Json::Value out;
-        if(reader->parse(value.data(), value.data() + value.size(), &out, NULL)) {
+        std::string errors;
+        if(reader->parse(value.data(), value.data() + value.size(), &out, &errors)) {
             return out;
         }
-        return unexpected<std::string>(std::string("Failed to parse value as JSON"));
+        return unexpected<std::string>(std::string("Failed to parse value (" + value + ") as JSON: " + errors));
     }
 
     std::string JsonSerde::serialize(Json::Value in) {

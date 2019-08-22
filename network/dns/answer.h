@@ -6,14 +6,9 @@ namespace DnsTelemeter::Network::Dns {
     class Answer {
         public:
             Answer(std::string type, std::string name, std::string content, unsigned int ttl);
-            std::string getType();
-            std::string getName();
-            std::string getContent();
-            unsigned int getTtl();
-        private:
-            std::string type;
-            std::string name;
-            std::string content;
-            unsigned int ttl;
+            const std::string type;
+            const std::string name;
+            const std::string content;
+            const unsigned int ttl;
     };
 }

@@ -1,8 +1,9 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
-#include "network/dns/result.h"
+#include "network/dns/answer.h"
 #include "std/experimental/expected.h"
 
 using namespace std::experimental;
@@ -10,6 +11,6 @@ using namespace std::experimental;
 namespace DnsTelemeter::Network::Dns {
     class NativeResolver {
         public:
-            expected<Result, int> lookupA(std::string name);
+            expected<std::vector<Answer>, int> lookupA(std::string name);
     };
 }

@@ -8,14 +8,7 @@ cc_library(
     name = "native_resolver",
     hdrs = ["native_resolver.h"],
     srcs = ["native_resolver.cc"],
-    deps = ["//std/experimental:expected", ":result"],
+    deps = ["//std/experimental:expected", ":answer"],
     linkopts = ["-lresolv"],
     visibility = ["//visibility:public"]
-)
-
-cc_library(
-    name = "result",
-    hdrs = ["result.h"],
-    srcs = ["result.cc"],
-    deps = [":answer"],
 )

@@ -36,6 +36,7 @@ cc_library(
         ":lookup_remote_backend_handler",
         ":lookup_remote_backend_query",
         ":lookup_remote_backend_reply",
+        ":remote_backend_replies",
     ],
     visibility = ["//visibility:public"],
 )
