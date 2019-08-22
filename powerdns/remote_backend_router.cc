@@ -1,3 +1,4 @@
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -10,11 +11,11 @@ using namespace std::experimental;
 
 namespace DnsTelemeter::PowerDns {
     RemoteBackendRouter::RemoteBackendRouter() {
-        handlers = std::unordered_map<std::string, RemoteBackendHandler>();
+        handlers = std::unordered_map<std::string, std::shared_ptr<RemoteBackendHandler>>();
     }
 
-    void RemoteBackendRouter::on(std::string method, RemoteBackendHandler handler) {
-        handlers[method] = handler;
+    void RemoteBackendRouter::on(std::string method, std::shared_ptr<RemoteBackendHandler> handler) {
+        handlers.emplace(std::make_pair(method, handler));
     }
 
     Json::Value RemoteBackendRouter::route(Json::Value query) {
@@ -34,7 +35,6 @@ namespace DnsTelemeter::PowerDns {
         if(search == handlers.end())
             return failure;
 
-        auto key = search->first;
-        return handlers[key].handle(query);
+        return handlers[search->first]->handle(query);
     }
 }

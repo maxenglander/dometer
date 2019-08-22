@@ -1,17 +1,21 @@
 #pragma once
 
-#include "network/dns/resolver.h"
+#include <vector>
+
+#include "network/dns/native_resolver.h"
 #include "powerdns/lookup_remote_backend_handler.h"
+#include "powerdns/lookup_remote_backend_query.h"
+#include "powerdns/lookup_remote_backend_reply.h"
 
 using namespace DnsTelemeter::Network;
 
 namespace DnsTelemeter::PowerDns {
     class NativeLookupRemoteBackendHandler: public LookupRemoteBackendHandler {
         public:
-            NativeLookupRemoteBackendHandler(Dns::Resolver resolver);
+            NativeLookupRemoteBackendHandler(Dns::NativeResolver resolver);
         protected:
-            std::vector<LookupReply> handle(LookupQuery query);
+            std::vector<LookupRemoteBackendReply> handle(LookupRemoteBackendQuery query) override;
         private:
-            Network::Dns::Resolver resolver;
+            Network::Dns::NativeResolver resolver;
     };
 }

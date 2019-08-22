@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -13,9 +14,9 @@ namespace DnsTelemeter::PowerDns {
     class RemoteBackendRouter {
         public:
             RemoteBackendRouter();
-            void on(std::string method, RemoteBackendHandler handler);
+            void on(std::string method, std::shared_ptr<RemoteBackendHandler> handler);
             Json::Value route(Json::Value query);
         private:
-            std::unordered_map<std::string, RemoteBackendHandler> handlers;
+            std::unordered_map<std::string, std::shared_ptr<RemoteBackendHandler>> handlers;
     };
 }

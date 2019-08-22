@@ -6,7 +6,7 @@
 #include <string>
 
 #include "network/dns/answer.h"
-#include "network/dns/resolver.h"
+#include "network/dns/native_resolver.h"
 #include "network/dns/result.h"
 
 #include "std/experimental/expected.h"
@@ -14,7 +14,7 @@
 using namespace std::experimental;
 
 namespace DnsTelemeter::Network::Dns {
-    expected<Result, int> Resolver::lookupA(std::string name) {
+    expected<Result, int> NativeResolver::lookupA(std::string name) {
         std::vector<Answer> answers;
         int len;
 

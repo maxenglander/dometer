@@ -5,9 +5,9 @@ cc_library(
 )
 
 cc_library(
-    name = "resolver",
-    hdrs = ["resolver.h"],
-    srcs = ["resolver.cc"],
+    name = "native_resolver",
+    hdrs = ["native_resolver.h"],
+    srcs = ["native_resolver.cc"],
     deps = ["//std/experimental:expected", ":result"],
     linkopts = ["-lresolv"],
     visibility = ["//visibility:public"]

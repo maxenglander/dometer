@@ -11,6 +11,7 @@
 #include "json/json.h"
 #include "network/socket/socket_factory.h"
 #include "network/socket/unix_socket.h"
+#include "powerdns/remote_backend_router.h"
 #include "powerdns/unix_socket_remote_backend.h"
 #include "std/experimental/expected.h"
 #include "util/json_serde.h"
@@ -26,12 +27,14 @@ namespace DnsTelemeter::PowerDns {
             JsonSerde jsonSerde,
             unsigned int maxConnections,
             unsigned int maxMessageSize,
-            std::string socketPath) {
-        this->jsonSerde = jsonSerde;
-        this->maxConnections = maxConnections;
-        this->maxMessageSize = maxMessageSize;
-        this->socketPath = socketPath;
-    }
+            RemoteBackendRouter router,
+            std::string socketPath)
+    :   jsonSerde(jsonSerde),
+        maxConnections(maxConnections),
+        maxMessageSize(maxMessageSize),
+        router(router),
+        socketPath(socketPath)
+    {}
 
     expected<void, std::string> UnixSocketRemoteBackend::serve() {
         auto serverSocket
@@ -53,7 +56,7 @@ namespace DnsTelemeter::PowerDns {
 
                 expected<Json::Value, std::string> query = jsonSerde.deserialize(*request);
                 if(query) {
-                    reply = router.route(query);
+                    reply = router.route(*query);
                 }
 
                 (*clientSocket).write(jsonSerde.serialize(reply));

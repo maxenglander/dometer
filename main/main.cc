@@ -2,17 +2,22 @@
 #include <cstdlib>
 #include <cstring>
 #include <errno.h>
+#include <memory>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
 
-#include "network/dns/resolver.h"
+#include "network/dns/native_resolver.h"
 #include "network/socket/unix_socket.h"
+#include "powerdns/native_lookup_remote_backend_handler.h"
+#include "powerdns/remote_backend_router.h"
 #include "powerdns/unix_socket_remote_backend.h"
 #include "std/experimental/expected.h"
+#include "util/json_serde.h"
 
-#define MAX_LINE      4096
-#define SRV_BACKLOG   100
+#define MAX_MESSAGE_SIZE 4096
+#define MAX_CONNECTIONS  100
+#define SOCKET_PATH      "/var/run/dns-telemeter.sock"
 
 using namespace DnsTelemeter;
 using namespace DnsTelemeter::Network::Socket;
@@ -23,7 +28,19 @@ readline(int fd, void *vbuf, size_t n);
 
 int
 main(int argc, char **argv) {
-    PowerDns::UnixSocketRemoteBackend pdnsBackend;
+    Util::JsonSerde jsonSerde;
+    Network::Dns::NativeResolver dnsNativeResolver;
+    std::shared_ptr<PowerDns::NativeLookupRemoteBackendHandler> lookupHandler
+        = std::make_shared<PowerDns::NativeLookupRemoteBackendHandler>(dnsNativeResolver);
+    PowerDns::RemoteBackendRouter router;
+    router.on("lookup", lookupHandler);
+    PowerDns::UnixSocketRemoteBackend pdnsBackend(
+        jsonSerde,
+        MAX_CONNECTIONS,
+        MAX_MESSAGE_SIZE,
+        router,
+        std::string(SOCKET_PATH)
+    );
     pdnsBackend.serve();
 
     /**
@@ -59,10 +76,10 @@ main(int argc, char **argv) {
                 if(jsonin["method"] == "lookup") {
                     std::string qname = jsonin["parameters"]["qname"].asString();
                     std::string qtype = jsonin["parameters"]["qtype"].asString();
-                    Network::Dns::Resolver resolver;
+                    Network::Dns::NativeResolver native_resolver;
 
                     if(qtype == "A") {
-                        expected<Network::Dns::Result, int> result = resolver.lookupA(qname);
+                        expected<Network::Dns::Result, int> result = native_resolver.lookupA(qname);
                         if(result) {
                             std::vector<Network::Dns::Answer> answers = (*result).getAnswers();
                             jsonout["result"] = Json::Value(Json::arrayValue);

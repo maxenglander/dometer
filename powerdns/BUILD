@@ -1,29 +1,30 @@
 cc_library(
-    name = "lookup_query",
-    hdrs = ["lookup_query.h"],
-    srcs = ["lookup_query.cc"],
-)
-
-cc_library(
     name = "lookup_remote_backend_handler",
     hdrs = ["lookup_remote_backend_handler.h"],
     srcs = ["lookup_remote_backend_handler.cc"],
     deps = [
         "@jsoncpp//:jsoncpp",
-        "//network/dns:resolver",
+        "//network/dns:native_resolver",
         "//std/experimental:expected",
-        ":lookup_query",
-        ":lookup_reply",
+        ":lookup_remote_backend_query",
+        ":lookup_remote_backend_reply",
         ":remote_backend_handler",
+        ":remote_backend_replies",
     ],
 )
 
 cc_library(
-    name = "lookup_reply",
-    hdrs = ["lookup_reply.h"],
-    srcs = ["lookup_reply.cc"],
+    name = "lookup_remote_backend_query",
+    hdrs = ["lookup_remote_backend_query.h"],
+    srcs = ["lookup_remote_backend_query.cc"],
+)
+
+cc_library(
+    name = "lookup_remote_backend_reply",
+    hdrs = ["lookup_remote_backend_reply.h"],
+    srcs = ["lookup_remote_backend_reply.cc"],
     deps = [
-        ":lookup_query",
+        ":lookup_remote_backend_query",
     ],
 )
 
@@ -32,20 +33,29 @@ cc_library(
     hdrs = ["native_lookup_remote_backend_handler.h"],
     srcs = ["native_lookup_remote_backend_handler.cc"],
     deps = [
-        ":lookup_query",
-        ":lookup_reply",
         ":lookup_remote_backend_handler",
+        ":lookup_remote_backend_query",
+        ":lookup_remote_backend_reply",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
     name = "remote_backend_handler",
     hdrs = ["remote_backend_handler.h"],
-    srcs = ["remote_backend_handler.cc"],
     deps = [
         "@jsoncpp//:jsoncpp",
         "//std/experimental:expected",
     ],
+)
+
+cc_library(
+    name = "remote_backend_replies",
+    hdrs = ["remote_backend_replies.h"],
+    srcs = ["remote_backend_replies.cc"],
+    deps = [
+        "@jsoncpp//:jsoncpp"
+    ]
 )
 
 cc_library(
@@ -57,6 +67,7 @@ cc_library(
         "//std/experimental:expected",
         ":remote_backend_handler",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
@@ -68,6 +79,7 @@ cc_library(
         "//network/socket:unix_socket",
         "//std/experimental:expected",
         "//util:json_serde",
+        ":remote_backend_router",
     ],
     visibility = ["//visibility:public"],
 )

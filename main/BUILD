@@ -3,9 +3,12 @@ cc_binary(
     srcs = ["main.cc"],
     deps = [
         "@jsoncpp//:jsoncpp",
-        "//network/dns:resolver",
+        "//network/dns:native_resolver",
         "//network/socket:unix_socket",
+        "//powerdns:remote_backend_router",
+        "//powerdns:native_lookup_remote_backend_handler",
         "//powerdns:unix_socket_remote_backend",
         "//std/experimental:expected",
+        "//util:json_serde",
     ],
 )

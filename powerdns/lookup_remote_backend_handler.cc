@@ -2,13 +2,15 @@
 
 #include "json/json.h"
 #include "powerdns/lookup_remote_backend_handler.h"
-#include "powerdns/lookup_reply.h"
-#include "powerdns/lookup_query.h"
+#include "powerdns/lookup_remote_backend_reply.h"
+#include "powerdns/lookup_remote_backend_query.h"
+#include "powerdns/remote_backend_handler.h"
+#include "powerdns/remote_backend_replies.h"
 
 namespace DnsTelemeter::PowerDns {
     Json::Value LookupRemoteBackendHandler::handle(Json::Value query) {
         if(!validate(query))
-            return RemoteBackendHandler::handle(query);
+            return RemoteBackendReplies::failure();
 
         Json::Value reply;
         reply["result"] = Json::arrayValue;
@@ -16,9 +18,9 @@ namespace DnsTelemeter::PowerDns {
         std::string qtype = query["parameters"]["qtype"].asString();
         std::string qname = query["parameters"]["qname"].asString();
 
-        std::vector<LookupReply> lookupReply = this->handle(LookupQuery(qtype, qname));
+        std::vector<LookupRemoteBackendReply> lookupReply = handle(LookupRemoteBackendQuery(qtype, qname));
 
-        for(std::vector<LookupReply>::iterator it = lookupReply.begin(); it < lookupReply.end(); it++) {
+        for(std::vector<LookupRemoteBackendReply>::iterator it = lookupReply.begin(); it < lookupReply.end(); it++) {
             Json::Value entry(query);
             entry["content"] = (*it).content;
             entry["ttl"] = (*it).ttl;

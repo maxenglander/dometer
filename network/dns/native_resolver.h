@@ -8,7 +8,7 @@
 using namespace std::experimental;
 
 namespace DnsTelemeter::Network::Dns {
-    class Resolver {
+    class NativeResolver {
         public:
             expected<Result, int> lookupA(std::string name);
     };

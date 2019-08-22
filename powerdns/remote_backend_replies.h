@@ -3,8 +3,8 @@
 #include "json/json.h"
 
 namespace DnsTelemeter::PowerDns {
-    class RemoteBackendHandler {
+    class RemoteBackendReplies {
         public:
-            virtual Json::Value handle(Json::Value) = 0;
+            static Json::Value failure();
     };
 }

@@ -3,10 +3,10 @@
 #include <string>
 
 namespace DnsTelemeter::PowerDns {
-    class LookupQuery {
+    class LookupRemoteBackendQuery {
         public:
-            LookupQuery(std::string qname, std::string qtype);
-            LookupQuery(const LookupQuery&);
+            LookupRemoteBackendQuery(std::string qname, std::string qtype);
+            LookupRemoteBackendQuery(const LookupRemoteBackendQuery&);
         private:
             const std::string qname;
             const std::string qtype;
