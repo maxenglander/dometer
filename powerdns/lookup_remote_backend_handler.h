@@ -11,7 +11,6 @@ namespace DnsTelemeter::PowerDns {
     class LookupRemoteBackendHandler: public RemoteBackendHandler {
         public:
             virtual Json::Value handle(Json::Value query) override final;
-        protected:
             virtual std::vector<LookupRemoteBackendReply> handle(LookupRemoteBackendQuery query) = 0;
         private:
             bool validate(Json::Value query);

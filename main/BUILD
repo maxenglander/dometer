@@ -2,7 +2,6 @@ cc_binary(
     name = "main",
     srcs = ["main.cc"],
     deps = [
-        "@jsoncpp//:jsoncpp",
         "//network/dns:native_resolver",
         "//network/socket:unix_socket",
         "//powerdns:remote_backend_router",

@@ -7,9 +7,8 @@
 #include "network/socket/recv_until.h"
 #include "network/socket/unix_socket.h"
 #include "std/experimental/expected.h"
-#include "util/error/system_exception.h"
+#include "util/error.h"
 
-using namespace DnsTelemeter::Util::Error;
 using namespace std::experimental;
 
 namespace DnsTelemeter::Network::Socket {

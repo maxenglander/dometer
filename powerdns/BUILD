@@ -1,9 +1,22 @@
 cc_library(
+    name = "instrumented_lookup_remote_backend_handler",
+    hdrs = ["instrumented_lookup_remote_backend_handler.h"],
+    srcs = ["instrumented_lookup_remote_backend_handler.cc"],
+    deps = [
+        ":lookup_remote_backend_handler",
+        ":lookup_remote_backend_query",
+        ":lookup_remote_backend_reply",
+        ":native_lookup_remote_backend_handler",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "lookup_remote_backend_handler",
     hdrs = ["lookup_remote_backend_handler.h"],
     srcs = ["lookup_remote_backend_handler.cc"],
     deps = [
-        "@jsoncpp//:jsoncpp",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//network/dns:native_resolver",
         "//std/experimental:expected",
         ":lookup_remote_backend_query",
@@ -45,7 +58,7 @@ cc_library(
     name = "remote_backend_handler",
     hdrs = ["remote_backend_handler.h"],
     deps = [
-        "@jsoncpp//:jsoncpp",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//std/experimental:expected",
     ],
 )
@@ -55,7 +68,7 @@ cc_library(
     hdrs = ["remote_backend_replies.h"],
     srcs = ["remote_backend_replies.cc"],
     deps = [
-        "@jsoncpp//:jsoncpp"
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp"
     ]
 )
 
@@ -64,7 +77,7 @@ cc_library(
     hdrs = ["remote_backend_router.h"],
     srcs = ["remote_backend_router.cc"],
     deps = [
-        "@jsoncpp//:jsoncpp",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//std/experimental:expected",
         ":remote_backend_handler",
     ],

@@ -11,7 +11,7 @@ cc_library(
     deps = [
         "//network/socket:unix_socket",
         "//std/experimental:expected",
-        "//util/error:system_exception"
+        "//util:error"
     ],
     visibility = ["//visibility:public"],
 )
@@ -22,7 +22,7 @@ cc_library(
     srcs = ["unix_socket.cc"],
     deps = [
         "//std/experimental:expected",
-        "//util/error:system_exception",
+        "//util:error",
         ":recv_until"
     ],
     visibility = ["//visibility:public"],

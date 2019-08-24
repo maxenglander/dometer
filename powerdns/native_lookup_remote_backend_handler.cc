@@ -20,14 +20,16 @@ namespace DnsTelemeter::PowerDns {
             return result;
         }
 
-        auto lookupResult = resolver.lookupA(query.qname);
+        auto dnsResponse = resolver.lookupA(query.qname);
 
-        if(!lookupResult) {
+        if(!dnsResponse) {
             return result;
         }
 
-        for(auto it = (*lookupResult).begin(); it < (*lookupResult).end(); it++) {
-            result.push_back(LookupRemoteBackendReply(query, (*it).content, (*it).ttl));
+        auto answers = dnsResponse->answers; 
+
+        for(auto it = answers.begin(); it < answers.end(); it++) {
+            result.push_back(LookupRemoteBackendReply(query, it->content, it->ttl));
         }
 
         return result;

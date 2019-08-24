@@ -1,6 +1,6 @@
 cc_library(
     name = "expected",
     hdrs = ["expected.h"],
-    deps = ["@expected//:expected"],
+    deps = ["@com_github_TartanLlama_expected//:expected"],
     visibility = ["//visibility:public"],
 )
