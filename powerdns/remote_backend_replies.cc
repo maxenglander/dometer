@@ -7,4 +7,10 @@ namespace DnsTelemeter::PowerDns {
         value["result"] = Json::Value(false);
         return value;
     }
+
+    Json::Value RemoteBackendReplies::success() {
+        Json::Value value;
+        value["result"] = Json::Value(true);
+        return value;
+    }
 }

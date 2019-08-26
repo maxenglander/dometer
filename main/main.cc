@@ -3,6 +3,7 @@
 #include "network/dns/native_resolver.h"
 #include "network/socket/unix_socket.h"
 #include "powerdns/native_lookup_remote_backend_handler.h"
+#include "powerdns/noop_initialize_remote_backend_handler.h"
 #include "powerdns/remote_backend_router.h"
 #include "powerdns/unix_socket_remote_backend.h"
 #include "std/experimental/expected.h"
@@ -19,10 +20,16 @@ using namespace std::experimental;
 int main(int argc, char **argv) {
     Util::JsonSerde jsonSerde;
     Network::Dns::NativeResolver dnsNativeResolver;
+
+    std::shared_ptr<PowerDns::NoopInitializeRemoteBackendHandler> initializeHandler
+        = std::make_shared<PowerDns::NoopInitializeRemoteBackendHandler>();
     std::shared_ptr<PowerDns::NativeLookupRemoteBackendHandler> lookupHandler
         = std::make_shared<PowerDns::NativeLookupRemoteBackendHandler>(dnsNativeResolver);
+
     PowerDns::RemoteBackendRouter router;
+    router.on("initialize", initializeHandler);
     router.on("lookup", lookupHandler);
+
     PowerDns::UnixSocketRemoteBackend pdnsBackend(
         jsonSerde,
         MAX_CONNECTIONS,
@@ -30,6 +37,8 @@ int main(int argc, char **argv) {
         router,
         std::string(SOCKET_PATH)
     );
+
     pdnsBackend.serve();
+
     return 0;
 }

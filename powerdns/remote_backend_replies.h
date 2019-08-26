@@ -6,5 +6,6 @@ namespace DnsTelemeter::PowerDns {
     class RemoteBackendReplies {
         public:
             static Json::Value failure();
+            static Json::Value success();
     };
 }

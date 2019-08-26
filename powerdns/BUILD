@@ -72,6 +72,17 @@ cc_library(
 )
 
 cc_library(
+    name = "noop_initialize_remote_backend_handler",
+    hdrs = ["noop_initialize_remote_backend_handler.h"],
+    srcs = ["noop_initialize_remote_backend_handler.cc"],
+    deps = [
+        ":initialize_remote_backend_handler",
+        ":initialize_remote_backend_query",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "remote_backend_handler",
     hdrs = ["remote_backend_handler.h"],
     deps = [
