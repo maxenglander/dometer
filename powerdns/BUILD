@@ -1,4 +1,21 @@
 cc_library(
+    name = "initialize_remote_backend_handler",
+    hdrs = ["initialize_remote_backend_handler.h"],
+    srcs = ["initialize_remote_backend_handler.cc"],
+    deps = [
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
+        ":initialize_remote_backend_query",
+        ":remote_backend_handler",
+        ":remote_backend_replies",
+    ],
+)
+
+cc_library(
+    name = "initialize_remote_backend_query",
+    hdrs = ["initialize_remote_backend_query.h"],
+)
+
+cc_library(
     name = "instrumented_lookup_remote_backend_handler",
     hdrs = ["instrumented_lookup_remote_backend_handler.h"],
     srcs = ["instrumented_lookup_remote_backend_handler.cc"],
