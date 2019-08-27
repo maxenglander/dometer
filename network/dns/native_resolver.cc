@@ -1,7 +1,10 @@
+#include <algorithm>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <cstdio>
 #include <cstring>
+#include <cctype>
+#include <iostream>
 #include <netdb.h>
 #include <resolv.h>
 #include <string>
@@ -15,7 +18,21 @@
 using namespace std::experimental;
 
 namespace DnsTelemeter::Network::Dns {
-    expected<Response, Error> NativeResolver::lookupA(std::string name) {
+    expected<Response, Error> NativeResolver::lookup(std::string name, std::string type) {
+        std::cerr << "Got a request of type " + type + " for name " + name + "\n";
+
+        if     (type == "A")
+            return lookup(name, ns_t_a, &parseARecord);
+        else if(type == "ANY")
+            return lookup(name, ns_t_any, &parseANYRecord);
+        else if(type == "SOA")
+            return lookup(name, ns_t_soa, &parseSOARecord);
+
+        return unexpected<Error>(Error{"Lookup of type not supported: " + type, 0});
+    }
+
+    expected<Response, Error> NativeResolver::lookup(std::string name, ns_type type,
+            expected<Answer, Error> (*parser)(ns_msg* handle, ns_rr* rr)) {
         int len;
         unsigned char nsbuf[NS_PACKETSZ];
 
@@ -23,7 +40,7 @@ namespace DnsTelemeter::Network::Dns {
         /* Perform a DNS lookup using any search domains */
         /* defined in /etc/resolv.conf. See resolv(2).   */
         /*************************************************/
-        len = res_search(name.c_str(), C_IN, T_A, nsbuf, sizeof(nsbuf));
+        len = res_search(name.c_str(), C_IN, type, nsbuf, sizeof(nsbuf));
         if(len < 0) {
             return unexpected<Error>(Error{
                 std::string(hstrerror(h_errno)),
@@ -65,27 +82,102 @@ namespace DnsTelemeter::Network::Dns {
                 });
             }
 
-            if(ns_rr_type(rr) != ns_t_a) {
+            if(ns_rr_type(rr) != type) {
                 continue;
             }
 
             /*************************************************/
-            /* Extract the IP address and TTL.               */
-            /*************************************************/
-            char ip[INET_ADDRSTRLEN];
-            u_int32_t ttl;
-            inet_ntop(AF_INET, ns_rr_rdata(rr), ip, INET_ADDRSTRLEN);
-            ttl = ns_rr_ttl(rr);
-
-            /*************************************************/
             /* Append the IP and TTL to the answers vector.  */
             /*************************************************/
-            answers.push_back(Answer{"A", name, ip, ttl});
+            expected<Answer, Error> answer = (*parser)(&handle, &rr);
+            if(!answer) return unexpected<Error>(answer.error());
+            answers.push_back(*answer);
         }
 
         return Response{
             Header{rcode},
             answers
         };
+    }
+
+    expected<Answer, Error> NativeResolver::parseANYRecord(ns_msg* handle, ns_rr* rr) {
+        if(ns_rr_type
+    }
+
+    expected<Answer, Error> NativeResolver::parseARecord(ns_msg* handle, ns_rr* rr) {
+        /*************************************************/
+        /* Extract the IP address and TTL.               */
+        /*************************************************/
+        char ip[INET_ADDRSTRLEN];
+        u_int32_t ttl;
+        inet_ntop(AF_INET, ns_rr_rdata(*rr), ip, INET_ADDRSTRLEN);
+        ttl = ns_rr_ttl(*rr);
+
+        return Answer{std::string(ns_rr_name(*rr)), "A", ip, ttl};
+    }
+
+    expected<Answer, Error> NativeResolver::parseSOARecord(ns_msg* handle, ns_rr* rr) {
+        int rdlen;
+        if((rdlen = ns_rr_rdlen(*rr)) < 20) {
+            return unexpected<Error>(Error{
+                std::string("SOA record too short: " + std::to_string(rdlen)),
+                0
+            });
+        }
+
+        /*************************************************/
+        /* Extract SOA record parts.                     */
+        /*************************************************/
+        int n;
+        char mname[NS_MAXDNAME];
+        char rname[NS_MAXDNAME];
+        uint32_t serial;
+        uint32_t refresh;
+        uint32_t retry;
+        uint32_t expire;
+        uint32_t minimum;
+
+        const unsigned char * cp = ns_rr_rdata(*rr);
+
+        n = ns_name_uncompress(ns_msg_base(*handle), ns_msg_end(*handle), cp, mname, sizeof(mname));
+        if(n < 0) {
+            return unexpected<Error>(Error{
+                std::string("Failed to extract MNAME from SOA record"),
+                0
+            });
+        }
+        cp += n;
+
+        n = ns_name_uncompress(ns_msg_base(*handle), ns_msg_end(*handle), cp, rname, sizeof(rname));
+        if(n < 0) {
+            return unexpected<Error>(Error{
+                std::string("Failed to extract RNAME from SOA record"),
+                0
+            });
+        }
+        cp += n;
+
+        serial = ns_get32(cp);
+        cp += sizeof(serial);
+
+        refresh = ns_get32(cp);
+        cp += sizeof(refresh);
+
+        retry = ns_get32(cp);
+        cp += sizeof(retry);
+
+        expire = ns_get32(cp);
+        cp += sizeof(expire);
+
+        minimum = ns_get32(cp);
+
+        /*************************************************/
+        /* Append the SOA record to the  answers vector. */
+        /*************************************************/
+        return Answer({std::string(ns_rr_name(*rr)), "SOA",
+                    /*std::string(mname)*/std::string("bizbaz")      + " " + std::string(rname)
+            + " " + std::to_string(serial)  + " " + std::to_string(refresh)
+            + " " + std::to_string(retry)   + " " + std::to_string(expire)
+            + " " + std::to_string(minimum), minimum});
     }
 }

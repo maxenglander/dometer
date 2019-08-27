@@ -54,6 +54,7 @@ namespace DnsTelemeter::PowerDns {
                 Json::Value reply;
                 reply["result"] = Json::Value(false);
 
+                std::cerr << "Deserializing request: " + *request + "\n";
                 expected<Json::Value, std::string> query = jsonSerde.deserialize(*request);
                 if(query) {
                     reply = router.route(*query);

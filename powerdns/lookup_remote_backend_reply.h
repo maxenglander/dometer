@@ -7,7 +7,7 @@
 namespace DnsTelemeter::PowerDns {
     class LookupRemoteBackendReply: public LookupRemoteBackendQuery {
         public:
-            LookupRemoteBackendReply(LookupRemoteBackendQuery, std::string content, unsigned int ttl);
+            LookupRemoteBackendReply(std::string name, std::string type, std::string content, unsigned int ttl);
             const std::string content;
             const int ttl;
     };

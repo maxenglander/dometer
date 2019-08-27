@@ -4,6 +4,6 @@
 #include "powerdns/lookup_remote_backend_reply.h"
 
 namespace DnsTelemeter::PowerDns {
-    LookupRemoteBackendReply::LookupRemoteBackendReply(LookupRemoteBackendQuery query, std::string content, unsigned int ttl)
-        : LookupRemoteBackendQuery::LookupRemoteBackendQuery(query), content(content), ttl(ttl) {}
+    LookupRemoteBackendReply::LookupRemoteBackendReply(std::string name, std::string type, std::string content, unsigned int ttl)
+        : LookupRemoteBackendQuery::LookupRemoteBackendQuery(name, type), content(content), ttl(ttl) {}
 }

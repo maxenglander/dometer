@@ -16,20 +16,19 @@ namespace DnsTelemeter::PowerDns {
     std::vector<LookupRemoteBackendReply> NativeLookupRemoteBackendHandler::handle(LookupRemoteBackendQuery query) {
         std::vector<LookupRemoteBackendReply> result;
 
-        if(query.qtype != "A") {
-            return result;
-        }
-
-        auto dnsResponse = resolver.lookupA(query.qname);
+        auto dnsResponse = resolver.lookup(query.qname, query.qtype);
 
         if(!dnsResponse) {
+            std::cerr << dnsResponse.error().message + "\n";
             return result;
+        } else {
+            std::cerr << "Got some answers, rcode = " + std::to_string(dnsResponse->header.rcode) + "\n";
         }
 
         auto answers = dnsResponse->answers; 
 
         for(auto it = answers.begin(); it < answers.end(); it++) {
-            result.push_back(LookupRemoteBackendReply(query, it->content, it->ttl));
+            result.push_back(LookupRemoteBackendReply(it->name, it->type, it->content, it->ttl));
         }
 
         return result;
