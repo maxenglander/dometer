@@ -23,8 +23,6 @@ namespace Dometer::Network::Dns {
 
         if     (type == "A")
             return lookup(name, ns_t_a, &parseARecord);
-        else if(type == "ANY")
-            return lookup(name, ns_t_any, &parseANYRecord);
         else if(type == "SOA")
             return lookup(name, ns_t_soa, &parseSOARecord);
 
@@ -98,10 +96,6 @@ namespace Dometer::Network::Dns {
             Header{rcode},
             answers
         };
-    }
-
-    expected<Answer, Error> NativeResolver::parseANYRecord(ns_msg* handle, ns_rr* rr) {
-        if(ns_rr_type
     }
 
     expected<Answer, Error> NativeResolver::parseARecord(ns_msg* handle, ns_rr* rr) {

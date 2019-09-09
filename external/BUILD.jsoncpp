@@ -1,9 +1,6 @@
-package(
-    default_visibility = ["//visibility:public"],
-)
-
 cc_library(
     name = "jsoncpp",
+    deps = [":jsoncpp_json_valueiterator"],
     srcs = glob([
         "src/lib_json/*.cpp",
         "src/lib_json/*.h",
@@ -13,12 +10,9 @@ cc_library(
     ]),
     copts = [
         "-DJSON_USE_EXCEPTION=0",
-        "-Iexternal/jsoncpp/include",
-        "-Iexternal/jsoncpp/include/jsoncpp",
     ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
-    deps = [":jsoncpp_json_valueiterator"],
 )
 
 cc_library(
