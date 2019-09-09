@@ -6,7 +6,7 @@
 
 using namespace std::experimental;
 
-namespace DnsTelemeter::Network::Socket {
+namespace Dometer::Network::Socket {
     class SocketFactory {
         public:
             static expected<UnixSocket, std::string> makeUnixSocket();

@@ -5,7 +5,7 @@
 
 using namespace std::experimental;
 
-namespace DnsTelemeter::Util {
+namespace Dometer::Util {
     class JsonSerde {
         public:
             JsonSerde();

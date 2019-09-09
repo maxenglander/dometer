@@ -4,7 +4,7 @@
 
 #include "network/dns/answer.h"
 
-namespace DnsTelemeter::Network::Dns {
+namespace Dometer::Network::Dns {
     class Result {
         public:
             static Result failure();

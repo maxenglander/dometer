@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace DnsTelemeter::Network::Dns {
+namespace Dometer::Network::Dns {
     struct Answer {
         const std::string name;
         const std::string type;

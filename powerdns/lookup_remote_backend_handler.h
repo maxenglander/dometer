@@ -7,7 +7,7 @@
 #include "powerdns/lookup_remote_backend_reply.h"
 #include "powerdns/remote_backend_handler.h"
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     class LookupRemoteBackendHandler: public RemoteBackendHandler {
         public:
             virtual Json::Value handle(Json::Value query) override final;

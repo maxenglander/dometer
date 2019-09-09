@@ -1,4 +1,16 @@
+workspace(name = "com_github_maxenglander_dometer")
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+   name = "rules_foreign_cc",
+   strip_prefix = "rules_foreign_cc-c3d5405cbc570257e7c9f75f902fab42241e6a53",
+   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/c3d5405cbc570257e7c9f75f902fab42241e6a53.zip",
+   sha256 = "b30d354592980848dd1ecc120de3de34a7c574985e85b3ae2bcecd174fd007b8"
+)
+
+load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependencies")
+rules_foreign_cc_dependencies()
 
 http_archive(
     name = "com_github_TartanLlama_expected",
@@ -14,6 +26,14 @@ http_archive(
     sha256 = "c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6",
     build_file = "@//external:BUILD.jsoncpp",
     strip_prefix = "jsoncpp-1.8.4",
+)
+
+http_archive(
+    name = "nl_NLnetLabs_ldns",
+    urls = ["https://nlnetlabs.nl/downloads/ldns/ldns-1.7.1.tar.gz"],
+    sha256 = "8ac84c16bdca60e710eea75782356f3ac3b55680d40e1530d7cea474ac208229",
+    build_file = "@//external:BUILD.ldns",
+    strip_prefix = "ldns-1.7.1",
 )
 
 http_archive(

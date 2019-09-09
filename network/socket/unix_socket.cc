@@ -11,7 +11,7 @@
 
 using namespace std::experimental;
 
-namespace DnsTelemeter::Network::Socket {
+namespace Dometer::Network::Socket {
     UnixSocket::UnixSocket(int fd) : fd(fd) {}
     UnixSocket::UnixSocket(unsigned int fd) : UnixSocket((int)fd) {}
     UnixSocket::UnixSocket(const UnixSocket &s) : UnixSocket(s.fd) {}

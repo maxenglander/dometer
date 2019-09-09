@@ -10,10 +10,7 @@ RUN apt-get update \
  && apt-get install -yq --no-install-recommends --no-install-suggests apt-utils
 
 RUN apt-get install -yq --no-install-recommends --no-install-suggests \
-    pkg-config zip g++ zlib1g-dev unzip python3
-
-RUN apt-get install -yq --no-install-recommends --no-install-suggests \
-    pdns-server pdns-backend-remote
+    pkg-config zip g++ libtool zlib1g-dev unzip python3
 
 RUN apt-get install -yq --no-install-recommends --no-install-suggests \
     ca-certificates ctags curl git socat procps

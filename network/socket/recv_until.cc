@@ -6,7 +6,7 @@
 
 #include "network/socket/recv_until.h"
 
-namespace DnsTelemeter::Network::Socket {
+namespace Dometer::Network::Socket {
     ssize_t recvUntil(unsigned int fd, void *vbuf, char delimiter, size_t n) {
         ssize_t num_read;
         size_t tot_read;

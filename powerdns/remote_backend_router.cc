@@ -10,7 +10,7 @@
 
 using namespace std::experimental;
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     RemoteBackendRouter::RemoteBackendRouter() {
         handlers = std::unordered_map<std::string, std::shared_ptr<RemoteBackendHandler>>();
     }

@@ -18,10 +18,10 @@ cc_library(
     ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
-    deps = [":private"],
+    deps = [":jsoncpp_json_valueiterator"],
 )
 
 cc_library(
-    name = "private",
+    name = "jsoncpp_json_valueiterator",
     textual_hdrs = ["src/lib_json/json_valueiterator.inl"],
 )

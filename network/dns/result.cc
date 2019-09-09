@@ -1,7 +1,7 @@
 #include "network/dns/answer.h"
 #include "network/dns/result.h"
 
-namespace DnsTelemeter::Network::Dns {
+namespace Dometer::Network::Dns {
     Result::Result(std::vector<Answer> answers, bool succeeded) {
         this->answers = answers;
         this->_succeeded = succeeded;

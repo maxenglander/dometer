@@ -8,7 +8,7 @@
 
 using namespace std::experimental;
 
-namespace DnsTelemeter::Util {
+namespace Dometer::Util {
     JsonSerde::JsonSerde() {
         Json::CharReaderBuilder readerBuilder;
         reader = readerBuilder.newCharReader();

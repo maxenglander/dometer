@@ -7,9 +7,9 @@
 #include "powerdns/lookup_remote_backend_query.h"
 #include "powerdns/lookup_remote_backend_reply.h"
 
-using namespace DnsTelemeter::Network;
+using namespace Dometer::Network;
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     class NativeLookupRemoteBackendHandler: public LookupRemoteBackendHandler {
         public:
             NativeLookupRemoteBackendHandler(Dns::NativeResolver resolver);

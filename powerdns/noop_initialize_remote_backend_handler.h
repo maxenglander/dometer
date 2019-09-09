@@ -3,7 +3,7 @@
 #include "powerdns/initialize_remote_backend_handler.h"
 #include "powerdns/initialize_remote_backend_query.h"
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     class NoopInitializeRemoteBackendHandler: public InitializeRemoteBackendHandler {
         public:
             NoopInitializeRemoteBackendHandler();

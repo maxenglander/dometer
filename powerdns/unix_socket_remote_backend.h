@@ -7,10 +7,10 @@
 #include "std/experimental/expected.h"
 #include "util/json_serde.h"
 
-using namespace DnsTelemeter::Util;
+using namespace Dometer::Util;
 using namespace std::experimental;
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     class UnixSocketRemoteBackend {
         public:
             UnixSocketRemoteBackend(

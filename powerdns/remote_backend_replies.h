@@ -2,7 +2,7 @@
 
 #include "json/json.h"
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     class RemoteBackendReplies {
         public:
             static Json::Value failure();

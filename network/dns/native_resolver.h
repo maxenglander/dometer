@@ -8,10 +8,10 @@
 #include "std/experimental/expected.h"
 #include "util/error.h"
 
-using namespace DnsTelemeter::Util;
+using namespace Dometer::Util;
 using namespace std::experimental;
 
-namespace DnsTelemeter::Network::Dns {
+namespace Dometer::Network::Dns {
     class NativeResolver {
         public:
             expected<Response, Error> lookup(std::string name, std::string type);

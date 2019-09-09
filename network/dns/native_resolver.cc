@@ -17,7 +17,7 @@
 
 using namespace std::experimental;
 
-namespace DnsTelemeter::Network::Dns {
+namespace Dometer::Network::Dns {
     expected<Response, Error> NativeResolver::lookup(std::string name, std::string type) {
         std::cerr << "Got a request of type " + type + " for name " + name + "\n";
 

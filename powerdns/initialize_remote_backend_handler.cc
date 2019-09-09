@@ -6,7 +6,7 @@
 #include "powerdns/remote_backend_handler.h"
 #include "powerdns/remote_backend_replies.h"
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     Json::Value InitializeRemoteBackendHandler::handle(Json::Value query) {
         if(!validate(query)) {
             return RemoteBackendReplies::failure();

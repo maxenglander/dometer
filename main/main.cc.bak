@@ -17,7 +17,7 @@
 
 using namespace std::experimental;
 
-using namespace DnsTelemeter;
+using namespace Dometer;
 
 ssize_t
 readline(int fd, void *vbuf, size_t n);

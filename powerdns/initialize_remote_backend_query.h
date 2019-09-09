@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     struct InitializeRemoteBackendQuery {
         const std::string command;
         const int timeout;

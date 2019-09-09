@@ -5,7 +5,7 @@
 #include "powerdns/lookup_remote_backend_reply.h"
 #include "powerdns/instrumented_lookup_remote_backend_handler.h"
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     InstrumentedLookupRemoteBackendHandler::InstrumentedLookupRemoteBackendHandler(std::shared_ptr<LookupRemoteBackendHandler> realHandler)
     : realHandler(realHandler) {}
 

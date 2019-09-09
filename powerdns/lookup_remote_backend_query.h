@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     class LookupRemoteBackendQuery {
         public:
             LookupRemoteBackendQuery(std::string qname, std::string qtype);

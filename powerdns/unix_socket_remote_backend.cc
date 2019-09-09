@@ -18,11 +18,11 @@
 
 #define MAX_LINE 4096
 
-using namespace DnsTelemeter::Network::Socket;
-using namespace DnsTelemeter::Util;
+using namespace Dometer::Network::Socket;
+using namespace Dometer::Util;
 using namespace std::experimental;
 
-namespace DnsTelemeter::PowerDns {
+namespace Dometer::PowerDns {
     UnixSocketRemoteBackend::UnixSocketRemoteBackend(
             JsonSerde jsonSerde,
             unsigned int maxConnections,
@@ -38,7 +38,7 @@ namespace DnsTelemeter::PowerDns {
 
     expected<void, std::string> UnixSocketRemoteBackend::serve() {
         auto serverSocket
-            = DnsTelemeter::Network::Socket::SocketFactory::makeUnixSocket();
+            = Dometer::Network::Socket::SocketFactory::makeUnixSocket();
 
         if(!serverSocket)
             return unexpected<std::string>(std::string("Failed to create server socket"));

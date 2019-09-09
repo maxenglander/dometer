@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace DnsTelemeter::Util {
+namespace Dometer::Util {
     struct Error {
         const std::string message;
         const int number;
