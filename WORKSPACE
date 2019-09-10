@@ -29,14 +29,6 @@ http_archive(
 )
 
 http_archive(
-    name = "com_github_open-source-parsers_jsoncpp",
-    urls = ["https://github.com/open-source-parsers/jsoncpp/archive/1.8.4.tar.gz"],
-    sha256 = "c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6",
-    build_file = "@//external:BUILD.jsoncpp",
-    strip_prefix = "jsoncpp-1.8.4",
-)
-
-http_archive(
     name = "nl_NLnetLabs_ldns",
     urls = ["https://nlnetlabs.nl/downloads/ldns/ldns-1.7.1.tar.gz"],
     sha256 = "8ac84c16bdca60e710eea75782356f3ac3b55680d40e1530d7cea474ac208229",
