@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "asio.hpp"
 #include "ldns/ldns.h"
 
@@ -33,6 +35,7 @@ int main(int argc, char **argv) {
         /*********************************/
         if(ldns_wire2pkt(&query_pkt, query_buf, query_len) != LDNS_STATUS_OK) {
             // TODO
+            std::cout << "Failed to create packet model from wire" << std::endl;
         }
 
         /*********************************/
@@ -71,6 +74,7 @@ int main(int argc, char **argv) {
         /*********************************/
         if(ldns_pkt2wire(&answer_buf, answer_pkt, &answer_len) != LDNS_STATUS_OK) {
             // TODO
+            std::cout << "Failed to serialize packet model to wire format" << std::endl;
         }
 
         /*********************************/
@@ -79,15 +83,16 @@ int main(int argc, char **argv) {
         socket.send_to(asio::buffer(answer_buf, answer_len), sender_endpoint);
 
         /*********************************/
-        /* Free memory.                  */
+        /* Free memory. Order matters.   */
         /*********************************/
-        ldns_rr_list_free(answer_ad);
-        ldns_rr_list_free(answer_an);
-        ldns_rr_list_free(answer_ns);
+        ldns_pkt_free(query_pkt);
+
+        LDNS_FREE(answer_buf);
         ldns_pkt_free(answer_pkt);
         ldns_rr_list_free(answer_qr);
-        ldns_rr_list_free(query_qr);
-        ldns_pkt_free(query_pkt);
+        ldns_rr_list_free(answer_an);
+        ldns_rr_list_free(answer_ns);
+        ldns_rr_list_free(answer_ad);
     }
 
     return 0;
