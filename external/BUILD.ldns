@@ -10,7 +10,7 @@ filegroup(
 )
 
 configure_make(
-    name = "ldns_configure_make",
+    name = "ldns",
     configure_in_place = True,
     configure_options = [
         "--disable-dane",
@@ -21,6 +21,5 @@ configure_make(
     ],
     lib_source = ":ldns_all",
     out_lib_dir = "lib",
-    shared_libraries = ["libldns.so"],
-    visibility = ["//visibility:public"],
+    shared_libraries = ["libldns.so.3",],
 )

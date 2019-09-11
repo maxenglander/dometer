@@ -29,7 +29,7 @@ http_archive(
 )
 
 http_archive(
-    name = "nl_NLnetLabs_ldns",
+    name = "nl_nlnetlabs_ldns",
     urls = ["https://nlnetlabs.nl/downloads/ldns/ldns-1.7.1.tar.gz"],
     sha256 = "8ac84c16bdca60e710eea75782356f3ac3b55680d40e1530d7cea474ac208229",
     build_file = "@//external:BUILD.ldns",
