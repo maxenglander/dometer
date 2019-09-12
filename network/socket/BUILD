@@ -1,12 +1,12 @@
 cc_library(
     name = "recv_until",
-    hdrs = ["recv_until.h"],
+    hdrs = ["recv_until.hpp"],
     srcs = ["recv_until.cc"],
 )
 
 cc_library(
     name = "socket_factory",
-    hdrs = ["socket_factory.h"],
+    hdrs = ["socket_factory.hpp"],
     srcs = ["socket_factory.cc"],
     deps = [
         "//network/socket:unix_socket",
@@ -18,7 +18,7 @@ cc_library(
 
 cc_library(
     name = "unix_socket",
-    hdrs = ["unix_socket.h"],
+    hdrs = ["unix_socket.hpp"],
     srcs = ["unix_socket.cc"],
     deps = [
         "//std/experimental:expected",

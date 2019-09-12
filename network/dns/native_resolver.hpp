@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "network/dns/response.h"
-#include "std/experimental/expected.h"
-#include "util/error.h"
+#include "network/dns/response.hpp"
+#include "std/experimental/expected.hpp"
+#include "util/error.hpp"
 
 using namespace Dometer::Util;
 using namespace std::experimental;

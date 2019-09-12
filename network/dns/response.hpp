@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "network/dns/answer.h"
-#include "network/dns/header.h"
+#include "network/dns/answer.hpp"
+#include "network/dns/header.hpp"
 
 namespace Dometer::Network::Dns {
     struct Response {

@@ -1,8 +1,8 @@
 #include <sys/socket.h>
 
-#include "network/socket/socket_factory.h"
-#include "network/socket/unix_socket.h"
-#include "std/experimental/expected.h"
+#include "network/socket/socket_factory.hpp"
+#include "network/socket/unix_socket.hpp"
+#include "std/experimental/expected.hpp"
 
 using namespace std::experimental;
 

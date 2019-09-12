@@ -10,7 +10,7 @@
 
 #include "network/dns/resolver.h"
 
-#include "std/experimental/expected.h"
+#include "std/experimental/expected.hpp"
 
 #define MAX_LINE      4096
 #define SRV_BACKLOG   100

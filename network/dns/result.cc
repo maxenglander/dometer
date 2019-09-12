@@ -1,5 +1,5 @@
-#include "network/dns/answer.h"
-#include "network/dns/result.h"
+#include "network/dns/answer.hpp"
+#include "network/dns/result.hpp"
 
 namespace Dometer::Network::Dns {
     Result::Result(std::vector<Answer> answers, bool succeeded) {

@@ -1,16 +1,16 @@
 cc_library(
     name = "answer",
-    hdrs = ["answer.h"],
+    hdrs = ["answer.hpp"],
 )
 
 cc_library(
     name = "header",
-    hdrs = ["header.h"],
+    hdrs = ["header.hpp"],
 )
 
 cc_library(
     name = "native_resolver",
-    hdrs = ["native_resolver.h"],
+    hdrs = ["native_resolver.hpp"],
     srcs = ["native_resolver.cc"],
     deps = [
         "//std/experimental:expected",
@@ -25,7 +25,7 @@ cc_library(
 
 cc_library(
     name = "response",
-    hdrs = ["response.h"],
+    hdrs = ["response.hpp"],
     deps = [
         ":answer",
         ":header",

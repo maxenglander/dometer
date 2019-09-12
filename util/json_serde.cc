@@ -3,8 +3,8 @@
 #include <string>
 
 #include "json/json.h"
-#include "std/experimental/expected.h"
-#include "util/json_serde.h"
+#include "std/experimental/expected.hpp"
+#include "util/json_serde.hpp"
 
 using namespace std::experimental;
 

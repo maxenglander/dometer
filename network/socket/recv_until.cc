@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "network/socket/recv_until.h"
+#include "network/socket/recv_until.hpp"
 
 namespace Dometer::Network::Socket {
     ssize_t recvUntil(unsigned int fd, void *vbuf, char delimiter, size_t n) {

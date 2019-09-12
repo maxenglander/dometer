@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "network/dns/answer.h"
+#include "network/dns/answer.hpp"
 
 namespace Dometer::Network::Dns {
     class Result {

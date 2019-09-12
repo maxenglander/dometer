@@ -9,11 +9,11 @@
 #include <resolv.h>
 #include <string>
 
-#include "network/dns/answer.h"
-#include "network/dns/header.h"
-#include "network/dns/native_resolver.h"
-#include "std/experimental/expected.h"
-#include "util/error.h"
+#include "network/dns/answer.hpp"
+#include "network/dns/header.hpp"
+#include "network/dns/native_resolver.hpp"
+#include "std/experimental/expected.hpp"
+#include "util/error.hpp"
 
 using namespace std::experimental;
 
