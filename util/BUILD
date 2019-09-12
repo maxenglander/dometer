@@ -3,14 +3,3 @@ cc_library(
     hdrs = ["error.hpp"],
     visibility = ["//visibility:public"],
 )
-
-cc_library(
-    name = "json_serde",
-    hdrs = ["json_serde.hpp"],
-    srcs = ["json_serde.cpp"],
-    deps = [
-        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
-        "//std/experimental:expected",
-    ],
-    visibility = ["//visibility:public"],
-)

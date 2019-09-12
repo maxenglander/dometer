@@ -5,4 +5,7 @@ cc_binary(
         "@net_sourceforge_asio_asio//:asio",
         "@nl_nlnetlabs_ldns//:ldns",
     ],
+    linkopts = [
+        "-lresolv"
+    ],
 )

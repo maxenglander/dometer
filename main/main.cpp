@@ -1,9 +1,10 @@
+#include <arpa/inet.h>
+#include <arpa/nameser.h>
 #include <iostream>
+#include <netdb.h>
+#include <resolv.h>
 
 #include "asio.hpp"
-#include "ldns/ldns.h"
-
-#define MAX_MESSAGE_SIZE 1024
 
 using namespace asio::ip;
 
@@ -12,87 +13,58 @@ int main(int argc, char **argv) {
     udp::socket socket(io_context, udp::endpoint(udp::v4(), 53));
 
     for(;;) {
-        unsigned char* answer_buf;
-        ldns_rr_list *answer_ad;
-        ldns_rr_list *answer_an;
-        size_t answer_len;
-        ldns_rr_list *answer_ns;
-        ldns_pkt *answer_pkt;
-        ldns_rr_list *answer_qr;
+        unsigned char in_buf[PACKETSZ];
+        ns_class in_class;
+        ns_msg in_h;
+        u_int16_t in_id;
+        ns_rr in_qr;
+        const char *in_name;
+        size_t in_len;
+        ns_type in_type;
 
-        unsigned char query_buf[MAX_MESSAGE_SIZE];
-        size_t query_len;
-        ldns_pkt *query_pkt;
-        ldns_rr_list *query_qr;
+        unsigned char out_buf[PACKETSZ];
+        ns_msg out_h;
+        size_t out_len;
 
         udp::endpoint sender_endpoint;
-        query_len = socket.receive_from(
-            asio::buffer(query_buf, MAX_MESSAGE_SIZE), sender_endpoint);
+        in_len = socket.receive_from(
+            asio::buffer(in_buf, sizeof(in_buf)), sender_endpoint);
 
-        /*********************************/
-        /* Convert received message to   */
-        /* DNS query packet structure.   */
-        /*********************************/
-        if(ldns_wire2pkt(&query_pkt, query_buf, query_len) != LDNS_STATUS_OK) {
+        if(ns_initparse(in_buf, in_len, &in_h) < 0) {
             // TODO
-            std::cout << "Failed to create packet model from wire" << std::endl;
         }
 
-        /*********************************/
-        /* Initialize answer packet.     */
-        /*********************************/
-        answer_pkt = ldns_pkt_new();
-        ldns_pkt_set_qr(answer_pkt, 1);
-        ldns_pkt_set_id(answer_pkt, ldns_pkt_id(query_pkt));
+        in_id = ns_msg_id(in_h);
 
-        /*********************************/
-        /* Loop over question records.   */
-        /*********************************/
-        answer_qr = ldns_rr_list_new();
-        query_qr = ldns_pkt_question(query_pkt);
-
-        for(size_t i = 0; i < ldns_rr_list_rr_count(query_qr); i++) {
-            ldns_rr *query_rr = ldns_rr_list_rr(query_qr, i);
-            ldns_rr_list_push_rr(answer_qr, ldns_rr_clone(query_rr));
-        }
-
-        answer_ad = ldns_rr_list_new();
-        answer_an = ldns_rr_list_new();
-        answer_ns = ldns_rr_list_new();
-
-        /*********************************/
-        /* Attach sections to answer.    */
-        /*********************************/
-        ldns_pkt_push_rr_list(answer_pkt, LDNS_SECTION_ADDITIONAL, answer_ad);
-        ldns_pkt_push_rr_list(answer_pkt, LDNS_SECTION_ANSWER, answer_an);
-        ldns_pkt_push_rr_list(answer_pkt, LDNS_SECTION_AUTHORITY, answer_ns);
-        ldns_pkt_push_rr_list(answer_pkt, LDNS_SECTION_QUESTION, answer_qr);
-
-        /*********************************/
-        /* Serialize answer packet       */
-        /* structure.                    */
-        /*********************************/
-        if(ldns_pkt2wire(&answer_buf, answer_pkt, &answer_len) != LDNS_STATUS_OK) {
+        if(ns_msg_count(in_h, ns_s_qd) != 1) {
             // TODO
-            std::cout << "Failed to serialize packet model to wire format" << std::endl;
         }
+
+        if(ns_parserr(&in_h, ns_s_qd, 0, &in_qr) != 0) {
+            // TODO
+        }
+
+        in_name = ns_rr_name(in_qr);
+        in_class = ns_rr_class(in_qr);
+        in_type = ns_rr_type(in_qr);
+
+        fprintf(stdout, "msg id: %d; dname: %s\n", in_id, in_name); 
+
+        if((out_len = res_search(in_name, in_class, in_type, out_buf, sizeof(out_buf))) < 0) {
+            // TODO
+        }
+
+        if(ns_initparse(out_buf, out_len, &out_h) < 0) {
+            // TODO
+        }
+
+        unsigned char *out_cp = (unsigned char *)ns_msg_base(out_h);
+        ns_put16(in_id, out_cp);
 
         /*********************************/
         /* Send response to caller.      */
         /*********************************/
-        socket.send_to(asio::buffer(answer_buf, answer_len), sender_endpoint);
-
-        /*********************************/
-        /* Free memory. Order matters.   */
-        /*********************************/
-        ldns_pkt_free(query_pkt);
-
-        LDNS_FREE(answer_buf);
-        ldns_pkt_free(answer_pkt);
-        ldns_rr_list_free(answer_qr);
-        ldns_rr_list_free(answer_an);
-        ldns_rr_list_free(answer_ns);
-        ldns_rr_list_free(answer_ad);
+        socket.send_to(asio::buffer(out_buf, out_len), sender_endpoint);
     }
 
     return 0;

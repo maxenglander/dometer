@@ -1,5 +1,9 @@
 ## Useful links
 
+### Ctags
+
+[Generate](ctags -R --c++-kinds=+p --fields=+iaS --extra=+q /usr/include)
+
 ### Json
 
 [JsonCpp Documentation](https://open-source-parsers.github.io/jsoncpp-docs/doxygen/index.html)
