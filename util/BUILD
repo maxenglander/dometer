@@ -7,7 +7,7 @@ cc_library(
 cc_library(
     name = "json_serde",
     hdrs = ["json_serde.hpp"],
-    srcs = ["json_serde.cc"],
+    srcs = ["json_serde.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//std/experimental:expected",

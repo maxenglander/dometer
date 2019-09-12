@@ -11,7 +11,7 @@ cc_library(
 cc_library(
     name = "native_resolver",
     hdrs = ["native_resolver.hpp"],
-    srcs = ["native_resolver.cc"],
+    srcs = ["native_resolver.cpp"],
     deps = [
         "//std/experimental:expected",
         "//util:error",
