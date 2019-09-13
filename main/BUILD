@@ -3,7 +3,9 @@ cc_binary(
     srcs = ["main.cpp"],
     deps = [
         "@net_sourceforge_asio_asio//:asio",
-        "@nl_nlnetlabs_ldns//:ldns",
+        "//experimental:expected",
+        "//network/dns:native_resolver",
+        "//network/dns:packet",
     ],
     linkopts = [
         "-lresolv"

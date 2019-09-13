@@ -5,12 +5,19 @@
 #include <resolv.h>
 
 #include "asio.hpp"
+#include "experimental/expected.hpp"
+#include "network/dns/native_resolver.hpp"
+#include "network/dns/packet.hpp"
 
+using namespace Dometer::Network;
+using namespace std::experimental;
 using namespace asio::ip;
 
 int main(int argc, char **argv) {
     asio::io_context io_context;
     udp::socket socket(io_context, udp::endpoint(udp::v4(), 53));
+
+    Dns::NativeResolver resolver;
 
     for(;;) {
         unsigned char in_buf[PACKETSZ];
@@ -29,6 +36,8 @@ int main(int argc, char **argv) {
         udp::endpoint sender_endpoint;
         in_len = socket.receive_from(
             asio::buffer(in_buf, sizeof(in_buf)), sender_endpoint);
+
+        expected<Dns::Packet, Error> packet = Dns::Packet::makePacket(in_buf, in_len);
 
         if(ns_initparse(in_buf, in_len, &in_h) < 0) {
             // TODO

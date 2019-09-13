@@ -2,7 +2,7 @@ FROM debian:stable-20190610-slim
 
 ENV BAZEL_INSTALLER_PATH /tmp/bazel-installer.sh
 ENV BAZEL_INSTALLER_URL https://github.com/bazelbuild/bazel/releases/download/0.28.0/bazel-0.28.0-installer-linux-x86_64.sh
-ENV BUILD_DIR /dns-telemeter/build
+ENV BUILD_DIR /dometer/build
 ENV DEBIAN_FRONTEND noninteractive
 ENV PATHOGEN_URL https://tpo.pe/pathogen.vim
 
@@ -31,5 +31,5 @@ COPY . .
 RUN cp -a dotfiles/. $HOME/
 RUN ctags -R --c++-kinds=+p+l
 
-#RUN bazel build //main:dns-telemeter
+#RUN bazel build //main:dometer
 CMD ["/bin/bash", "-c", "tail -f /dev/null"]
