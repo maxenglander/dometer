@@ -39,13 +39,15 @@ int main(int argc, char **argv) {
 
         expected<Dns::Packet, Error> packet = Dns::Packet::makePacket(in_buf, in_len);
 
-        if(ns_initparse(in_buf, in_len, &in_h) < 0) {
+        ns_initparse(in_buf, in_len, &in_h);
+
+        if(!packet) {
             // TODO
         }
 
-        in_id = ns_msg_id(in_h);
+        in_id = packet->header.id;
 
-        if(ns_msg_count(in_h, ns_s_qd) != 1) {
+        if(packet->header.qdcount != 1) {
             // TODO
         }
 
