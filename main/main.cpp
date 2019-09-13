@@ -39,30 +39,29 @@ int main(int argc, char **argv) {
 
         expected<Dns::Packet, Error> packet = Dns::Packet::makePacket(in_buf, in_len);
 
-        ns_initparse(in_buf, in_len, &in_h);
-
         if(!packet) {
             // TODO
+            fprintf(stderr, "failed to parse packet: %s (%d)\n", packet.error().message.c_str(), packet.error().number);
         }
 
         in_id = packet->header.id;
 
         if(packet->header.qdcount != 1) {
             // TODO
+            fprintf(stderr, "qd count is incorrect: %d\n", packet->header.qdcount);
         }
 
-        if(ns_parserr(&in_h, ns_s_qd, 0, &in_qr) != 0) {
-            // TODO
+        auto question = packet->question();
+
+        if(!question) {
+            fprintf(stderr, "failed to parse question: %s (%d)\n", question.error().message.c_str(), question.error().number);
         }
 
-        in_name = ns_rr_name(in_qr);
-        in_class = ns_rr_class(in_qr);
-        in_type = ns_rr_type(in_qr);
+        fprintf(stdout, "msg id: %d; dname: %s\n", in_id, question->qname.c_str()); 
 
-        fprintf(stdout, "msg id: %d; dname: %s\n", in_id, in_name); 
-
-        if((out_len = res_search(in_name, in_class, in_type, out_buf, sizeof(out_buf))) < 0) {
+        if((out_len = res_search(question->qname.c_str(), question->qclass, question->qtype, out_buf, sizeof(out_buf))) < 0) {
             // TODO
+            fprintf(stderr, "failed to search: %s (%d)\n", strerror(errno), errno); 
         }
 
         if(ns_initparse(out_buf, out_len, &out_h) < 0) {

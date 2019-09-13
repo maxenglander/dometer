@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "experimental/expected.hpp"
+#include "network/dns/class.hpp"
 #include "network/dns/packet.hpp"
 #include "util/error.hpp"
 
@@ -15,7 +16,7 @@ namespace Dometer::Network::Dns {
     Packet::Packet(Packet&& packet)
         :    header(packet.header),
              bytes(std::move(packet.bytes)),
-             handle(std::exchange(handle, {0})),
+             handle(std::exchange(packet.handle, {0})),
              size(packet.size)
     {}
 
@@ -47,5 +48,21 @@ namespace Dometer::Network::Dns {
             return unexpected<Error>(Error({strerror(errno), errno}));
 
         return Packet(std::move(bytes), handle, size);
+    }
+
+    expected<Question, Error> Packet::question() {
+        if(header.qdcount != 1)
+            return unexpected<Error>(Error{"qdcount is not equal to 1"});
+
+        ns_rr question;
+
+        if(ns_parserr(&handle, ns_s_qd, 0, &question) != 0)
+            return unexpected<Error>(Error{strerror(errno), errno});
+
+        return Question{
+            std::string(ns_rr_name(question)),
+            Type(ns_rr_type(question)),
+            Class(ns_rr_class(question))
+        };
     }
 }
