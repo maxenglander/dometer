@@ -15,9 +15,9 @@ using namespace std::experimental;
 namespace Dometer::Network::Dns {
     Packet::Packet(Packet&& packet)
         :    header(packet.header),
+             size(packet.size),
              bytes(std::move(packet.bytes)),
-             handle(std::exchange(packet.handle, {0})),
-             size(packet.size)
+             handle(std::exchange(packet.handle, {0}))
     {}
 
     Packet::Packet(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
@@ -29,9 +29,9 @@ namespace Dometer::Network::Dns {
                  ns_msg_getflag(handle, ns_f_ra),
                  (uint8_t)ns_msg_getflag(handle, ns_f_rcode)
              }),
+             size(size),
              bytes(std::move(bytes)),
-             handle(handle),
-             size(size)
+             handle(handle)
     {}
 
     Packet::~Packet() {}
@@ -64,5 +64,9 @@ namespace Dometer::Network::Dns {
             Type(ns_rr_type(question)),
             Class(ns_rr_class(question))
         };
+    }
+
+    Packet::operator void*() const {
+        return bytes.get();
     }
 }

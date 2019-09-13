@@ -10,6 +10,6 @@ using namespace std::experimental;
 namespace Dometer::Network::Dns {
     class NativeResolver {
         public:
-            expected<Packet, Error> resolve(Packet);
+            expected<Packet, Error> resolve(Packet&);
     };
 }

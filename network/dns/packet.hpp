@@ -23,12 +23,14 @@ namespace Dometer::Network::Dns {
 
             expected<Question, Error> question();
 
+            operator void*() const;
+
             const Header header;
+            const size_t size;
         private:
             Packet(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
 
             std::unique_ptr<uint8_t[]> bytes;
             ns_msg handle;
-            const size_t size;
     };
 }
