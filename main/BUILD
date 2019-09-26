@@ -5,6 +5,7 @@ cc_binary(
         "@net_sourceforge_asio_asio//:asio",
         "//experimental:expected",
         "//network/dns:native_resolver",
+        "//network/dns:opcode",
         "//network/dns:packet",
     ],
     linkopts = [

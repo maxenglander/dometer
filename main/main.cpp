@@ -1,12 +1,10 @@
-#include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <iostream>
-#include <netdb.h>
-#include <resolv.h>
 
 #include "asio.hpp"
 #include "experimental/expected.hpp"
 #include "network/dns/native_resolver.hpp"
+#include "network/dns/opcode.hpp"
 #include "network/dns/packet.hpp"
 
 using namespace Dometer::Network;
@@ -14,48 +12,60 @@ using namespace std::experimental;
 using namespace asio::ip;
 
 int main(int argc, char **argv) {
-    asio::io_context io_context;
-    udp::socket socket(io_context, udp::endpoint(udp::v4(), 53));
+    asio::io_context ioContext;
+    udp::socket socket(ioContext, udp::endpoint(udp::v4(), 53));
 
     Dns::NativeResolver resolver;
 
     for(;;) {
-        unsigned char in_buf[PACKETSZ];
-        size_t in_len;
+        unsigned char buffer[PACKETSZ];
+        size_t length;
 
-        udp::endpoint sender_endpoint;
-        in_len = socket.receive_from(
-            asio::buffer(in_buf, sizeof(in_buf)), sender_endpoint);
+        udp::endpoint senderEndpoint;
+        length = socket.receive_from(
+            asio::buffer(buffer, sizeof(buffer)), senderEndpoint);
 
-        expected<Dns::Packet, Error> query = Dns::Packet::makePacket(in_buf, in_len);
+        expected<Dns::Packet, Error> query = Dns::Packet::makePacket(buffer, length);
 
         if(!query) {
-            // TODO
+            // TODO: signal FORMERR
             fprintf(stderr, "failed to parse query query: %s (%d)\n", query.error().message.c_str(), query.error().number);
+            continue;
         }
 
-        fprintf(stdout, "byte[0] = %d, byte[1] = %d, id = %d\n", in_buf[0], in_buf[1], query->header.id);
+        if(query->header.opcode != Dns::Opcode::QUERY) {
+            // TODO: signal NOTIMP or REFUSE
+            fprintf(stderr, "opcode not implemented: %d\n", static_cast<int>(query->header.opcode));
+            continue;
+        }
 
         if(query->header.qdcount != 1) {
-            // TODO
-            fprintf(stderr, "qd count is incorrect: %d\n", query->header.qdcount);
+            // TODO: signal FORMERR
+            fprintf(stderr, "qdcount is invalid: %d\n", query->header.qdcount);
+            continue;
         }
 
         auto question = query->question();
 
         if(!question) {
-            fprintf(stderr, "failed to parse question: %s (%d)\n", question.error().message.c_str(), question.error().number);
+            // TODO: signal FORMERR
+            fprintf(stderr, "failed to parse question: %s (%d)\n",
+                    question.error().message.c_str(), question.error().number);
+            continue;
         }
 
-        fprintf(stdout, "msg id: %d; dname: %s; class: %s; type %s\n", query->header.id, question->qname.c_str(), ((std::string)question->qclass).c_str(), ((std::string)question->qtype).c_str()); 
+        fprintf(stdout, "msg id: %d; dname: %s; class: %s; type %s\n",
+                query->header.id, question->qname.c_str(), ((std::string)question->qclass).c_str(),
+                ((std::string)question->qtype).c_str()); 
 
         auto response = resolver.resolve(*query);
 
         if(!response) {
-            // TODO
+            // TODO: signal SERVFAIL
             fprintf(stderr, "failed to get response: %s (%d)\n", response.error().message.c_str(), response.error().number); 
+            continue;
         } else {
-            socket.send_to(asio::buffer(*response, response->size), sender_endpoint);
+            socket.send_to(asio::buffer(*response, response->size), senderEndpoint);
         }
     }
 

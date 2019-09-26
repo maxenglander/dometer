@@ -8,7 +8,9 @@ cc_library(
 
 cc_library(
     name = "header",
-    deps = [],
+    deps = [
+        ":opcode"
+    ],
     hdrs = ["header.hpp"],
     visibility = ["//visibility:public"],
 )
@@ -21,8 +23,17 @@ cc_library(
         "//experimental:expected",
         "//util:error",
         ":packet",
+        ":resolution_mode",
     ],
     linkopts = ["-lresolv"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "opcode",
+    deps = [],
+    hdrs = ["opcode.hpp"],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 
@@ -48,6 +59,14 @@ cc_library(
         ":type",
     ],
     hdrs = ["question.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "resolution_mode",
+    deps = [],
+    hdrs = ["resolution_mode.hpp"],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 
