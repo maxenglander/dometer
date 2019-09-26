@@ -44,7 +44,7 @@ namespace Dometer::Network::Dns {
             }
         }
 
-        uint16_t id = query.header.id;
+        uint16_t id = query.id();
 
         buffer[0] = id >> 8;
         buffer[1] = id & 0xFF;

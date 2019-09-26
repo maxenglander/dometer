@@ -33,15 +33,15 @@ int main(int argc, char **argv) {
             continue;
         }
 
-        if(query->header.opcode != Dns::Opcode::QUERY) {
+        if(query->opcode() != Dns::Opcode::QUERY) {
             // TODO: signal NOTIMP or REFUSE
-            fprintf(stderr, "opcode not implemented: %d\n", static_cast<int>(query->header.opcode));
+            fprintf(stderr, "opcode not implemented: %d\n", static_cast<int>(query->opcode()));
             continue;
         }
 
-        if(query->header.qdcount != 1) {
+        if(query->qdcount() != 1) {
             // TODO: signal FORMERR
-            fprintf(stderr, "qdcount is invalid: %d\n", query->header.qdcount);
+            fprintf(stderr, "qdcount is invalid: %d\n", query->qdcount());
             continue;
         }
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
         }
 
         fprintf(stdout, "msg id: %d; dname: %s; class: %s; type %s\n",
-                query->header.id, question->qname.c_str(), ((std::string)question->qclass).c_str(),
+                query->id(), question->qname.c_str(), ((std::string)question->qclass).c_str(),
                 ((std::string)question->qtype).c_str()); 
 
         auto response = resolver.resolve(*query);

@@ -7,15 +7,6 @@ cc_library(
 )
 
 cc_library(
-    name = "header",
-    deps = [
-        ":opcode"
-    ],
-    hdrs = ["header.hpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "native_resolver",
     hdrs = ["native_resolver.hpp"],
     srcs = ["native_resolver.cpp"],
@@ -44,7 +35,7 @@ cc_library(
         "//experimental:expected",
         "//util:error",
         ":class",
-        ":header",
+        ":opcode",
         ":question",
         ":type",
     ],

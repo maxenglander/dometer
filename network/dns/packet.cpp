@@ -6,50 +6,24 @@
 
 #include "experimental/expected.hpp"
 #include "network/dns/class.hpp"
-#include "network/dns/packet.hpp"
 #include "network/dns/opcode.hpp"
+#include "network/dns/packet.hpp"
 #include "util/error.hpp"
 
 using namespace Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns {
-    Packet::Packet(Packet&& packet)
-        :    header(packet.header),
-             size(packet.size),
-             bytes(std::move(packet.bytes)),
-             handle(std::exchange(packet.handle, {0}))
-    {}
-
-    Packet::Packet(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
-        :    header(Header{
-                 ns_msg_id(handle),
-                 (bool)ns_msg_getflag(handle, ns_f_qr),
-                 static_cast<Opcode>(ns_msg_getflag(handle, ns_f_opcode)),
-                 ns_msg_getflag(handle, ns_f_aa),
-                 (bool)ns_msg_getflag(handle, ns_f_tc),
-                 (bool)ns_msg_getflag(handle, ns_f_rd),
-                 ns_msg_getflag(handle, ns_f_ra),
-                 0, // Z
-                 (uint8_t)ns_msg_getflag(handle, ns_f_rcode),
-                 ns_msg_count(handle, ns_s_qd),
-                 ns_msg_count(handle, ns_s_an),
-                 ns_msg_count(handle, ns_s_ns),
-                 ns_msg_count(handle, ns_s_ar),
-             }),
-             size(size),
-             bytes(std::move(bytes)),
-             handle(handle)
-    {}
-
-    Packet::~Packet() {}
-
     expected<Packet, Error> Packet::makePacket(uint8_t *bytePtr, size_t size) {
+        auto bytes = std::make_unique<uint8_t[]>(size);
+        std::copy(bytePtr, bytePtr + size, bytes.get());
+        return makePacket(std::move(bytes), size);
+    }
+
+    expected<Packet, Error> Packet::makePacket(std::unique_ptr<uint8_t[]> bytes, size_t size) {
         if(size < 0 || size > PACKETSZ)
             return unexpected<Error>(Error{"Invalid packet length: " + std::to_string(size), 0});
 
-        auto bytes = std::make_unique<uint8_t[]>(size);
-        std::copy(bytePtr, bytePtr + size, bytes.get());
         ns_msg handle;
 
         if(ns_initparse(bytes.get(), size, &handle) < 0)
@@ -58,8 +32,42 @@ namespace Dometer::Network::Dns {
         return Packet(std::move(bytes), handle, size);
     }
 
+    Packet::Packet(Packet&& packet)
+        :   size(packet.size),
+            bytes(std::move(packet.bytes)),
+            handle(std::exchange(packet.handle, {0}))
+    {}
+
+    Packet::Packet(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
+        :   size(size),
+            bytes(std::move(bytes)),
+            handle(handle)
+    {}
+
+    Packet::~Packet() {}
+
+    bool Packet::aa() {
+        return ns_msg_getflag(handle, ns_f_aa);
+    }
+
+    uint16_t Packet::id() {
+        return ns_msg_id(handle);
+    }
+
+    Opcode Packet::opcode() {
+        return static_cast<Opcode>(ns_msg_getflag(handle, ns_f_opcode));
+    }
+
+    uint16_t Packet::qdcount() {
+        return ns_msg_count(handle, ns_s_qd);
+    }
+
+    bool Packet::qr() {
+        return (bool)ns_msg_getflag(handle, ns_f_qr);
+    }
+
     expected<Question, Error> Packet::question() {
-        if(header.qdcount != 1)
+        if(qdcount() != 1)
             return unexpected<Error>(Error{"qdcount is not equal to 1"});
 
         ns_rr question;
@@ -72,6 +80,22 @@ namespace Dometer::Network::Dns {
             Type(ns_rr_type(question)),
             Class(ns_rr_class(question))
         };
+    }
+
+    bool Packet::ra() {
+        return ns_msg_getflag(handle, ns_f_ra);
+    }
+
+    uint8_t Packet::rcode() {
+        return (uint8_t)ns_msg_getflag(handle, ns_f_rcode);
+    }
+
+    bool Packet::rd() {
+        return ns_msg_getflag(handle, ns_f_rd);
+    }
+
+    bool Packet::tc() {
+        return (bool)ns_msg_getflag(handle, ns_f_tc);
     }
 
     Packet::operator void*() const {
