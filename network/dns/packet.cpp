@@ -8,6 +8,8 @@
 #include "network/dns/class.hpp"
 #include "network/dns/opcode.hpp"
 #include "network/dns/packet.hpp"
+#include "network/dns/qr.hpp"
+#include "network/dns/rcode.hpp"
 #include "util/error.hpp"
 
 using namespace Dometer::Util;
@@ -30,6 +32,16 @@ namespace Dometer::Network::Dns {
             return unexpected<Error>(Error({strerror(errno), errno}));
 
         return Packet(std::move(bytes), handle, size);
+    }
+
+    expected<Packet, Error> Packet::notImplemented(Packet& query) {
+        uint8_t *bytePtr = (uint8_t*)query;
+        auto reply = makePacket(bytePtr, query.size);
+        if(reply) {
+            reply->setQR(QR::REPLY);
+            reply->setRcode(Rcode::NOTIMP);
+        }
+        return reply;
     }
 
     Packet::Packet(Packet&& packet)
@@ -62,8 +74,8 @@ namespace Dometer::Network::Dns {
         return ns_msg_count(handle, ns_s_qd);
     }
 
-    bool Packet::qr() {
-        return (bool)ns_msg_getflag(handle, ns_f_qr);
+    QR Packet::qr() {
+        return static_cast<QR>(ns_msg_getflag(handle, ns_f_qr));
     }
 
     expected<Question, Error> Packet::question() {
@@ -94,11 +106,39 @@ namespace Dometer::Network::Dns {
         return ns_msg_getflag(handle, ns_f_rd);
     }
 
+    void Packet::setId(uint16_t id) {
+        bytes[0] = id >> 8;
+        bytes[1] = id & 0xFF;
+    }
+
+    void Packet::setQR(QR qr) {
+        // Includes "qr", "opcode", "aa" and "tc" flags
+        uint8_t byte3 = bytes[2];
+
+        // Overwrite "qr" flag
+        if(qr == QR::QUERY) {
+            byte3 &= ~(1UL << 7);
+        } else {
+            byte3 |= 1UL << 7;
+        }
+
+        bytes[2] = byte3;
+    }
+
+    void Packet::setRcode(Rcode rcode) {
+        // Includes "ra", "z", and "rcode" flags
+        uint8_t byte4 = bytes[3];
+
+        // Overwrite "rcode" flag
+        byte4 |= static_cast<uint16_t>(rcode) & /*2^4*/0x000f;
+        bytes[3] = byte4;
+    }
+
     bool Packet::tc() {
         return (bool)ns_msg_getflag(handle, ns_f_tc);
     }
 
-    Packet::operator void*() const {
+    Packet::operator uint8_t*() const {
         return bytes.get();
     }
 }

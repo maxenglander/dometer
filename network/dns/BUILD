@@ -36,10 +36,20 @@ cc_library(
         "//util:error",
         ":class",
         ":opcode",
+        ":qr",
         ":question",
+        ":rcode",
         ":type",
     ],
     srcs = ["packet.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "qr",
+    deps = [],
+    hdrs = ["qr.hpp"],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 
@@ -50,6 +60,14 @@ cc_library(
         ":type",
     ],
     hdrs = ["question.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "rcode",
+    deps = [],
+    hdrs = ["rcode.hpp"],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 

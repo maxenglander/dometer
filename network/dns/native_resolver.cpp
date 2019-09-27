@@ -25,7 +25,7 @@ namespace Dometer::Network::Dns {
 
     expected<Packet, Error> NativeResolver::resolve(Packet& query) {
         unsigned char buffer[PACKETSZ];
-        size_t length;
+        int length;
 
         auto question = query.question();
 
@@ -33,22 +33,21 @@ namespace Dometer::Network::Dns {
             return unexpected<Error>(question.error());
 
         if(resolutionMode == ResolutionMode::QUERY) {
-            if((length = res_query(question->qname.c_str(), question->qclass,
-                            question->qtype, buffer, PACKETSZ)) < 0) {
-                return unexpected<Error>(Error{hstrerror(h_errno), h_errno});
-            }
+            length = res_query(question->qname.c_str(), question->qclass,
+                    question->qtype, buffer, PACKETSZ);
         } else {
-            if((length = res_search(question->qname.c_str(), question->qclass,
-                            question->qtype, buffer, PACKETSZ)) < 0) {
-                return unexpected<Error>(Error{hstrerror(h_errno), h_errno});
-            }
+            length = res_search(question->qname.c_str(), question->qclass,
+                    question->qtype, buffer, PACKETSZ);
         }
 
-        uint16_t id = query.id();
+        if(length < 0)
+            return unexpected<Error>(Error{hstrerror(h_errno), h_errno});
 
-        buffer[0] = id >> 8;
-        buffer[1] = id & 0xFF;
+        expected<Packet, Error> reply = Packet::makePacket(buffer, length);
+        if(reply) {
+            reply->setId(query.id());
+        }
 
-        return Packet::makePacket(buffer, length);
+        return reply;
     }
 }

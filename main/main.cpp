@@ -31,41 +31,38 @@ int main(int argc, char **argv) {
             // TODO: signal FORMERR
             fprintf(stderr, "failed to parse query query: %s (%d)\n", query.error().message.c_str(), query.error().number);
             continue;
-        }
-
-        if(query->opcode() != Dns::Opcode::QUERY) {
+        } else if(query->opcode() != Dns::Opcode::QUERY) {
             // TODO: signal NOTIMP or REFUSE
             fprintf(stderr, "opcode not implemented: %d\n", static_cast<int>(query->opcode()));
-            continue;
-        }
-
-        if(query->qdcount() != 1) {
+            auto reply = Dns::Packet::notImplemented(*query);
+            socket.send_to(asio::buffer(*reply, reply->size), senderEndpoint);
+        } else if(query->qdcount() != 1) {
             // TODO: signal FORMERR
             fprintf(stderr, "qdcount is invalid: %d\n", query->qdcount());
             continue;
-        }
-
-        auto question = query->question();
-
-        if(!question) {
-            // TODO: signal FORMERR
-            fprintf(stderr, "failed to parse question: %s (%d)\n",
-                    question.error().message.c_str(), question.error().number);
-            continue;
-        }
-
-        fprintf(stdout, "msg id: %d; dname: %s; class: %s; type %s\n",
-                query->id(), question->qname.c_str(), ((std::string)question->qclass).c_str(),
-                ((std::string)question->qtype).c_str()); 
-
-        auto response = resolver.resolve(*query);
-
-        if(!response) {
-            // TODO: signal SERVFAIL
-            fprintf(stderr, "failed to get response: %s (%d)\n", response.error().message.c_str(), response.error().number); 
-            continue;
         } else {
-            socket.send_to(asio::buffer(*response, response->size), senderEndpoint);
+            auto question = query->question();
+
+            if(!question) {
+                // TODO: signal FORMERR
+                fprintf(stderr, "failed to parse question: %s (%d)\n",
+                        question.error().message.c_str(), question.error().number);
+                continue;
+            }
+
+            fprintf(stdout, "msg id: %d; dname: %s; class: %s; type %s; opcode: %d\n",
+                    query->id(), question->qname.c_str(), ((std::string)question->qclass).c_str(),
+                    ((std::string)question->qtype).c_str(), static_cast<uint16_t>(query->opcode())); 
+
+            auto reply = resolver.resolve(*query);
+
+            if(!reply) {
+                // TODO: signal SERVFAIL
+                fprintf(stderr, "failed to get reply: %s (%d)\n", reply.error().message.c_str(), reply.error().number); 
+                continue;
+            } else {
+                socket.send_to(asio::buffer(*reply, reply->size), senderEndpoint);
+            }
         }
     }
 
