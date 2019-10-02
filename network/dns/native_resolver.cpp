@@ -23,7 +23,7 @@ namespace Dometer::Network::Dns {
     NativeResolver::NativeResolver(ResolutionMode resolutionMode)
         : resolutionMode(resolutionMode) {}
 
-    expected<Packet, Error> NativeResolver::resolve(Packet& query) {
+    expected<Packet, Error> NativeResolver::resolve(Packet& query) const {
         unsigned char buffer[PACKETSZ];
         int length;
 

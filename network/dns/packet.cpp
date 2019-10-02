@@ -12,10 +12,22 @@
 #include "network/dns/rcode.hpp"
 #include "util/error.hpp"
 
+#define DNS_PACKET_HEADER_SIZE 32
+
 using namespace Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns {
+    expected<Packet, Error> Packet::formatError(Packet& packet) {
+        uint8_t *bytePtr = (uint8_t*)packet;
+        auto reply = makePacket(bytePtr, packet.size);
+        if(reply) {
+            reply->setQR(QR::REPLY);
+            reply->setRcode(Rcode::FORMERR);
+        }
+        return reply;
+    }
+
     expected<Packet, Error> Packet::makePacket(uint8_t *bytePtr, size_t size) {
         auto bytes = std::make_unique<uint8_t[]>(size);
         std::copy(bytePtr, bytePtr + size, bytes.get());

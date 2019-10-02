@@ -17,6 +17,7 @@ using namespace std::experimental;
 namespace Dometer::Network::Dns {
     class Packet {
         public:
+            static expected<Packet, Error> formatError(Packet& query); 
             static expected<Packet, Error> makePacket(uint8_t *bytePtr, size_t size);
             static expected<Packet, Error> makePacket(std::unique_ptr<uint8_t[]> bytes, size_t size);
             static expected<Packet, Error> notImplemented(Packet& query); 

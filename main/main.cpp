@@ -8,8 +8,8 @@
 #include "network/dns/packet.hpp"
 
 using namespace Dometer::Network;
-using namespace std::experimental;
 using namespace asio::ip;
+using namespace std::experimental;
 
 int main(int argc, char **argv) {
     asio::io_context ioContext;
@@ -28,18 +28,18 @@ int main(int argc, char **argv) {
         expected<Dns::Packet, Error> query = Dns::Packet::makePacket(buffer, length);
 
         if(!query) {
-            // TODO: signal FORMERR
-            fprintf(stderr, "failed to parse query query: %s (%d)\n", query.error().message.c_str(), query.error().number);
-            continue;
+            // Send empty response
+            fprintf(stderr, "failed to parse query: %s (%d)\n", query.error().message.c_str(), query.error().number);
+            socket.send_to(asio::buffer(""), senderEndpoint);
         } else if(query->opcode() != Dns::Opcode::QUERY) {
-            // TODO: signal NOTIMP or REFUSE
             fprintf(stderr, "opcode not implemented: %d\n", static_cast<int>(query->opcode()));
             auto reply = Dns::Packet::notImplemented(*query);
             socket.send_to(asio::buffer(*reply, reply->size), senderEndpoint);
         } else if(query->qdcount() != 1) {
             // TODO: signal FORMERR
             fprintf(stderr, "qdcount is invalid: %d\n", query->qdcount());
-            continue;
+            auto reply = Dns::Packet::formatError(*query);
+            socket.send_to(asio::buffer(*reply, reply->size), senderEndpoint);
         } else {
             auto question = query->question();
 

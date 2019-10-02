@@ -13,7 +13,7 @@ namespace Dometer::Network::Dns {
         public:
             NativeResolver();
             NativeResolver(ResolutionMode);
-            expected<Packet, Error> resolve(Packet&);
+            expected<Packet, Error> resolve(Packet&) const;
         private:
             const ResolutionMode resolutionMode;
     };
