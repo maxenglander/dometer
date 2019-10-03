@@ -12,19 +12,22 @@
 #include "network/dns/rcode.hpp"
 #include "util/error.hpp"
 
-#define DNS_PACKET_HEADER_SIZE 32
-
 using namespace Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns {
-    expected<Packet, Error> Packet::formatError(Packet& packet) {
-        uint8_t *bytePtr = (uint8_t*)packet;
-        auto reply = makePacket(bytePtr, packet.size);
-        if(reply) {
-            reply->setQR(QR::REPLY);
-            reply->setRcode(Rcode::FORMERR);
-        }
+    Packet Packet::copyPacket(Packet& packet) {
+        auto bytes = std::make_unique<uint8_t[]>(packet.size);
+        uint8_t *bytePtr = packet;
+        size_t size = packet.size;
+        std::copy(bytePtr, bytePtr + size, bytes.get());
+        return *makePacket(std::move(bytes), packet.size);
+    }
+
+    Packet Packet::formatError(Packet& packet) {
+        auto reply = copyPacket(packet);
+        reply.setQR(QR::REPLY);
+        reply.setRcode(Rcode::FORMERR);
         return reply;
     }
 
@@ -46,13 +49,17 @@ namespace Dometer::Network::Dns {
         return Packet(std::move(bytes), handle, size);
     }
 
-    expected<Packet, Error> Packet::notImplemented(Packet& query) {
-        uint8_t *bytePtr = (uint8_t*)query;
-        auto reply = makePacket(bytePtr, query.size);
-        if(reply) {
-            reply->setQR(QR::REPLY);
-            reply->setRcode(Rcode::NOTIMP);
-        }
+    Packet Packet::notImplemented(Packet& query) {
+        auto reply = copyPacket(query);;
+        reply.setQR(QR::REPLY);
+        reply.setRcode(Rcode::NOTIMP);
+        return reply;
+    }
+
+    Packet Packet::serverFailure(Packet& query) {
+        auto reply = copyPacket(query);
+        reply.setQR(QR::REPLY);
+        reply.setRcode(Rcode::SERVFAIL);
         return reply;
     }
 

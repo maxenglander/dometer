@@ -7,6 +7,7 @@ using namespace Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns {
+    NativeResolvingHandler::NativeResolvingHandler() : NativeResolvingHandler(NativeResolver()) {}
     NativeResolvingHandler::NativeResolvingHandler(NativeResolver resolver) : resolver(resolver) {}
 
     expected<Packet, Error> NativeResolvingHandler::handle(Packet& query) const {

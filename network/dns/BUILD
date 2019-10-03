@@ -112,6 +112,7 @@ cc_library(
         "//experimental:expected",
         "//util:error",
         ":handler",
+        ":native_resolving_handler",
         ":packet",
     ],
     srcs = ["server.cpp"],

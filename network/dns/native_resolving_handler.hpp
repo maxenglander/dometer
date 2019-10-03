@@ -12,6 +12,7 @@ using namespace std::experimental;
 namespace Dometer::Network::Dns {
     class NativeResolvingHandler : public Handler {
         public:
+            NativeResolvingHandler();
             NativeResolvingHandler(NativeResolver);
             expected<Packet, Error> handle(Packet&) const;
         private:
