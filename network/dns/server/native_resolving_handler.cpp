@@ -1,12 +1,14 @@
 #include "experimental/expected.hpp"
-#include "network/dns/native_resolver.hpp"
-#include "network/dns/native_resolving_handler.hpp"
+#include "network/dns/resolver/native_resolver.hpp"
+#include "network/dns/server/native_resolving_handler.hpp"
 #include "util/error.hpp"
 
 using namespace Dometer::Util;
+using namespace Dometer::Network::Dns;
+using namespace Dometer::Network::Dns::Resolver;
 using namespace std::experimental;
 
-namespace Dometer::Network::Dns {
+namespace Dometer::Network::Dns::Server {
     NativeResolvingHandler::NativeResolvingHandler() : NativeResolvingHandler(NativeResolver()) {}
     NativeResolvingHandler::NativeResolvingHandler(NativeResolver resolver) : resolver(resolver) {}
 

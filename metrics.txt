@@ -1,0 +1,3 @@
+dns_answer{rcode,qtype,qname,valid}
+dns_query{qtype,qname,valid}
+dns_lookup{rcode,qtype,qname}

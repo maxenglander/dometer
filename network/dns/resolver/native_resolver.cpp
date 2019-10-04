@@ -10,13 +10,14 @@
 #include <string>
 
 #include "experimental/expected.hpp"
-#include "network/dns/native_resolver.hpp"
-#include "network/dns/resolution_mode.hpp"
+#include "network/dns/resolver/native_resolver.hpp"
+#include "network/dns/resolver/resolution_mode.hpp"
 #include "util/error.hpp"
 
+using namespace Dometer::Network::Dns;
 using namespace std::experimental;
 
-namespace Dometer::Network::Dns {
+namespace Dometer::Network::Dns::Resolver {
     NativeResolver::NativeResolver()
         : NativeResolver(ResolutionMode::QUERY) {}
 

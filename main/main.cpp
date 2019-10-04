@@ -1,13 +1,13 @@
 #include <iostream>
 
 #include "experimental/expected.hpp"
-#include "network/dns/server.hpp"
+#include "network/dns/server/server.hpp"
 
 using namespace Dometer::Network;
 using namespace std::experimental;
 
 int main(int argc, char **argv) {
-    Dns::Server server;
+    Dns::Server::Server server;
     auto result = server.serve();
     if(!result) {
         std::cerr << "failed to start DNS server: " + result.error().message

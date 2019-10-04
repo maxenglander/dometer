@@ -3,6 +3,7 @@
 #include "experimental/expected.hpp"
 #include "network/dns/packet.hpp"
 
+using namespace Dometer::Network::Dns;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns {
