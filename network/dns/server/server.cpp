@@ -44,33 +44,24 @@ namespace Dometer::Network::Dns::Server {
         }
 
         for(;;) {
-            unsigned char buffer[4096];
-            size_t length;
+            unsigned char queryBuffer[4096];
+            size_t queryLength = 0;
 
             udp::endpoint remoteEndpoint;
-            length = socket.receive_from(
-                    asio::buffer(buffer, sizeof(buffer)), remoteEndpoint, 0, errorCode);
+            queryLength = socket.receive_from(
+                    asio::buffer(queryBuffer, sizeof(queryBuffer)), remoteEndpoint, 0, errorCode);
 
             if(errorCode) {
                 continue;
             }
 
-            expected<Packet, Error> query = Packet::makePacket(buffer, length);
+            unsigned char replyBuffer[4096];
 
-            if(!query) {
-                socket.send_to(asio::buffer(""), remoteEndpoint);
+            auto replySize = handler->handle(queryBuffer, queryLength, replyBuffer, sizeof(replyBuffer));
+            if(replySize) {
+                socket.send_to(asio::buffer(replyBuffer, *replySize), remoteEndpoint, 0, errorCode);
             } else {
-                auto start = clock.now();
-                auto reply = handler->handle(*query);
-                auto end = clock.now();
-                auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-                if(!reply) {
-                    auto failure = Packet::serverFailure(*query);
-                    socket.send_to(asio::buffer(failure, failure.size), remoteEndpoint, 0, errorCode);
-                } else {
-                    socket.send_to(asio::buffer(*reply, reply->size), remoteEndpoint, 0, errorCode);
-                }
+                socket.send_to(asio::buffer(""), remoteEndpoint, 0, errorCode);
             }
         }
     }

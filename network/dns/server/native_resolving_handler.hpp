@@ -16,8 +16,11 @@ namespace Dometer::Network::Dns::Server {
         public:
             NativeResolvingHandler();
             NativeResolvingHandler(NativeResolver);
-            expected<Packet, Error> handle(Packet&) const;
+            expected<size_t, Error> handle(
+                    uint8_t *queryPtr, size_t querySize,
+                    uint8_t *replyPtr, size_t replySize) const;
         private:
+            expected<Packet, Error> handle(const expected<Packet, Error> &query) const;
             const NativeResolver resolver;
     };
 }

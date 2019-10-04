@@ -16,7 +16,7 @@ using namespace Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns {
-    Packet Packet::copyPacket(Packet& packet) {
+    Packet Packet::copyPacket(const Packet& packet) {
         auto bytes = std::make_unique<uint8_t[]>(packet.size);
         uint8_t *bytePtr = packet;
         size_t size = packet.size;
@@ -24,7 +24,7 @@ namespace Dometer::Network::Dns {
         return *makePacket(std::move(bytes), packet.size);
     }
 
-    Packet Packet::formatError(Packet& packet) {
+    Packet Packet::formatError(const Packet& packet) {
         auto reply = copyPacket(packet);
         reply.setQR(QR::REPLY);
         reply.setRcode(Rcode::FORMERR);
@@ -49,19 +49,23 @@ namespace Dometer::Network::Dns {
         return Packet(std::move(bytes), handle, size);
     }
 
-    Packet Packet::notImplemented(Packet& query) {
+    Packet Packet::notImplemented(const Packet& query) {
         auto reply = copyPacket(query);;
         reply.setQR(QR::REPLY);
         reply.setRcode(Rcode::NOTIMP);
         return reply;
     }
 
-    Packet Packet::serverFailure(Packet& query) {
+    Packet Packet::serverFailure(const Packet& query) {
         auto reply = copyPacket(query);
         reply.setQR(QR::REPLY);
         reply.setRcode(Rcode::SERVFAIL);
         return reply;
     }
+
+    Packet::Packet(const Packet& packet)
+        :   Packet(Packet::copyPacket(packet))
+    {}
 
     Packet::Packet(Packet&& packet)
         :   size(packet.size),
@@ -77,33 +81,34 @@ namespace Dometer::Network::Dns {
 
     Packet::~Packet() {}
 
-    bool Packet::aa() {
+    bool Packet::aa() const {
         return ns_msg_getflag(handle, ns_f_aa);
     }
 
-    uint16_t Packet::id() {
+    uint16_t Packet::id() const {
         return ns_msg_id(handle);
     }
 
-    Opcode Packet::opcode() {
+    Opcode Packet::opcode() const {
         return static_cast<Opcode>(ns_msg_getflag(handle, ns_f_opcode));
     }
 
-    uint16_t Packet::qdcount() {
+    uint16_t Packet::qdcount() const {
         return ns_msg_count(handle, ns_s_qd);
     }
 
-    QR Packet::qr() {
+    QR Packet::qr() const {
         return static_cast<QR>(ns_msg_getflag(handle, ns_f_qr));
     }
 
-    expected<Question, Error> Packet::question() {
+    expected<Question, Error> Packet::question() const {
         if(qdcount() != 1)
             return unexpected<Error>(Error{"qdcount is not equal to 1"});
 
         ns_rr question;
 
-        if(ns_parserr(&handle, ns_s_qd, 0, &question) != 0)
+        ns_msg handle_ = handle;
+        if(ns_parserr(&handle_, ns_s_qd, 0, &question) != 0)
             return unexpected<Error>(Error{strerror(errno), errno});
 
         return Question{
@@ -113,15 +118,15 @@ namespace Dometer::Network::Dns {
         };
     }
 
-    bool Packet::ra() {
+    bool Packet::ra() const {
         return ns_msg_getflag(handle, ns_f_ra);
     }
 
-    uint8_t Packet::rcode() {
+    uint8_t Packet::rcode() const {
         return (uint8_t)ns_msg_getflag(handle, ns_f_rcode);
     }
 
-    bool Packet::rd() {
+    bool Packet::rd() const {
         return ns_msg_getflag(handle, ns_f_rd);
     }
 
@@ -153,7 +158,7 @@ namespace Dometer::Network::Dns {
         bytes[3] = byte4;
     }
 
-    bool Packet::tc() {
+    bool Packet::tc() const {
         return (bool)ns_msg_getflag(handle, ns_f_tc);
     }
 
