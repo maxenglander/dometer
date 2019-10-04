@@ -30,17 +30,26 @@ namespace Dometer::Network::Dns::Server {
     expected<Packet, Error> NativeResolvingHandler::handle(const expected<Packet, Error> &query) const {
         if(!query) {
             return unexpected<Error>(query.error());
-        } else if(query->opcode() != Dns::Opcode::QUERY) {
-            return Packet::notImplemented(*query);
-        } else if(query->qdcount() != 1) {
-            return Packet::formatError(*query);
-        } else {
-            auto question = query->question();
-            if(!question) {
-                return Packet::formatError(*query);
-            } else {
-                return resolver.resolve(*query);
-            }
         }
+
+        if(query->opcode() != Dns::Opcode::QUERY) {
+            return Packet::notImplemented(*query);
+        }
+
+        if(query->qdcount() != 1) {
+            return Packet::formatError(*query);
+        }
+
+        auto question = query->question();
+        if(!question) {
+            return Packet::formatError(*query);
+        }
+
+        auto reply = resolver.resolve(question->qname, question->qclass, question->qtype);
+        if(reply) {
+            reply->setId(query->id());
+        }
+
+        return reply;
     }
 }

@@ -8,7 +8,7 @@ using namespace Dometer::Network::Dns;
 using namespace Dometer::Util;
 using namespace std::experimental;
 
-namespace Dometer::Network::Dns {
+namespace Dometer::Network::Dns::Server {
     class Handler {
         public:
             virtual expected<size_t, Error> handle(

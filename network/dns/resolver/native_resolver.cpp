@@ -24,31 +24,20 @@ namespace Dometer::Network::Dns::Resolver {
     NativeResolver::NativeResolver(ResolutionMode resolutionMode)
         : resolutionMode(resolutionMode) {}
 
-    expected<Packet, Error> NativeResolver::resolve(const Packet& query) const {
-        unsigned char buffer[PACKETSZ];
+    expected<Packet, Error> NativeResolver::resolve(
+            const std::string& qname, const Class& qclass, const Type& qtype) const {
+        unsigned char buffer[4096];
         int length;
 
-        auto question = query.question();
-
-        if(!question)
-            return unexpected<Error>(question.error());
-
         if(resolutionMode == ResolutionMode::QUERY) {
-            length = res_query(question->qname.c_str(), question->qclass,
-                    question->qtype, buffer, PACKETSZ);
+            length = res_query(qname.c_str(), qclass, qtype, buffer, sizeof(buffer));
         } else {
-            length = res_search(question->qname.c_str(), question->qclass,
-                    question->qtype, buffer, PACKETSZ);
+            length = res_search(qname.c_str(), qclass, qtype, buffer, sizeof(buffer));
         }
 
         if(length < 0)
             return unexpected<Error>(Error{hstrerror(h_errno), h_errno});
 
-        expected<Packet, Error> reply = Packet::makePacket(buffer, length);
-        if(reply) {
-            reply->setId(query.id());
-        }
-
-        return reply;
+        return Packet::makePacket(buffer, length);
     }
 }

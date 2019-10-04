@@ -4,7 +4,9 @@ cc_library(
     srcs = ["native_resolver.cpp"],
     deps = [
         "//experimental:expected",
+        "//network/dns:class",
         "//network/dns:packet",
+        "//network/dns:type",
         "//util:error",
         ":resolution_mode",
     ],

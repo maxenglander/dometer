@@ -1,6 +1,5 @@
 #pragma once
 
-#include <chrono>
 #include <memory>
 
 #include "asio.hpp"
@@ -14,11 +13,10 @@ namespace Dometer::Network::Dns::Server {
     class Server {
         public:
             Server();
-            Server(std::chrono::steady_clock, std::unique_ptr<Handler>);
+            Server(std::unique_ptr<Handler>);
             expected<void, Error> serve();
             expected<void, Error> serve(uint16_t port);
         private:
-            const std::chrono::steady_clock clock;
             const std::unique_ptr<Handler> handler;
     };
 }

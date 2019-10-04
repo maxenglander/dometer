@@ -1,3 +1,2 @@
-dns_answer{rcode,qtype,qname,valid}
-dns_query{qtype,qname,valid}
-dns_lookup{rcode,qtype,qname}
+dns_packet{opcode,qr,qtype,qname,rcode,valid}
+dns_lookup{qtype,qname,rcode}

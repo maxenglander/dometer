@@ -1,4 +1,3 @@
-#include <chrono>
 #include <memory>
 
 #include "asio.hpp"
@@ -15,11 +14,10 @@ using namespace asio::ip;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns::Server {
-    Server::Server() : Server(std::chrono::steady_clock(), std::make_unique<NativeResolvingHandler>()) {}
+    Server::Server() : Server(std::make_unique<NativeResolvingHandler>()) {}
 
-    Server::Server(std::chrono::steady_clock clock, std::unique_ptr<Handler> handler)
-        :   clock(clock),
-            handler(std::move(handler))
+    Server::Server(std::unique_ptr<Handler> handler)
+        :   handler(std::move(handler))
     {}
 
     expected<void, Error> Server::serve() {

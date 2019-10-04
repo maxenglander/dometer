@@ -1,7 +1,11 @@
 #pragma once
 
+#include <string>
+
 #include "experimental/expected.hpp"
+#include "network/dns/class.hpp"
 #include "network/dns/packet.hpp"
+#include "network/dns/type.hpp"
 #include "network/dns/resolver/resolution_mode.hpp"
 #include "util/error.hpp"
 
@@ -14,7 +18,7 @@ namespace Dometer::Network::Dns::Resolver {
         public:
             NativeResolver();
             NativeResolver(ResolutionMode);
-            expected<Packet, Error> resolve(const Packet&) const;
+            expected<Packet, Error> resolve(const std::string&, const Class&, const Type&) const;
         private:
             const ResolutionMode resolutionMode;
     };
