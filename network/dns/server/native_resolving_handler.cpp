@@ -1,6 +1,12 @@
+#include <memory>
+#include <unordered_map>
+#include <unordered_set>
+
 #include "experimental/expected.hpp"
 #include "network/dns/resolver/native_resolver.hpp"
 #include "network/dns/server/native_resolving_handler.hpp"
+#include "util/callback.hpp"
+#include "util/callback_registry.hpp"
 #include "util/error.hpp"
 
 using namespace Dometer::Util;
@@ -9,8 +15,18 @@ using namespace Dometer::Network::Dns::Resolver;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns::Server {
-    NativeResolvingHandler::NativeResolvingHandler() : NativeResolvingHandler(NativeResolver()) {}
-    NativeResolvingHandler::NativeResolvingHandler(NativeResolver resolver) : resolver(resolver) {}
+    NativeResolvingHandler::NativeResolvingHandler()
+        :   NativeResolvingHandler(
+                CallbackRegistry<EventType, Event>(),
+                NativeResolver())
+    {}
+
+    NativeResolvingHandler::NativeResolvingHandler(
+                CallbackRegistry<EventType, Event> listeners,
+                NativeResolver resolver)
+        :   listeners(listeners),
+            resolver(resolver)
+    {}
 
     expected<size_t, Error> NativeResolvingHandler::handle(
             uint8_t *queryPtr, size_t querySize,
@@ -51,5 +67,9 @@ namespace Dometer::Network::Dns::Server {
         }
 
         return reply;
+    }
+
+    void NativeResolvingHandler::on(EventType eventType, std::shared_ptr<Callback<Event>> listener) {
+        listeners.insert(eventType, listener);
     }
 }

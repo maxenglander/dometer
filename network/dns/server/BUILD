@@ -1,8 +1,31 @@
 cc_library(
+    name = "event",
+    deps = [
+        ":event_type",
+    ],
+    hdrs = ["event.hpp"],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "event_type",
+    deps = [],
+    hdrs = ["event_type.hpp"],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "handler",
     deps = [
         "//experimental:expected",
         "//network/dns:packet",
+        "//util:callback",
+        "//util:callback_registry",
+        "//util:error",
+        ":event",
+        ":event_type",
     ],
     hdrs = ["handler.hpp"],
     srcs = [],
@@ -15,9 +38,13 @@ cc_library(
     srcs = ["native_resolving_handler.cpp"],
     deps = [
         "//experimental:expected",
-        "//util:error",
         "//network/dns:packet",
         "//network/dns/resolver:native_resolver",
+        "//util:callback",
+        "//util:callback_registry",
+        "//util:error",
+        ":event",
+        ":event_type",
         ":handler",
     ],
     visibility = ["//visibility:public"],
