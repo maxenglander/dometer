@@ -19,6 +19,6 @@ namespace Dometer::Network::Dns::Server {
             virtual expected<size_t, Error> handle(
                     uint8_t *queryPtr, size_t querySize,
                     uint8_t *replyPtr, size_t replySize) const = 0;
-            virtual void on(EventType, std::shared_ptr<Callback<Event>>) = 0;
+            virtual void on(EventType, std::shared_ptr<Callback<Event&>>) = 0;
     };
 }

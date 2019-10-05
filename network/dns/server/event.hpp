@@ -5,6 +5,6 @@
 namespace Dometer::Network::Dns::Server {
     class Event {
         public:
-            virtual EventType getType() const;
+            virtual EventType getType() const = 0;
     };
 }

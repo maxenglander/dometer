@@ -24,16 +24,16 @@ namespace Dometer::Network::Dns::Server {
         public:
             NativeResolvingHandler();
             NativeResolvingHandler(
-                    CallbackRegistry<EventType, Event>,
+                    CallbackRegistry<EventType, Event&>,
                     NativeResolver);
             expected<size_t, Error> handle(
                     uint8_t *queryPtr, size_t querySize,
                     uint8_t *replyPtr, size_t replySize) const;
-            void on(EventType, std::shared_ptr<Callback<Event>>);
+            void on(EventType, std::shared_ptr<Callback<Event&>>);
         private:
             expected<Packet, Error> handle(const expected<Packet, Error> &query) const;
-            void notify(EventType, Event) const;
-            CallbackRegistry<EventType, Event> listeners;
+            void notify(EventType, Event&);
+            CallbackRegistry<EventType, Event&> listeners;
             const NativeResolver resolver;
     };
 }

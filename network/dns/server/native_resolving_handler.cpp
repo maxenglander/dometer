@@ -4,6 +4,8 @@
 
 #include "experimental/expected.hpp"
 #include "network/dns/resolver/native_resolver.hpp"
+#include "network/dns/server/event.hpp"
+#include "network/dns/server/event_type.hpp"
 #include "network/dns/server/native_resolving_handler.hpp"
 #include "util/callback.hpp"
 #include "util/callback_registry.hpp"
@@ -17,12 +19,12 @@ using namespace std::experimental;
 namespace Dometer::Network::Dns::Server {
     NativeResolvingHandler::NativeResolvingHandler()
         :   NativeResolvingHandler(
-                CallbackRegistry<EventType, Event>(),
+                CallbackRegistry<EventType, Event&>(),
                 NativeResolver())
     {}
 
     NativeResolvingHandler::NativeResolvingHandler(
-                CallbackRegistry<EventType, Event> listeners,
+                CallbackRegistry<EventType, Event&> listeners,
                 NativeResolver resolver)
         :   listeners(listeners),
             resolver(resolver)
@@ -69,7 +71,11 @@ namespace Dometer::Network::Dns::Server {
         return reply;
     }
 
-    void NativeResolvingHandler::on(EventType eventType, std::shared_ptr<Callback<Event>> listener) {
-        listeners.insert(eventType, listener);
+    void NativeResolvingHandler::on(EventType eventType, std::shared_ptr<Callback<Event&>> listener) {
+        listeners.on(eventType, listener);
+    }
+
+    void NativeResolvingHandler::notify(EventType eventType, Event& event) {
+        listeners.notify(eventType, event);
     }
 }

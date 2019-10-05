@@ -16,15 +16,29 @@ namespace Dometer::Util {
         public:
             CallbackRegistry() : CallbackRegistry(std::unordered_map<Key, std::unordered_set<std::shared_ptr<Callback<T>>>>()) {}
             CallbackRegistry(std::unordered_map<Key, std::unordered_set<std::shared_ptr<Callback<T>>>> map) : map(map) {}
-            void insert(Key k, std::shared_ptr<Callback<T>> v) {
-                auto search = this->map.find(k);
+            void on(Key k, std::shared_ptr<Callback<T>> v) {
+                auto search = map.find(k);
 
-                if(search == this->map.end()) {
-                    this->map[k] = std::unordered_set<std::shared_ptr<Callback<T>>>();
+                if(search == map.end()) {
+                    map[k] = std::unordered_set<std::shared_ptr<Callback<T>>>();
                 }
 
-                std::unordered_set<std::shared_ptr<Callback<T>>> set = this->map[k];
+                std::unordered_set<std::shared_ptr<Callback<T>>> set = map[k];
                 set.insert(v);
+            }
+
+            void notify(Key k, T t) {
+                auto search = map.find(k);
+
+                if(search == map.end()) {
+                    return;
+                }
+
+                std::unordered_set<std::shared_ptr<Callback<T>>> set = map[k];
+
+                for(auto it = set.begin(); it != set.end(); it++) {
+                    std::shared_ptr<Callback<T>> callbackPtr = *it;
+                }
             }
         private:
             std::unordered_map<Key, std::unordered_set<std::shared_ptr<Callback<T>>>> map;
