@@ -4,9 +4,8 @@ cc_binary(
     deps = [
         "@net_sourceforge_asio_asio//:asio",
         "//experimental:expected",
-        "//network/dns:opcode",
-        "//network/dns:packet",
-        "//network/dns/resolver:native_resolver",
+        "//network/dns/server:event_type",
+        "//network/dns/server:native_resolving_handler",
         "//network/dns/server:server",
     ],
     linkopts = [

@@ -1,2 +1,3 @@
-dns_packet{opcode,qr,qtype,qname,rcode,valid}
-dns_lookup{qtype,qname,rcode}
+dns_packet_count{opcode,qr,qtype,qname,rcode,valid}
+dns_lookup_count{qtype,qname,rcode}
+dns_lookup_duration_us{qtype,qname,rcode}
