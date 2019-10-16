@@ -11,6 +11,9 @@ using namespace std::experimental;
 
 int main(int argc, char **argv) {
     auto handler = std::make_unique<Dns::Server::NativeResolvingHandler>();
+    handler->on(Dns::Server::EventType::LOOKUP, [](auto& evt) {
+        std::cout << "performed a lookup" << std::endl;
+    });
     Dns::Server::Server server(std::move(handler));
     auto result = server.serve();
 

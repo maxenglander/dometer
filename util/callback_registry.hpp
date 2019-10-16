@@ -1,46 +1,48 @@
 #pragma once
 
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <unordered_map>
-#include <unordered_set>
+#include <vector>
 
 #include "util/callback.hpp"
 
 namespace Dometer::Util {
-    template <
-        class Key,
-        class T
-    >
+    template <class Key, class T>
     class CallbackRegistry {
         public:
-            CallbackRegistry() : CallbackRegistry(std::unordered_map<Key, std::unordered_set<std::shared_ptr<Callback<T>>>>()) {}
-            CallbackRegistry(std::unordered_map<Key, std::unordered_set<std::shared_ptr<Callback<T>>>> map) : map(map) {}
-            void on(Key k, std::shared_ptr<Callback<T>> v) {
+            CallbackRegistry() : CallbackRegistry(std::unordered_map<Key, std::vector<Callback<T>>>()) {}
+            CallbackRegistry(std::unordered_map<Key, std::vector<Callback<T>>> map) : map(map) {}
+            void on(Key k, Callback<T> v) {
                 auto search = map.find(k);
 
                 if(search == map.end()) {
-                    map[k] = std::unordered_set<std::shared_ptr<Callback<T>>>();
+                    std::cout << "creating new list" << std::endl;
+                    map[k] = std::vector<Callback<T>>();
                 }
 
-                std::unordered_set<std::shared_ptr<Callback<T>>> set = map[k];
-                set.insert(v);
+                std::cout << "adding callback" << std::endl;
+                map[k].push_back(v);
+                std::cout << "list has size: " << map[k].size() << std::endl;
             }
 
             void notify(Key k, T t) {
+                std::cout << "handling notify" << std::endl;
                 auto search = map.find(k);
-
                 if(search == map.end()) {
                     return;
                 }
 
-                std::unordered_set<std::shared_ptr<Callback<T>>> set = map[k];
-
-                for(auto it = set.begin(); it != set.end(); it++) {
-                    std::shared_ptr<Callback<T>> callbackPtr = *it;
+                auto list = search->second;
+                std::cout << "got callback list of size: " << list.size() << std::endl;
+                for(auto it = list.begin(); it != list.end(); it++) {
+                    Callback<T> callback = *it;
+                    std::cout << "invoking callback" << std::endl;
+                    callback(t);
                 }
             }
         private:
-            std::unordered_map<Key, std::unordered_set<std::shared_ptr<Callback<T>>>> map;
+            std::unordered_map<Key, std::vector<Callback<T>>> map;
     };
 }

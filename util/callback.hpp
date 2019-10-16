@@ -1,8 +1,8 @@
 #pragma once
 
+#include <functional>
+
 namespace Dometer::Util {
     template <typename T>
-    class Callback {
-        virtual void operator()(T t) = 0;
-    };
+    using Callback = std::function<void(T)>;
 }

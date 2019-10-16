@@ -6,6 +6,7 @@
 #include "network/dns/resolver/native_resolver.hpp"
 #include "network/dns/server/event.hpp"
 #include "network/dns/server/event_type.hpp"
+#include "network/dns/server/lookup_event.hpp"
 #include "network/dns/server/native_resolving_handler.hpp"
 #include "util/callback.hpp"
 #include "util/callback_registry.hpp"
@@ -32,9 +33,9 @@ namespace Dometer::Network::Dns::Server {
 
     expected<size_t, Error> NativeResolvingHandler::handle(
             uint8_t *queryPtr, size_t querySize,
-            uint8_t *replyPtr, size_t replySize) const {
-        const auto query = Packet::makePacket(queryPtr, querySize);
-        const auto reply = handle(query);
+            uint8_t *replyPtr, size_t replySize) {
+        auto query = Packet::makePacket(queryPtr, querySize);
+        auto reply = handle(query);
 
         if(reply) {
             uint8_t *replyPtrIn = *reply;
@@ -45,7 +46,7 @@ namespace Dometer::Network::Dns::Server {
         }
     }
 
-    expected<Packet, Error> NativeResolvingHandler::handle(const expected<Packet, Error> &query) const {
+    expected<Packet, Error> NativeResolvingHandler::handle(expected<Packet, Error> &query) {
         if(!query) {
             return unexpected<Error>(query.error());
         }
@@ -68,14 +69,17 @@ namespace Dometer::Network::Dns::Server {
             reply->setId(query->id());
         }
 
+        auto event = LookupEvent(*query, reply);
+        notify(event);
+
         return reply;
     }
 
-    void NativeResolvingHandler::on(EventType eventType, std::shared_ptr<Callback<Event&>> listener) {
-        listeners.on(eventType, listener);
+    void NativeResolvingHandler::notify(Event& event) {
+        listeners.notify(event.getType(), event);
     }
 
-    void NativeResolvingHandler::notify(EventType eventType, Event& event) {
-        listeners.notify(eventType, event);
+    void NativeResolvingHandler::on(EventType eventType, Callback<Event&> listener) {
+        listeners.on(eventType, listener);
     }
 }

@@ -28,11 +28,11 @@ namespace Dometer::Network::Dns::Server {
                     NativeResolver);
             expected<size_t, Error> handle(
                     uint8_t *queryPtr, size_t querySize,
-                    uint8_t *replyPtr, size_t replySize) const;
-            void on(EventType, std::shared_ptr<Callback<Event&>>);
+                    uint8_t *replyPtr, size_t replySize);
+            void on(EventType, Callback<Event&>);
         private:
-            expected<Packet, Error> handle(const expected<Packet, Error> &query) const;
-            void notify(EventType, Event&);
+            expected<Packet, Error> handle(expected<Packet, Error>& query);
+            void notify(Event&);
             CallbackRegistry<EventType, Event&> listeners;
             const NativeResolver resolver;
     };

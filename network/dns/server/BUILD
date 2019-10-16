@@ -33,6 +33,20 @@ cc_library(
 )
 
 cc_library(
+    name = "lookup_event",
+    deps = [
+        "//experimental:expected",
+        "//network/dns:packet",
+        "//util:error",
+        ":event",
+        ":event_type",
+    ],
+    hdrs = ["lookup_event.hpp"],
+    srcs = ["lookup_event.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "native_resolving_handler",
     hdrs = ["native_resolving_handler.hpp"],
     srcs = ["native_resolving_handler.cpp"],
@@ -46,6 +60,7 @@ cc_library(
         ":event",
         ":event_type",
         ":handler",
+        ":lookup_event",
     ],
     visibility = ["//visibility:public"],
 )
