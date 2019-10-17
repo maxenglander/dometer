@@ -1,22 +1,22 @@
 #pragma once
 
+#include <chrono>
 #include <memory>
-#include <unordered_map>
-#include <unordered_set>
 
 #include "experimental/expected.hpp"
-#include "network/dns/packet.hpp"
 #include "network/dns/resolver/native_resolver.hpp"
-#include "network/dns/server/event.hpp"
 #include "network/dns/server/event_type.hpp"
 #include "network/dns/server/handler.hpp"
 #include "util/callback.hpp"
 #include "util/callback_registry.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Network::Dns;
-using namespace Dometer::Network::Dns::Resolver;
-using namespace Dometer::Util;
+namespace Dometer::Network::Dns {
+    class Packet;
+}
+
+namespace Dns = Dometer::Network::Dns;
+namespace Util = Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns::Server {
@@ -24,16 +24,18 @@ namespace Dometer::Network::Dns::Server {
         public:
             NativeResolvingHandler();
             NativeResolvingHandler(
-                    CallbackRegistry<EventType, Event&>,
-                    NativeResolver);
-            expected<size_t, Error> handle(
+                    std::chrono::steady_clock,
+                    Util::CallbackRegistry<EventType, std::shared_ptr<Event>>,
+                    Dns::Resolver::NativeResolver);
+            expected<size_t, Util::Error> handle(
                     uint8_t *queryPtr, size_t querySize,
                     uint8_t *replyPtr, size_t replySize);
-            void on(EventType, Callback<Event&>);
+            Handler& on(EventType, Util::Callback<std::shared_ptr<Event>>);
         private:
-            expected<Packet, Error> handle(expected<Packet, Error>& query);
-            void notify(Event&);
-            CallbackRegistry<EventType, Event&> listeners;
-            const NativeResolver resolver;
+            expected<Dns::Packet, Util::Error> handle(expected<Dns::Packet, Util::Error>& query);
+            void notify(std::shared_ptr<Event>);
+            const std::chrono::steady_clock clock;
+            Util::CallbackRegistry<EventType, std::shared_ptr<Event>> listeners;
+            const Dns::Resolver::NativeResolver resolver;
     };
 }

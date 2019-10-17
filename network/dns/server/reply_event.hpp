@@ -14,16 +14,16 @@ namespace Util = Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns::Server {
-    class LookupEvent : public Event {
+    class ReplyEvent : public Event {
         public:
-            LookupEvent(
-                    const Dns::Packet& query,
-                    const expected<Dns::Packet, Util::Error>& reply);
-            const Dns::Packet& getQuery() const;
+            ReplyEvent(
+                    const expected<Dns::Packet, Util::Error>& query,
+                    const expected<Packet, Util::Error>& reply);
+            const expected<Dns::Packet, Util::Error>& getQuery() const;
             const expected<Dns::Packet, Util::Error>& getReply() const;
             EventType getType() const;
         private:
-            const Dns::Packet& query;
+            const expected<Dns::Packet, Util::Error>& query;
             const expected<Dns::Packet, Util::Error>& reply;
     };
 }

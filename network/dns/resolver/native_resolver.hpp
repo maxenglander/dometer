@@ -4,13 +4,16 @@
 
 #include "experimental/expected.hpp"
 #include "network/dns/class.hpp"
-#include "network/dns/packet.hpp"
 #include "network/dns/type.hpp"
 #include "network/dns/resolver/resolution_mode.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Network::Dns;
-using namespace Dometer::Util;
+namespace Dometer::Network::Dns {
+    class Packet;
+}
+
+namespace Dns = Dometer::Network::Dns;
+namespace Util = Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns::Resolver {
@@ -18,7 +21,7 @@ namespace Dometer::Network::Dns::Resolver {
         public:
             NativeResolver();
             NativeResolver(ResolutionMode);
-            expected<Packet, Error> resolve(const std::string&, const Class&, const Type&) const;
+            expected<Dns::Packet, Util::Error> resolve(const std::string&, const Class&, const Type&) const;
         private:
             const ResolutionMode resolutionMode;
     };

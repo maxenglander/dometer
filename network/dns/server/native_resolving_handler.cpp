@@ -1,13 +1,15 @@
+#include <chrono>
 #include <memory>
-#include <unordered_map>
-#include <unordered_set>
 
 #include "experimental/expected.hpp"
+#include "network/dns/packet.hpp"
 #include "network/dns/resolver/native_resolver.hpp"
 #include "network/dns/server/event.hpp"
 #include "network/dns/server/event_type.hpp"
 #include "network/dns/server/lookup_event.hpp"
 #include "network/dns/server/native_resolving_handler.hpp"
+#include "network/dns/server/query_event.hpp"
+#include "network/dns/server/reply_event.hpp"
 #include "util/callback.hpp"
 #include "util/callback_registry.hpp"
 #include "util/error.hpp"
@@ -20,14 +22,17 @@ using namespace std::experimental;
 namespace Dometer::Network::Dns::Server {
     NativeResolvingHandler::NativeResolvingHandler()
         :   NativeResolvingHandler(
-                CallbackRegistry<EventType, Event&>(),
+                std::chrono::steady_clock(),
+                CallbackRegistry<EventType, std::shared_ptr<Event>>(),
                 NativeResolver())
     {}
 
     NativeResolvingHandler::NativeResolvingHandler(
-                CallbackRegistry<EventType, Event&> listeners,
+                std::chrono::steady_clock clock,
+                CallbackRegistry<EventType, std::shared_ptr<Event>> listeners,
                 NativeResolver resolver)
-        :   listeners(listeners),
+        :   clock(clock),
+            listeners(listeners),
             resolver(resolver)
     {}
 
@@ -35,7 +40,10 @@ namespace Dometer::Network::Dns::Server {
             uint8_t *queryPtr, size_t querySize,
             uint8_t *replyPtr, size_t replySize) {
         auto query = Packet::makePacket(queryPtr, querySize);
+        notify(std::make_shared<QueryEvent>(query));
+
         auto reply = handle(query);
+        notify(std::make_shared<ReplyEvent>(query, reply));
 
         if(reply) {
             uint8_t *replyPtrIn = *reply;
@@ -49,13 +57,9 @@ namespace Dometer::Network::Dns::Server {
     expected<Packet, Error> NativeResolvingHandler::handle(expected<Packet, Error> &query) {
         if(!query) {
             return unexpected<Error>(query.error());
-        }
-
-        if(query->opcode() != Dns::Opcode::QUERY) {
+        } else if(query->opcode() != Dns::Opcode::QUERY) {
             return Packet::notImplemented(*query);
-        }
-
-        if(query->qdcount() != 1) {
+        } else if(query->qdcount() != 1) {
             return Packet::formatError(*query);
         }
 
@@ -69,17 +73,17 @@ namespace Dometer::Network::Dns::Server {
             reply->setId(query->id());
         }
 
-        auto event = LookupEvent(*query, reply);
-        notify(event);
+        notify(std::make_shared<LookupEvent>(*query, reply));
 
         return reply;
     }
 
-    void NativeResolvingHandler::notify(Event& event) {
-        listeners.notify(event.getType(), event);
+    void NativeResolvingHandler::notify(std::shared_ptr<Event> event) {
+        listeners.notify(event->getType(), event);
     }
 
-    void NativeResolvingHandler::on(EventType eventType, Callback<Event&> listener) {
+    Handler& NativeResolvingHandler::on(EventType eventType, Callback<std::shared_ptr<Event>> listener) {
         listeners.on(eventType, listener);
+        return *this;
     }
 }

@@ -11,7 +11,7 @@
 #include "network/dns/rcode.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Util;
+namespace Util = Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns {
@@ -19,8 +19,8 @@ namespace Dometer::Network::Dns {
         public:
             static Packet copyPacket(const Packet& packet);
             static Packet formatError(const Packet& query); 
-            static expected<Packet, Error> makePacket(uint8_t *bytePtr, size_t size);
-            static expected<Packet, Error> makePacket(std::unique_ptr<uint8_t[]> bytes, size_t size);
+            static expected<Packet, Util::Error> makePacket(uint8_t *bytePtr, size_t size);
+            static expected<Packet, Util::Error> makePacket(std::unique_ptr<uint8_t[]> bytes, size_t size);
             static Packet notImplemented(const Packet& query); 
             static Packet serverFailure(const Packet& query); 
 
@@ -33,7 +33,7 @@ namespace Dometer::Network::Dns {
             Opcode opcode() const;
             uint16_t qdcount() const;
             QR qr() const;
-            expected<Question, Error> question() const;
+            expected<Question, Util::Error> question() const;
             bool rd() const;
             bool ra() const;
             uint8_t rcode() const;

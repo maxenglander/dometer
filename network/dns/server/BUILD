@@ -61,7 +61,37 @@ cc_library(
         ":event_type",
         ":handler",
         ":lookup_event",
+        ":query_event",
+        ":reply_event",
     ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "query_event",
+    deps = [
+        "//experimental:expected",
+        "//network/dns:packet",
+        "//util:error",
+        ":event",
+        ":event_type",
+    ],
+    hdrs = ["query_event.hpp"],
+    srcs = ["query_event.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "reply_event",
+    deps = [
+        "//experimental:expected",
+        "//network/dns:packet",
+        "//util:error",
+        ":event",
+        ":event_type",
+    ],
+    hdrs = ["reply_event.hpp"],
+    srcs = ["reply_event.cpp"],
     visibility = ["//visibility:public"],
 )
 

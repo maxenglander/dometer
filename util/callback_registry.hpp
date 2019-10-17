@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -18,27 +17,21 @@ namespace Dometer::Util {
                 auto search = map.find(k);
 
                 if(search == map.end()) {
-                    std::cout << "creating new list" << std::endl;
                     map[k] = std::vector<Callback<T>>();
                 }
 
-                std::cout << "adding callback" << std::endl;
                 map[k].push_back(v);
-                std::cout << "list has size: " << map[k].size() << std::endl;
             }
 
             void notify(Key k, T t) {
-                std::cout << "handling notify" << std::endl;
                 auto search = map.find(k);
                 if(search == map.end()) {
                     return;
                 }
 
                 auto list = search->second;
-                std::cout << "got callback list of size: " << list.size() << std::endl;
                 for(auto it = list.begin(); it != list.end(); it++) {
                     Callback<T> callback = *it;
-                    std::cout << "invoking callback" << std::endl;
                     callback(t);
                 }
             }

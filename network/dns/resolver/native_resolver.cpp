@@ -10,11 +10,13 @@
 #include <string>
 
 #include "experimental/expected.hpp"
+#include "network/dns/packet.hpp"
 #include "network/dns/resolver/native_resolver.hpp"
 #include "network/dns/resolver/resolution_mode.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Network::Dns;
+namespace Dns = Dometer::Network::Dns;
+namespace Util = Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Network::Dns::Resolver {
@@ -24,7 +26,7 @@ namespace Dometer::Network::Dns::Resolver {
     NativeResolver::NativeResolver(ResolutionMode resolutionMode)
         : resolutionMode(resolutionMode) {}
 
-    expected<Packet, Error> NativeResolver::resolve(
+    expected<Dns::Packet, Util::Error> NativeResolver::resolve(
             const std::string& qname, const Class& qclass, const Type& qtype) const {
         unsigned char buffer[4096];
         int length;
@@ -36,8 +38,8 @@ namespace Dometer::Network::Dns::Resolver {
         }
 
         if(length < 0)
-            return unexpected<Error>(Error{hstrerror(h_errno), h_errno});
+            return unexpected<Util::Error>(Util::Error{hstrerror(h_errno), h_errno});
 
-        return Packet::makePacket(buffer, length);
+        return Dns::Packet::makePacket(buffer, length);
     }
 }

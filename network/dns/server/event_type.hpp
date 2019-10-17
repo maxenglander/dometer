@@ -5,7 +5,8 @@
 namespace Dometer::Network::Dns::Server {
     enum class EventType {
         LOOKUP,
-        PACKET
+        QUERY,
+        REPLY
     };
 }
 
