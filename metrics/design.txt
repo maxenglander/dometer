@@ -1,0 +1,35 @@
+metric/counter.hpp
+metric/label.hpp
+metric/label_value.hpp
+metric/metric.hpp
+metric/observer.hpp
+metric/observation.hpp
+metric/recorder.hpp
+metric/store.hpp
+metric/unit.hpp
+
+Metric
+
+Observation
+  metric
+  value
+
+metricObserver.observe(observation);
+metricObserver.get(metric)
+    .newObservation()
+    .withLabels(...)
+    .inc();
+
+store[Counter].inc();
+
+Observation<T>
+  Descriptor descriptor
+  tuple<...> labels
+  T value
+
+metricObserver.observe(Metrics::QueryObservation::newBuilder().qname().build());
+metricObserver.observe(new ReplyObservation());
+metricObserver.observe(new LookupObservation());
+
+
+Observer => ... => Prometheus
