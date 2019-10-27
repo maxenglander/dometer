@@ -2,6 +2,8 @@
 #include <memory>
 
 #include "experimental/expected.hpp"
+#include "metrics/observer.hpp"
+#include "metrics/query_observation.hpp"
 #include "network/dns/packet.hpp"
 #include "network/dns/server/event_type.hpp"
 #include "network/dns/server/handler.hpp"
@@ -12,9 +14,12 @@
 #include "network/dns/server/server.hpp"
 
 namespace Dns = Dometer::Network::Dns;
+namespace Metrics = Dometer::Metrics;
 using namespace std::experimental;
 
 int main(int argc, char **argv) {
+    Metrics::Observer observer;
+
     std::unique_ptr<Dns::Server::Handler> handler
         = std::make_unique<Dns::Server::NativeResolvingHandler>();
 
@@ -23,8 +28,9 @@ int main(int argc, char **argv) {
         std::cout << "performed a lookup" << std::endl;
     });
 
-    handler->on(Dns::Server::EventType::QUERY, [](auto event) {
+    handler->on(Dns::Server::EventType::QUERY, [&observer](auto event) {
         std::cout << "received a query" << std::endl;
+        observer.observe(Metrics::QueryObservation::newBuilder().build());
     });
 
     handler->on(Dns::Server::EventType::REPLY, [](auto event) {

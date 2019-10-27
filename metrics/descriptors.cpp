@@ -8,7 +8,8 @@
 
 namespace Dometer::Metrics {
     const Descriptor<std::string, bool> Descriptors::QUERY
-        = Descriptor<std::string, bool>("query", "DNS query received", Unit::NONE,
-                                        tuple(Labels::string("qname"), 
-                                              Labels::boolean("valid")));
+        = Descriptor<std::string, bool>{"query", "DNS query received",
+                                        std::tuple(Labels::string("qname"), 
+                                                   Labels::boolean("valid")),
+                                        Unit::NONE};
 }

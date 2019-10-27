@@ -5,7 +5,7 @@
 namespace Dometer::Metrics {
     class Observer {
         public:
-            template<typename T...>
-            void observe(Observation<T...>);
+            template<typename... T>
+            void observe(Observation<T...>) {}
     };
 }

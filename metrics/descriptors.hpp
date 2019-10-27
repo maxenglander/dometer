@@ -6,6 +6,6 @@ namespace Dometer::Metrics {
     class Descriptors {
         public:
             Descriptors() = delete;
-            const static Descriptor<std::string, bool> QUERY;
+            static const Descriptor<std::string, bool> QUERY;
     };
 }

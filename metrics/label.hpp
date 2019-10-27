@@ -6,7 +6,7 @@ namespace Dometer::Metrics {
     template<typename T>
     struct Label {
         Label() = delete;
-        Label(std::string);
+        Label(std::string name) : name(name) {};
         virtual std::string toString(T) const = 0;
         const std::string name;
     };

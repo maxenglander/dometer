@@ -8,11 +8,11 @@
 #include "metrics/unit.hpp"
 
 namespace Dometer::Metrics {
-    template<typename T...>
+    template<typename... T>
     struct Descriptor {
         const std::string name;
         const std::string description;
-        const tuple<std::unique_ptr<Label<T>>...> labels;
+        const std::tuple<std::unique_ptr<Label<T>>...> labels;
         const Unit unit;
     };
 }

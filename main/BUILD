@@ -4,6 +4,8 @@ cc_binary(
     deps = [
         "@net_sourceforge_asio_asio//:asio",
         "//experimental:expected",
+        "//metrics:observer",
+        "//metrics:query_observation",
         "//network/dns:packet",
         "//network/dns/server:event_type",
         "//network/dns/server:handler",

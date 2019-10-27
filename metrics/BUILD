@@ -36,7 +36,7 @@ cc_library(
     name = "label",
     deps = [],
     hdrs = ["label.hpp"],
-    srcs = ["label.cpp"],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 
@@ -49,6 +49,37 @@ cc_library(
     ],
     hdrs = ["labels.hpp"],
     srcs = ["labels.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "observation",
+    deps = [
+        ":descriptor",
+    ],
+    hdrs = ["observation.hpp"],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "observer",
+    deps = [
+        ":observation",
+    ],
+    hdrs = ["observer.hpp"],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "query_observation",
+    deps = [
+        ":descriptors",
+        ":observation",
+    ],
+    hdrs = ["query_observation.hpp"],
+    srcs = ["query_observation.cpp"],
     visibility = ["//visibility:public"],
 )
 
