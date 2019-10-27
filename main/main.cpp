@@ -1,19 +1,19 @@
 #include <iostream>
 #include <memory>
 
+#include "dns/packet.hpp"
+#include "dns/server/event_type.hpp"
+#include "dns/server/handler.hpp"
+#include "dns/server/lookup_event.hpp"
+#include "dns/server/native_resolving_handler.hpp"
+#include "dns/server/query_event.hpp"
+#include "dns/server/reply_event.hpp"
+#include "dns/server/server.hpp"
 #include "experimental/expected.hpp"
 #include "metrics/observer.hpp"
 #include "metrics/query_observation.hpp"
-#include "network/dns/packet.hpp"
-#include "network/dns/server/event_type.hpp"
-#include "network/dns/server/handler.hpp"
-#include "network/dns/server/lookup_event.hpp"
-#include "network/dns/server/native_resolving_handler.hpp"
-#include "network/dns/server/query_event.hpp"
-#include "network/dns/server/reply_event.hpp"
-#include "network/dns/server/server.hpp"
 
-namespace Dns = Dometer::Network::Dns;
+namespace Dns = Dometer::Dns;
 namespace Metrics = Dometer::Metrics;
 using namespace std::experimental;
 

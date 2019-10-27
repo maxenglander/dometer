@@ -29,6 +29,14 @@ http_archive(
 )
 
 http_archive(
+    name = "com_github_TartanLlama_optional",
+    urls = ["https://github.com/TartanLlama/optional/archive/v1.0.0.tar.gz"],
+    sha256 = "e18941da05bca12a796ebbeacb83993bc0f10e817fa10bb45124a421c2384690",
+    build_file = "@//external:BUILD.optional",
+    strip_prefix = "optional-1.0.0",
+)
+
+http_archive(
     name = "nl_nlnetlabs_ldns",
     urls = ["https://nlnetlabs.nl/downloads/ldns/ldns-1.7.1.tar.gz"],
     sha256 = "8ac84c16bdca60e710eea75782356f3ac3b55680d40e1530d7cea474ac208229",
