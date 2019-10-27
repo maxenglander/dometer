@@ -27,7 +27,7 @@ namespace Dometer::Dns {
     Packet Packet::formatError(const Packet& packet) {
         auto reply = copyPacket(packet);
         reply.setQR(QR::REPLY);
-        reply.setRcode(Rcode::FORMERR);
+        reply.setRCode(RCode::FORMERR);
         return reply;
     }
 
@@ -52,14 +52,14 @@ namespace Dometer::Dns {
     Packet Packet::notImplemented(const Packet& query) {
         auto reply = copyPacket(query);;
         reply.setQR(QR::REPLY);
-        reply.setRcode(Rcode::NOTIMP);
+        reply.setRCode(RCode::NOTIMP);
         return reply;
     }
 
     Packet Packet::serverFailure(const Packet& query) {
         auto reply = copyPacket(query);
         reply.setQR(QR::REPLY);
-        reply.setRcode(Rcode::SERVFAIL);
+        reply.setRCode(RCode::SERVFAIL);
         return reply;
     }
 
@@ -81,28 +81,28 @@ namespace Dometer::Dns {
 
     Packet::~Packet() {}
 
-    bool Packet::aa() const {
+    bool Packet::getAA() const {
         return ns_msg_getflag(handle, ns_f_aa);
     }
 
-    uint16_t Packet::id() const {
+    uint16_t Packet::getId() const {
         return ns_msg_id(handle);
     }
 
-    Opcode Packet::opcode() const {
-        return static_cast<Opcode>(ns_msg_getflag(handle, ns_f_opcode));
+    OpCode Packet::getOpCode() const {
+        return static_cast<OpCode>(ns_msg_getflag(handle, ns_f_opcode));
     }
 
-    uint16_t Packet::qdcount() const {
+    uint16_t Packet::getQDCount() const {
         return ns_msg_count(handle, ns_s_qd);
     }
 
-    QR Packet::qr() const {
+    QR Packet::getQR() const {
         return static_cast<QR>(ns_msg_getflag(handle, ns_f_qr));
     }
 
-    expected<Question, Error> Packet::question() const {
-        if(qdcount() != 1)
+    expected<Question, Error> Packet::getQuestion() const {
+        if(getQDCount() != 1)
             return unexpected<Error>(Error{"qdcount is not equal to 1"});
 
         ns_rr question;
@@ -118,18 +118,21 @@ namespace Dometer::Dns {
         };
     }
 
-    bool Packet::ra() const {
+    bool Packet::getRA() const {
         return ns_msg_getflag(handle, ns_f_ra);
     }
 
-    uint8_t Packet::rcode() const {
+    uint8_t Packet::getRCode() const {
         return (uint8_t)ns_msg_getflag(handle, ns_f_rcode);
     }
 
-    bool Packet::rd() const {
+    bool Packet::getRD() const {
         return ns_msg_getflag(handle, ns_f_rd);
     }
 
+    bool Packet::getTC() const {
+        return (bool)ns_msg_getflag(handle, ns_f_tc);
+    }
     void Packet::setId(uint16_t id) {
         bytes[0] = id >> 8;
         bytes[1] = id & 0xFF;
@@ -149,17 +152,13 @@ namespace Dometer::Dns {
         bytes[2] = byte3;
     }
 
-    void Packet::setRcode(Rcode rcode) {
+    void Packet::setRCode(RCode rcode) {
         // Includes "ra", "z", and "rcode" flags
         uint8_t byte4 = bytes[3];
 
         // Overwrite "rcode" flag
         byte4 |= static_cast<uint16_t>(rcode) & /*2^4*/0x000f;
         bytes[3] = byte4;
-    }
-
-    bool Packet::tc() const {
-        return (bool)ns_msg_getflag(handle, ns_f_tc);
     }
 
     Packet::operator uint8_t*() const {

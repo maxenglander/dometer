@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 
         builder.valid(false);
         if(query) {
-            auto question = query->question();
+            auto question = query->getQuestion();
             if(question) {
                 builder.qname(question->qname);
                 builder.valid(true);

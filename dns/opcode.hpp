@@ -1,7 +1,7 @@
 #pragma once
 
 namespace Dometer::Dns {
-    enum class Opcode {
+    enum class OpCode {
         QUERY = 0,
         IQUERY = 1,
         STATUS = 2,

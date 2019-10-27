@@ -57,20 +57,18 @@ namespace Dometer::Dns::Server {
     expected<Packet, Error> NativeResolvingHandler::handle(expected<Packet, Error> &query) {
         if(!query) {
             return unexpected<Error>(query.error());
-        } else if(query->opcode() != Dns::Opcode::QUERY) {
+        } else if(query->getOpCode() != Dns::OpCode::QUERY) {
             return Packet::notImplemented(*query);
-        } else if(query->qdcount() != 1) {
-            return Packet::formatError(*query);
         }
 
-        auto question = query->question();
+        auto question = query->getQuestion();
         if(!question) {
             return Packet::formatError(*query);
         }
 
         auto reply = resolver.resolve(question->qname, question->qclass, question->qtype);
         if(reply) {
-            reply->setId(query->id());
+            reply->setId(query->getId());
         }
 
         notify(std::make_shared<LookupEvent>(*query, reply));
