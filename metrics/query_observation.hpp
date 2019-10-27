@@ -19,5 +19,6 @@ namespace Dometer::Metrics {
     struct QueryObservation : Observation<std::string, bool> {
         QueryObservation(std::tuple<std::string, bool>, uint64_t);
         static QueryObservationBuilder newBuilder();
+        using Builder = QueryObservationBuilder;
     };
 }

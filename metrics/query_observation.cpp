@@ -14,7 +14,7 @@ namespace Dometer::Metrics {
     }
 
     Observation<std::string, bool> QueryObservationBuilder::build() const {
-        return QueryObservation(std::tuple(_qname, _valid), 1);
+        return QueryObservation(std::make_tuple(_qname, _valid), 1);
     }
 
     QueryObservationBuilder& QueryObservationBuilder::qname(std::string qname) {

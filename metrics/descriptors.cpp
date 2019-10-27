@@ -7,9 +7,10 @@
 #include "metrics/unit.hpp"
 
 namespace Dometer::Metrics {
-    const Descriptor<std::string, bool> Descriptors::QUERY
-        = Descriptor<std::string, bool>{"query", "DNS query received",
-                                        std::tuple(Labels::string("qname"), 
-                                                   Labels::boolean("valid")),
+    const Descriptor<std::string, bool> Descriptors::QUERY{"query", "DNS query received",
+                                        std::make_tuple(
+                                            Labels::string("qname"), 
+                                            Labels::boolean("valid")
+                                        ),
                                         Unit::NONE};
 }

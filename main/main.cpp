@@ -29,8 +29,22 @@ int main(int argc, char **argv) {
     });
 
     handler->on(Dns::Server::EventType::QUERY, [&observer](auto event) {
+        Metrics::QueryObservation::Builder builder = Metrics::QueryObservation::newBuilder();
+
         std::cout << "received a query" << std::endl;
-        observer.observe(Metrics::QueryObservation::newBuilder().build());
+        auto queryEvent = std::dynamic_pointer_cast<Dns::Server::QueryEvent>(event);
+        auto query = queryEvent->getQuery();
+
+        builder.valid(false);
+        if(query) {
+            auto question = query->question();
+            if(question) {
+                builder.qname(question->qname);
+                builder.valid(true);
+            }
+        }
+
+        observer.observe(builder.build());
     });
 
     handler->on(Dns::Server::EventType::REPLY, [](auto event) {
