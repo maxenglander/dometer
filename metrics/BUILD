@@ -72,6 +72,19 @@ cc_library(
 )
 
 cc_library(
+    name = "label_helper",
+    deps = [
+        "//util:tuple_helper",
+        ":label"
+    ],
+    hdrs = [
+        "label_helper.hpp",
+        "label_helper.ipp",
+    ],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+cc_library(
     name = "labels",
     deps = [
         ":boolean_label",
@@ -126,8 +139,8 @@ cc_library(
         "@com_github_jupp0r_prometheus_cpp//core",
         "@com_github_jupp0r_prometheus_cpp//pull",
         "@com_github_jupp0r_prometheus_cpp//push",
-        "//util:tuple_helper",
         ":descriptor",
+        ":label_helper",
         ":observation",
     ],
     hdrs = [

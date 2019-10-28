@@ -19,7 +19,9 @@ namespace Dometer::Util {
 	struct TupleHelperImpl<0>
 	{
 		template <typename T, typename F>
-		static constexpr decltype(auto) applyAt(T& tup, size_t idx, F fun) { assert(false); }
+		static constexpr decltype(auto) applyAt(T& tup, size_t idx, F fun) {
+            assert(false);
+        }
 	};
 	 
     struct TupleHelper {

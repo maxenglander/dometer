@@ -13,7 +13,7 @@ namespace Dometer::Metrics {
     template<typename... T>
     CounterDescriptor<T...>::CounterDescriptor(std::string name, std::string description,
                                                std::tuple<std::unique_ptr<Label<T>>...> labels)
-            :   Descriptor<T...>::Descriptor(name, description, std::move(labels), Type::COUNTER, Unit::NONE)
+            :   Descriptor<T...>::Descriptor(name, description, labels, Type::COUNTER, Unit::NONE)
     {
     }
 }
