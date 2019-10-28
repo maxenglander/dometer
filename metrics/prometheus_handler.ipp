@@ -27,22 +27,18 @@ namespace Dometer::Metrics {
     void PrometheusHandler::handleCounter(Observation<T...> observation) {
         const Descriptor<T...>& descriptor = observation.descriptor;
 
-        auto it = counters.find(descriptor.name);
-        if(it == counters.end()) {
+        auto search = counters.find(descriptor.name);
+        if(search == counters.end()) {
             counters.insert({descriptor.name, std::ref(prometheus::BuildCounter()
                 .Name(descriptor.name)
                 .Help(descriptor.description)
                 .Register(*registry))});
-        }
-
-        it = counters.find(descriptor.name);
-        if(it == counters.end()) {
-            std::cout << "prometheus handler: still at end of counters" << std::endl;
+            search = counters.find(descriptor.name);
         }
 
         std::map<std::string, std::string> labels
             = LabelHelper::createLabelMap(descriptor.labels, observation.labelValues);
-        prometheus::Family<prometheus::Counter>& counter = it->second;
+        prometheus::Family<prometheus::Counter>& counter = search->second;
         counter.Add(labels).Increment(observation.value);
     }
 }

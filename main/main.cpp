@@ -49,8 +49,10 @@ int main(int argc, char **argv) {
         if(query) {
             auto question = query->getQuestion();
             if(question) {
-                builder.qname(question->qname);
-                builder.valid(true);
+                builder.qclass(question->qclass)
+                       .qname(question->qname)
+                       .qtype(question->qtype)
+                       .valid(true);
             }
         }
 
