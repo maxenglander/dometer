@@ -43,8 +43,9 @@ namespace Dometer::Dns {
 
         ns_msg handle;
 
-        if(ns_initparse(bytes.get(), size, &handle) < 0)
+        if(ns_initparse(bytes.get(), size, &handle) < 0) {
             return unexpected<Error>(Error({strerror(errno), errno}));
+        }
 
         return Packet(std::move(bytes), handle, size);
     }

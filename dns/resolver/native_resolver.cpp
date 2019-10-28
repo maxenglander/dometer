@@ -28,17 +28,27 @@ namespace Dometer::Dns::Resolver {
 
     expected<Dns::Packet, Util::Error> NativeResolver::resolve(
             const std::string& qname, const Class& qclass, const Type& qtype) const {
-        unsigned char buffer[4096];
-        int length;
+        unsigned char buffer[PACKETSZ];
+        memset(buffer, 0, PACKETSZ);
 
+        int length;
         if(resolutionMode == ResolutionMode::QUERY) {
-            length = res_query(qname.c_str(), qclass, qtype, buffer, sizeof(buffer));
+            length = res_query(qname.c_str(), qclass, qtype, buffer, PACKETSZ);
         } else {
-            length = res_search(qname.c_str(), qclass, qtype, buffer, sizeof(buffer));
+            length = res_search(qname.c_str(), qclass, qtype, buffer, PACKETSZ);
         }
 
-        if(length < 0)
-            return unexpected<Util::Error>(Util::Error{hstrerror(h_errno), h_errno});
+        if(length < 0) {
+            int savedherrno = h_errno;
+
+            // Nasty hack because res_* hides the length of packets from us
+            for(int i = 0; i <= PACKETSZ; i++) {
+                auto reply = Dns::Packet::makePacket(buffer, i);
+                if(reply) return reply;
+            }
+
+            return unexpected<Util::Error>(Util::Error{hstrerror(savedherrno), savedherrno});
+        }
 
         return Dns::Packet::makePacket(buffer, length);
     }

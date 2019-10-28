@@ -1,4 +1,5 @@
 #include <chrono>
+#include <iostream>
 #include <memory>
 
 #include "dns/packet.hpp"
@@ -68,7 +69,10 @@ namespace Dometer::Dns::Server {
 
         auto reply = resolver.resolve(question->qname, question->qclass, question->qtype);
         if(reply) {
+            std::cout << "updating reply id" << std::endl;
             reply->setId(query->getId());
+        } else {
+            std::cout << "got a bad reply" << std::endl;
         }
 
         notify(std::make_shared<LookupEvent>(*query, reply));
