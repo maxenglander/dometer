@@ -1,12 +1,11 @@
 #include "metrics/boolean_label.hpp"
 
 namespace Dometer::Metrics {
-    BooleanLabel::BooleanLabel(std::string name) : Label::Label(name) {}
+    BooleanLabel::BooleanLabel(std::string name) : Label::Label(name, false) {}
 
     std::string BooleanLabel::toString(bool value) const {
         if(value)
-            return "true";
-        else
-            return "false";
+            return std::string("true");
+        return std::string("false");
     }
 }

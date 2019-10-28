@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include <iostream>
 #include <map>
 #include <string>
 #include <tuple>
@@ -14,6 +16,7 @@
 namespace Dometer::Metrics {
     template<typename... T>
     void PrometheusHandler::handle(Observation<T...> observation) {
+        std::cout << "prometheus: handling observation" << std::endl;
         switch(observation.descriptor.type) {
             case Type::COUNTER:
                 handleCounter(observation);
@@ -22,16 +25,24 @@ namespace Dometer::Metrics {
 
     template<typename... T>
     void PrometheusHandler::handleCounter(Observation<T...> observation) {
-        Descriptor<T...>& descriptor = observation.descriptor;
+        const Descriptor<T...>& descriptor = observation.descriptor;
 
-        auto search = counters.find(descriptor.name);
-        if(!search) {
-            counters[descriptor.name] = registry.Add<prometheus::Counter>(descriptor.name, descriptor.description, {});
+        auto it = counters.find(descriptor.name);
+        if(it == counters.end()) {
+            counters.insert({descriptor.name, std::ref(prometheus::BuildCounter()
+                .Name(descriptor.name)
+                .Help(descriptor.description)
+                .Register(*registry))});
+        }
+
+        it = counters.find(descriptor.name);
+        if(it == counters.end()) {
+            std::cout << "prometheus handler: still at end of counters" << std::endl;
         }
 
         std::map<std::string, std::string> labels
             = LabelHelper::createLabelMap(descriptor.labels, observation.labelValues);
-
-        counters[descriptor.name].Add(labels).increment(observation.value);
+        prometheus::Family<prometheus::Counter>& counter = it->second;
+        counter.Add(labels).Increment(observation.value);
     }
 }

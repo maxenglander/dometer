@@ -1,17 +1,18 @@
 #pragma once
 
-#include "metrics/handler.hpp"
+#include <memory>
+
 #include "metrics/observation.hpp"
 
 namespace Dometer::Metrics {
+    template<typename Handler>
     class Observer {
         public:
-            Observer(Handler&);
+            Observer(std::shared_ptr<Handler>);
             template<typename... T>
             void observe(Observation<T...>);
         private:
-            Handler& handler;
-            
+            std::shared_ptr<Handler> handler;
     };
 }
 

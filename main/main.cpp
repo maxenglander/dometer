@@ -14,16 +14,23 @@
 #include "metrics/prometheus_handler.hpp"
 #include "metrics/query_observation.hpp"
 
+#include "prometheus/exposer.h"
+#include "prometheus/registry.h"
+
 namespace Dns = Dometer::Dns;
 namespace Metrics = Dometer::Metrics;
 using namespace std::experimental;
 
 int main(int argc, char **argv) {
-    Metrics::PrometheusHandler prometheusHandler;
-    Metrics::Observer metricsObserver(prometheusHandler);
+    auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
-    std::unique_ptr<Dns::Server::Handler> serverHandler
-        = std::make_unique<Dns::Server::NativeResolvingHandler>();
+    auto prometheusHandler = std::make_shared<Metrics::PrometheusHandler>(prometheusRegistry);
+    Metrics::Observer<Metrics::PrometheusHandler> metricsObserver(prometheusHandler);
+
+    prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
+    prometheusExposer.RegisterCollectable(prometheusRegistry);
+
+    auto serverHandler = std::make_unique<Dns::Server::NativeResolvingHandler>();
 
     serverHandler->on(Dns::Server::EventType::LOOKUP, [](auto event) {
         auto lookupEvent = std::dynamic_pointer_cast<Dns::Server::LookupEvent>(event);
@@ -31,9 +38,10 @@ int main(int argc, char **argv) {
     });
 
     serverHandler->on(Dns::Server::EventType::QUERY, [&metricsObserver](auto event) {
-        Metrics::QueryObservation::Builder builder = Metrics::QueryObservation::newBuilder();
+        auto builder = Metrics::QueryObservation::newBuilder();
 
         std::cout << "received a query" << std::endl;
+
         auto queryEvent = std::dynamic_pointer_cast<Dns::Server::QueryEvent>(event);
         auto query = queryEvent->getQuery();
 
@@ -46,6 +54,7 @@ int main(int argc, char **argv) {
             }
         }
 
+        std::cout << "making a query observation" << std::endl;
         metricsObserver.observe(builder.build());
     });
 
@@ -56,9 +65,7 @@ int main(int argc, char **argv) {
     });
 
     Dns::Server::Server server(std::move(serverHandler));
-
     auto result = server.serve();
-
     if(!result) {
         std::cerr << "failed to start DNS server: " + result.error().message
             + " (" + std::to_string(result.error().number) + ")" << std::endl;

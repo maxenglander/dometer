@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include <memory>
 #include <unordered_map>
 
 #include "metrics/handler.hpp"
@@ -9,19 +11,17 @@
 #include "prometheus/family.h"
 #include "prometheus/registry.h"
 
-namespace Util = Dometer::Util;
-
 namespace Dometer::Metrics {
-    class PrometheusHandler : public Handler {
+    class PrometheusHandler {
         public:
-            template<typename... T>
-            void handle(Observation<T...>);
-        private:
-            template<typename... T>
-            void handleCounter(Observation<T...>);
+            PrometheusHandler(std::shared_ptr<prometheus::Registry>);
 
-            std::unordered_map<std::string, prometheus::Family<prometheus::Counter>> counters;
-            prometheus::Registry registry;
+            template<typename... T> void handle(Observation<T...>);
+        private:
+            template<typename... T> void handleCounter(Observation<T...>);
+
+            std::unordered_map<std::string, std::reference_wrapper<prometheus::Family<prometheus::Counter>>> counters;
+            std::shared_ptr<prometheus::Registry> registry;
     };
 }
 

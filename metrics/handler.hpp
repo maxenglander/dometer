@@ -5,7 +5,6 @@
 namespace Dometer::Metrics {
     class Handler {
         public:
-            template<typename... T>
-            void handle(Observation<T...>) {};
+            template<typename... T> void handle(Observation<T...>) {};
     };
 }

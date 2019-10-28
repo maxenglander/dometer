@@ -1,35 +1,29 @@
-metric/counter.hpp
-metric/label.hpp
-metric/label_value.hpp
-metric/metric.hpp
-metric/observer.hpp
-metric/observation.hpp
-metric/recorder.hpp
-metric/store.hpp
-metric/unit.hpp
+prometheus
+==========
 
-Metric
+PrometheusHandler => ... => {Exposer, Gateway}
 
-Observation
-  metric
-  value
+- can have PH(Exporter) where Exporter is either ExposerExporter or
+  GatewayExporter
+  * not great because Registry is store on PH, and need a way to pass that to
+    Exporter, seems like pointless abstraction
+  * makes it difficult to support both push/pull
+- can have two constructors, PH(Exposer) and PH(Gateway)
+  * not great because would prefer not to expose Prometheus client API outside
+    of metrics/ package 
+  * makes it difficult to support both push/pull
+- can have PH(PHConfig), and PH creates either an Exposwer or Gateway depending
+   on content
+  * overcomplicates PH
+  * supports have both push/pull, or even combinations of both
+- can have PH(Registry), and manage exposition outside of PH
+  * not great because would prefer not to expose Prometheus client API outside
+    of metrics/ pacage
+  * supports have both push/pull, or even combinations of both
 
-metricObserver.observe(observation);
-metricObserver.get(metric)
-    .newObservation()
-    .withLabels(...)
-    .inc();
+eviction
+========
 
-store[Counter].inc();
-
-Observation<T>
-  Descriptor descriptor
-  tuple<...> labels
-  T value
-
-metricObserver.observe(Metrics::QueryObservation::newBuilder().qname().build());
-metricObserver.observe(new ReplyObservation());
-metricObserver.observe(new LookupObservation());
-
-
-Observer => ... => Prometheus
+- can keep a mru-list of [[labels1...], [labels2...]]
+- when [labels2...] gets evicted, all counters, guages, etc. that match that
+  list of labels get removed

@@ -1,0 +1,29 @@
+{
+  "metrics": {
+    "handlers": [
+      {
+        "type": "prometheus",
+        "transports": [
+          {
+            "type": "pull",
+            "url": "http://0.0.0.0:1234/metrics"
+          },
+          {
+            "type": "push",
+            ...
+          }  
+        ]
+      }
+    ]
+  },
+  "servers": [
+    {
+        "address": "udp://0.0.0.0:53",
+        "maxConnections": 100
+    },
+    {
+        "address": "unix:/var/run/dometer.sock"
+        "maxConnections": 100
+    }
+  ]
+}
