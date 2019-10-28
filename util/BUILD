@@ -24,3 +24,9 @@ cc_library(
     hdrs = ["enum_hasher.hpp"],
     visibility = ["//visibility:public"],
 )
+
+cc_library(
+    name = "tuple_helper",
+    hdrs = ["tuple_helper.hpp"],
+    visibility = ["//visibility:public"],
+)

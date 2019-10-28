@@ -9,12 +9,32 @@ cc_library(
 )
 
 cc_library(
+    name = "counter_descriptor",
+    deps = [
+        ":descriptor",
+        ":label",
+        ":type",
+        ":unit",
+    ],
+    hdrs = [
+        "counter_descriptor.hpp",
+        "counter_descriptor.ipp",
+    ],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "descriptor",
     deps = [
         ":label",
+        ":type",
         ":unit",
     ],
-    hdrs = ["descriptor.hpp"],
+    hdrs = [
+        "descriptor.hpp",
+        "descriptor.ipp",
+    ],
     srcs = [],
     visibility = ["//visibility:public"],
 )
@@ -22,6 +42,7 @@ cc_library(
 cc_library(
     name = "descriptors",
     deps = [
+        ":counter_descriptor",
         ":descriptor",
         ":label",
         ":labels",
@@ -29,6 +50,16 @@ cc_library(
     ],
     hdrs = ["descriptors.hpp"],
     srcs = ["descriptors.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "handler",
+    deps = [
+        ":observation"
+    ],
+    hdrs = ["handler.hpp"],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 
@@ -53,6 +84,17 @@ cc_library(
 )
 
 cc_library(
+    name = "noop_handler",
+    deps = [
+        ":handler",
+        ":observation",
+    ],
+    hdrs = ["noop_handler.hpp"],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "observation",
     deps = [
         ":descriptor",
@@ -65,9 +107,33 @@ cc_library(
 cc_library(
     name = "observer",
     deps = [
+        ":handler",
         ":observation",
     ],
-    hdrs = ["observer.hpp"],
+    hdrs = [
+        "observer.hpp",
+        "observer.ipp",
+    ],
+    srcs = [
+        "observer.cpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "prometheus_handler",
+    deps = [
+        "@com_github_jupp0r_prometheus_cpp//core",
+        "@com_github_jupp0r_prometheus_cpp//pull",
+        "@com_github_jupp0r_prometheus_cpp//push",
+        "//util:tuple_helper",
+        ":descriptor",
+        ":observation",
+    ],
+    hdrs = [
+        "prometheus_handler.hpp",
+        "prometheus_handler.ipp",
+    ],
     srcs = [],
     visibility = ["//visibility:public"],
 )
@@ -90,6 +156,14 @@ cc_library(
     ],
     hdrs = ["string_label.hpp"],
     srcs = ["string_label.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "type",
+    deps = [],
+    hdrs = ["type.hpp"],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 

@@ -1,0 +1,3 @@
+ TODO
+ - factor templatized hpp implementations into ipp files
+ - replace #include statements with forward declarations
