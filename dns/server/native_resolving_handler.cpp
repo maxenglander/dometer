@@ -78,8 +78,9 @@ namespace Dometer::Dns::Server {
             std::cout << "got a bad reply" << std::endl;
         }
 
+        std::chrono::duration<float> latency = end - start;
         notify(std::make_shared<LookupEvent>(*query, reply,
-                    std::chrono::duration_cast<std::chrono::microseconds>(end - start)));
+                    std::chrono::duration_cast<std::chrono::microseconds>(latency)));
 
         return reply;
     }

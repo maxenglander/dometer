@@ -11,12 +11,12 @@ namespace Dometer::Dns::Metrics {
             :    public Dometer::Metrics::ObservationBuilder<double, std::string, std::string, Dometer::Dns::Type> {
         public:
             Dometer::Metrics::Observation<double, std::string, std::string, Dometer::Dns::Type> build() const;
-            LookupObservationBuilder& duration(double durationMicroseconds);
+            LookupObservationBuilder& duration(double duration);
             LookupObservationBuilder& qclass(std::string);
             LookupObservationBuilder& qname(std::string);
             LookupObservationBuilder& qtype(Dometer::Dns::Type);
         private:
-            uint64_t _durationMicroseconds;
+            double _duration;
             std::string _qclass;
             std::string _qname;
             Dometer::Dns::Type _qtype = Dometer::Dns::Type::A;

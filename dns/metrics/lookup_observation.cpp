@@ -8,10 +8,10 @@
 #include "metrics/observation.hpp"
 
 namespace Dometer::Dns::Metrics {
-    LookupObservation::LookupObservation(double durationMicroseconds,
+    LookupObservation::LookupObservation(double duration,
                 std::tuple<std::string, std::string, Dometer::Dns::Type> labelValues)
             :   Dometer::Metrics::Observation<double, std::string, std::string, Dometer::Dns::Type>::Observation(
-                    LookupSummary::INSTANCE, durationMicroseconds, labelValues
+                    LookupSummary::INSTANCE, duration, labelValues
                 )
     {}
 
@@ -20,11 +20,11 @@ namespace Dometer::Dns::Metrics {
     }
 
     Dometer::Metrics::Observation<double, std::string, std::string, Dometer::Dns::Type> LookupObservationBuilder::build() const {
-        return LookupObservation(_durationMicroseconds, std::make_tuple(_qclass, _qname, _qtype));
+        return LookupObservation(_duration, std::make_tuple(_qclass, _qname, _qtype));
     }
 
-    LookupObservationBuilder& LookupObservationBuilder::duration(double microseconds) {
-        this->_durationMicroseconds = microseconds;
+    LookupObservationBuilder& LookupObservationBuilder::duration(double seconds) {
+        this->_duration = seconds;
         return *this;
     }
 

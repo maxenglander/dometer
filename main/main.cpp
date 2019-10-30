@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <memory>
 
@@ -41,12 +42,14 @@ int main(int argc, char **argv) {
         auto query = lookupEvent->getQuery();
 
         if(query) {
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(lookupEvent->getDuration());
+
             auto question = query.getQuestion();
             if(question) {
                 builder.qclass(question->qclass)
                        .qname(question->qname)
                        .qtype(question->qtype)
-                       .duration(lookupEvent->getDuration().count());
+                       .duration(duration.count() / 1000000.0);
             }
         }
 
