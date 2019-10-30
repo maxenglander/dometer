@@ -10,8 +10,13 @@ using namespace std::experimental;
 namespace Dometer::Dns::Server {
     LookupEvent::LookupEvent(
             const Packet& query,
-            const expected<Packet, Error>& reply)
-        :   query(query), reply(reply) {}
+            const expected<Packet, Error>& reply,
+            const std::chrono::duration<double, std::micro> duration)
+        :   query(query), reply(reply), duration(duration) {}
+
+    const std::chrono::duration<double, std::micro> LookupEvent::getDuration() const {
+        return duration;
+    }
 
     const Packet& LookupEvent::getQuery() const {
         return query;

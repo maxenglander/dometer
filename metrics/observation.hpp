@@ -6,17 +6,17 @@
 #include "metrics/metric.hpp"
 
 namespace Dometer::Metrics {
-    template<typename... T>
+    template<typename V, typename... L>
     struct Observation {
-        Observation(const Metric<T...>& metric, std::tuple<T...> labelValues, uint64_t value)
-            : metric(metric), labelValues(labelValues), value(value) {};
-        const Metric<T...>& metric;
-        const std::tuple<T...> labelValues;
-        const uint64_t value;
+        Observation(const Metric<V, L...>& metric, V value, std::tuple<L...> labelValues)
+            : metric(metric), value(value), labelValues(labelValues) {};
+        const Metric<V, L...>& metric;
+        const V value;
+        const std::tuple<L...> labelValues;
     };
 
-    template<typename... T>
+    template<typename V, typename... L>
     class ObservationBuilder {
-        virtual Observation<T...> build() const = 0;
+        virtual Observation<V, L...> build() const = 0;
     };
 }

@@ -9,12 +9,12 @@
 #include "metrics/unit.hpp"
 
 namespace Dometer::Metrics {
-    template<typename... T>
+    template<typename V, typename... L>
     struct Metric {
-        Metric(std::string, std::string, std::tuple<std::shared_ptr<Label<T>>...>, Type, Unit);
+        Metric(std::string, std::string, std::tuple<std::shared_ptr<Label<L>>...>, Type, Unit);
         const std::string name;
         const std::string description;
-        const std::tuple<std::shared_ptr<Label<T>>...> labels;
+        const std::tuple<std::shared_ptr<Label<L>>...> labels;
         const Type type;
         const Unit unit;
     };

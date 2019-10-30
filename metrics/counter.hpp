@@ -8,9 +8,9 @@
 #include "metrics/metric.hpp"
 
 namespace Dometer::Metrics {
-    template<typename... T>
-    struct Counter : Metric<T...> {
-        Counter(std::string, std::string, std::tuple<std::shared_ptr<Label<T>>...>);
+    template<typename... L>
+    struct Counter : Metric<uint64_t, L...> {
+        Counter(std::string, std::string, std::tuple<std::shared_ptr<Label<L>>...>);
     };
 }
 

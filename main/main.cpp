@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "dns/packet.hpp"
+#include "dns/metrics/lookup_observation.hpp"
 #include "dns/metrics/query_observation.hpp"
 #include "dns/metrics/reply_observation.hpp"
 #include "dns/server/event_type.hpp"
@@ -33,8 +34,23 @@ int main(int argc, char **argv) {
 
     auto serverHandler = std::make_unique<Dns::Server::NativeResolvingHandler>();
 
-    serverHandler->on(Dns::Server::EventType::LOOKUP, [](auto event) {
+    serverHandler->on(Dns::Server::EventType::LOOKUP, [&metricsObserver](auto event) {
+        auto builder = Dns::Metrics::LookupObservation::newBuilder();
+
         auto lookupEvent = std::dynamic_pointer_cast<Dns::Server::LookupEvent>(event);
+        auto query = lookupEvent->getQuery();
+
+        if(query) {
+            auto question = query.getQuestion();
+            if(question) {
+                builder.qclass(question->qclass)
+                       .qname(question->qname)
+                       .qtype(question->qtype)
+                       .duration(lookupEvent->getDuration().count());
+            }
+        }
+
+        metricsObserver.observe(builder.build());
     });
 
     serverHandler->on(Dns::Server::EventType::QUERY, [&metricsObserver](auto event) {

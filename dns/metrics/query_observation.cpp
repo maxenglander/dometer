@@ -8,10 +8,10 @@
 #include "metrics/observation.hpp"
 
 namespace Dometer::Dns::Metrics {
-    QueryObservation::QueryObservation(
-                std::tuple<std::string, std::string, Dometer::Dns::Type, bool> labelValues, uint64_t value)
-            :   Dometer::Metrics::Observation<std::string, std::string, Dometer::Dns::Type, bool>::Observation(
-                    QueryCounter::INSTANCE, labelValues, value
+    QueryObservation::QueryObservation(uint64_t value,
+                    std::tuple<std::string, std::string, Dometer::Dns::Type, bool> labelValues)
+            :   Dometer::Metrics::Observation<uint64_t, std::string, std::string, Dometer::Dns::Type, bool>::Observation(
+                    QueryCounter::INSTANCE, value, labelValues
                 )
     {}
 
@@ -19,8 +19,8 @@ namespace Dometer::Dns::Metrics {
         return QueryObservationBuilder();
     }
 
-    Dometer::Metrics::Observation<std::string, std::string, Dometer::Dns::Type, bool> QueryObservationBuilder::build() const {
-        return QueryObservation(std::make_tuple(_qclass, _qname, _qtype, _valid), 1);
+    Dometer::Metrics::Observation<uint64_t, std::string, std::string, Dometer::Dns::Type, bool> QueryObservationBuilder::build() const {
+        return QueryObservation(1, std::make_tuple(_qclass, _qname, _qtype, _valid));
     }
 
     QueryObservationBuilder& QueryObservationBuilder::qclass(std::string qclass) {

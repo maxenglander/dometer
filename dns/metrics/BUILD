@@ -10,6 +10,37 @@ cc_library(
 )
 
 cc_library(
+    name = "lookup_observation",
+    deps = [
+        "//dns:type",
+        "//metrics:labels",
+        "//metrics:observation",
+        "//metrics:unit",
+        ":labels",
+        ":lookup_summary",
+        ":type_label",
+    ],
+    hdrs = ["lookup_observation.hpp"],
+    srcs = ["lookup_observation.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "lookup_summary",
+    deps = [
+        "//dns:type",
+        "//metrics:labels",
+        "//metrics:summary",
+        "//metrics:unit",
+        ":labels",
+        ":type_label",
+    ],
+    hdrs = ["lookup_summary.hpp"],
+    srcs = ["lookup_summary.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "query_counter",
     deps = [
         "//dns:type",

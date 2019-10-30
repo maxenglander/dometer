@@ -6,6 +6,7 @@ cc_binary(
         "@com_github_jupp0r_prometheus_cpp//pull",
         "@net_sourceforge_asio_asio//:asio",
         "//dns:packet",
+        "//dns/metrics:lookup_observation",
         "//dns/metrics:query_observation",
         "//dns/metrics:reply_observation",
         "//dns/server:event_type",

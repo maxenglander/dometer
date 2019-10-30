@@ -6,9 +6,10 @@
 #include "metrics/observation.hpp"
 
 namespace Dometer::Dns::Metrics {
-    ReplyObservation::ReplyObservation(std::tuple<std::string, std::string, std::string, bool> labelValues, uint64_t value)
-            :   Dometer::Metrics::Observation<std::string, std::string, std::string, bool>::Observation(
-                    ReplyCounter::INSTANCE, labelValues, value
+    ReplyObservation::ReplyObservation(uint64_t value,
+                    std::tuple<std::string, std::string, std::string, bool> labelValues)
+            :   Dometer::Metrics::Observation<uint64_t, std::string, std::string, std::string, bool>::Observation(
+                    ReplyCounter::INSTANCE, value, labelValues
                 )
     {}
 
@@ -16,8 +17,8 @@ namespace Dometer::Dns::Metrics {
         return ReplyObservationBuilder();
     }
 
-    Dometer::Metrics::Observation<std::string, std::string, std::string, bool> ReplyObservationBuilder::build() const {
-        return ReplyObservation(std::make_tuple(_qclass, _qname, _qtype, _valid), 1);
+    Dometer::Metrics::Observation<uint64_t, std::string, std::string, std::string, bool> ReplyObservationBuilder::build() const {
+        return ReplyObservation(1, std::make_tuple(_qclass, _qname, _qtype, _valid));
     }
 
     ReplyObservationBuilder& ReplyObservationBuilder::qclass(std::string qclass) {

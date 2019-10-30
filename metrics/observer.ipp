@@ -10,9 +10,14 @@ namespace Dometer::Metrics {
     Observer<Handler>::Observer(std::shared_ptr<Handler> handler) : handler(handler) {}
 
     template<typename Handler>
-    template<typename... T>
-    void Observer<Handler>::observe(Observation<T...> observation) {
-        std::cout << "observer: sending observation to handler" << std::endl;
+    template<typename... L>
+    void Observer<Handler>::observe(Observation<uint64_t, L...> observation) {
+        handler->handle(observation);
+    }
+
+    template<typename Handler>
+    template<typename... L>
+    void Observer<Handler>::observe(Observation<double, L...> observation) {
         handler->handle(observation);
     }
 }

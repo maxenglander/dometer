@@ -124,6 +124,7 @@ cc_library(
     name = "prometheus_handler",
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
+        ":counter",
         ":metric",
         ":handler",
         ":label_helper",
@@ -144,6 +145,22 @@ cc_library(
     ],
     hdrs = ["string_label.hpp"],
     srcs = ["string_label.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "summary",
+    deps = [
+        ":label",
+        ":metric",
+        ":type",
+        ":unit",
+    ],
+    hdrs = [
+        "summary.hpp",
+        "summary.ipp",
+    ],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 

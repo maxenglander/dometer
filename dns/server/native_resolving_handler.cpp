@@ -67,7 +67,10 @@ namespace Dometer::Dns::Server {
             return Packet::formatError(*query);
         }
 
+        auto start = clock.now();
         auto reply = resolver.resolve(question->qname, question->qclass, question->qtype);
+        auto end = clock.now();
+
         if(reply) {
             std::cout << "updating reply id" << std::endl;
             reply->setId(query->getId());
@@ -75,7 +78,8 @@ namespace Dometer::Dns::Server {
             std::cout << "got a bad reply" << std::endl;
         }
 
-        notify(std::make_shared<LookupEvent>(*query, reply));
+        notify(std::make_shared<LookupEvent>(*query, reply,
+                    std::chrono::duration_cast<std::chrono::microseconds>(end - start)));
 
         return reply;
     }

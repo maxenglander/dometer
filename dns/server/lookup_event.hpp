@@ -1,5 +1,7 @@
 #pragma once
 
+#include <chrono>
+
 #include "dns/server/event.hpp"
 #include "dns/server/event_type.hpp"
 #include "experimental/expected.hpp"
@@ -18,12 +20,15 @@ namespace Dometer::Dns::Server {
         public:
             LookupEvent(
                     const Dns::Packet& query,
-                    const expected<Dns::Packet, Util::Error>& reply);
+                    const expected<Dns::Packet, Util::Error>& reply,
+                    const std::chrono::duration<double, std::micro> duration);
+            const std::chrono::duration<double, std::micro> getDuration() const;
             const Dns::Packet& getQuery() const;
             const expected<Dns::Packet, Util::Error>& getReply() const;
             EventType getType() const;
         private:
             const Dns::Packet& query;
             const expected<Dns::Packet, Util::Error>& reply;
+            const std::chrono::duration<double, std::micro> duration;
     };
 }
