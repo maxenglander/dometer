@@ -1,19 +1,25 @@
 #include <string>
 #include <tuple>
 
-#include "metrics/descriptors.hpp"
+#include "dns/type.hpp"
+#include "dns/metrics/query_counter.hpp"
+#include "dns/metrics/query_observation.hpp"
+#include "dns/metrics/type_label.hpp"
 #include "metrics/observation.hpp"
-#include "metrics/query_observation.hpp"
 
-namespace Dometer::Metrics {
-    QueryObservation::QueryObservation(std::tuple<std::string, std::string, std::string, bool> labelValues, uint64_t value)
-            : Observation<std::string, std::string, std::string, bool>::Observation(Descriptors::QUERY, labelValues, value) {}
+namespace Dometer::Dns::Metrics {
+    QueryObservation::QueryObservation(
+                std::tuple<std::string, std::string, Dometer::Dns::Type, bool> labelValues, uint64_t value)
+            :   Dometer::Metrics::Observation<std::string, std::string, Dometer::Dns::Type, bool>::Observation(
+                    QueryCounter::INSTANCE, labelValues, value
+                )
+    {}
 
     QueryObservationBuilder QueryObservation::newBuilder() {
         return QueryObservationBuilder();
     }
 
-    Observation<std::string, std::string, std::string, bool> QueryObservationBuilder::build() const {
+    Dometer::Metrics::Observation<std::string, std::string, Dometer::Dns::Type, bool> QueryObservationBuilder::build() const {
         return QueryObservation(std::make_tuple(_qclass, _qname, _qtype, _valid), 1);
     }
 
@@ -27,7 +33,7 @@ namespace Dometer::Metrics {
         return *this;
     }
 
-    QueryObservationBuilder& QueryObservationBuilder::qtype(std::string qtype) {
+    QueryObservationBuilder& QueryObservationBuilder::qtype(Dometer::Dns::Type qtype) {
         this->_qtype = qtype;
         return *this;
     }

@@ -5,6 +5,8 @@
 #include "dns/type.hpp"
 
 namespace Dometer::Dns {
+    const Type Type::A = Type(ns_t_a);
+
     Type::Type(uint16_t value) : value(value) {}
 
     Type::operator uint16_t() const {

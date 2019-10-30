@@ -10,8 +10,8 @@
 
 namespace Dometer::Metrics {
     template<typename... T>
-    struct Descriptor {
-        Descriptor(std::string, std::string, std::tuple<std::shared_ptr<Label<T>>...>, Type, Unit);
+    struct Metric {
+        Metric(std::string, std::string, std::tuple<std::shared_ptr<Label<T>>...>, Type, Unit);
         const std::string name;
         const std::string description;
         const std::tuple<std::shared_ptr<Label<T>>...> labels;
@@ -20,4 +20,4 @@ namespace Dometer::Metrics {
     };
 }
 
-#include "metrics/descriptor.ipp"
+#include "metrics/metric.ipp"

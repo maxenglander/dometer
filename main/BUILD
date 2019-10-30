@@ -6,6 +6,8 @@ cc_binary(
         "@com_github_jupp0r_prometheus_cpp//pull",
         "@net_sourceforge_asio_asio//:asio",
         "//dns:packet",
+        "//dns/metrics:query_observation",
+        "//dns/metrics:reply_observation",
         "//dns/server:event_type",
         "//dns/server:handler",
         "//dns/server:lookup_event",
@@ -16,7 +18,6 @@ cc_binary(
         "//experimental:expected",
         "//metrics:prometheus_handler",
         "//metrics:observer",
-        "//metrics:query_observation",
     ],
     linkopts = [
         "-lresolv"

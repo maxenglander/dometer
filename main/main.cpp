@@ -2,6 +2,8 @@
 #include <memory>
 
 #include "dns/packet.hpp"
+#include "dns/metrics/query_observation.hpp"
+#include "dns/metrics/reply_observation.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
 #include "dns/server/lookup_event.hpp"
@@ -12,7 +14,6 @@
 #include "experimental/expected.hpp"
 #include "metrics/observer.hpp"
 #include "metrics/prometheus_handler.hpp"
-#include "metrics/query_observation.hpp"
 
 #include "prometheus/exposer.h"
 #include "prometheus/registry.h"
@@ -34,13 +35,10 @@ int main(int argc, char **argv) {
 
     serverHandler->on(Dns::Server::EventType::LOOKUP, [](auto event) {
         auto lookupEvent = std::dynamic_pointer_cast<Dns::Server::LookupEvent>(event);
-        std::cout << "performed a lookup" << std::endl;
     });
 
     serverHandler->on(Dns::Server::EventType::QUERY, [&metricsObserver](auto event) {
-        auto builder = Metrics::QueryObservation::newBuilder();
-
-        std::cout << "received a query" << std::endl;
+        auto builder = Dns::Metrics::QueryObservation::newBuilder();
 
         auto queryEvent = std::dynamic_pointer_cast<Dns::Server::QueryEvent>(event);
         auto query = queryEvent->getQuery();
@@ -56,14 +54,27 @@ int main(int argc, char **argv) {
             }
         }
 
-        std::cout << "making a query observation" << std::endl;
         metricsObserver.observe(builder.build());
     });
 
-    serverHandler->on(Dns::Server::EventType::REPLY, [](auto event) {
-        auto replyEvent = std::dynamic_pointer_cast<Dns::Server::ReplyEvent>(event);
-        auto query = replyEvent->getQuery();
-        std::cout << "sent a reply" << std::endl;
+    serverHandler->on(Dns::Server::EventType::REPLY, [&metricsObserver](auto event) {
+        auto builder = Dns::Metrics::ReplyObservation::newBuilder();
+
+        auto queryEvent = std::dynamic_pointer_cast<Dns::Server::ReplyEvent>(event);
+        auto reply = queryEvent->getReply();
+
+        builder.valid(false);
+        if(reply) {
+            auto question = reply->getQuestion();
+            if(question) {
+                builder.qclass(question->qclass)
+                       .qname(question->qname)
+                       .qtype(question->qtype)
+                       .valid(true);
+            }
+        }
+
+        metricsObserver.observe(builder.build());
     });
 
     Dns::Server::Server server(std::move(serverHandler));

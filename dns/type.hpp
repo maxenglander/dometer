@@ -6,6 +6,7 @@
 namespace Dometer::Dns {
     class Type {
         public:
+            static const Type A;
             Type(uint16_t value);
             operator uint16_t() const;
             operator std::string() const;

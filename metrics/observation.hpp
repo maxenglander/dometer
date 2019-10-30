@@ -3,14 +3,14 @@
 #include <stdint.h>
 #include <tuple>
 
-#include "metrics/descriptor.hpp"
+#include "metrics/metric.hpp"
 
 namespace Dometer::Metrics {
     template<typename... T>
     struct Observation {
-        Observation(const Descriptor<T...>& descriptor, std::tuple<T...> labelValues, uint64_t value)
-            : descriptor(descriptor), labelValues(labelValues), value(value) {};
-        const Descriptor<T...>& descriptor;
+        Observation(const Metric<T...>& metric, std::tuple<T...> labelValues, uint64_t value)
+            : metric(metric), labelValues(labelValues), value(value) {};
+        const Metric<T...>& metric;
         const std::tuple<T...> labelValues;
         const uint64_t value;
     };

@@ -9,47 +9,18 @@ cc_library(
 )
 
 cc_library(
-    name = "counter_descriptor",
+    name = "counter",
     deps = [
-        ":descriptor",
         ":label",
+        ":metric",
         ":type",
         ":unit",
     ],
     hdrs = [
-        "counter_descriptor.hpp",
-        "counter_descriptor.ipp",
+        "counter.hpp",
+        "counter.ipp",
     ],
     srcs = [],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "descriptor",
-    deps = [
-        ":label",
-        ":type",
-        ":unit",
-    ],
-    hdrs = [
-        "descriptor.hpp",
-        "descriptor.ipp",
-    ],
-    srcs = [],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "descriptors",
-    deps = [
-        ":counter_descriptor",
-        ":descriptor",
-        ":label",
-        ":labels",
-        ":unit",
-    ],
-    hdrs = ["descriptors.hpp"],
-    srcs = ["descriptors.cpp"],
     visibility = ["//visibility:public"],
 )
 
@@ -84,6 +55,7 @@ cc_library(
     srcs = [],
     visibility = ["//visibility:public"],
 )
+
 cc_library(
     name = "labels",
     deps = [
@@ -97,20 +69,38 @@ cc_library(
 )
 
 cc_library(
-    name = "noop_handler",
+    name = "metric",
     deps = [
-        ":handler",
-        ":observation",
+        ":label",
+        ":type",
+        ":unit",
     ],
-    hdrs = ["noop_handler.hpp"],
+    hdrs = [
+        "metric.hpp",
+        "metric.ipp",
+    ],
     srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "metrics",
+    deps = [
+        ":counter_metric",
+        ":metric",
+        ":label",
+        ":labels",
+        ":unit",
+    ],
+    hdrs = ["metrics.hpp"],
+    srcs = ["metrics.cpp"],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
     name = "observation",
     deps = [
-        ":descriptor",
+        ":metric",
     ],
     hdrs = ["observation.hpp"],
     srcs = [],
@@ -134,7 +124,7 @@ cc_library(
     name = "prometheus_handler",
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
-        ":descriptor",
+        ":metric",
         ":handler",
         ":label_helper",
         ":observation",
@@ -144,17 +134,6 @@ cc_library(
         "prometheus_handler.ipp",
     ],
     srcs = ["prometheus_handler.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "query_observation",
-    deps = [
-        ":descriptors",
-        ":observation",
-    ],
-    hdrs = ["query_observation.hpp"],
-    srcs = ["query_observation.cpp"],
     visibility = ["//visibility:public"],
 )
 

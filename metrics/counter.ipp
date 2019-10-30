@@ -3,17 +3,17 @@
 #include <tuple>
 #include <utility>
 
-#include "metrics/counter_descriptor.hpp"
-#include "metrics/descriptor.hpp"
+#include "metrics/counter.hpp"
 #include "metrics/label.hpp"
+#include "metrics/metric.hpp"
 #include "metrics/type.hpp"
 #include "metrics/unit.hpp"
 
 namespace Dometer::Metrics {
     template<typename... T>
-    CounterDescriptor<T...>::CounterDescriptor(std::string name, std::string description,
+    Counter<T...>::Counter(std::string name, std::string description,
                                                std::tuple<std::shared_ptr<Label<T>>...> labels)
-            :   Descriptor<T...>::Descriptor(name, description, labels, Type::COUNTER, Unit::NONE)
+            :   Metric<T...>::Metric(name, description, labels, Type::COUNTER, Unit::NONE)
     {
     }
 }
