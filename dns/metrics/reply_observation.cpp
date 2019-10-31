@@ -9,7 +9,7 @@ namespace Dometer::Dns::Metrics {
     ReplyObservation::ReplyObservation(uint64_t value,
                     std::tuple<std::string, std::string, std::string, bool> labelValues)
             :   Dometer::Metrics::Observation<uint64_t, std::string, std::string, std::string, bool>::Observation(
-                    ReplyCounter::INSTANCE, value, labelValues
+                    value, labelValues
                 )
     {}
 

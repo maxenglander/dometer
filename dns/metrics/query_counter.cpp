@@ -13,7 +13,7 @@ namespace Dometer::Dns::Metrics {
 
     QueryCounter::QueryCounter()
             :   Dometer::Metrics::Counter<std::string, std::string, Dometer::Dns::Type, bool>::Counter(
-                    "dns_query_count", "Count of DNS queries received",
+                    "dns_query_received_count", "Count of DNS queries received by Dometer",
                     std::make_tuple(
                         Dometer::Metrics::Labels::string("qclass"), 
                         Dometer::Metrics::Labels::string("qname"),

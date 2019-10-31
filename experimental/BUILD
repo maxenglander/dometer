@@ -11,3 +11,10 @@ cc_library(
     deps = ["@com_github_TartanLlama_optional//:optional"],
     visibility = ["//visibility:public"],
 )
+
+cc_library(
+    name = "variant",
+    hdrs = ["variant.hpp"],
+    deps = ["@com_github_mpark_variant//:variant"],
+    visibility = ["//visibility:public"],
+)

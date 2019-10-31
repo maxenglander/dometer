@@ -25,16 +25,6 @@ cc_library(
 )
 
 cc_library(
-    name = "handler",
-    deps = [
-        ":observation"
-    ],
-    hdrs = ["handler.hpp"],
-    srcs = [],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "label",
     deps = [],
     hdrs = ["label.hpp"],
@@ -102,7 +92,10 @@ cc_library(
     deps = [
         ":metric",
     ],
-    hdrs = ["observation.hpp"],
+    hdrs = [
+        "observation.hpp",
+        "observation.ipp",
+    ],
     srcs = [],
     visibility = ["//visibility:public"],
 )
@@ -110,7 +103,9 @@ cc_library(
 cc_library(
     name = "observer",
     deps = [
+        ":counter",
         ":observation",
+        ":summary",
     ],
     hdrs = [
         "observer.hpp",
@@ -126,9 +121,9 @@ cc_library(
         "@com_github_jupp0r_prometheus_cpp//core",
         ":counter",
         ":metric",
-        ":handler",
         ":label_helper",
         ":observation",
+        ":summary",
     ],
     hdrs = [
         "prometheus_handler.hpp",

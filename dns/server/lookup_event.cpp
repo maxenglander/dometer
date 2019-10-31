@@ -11,10 +11,10 @@ namespace Dometer::Dns::Server {
     LookupEvent::LookupEvent(
             const Packet& query,
             const expected<Packet, Error>& reply,
-            const std::chrono::duration<float, std::micro> duration)
+            const std::chrono::microseconds duration)
         :   query(query), reply(reply), duration(duration) {}
 
-    const std::chrono::duration<float, std::micro> LookupEvent::getDuration() const {
+    const std::chrono::microseconds LookupEvent::getDuration() const {
         return duration;
     }
 

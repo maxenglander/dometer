@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-
+#include <string> 
 #include "dns/type.hpp"
 #include "metrics/label.hpp"
 

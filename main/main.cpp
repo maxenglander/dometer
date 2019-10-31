@@ -4,7 +4,10 @@
 
 #include "dns/packet.hpp"
 #include "dns/metrics/lookup_observation.hpp"
+#include "dns/metrics/lookup_summary.hpp"
+#include "dns/metrics/query_counter.hpp"
 #include "dns/metrics/query_observation.hpp"
+#include "dns/metrics/reply_counter.hpp"
 #include "dns/metrics/reply_observation.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
@@ -27,36 +30,37 @@ using namespace std::experimental;
 int main(int argc, char **argv) {
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
-    auto prometheusHandler = std::make_shared<Metrics::PrometheusHandler>(prometheusRegistry);
-    Metrics::Observer<Metrics::PrometheusHandler> metricsObserver(prometheusHandler);
+    Metrics::PrometheusHandler prometheusHandler(prometheusRegistry);
 
     prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
     prometheusExposer.RegisterCollectable(prometheusRegistry);
 
     auto serverHandler = std::make_unique<Dns::Server::NativeResolvingHandler>();
 
-    serverHandler->on(Dns::Server::EventType::LOOKUP, [&metricsObserver](auto event) {
+    serverHandler->on(Dns::Server::EventType::LOOKUP, [&prometheusHandler](auto event) {
         auto builder = Dns::Metrics::LookupObservation::newBuilder();
 
         auto lookupEvent = std::dynamic_pointer_cast<Dns::Server::LookupEvent>(event);
         auto query = lookupEvent->getQuery();
 
         if(query) {
-            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(lookupEvent->getDuration());
+            std::chrono::microseconds duration = lookupEvent->getDuration();
+            std::chrono::duration<double> asSeconds
+                = lookupEvent->getDuration();
 
             auto question = query.getQuestion();
             if(question) {
                 builder.qclass(question->qclass)
                        .qname(question->qname)
                        .qtype(question->qtype)
-                       .duration(duration.count() / 1000000.0);
+                       .duration(asSeconds.count());
             }
         }
 
-        metricsObserver.observe(builder.build());
+        prometheusHandler.observe(Dns::Metrics::LookupSummary::INSTANCE, builder.build());
     });
 
-    serverHandler->on(Dns::Server::EventType::QUERY, [&metricsObserver](auto event) {
+    serverHandler->on(Dns::Server::EventType::QUERY, [&prometheusHandler](auto event) {
         auto builder = Dns::Metrics::QueryObservation::newBuilder();
 
         auto queryEvent = std::dynamic_pointer_cast<Dns::Server::QueryEvent>(event);
@@ -73,10 +77,10 @@ int main(int argc, char **argv) {
             }
         }
 
-        metricsObserver.observe(builder.build());
+        prometheusHandler.increment(Dns::Metrics::QueryCounter::INSTANCE, builder.build());
     });
 
-    serverHandler->on(Dns::Server::EventType::REPLY, [&metricsObserver](auto event) {
+    serverHandler->on(Dns::Server::EventType::REPLY, [&prometheusHandler](auto event) {
         auto builder = Dns::Metrics::ReplyObservation::newBuilder();
 
         auto queryEvent = std::dynamic_pointer_cast<Dns::Server::ReplyEvent>(event);
@@ -93,7 +97,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        metricsObserver.observe(builder.build());
+        prometheusHandler.increment(Dns::Metrics::ReplyCounter::INSTANCE, builder.build());
     });
 
     Dns::Server::Server server(std::move(serverHandler));

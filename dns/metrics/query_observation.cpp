@@ -11,7 +11,7 @@ namespace Dometer::Dns::Metrics {
     QueryObservation::QueryObservation(uint64_t value,
                     std::tuple<std::string, std::string, Dometer::Dns::Type, bool> labelValues)
             :   Dometer::Metrics::Observation<uint64_t, std::string, std::string, Dometer::Dns::Type, bool>::Observation(
-                    QueryCounter::INSTANCE, value, labelValues
+                    value, labelValues
                 )
     {}
 

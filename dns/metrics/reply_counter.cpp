@@ -10,7 +10,7 @@ namespace Dometer::Dns::Metrics {
 
     ReplyCounter::ReplyCounter()
             :   Dometer::Metrics::Counter<std::string, std::string, std::string, bool>::Counter(
-                    "dns_reply_count", "Count of DNS replies received",
+                    "dns_reply_sent_count", "Count of DNS replies returned by Dometer to clients",
                     std::make_tuple(
                         Dometer::Metrics::Labels::string("qclass"), 
                         Dometer::Metrics::Labels::string("qname"),

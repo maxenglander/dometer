@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iostream>
 #include <memory>
+#include <thread>
 
 #include "dns/packet.hpp"
 #include "dns/resolver/native_resolver.hpp"
@@ -70,17 +71,11 @@ namespace Dometer::Dns::Server {
         auto start = clock.now();
         auto reply = resolver.resolve(question->qname, question->qclass, question->qtype);
         auto end = clock.now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        if(reply) {
-            std::cout << "updating reply id" << std::endl;
-            reply->setId(query->getId());
-        } else {
-            std::cout << "got a bad reply" << std::endl;
-        }
+        if(reply) reply->setId(query->getId());
 
-        std::chrono::duration<float> latency = end - start;
-        notify(std::make_shared<LookupEvent>(*query, reply,
-                    std::chrono::duration_cast<std::chrono::microseconds>(latency)));
+        notify(std::make_shared<LookupEvent>(*query, reply, duration));
 
         return reply;
     }

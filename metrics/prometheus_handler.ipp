@@ -16,61 +16,37 @@
 
 namespace Dometer::Metrics {
     template<typename... L>
-    void PrometheusHandler::handle(Observation<double, L...> observation) {
-        switch(observation.metric.type) {
-            case Type::SUMMARY:
-                handleSummary(observation);
-            default:
-                break;
-        }
-    }
-
-    template<typename... L>
-    void PrometheusHandler::handle(Observation<uint64_t, L...> observation) {
-        switch(observation.metric.type) {
-            case Type::COUNTER:
-                handleCounter(observation);
-            default:
-                break;
-        }
-    }
-
-    template<typename... L>
-    void PrometheusHandler::handleCounter(Observation<uint64_t, L...> observation) {
-        const Metric<uint64_t, L...>& metric = observation.metric;
-
-        auto search = counters.find(metric.name);
+    void PrometheusHandler::increment(const Counter<L...>& counter, Observation<uint64_t, L...> observation) {
+        auto search = counters.find(counter.name);
         if(search == counters.end()) {
-            counters.insert({metric.name, std::ref(prometheus::BuildCounter()
-                .Name(metric.name)
-                .Help(metric.description)
+            counters.insert({counter.name, std::ref(prometheus::BuildCounter()
+                .Name(counter.name)
+                .Help(counter.description)
                 .Register(*registry))});
-            search = counters.find(metric.name);
+            search = counters.find(counter.name);
         }
 
         std::map<std::string, std::string> labels
-            = LabelHelper::createLabelMap(metric.labels, observation.labelValues);
-        prometheus::Family<prometheus::Counter>& counter = search->second;
-        counter.Add(labels).Increment(observation.value);
+            = LabelHelper::createLabelMap(counter.labels, observation.labelValues);
+        prometheus::Family<prometheus::Counter>& promCounter = search->second;
+        promCounter.Add(labels).Increment(observation.value);
     }
 
     template<typename... L>
-    void PrometheusHandler::handleSummary(Observation<double, L...> observation) {
-        const Metric<double, L...>& metric = observation.metric;
-
-        auto search = summaries.find(metric.name);
+    void PrometheusHandler::observe(const Summary<L...>& summary, Observation<double, L...> observation) {
+        auto search = summaries.find(summary.name);
         if(search == summaries.end()) {
-            summaries.insert({metric.name, std::ref(prometheus::BuildSummary()
-                .Name(metric.name)
-                .Help(metric.description)
+            summaries.insert({summary.name, std::ref(prometheus::BuildSummary()
+                .Name(summary.name)
+                .Help(summary.description)
                 .Register(*registry))});
-            search = summaries.find(metric.name);
+            search = summaries.find(summary.name);
         }
 
         std::map<std::string, std::string> labels
-            = LabelHelper::createLabelMap(metric.labels, observation.labelValues);
-        prometheus::Family<prometheus::Summary>& summary = search->second;
-        summary.Add(labels, prometheus::Summary::Quantiles{
+            = LabelHelper::createLabelMap(summary.labels, observation.labelValues);
+        prometheus::Family<prometheus::Summary>& promSummary = search->second;
+        promSummary.Add(labels, prometheus::Summary::Quantiles{
             {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
         }).Observe(observation.value);
     }

@@ -21,14 +21,14 @@ namespace Dometer::Dns::Server {
             LookupEvent(
                     const Dns::Packet& query,
                     const expected<Dns::Packet, Util::Error>& reply,
-                    const std::chrono::duration<float, std::micro> duration);
-            const std::chrono::duration<float, std::micro> getDuration() const;
+                    const std::chrono::microseconds duration);
+            const std::chrono::microseconds getDuration() const;
             const Dns::Packet& getQuery() const;
             const expected<Dns::Packet, Util::Error>& getReply() const;
             EventType getType() const;
         private:
             const Dns::Packet& query;
             const expected<Dns::Packet, Util::Error>& reply;
-            const std::chrono::duration<float, std::micro> duration;
+            const std::chrono::microseconds duration;
     };
 }

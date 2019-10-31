@@ -11,7 +11,7 @@ namespace Dometer::Dns::Metrics {
     LookupObservation::LookupObservation(double duration,
                 std::tuple<std::string, std::string, Dometer::Dns::Type> labelValues)
             :   Dometer::Metrics::Observation<double, std::string, std::string, Dometer::Dns::Type>::Observation(
-                    LookupSummary::INSTANCE, duration, labelValues
+                    duration, labelValues
                 )
     {}
 
