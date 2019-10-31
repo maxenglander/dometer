@@ -4,6 +4,10 @@
 #include <map>
 #include <string>
 #include <tuple>
+#include <utility>
+
+#include "experimental/expected.hpp"
+#include "experimental/variant.hpp"
 
 #include "metrics/label_helper.hpp"
 #include "metrics/counter.hpp"
@@ -14,40 +18,63 @@
 #include "prometheus/counter.h"
 #include "prometheus/summary.h"
 
+#include "util/error.hpp"
+
+namespace Util = Dometer::Util;
+using namespace std::experimental;
+
 namespace Dometer::Metrics {
-    template<typename... L>
-    void PrometheusHandler::increment(const Counter<L...>& counter, Observation<uint64_t, L...> observation) {
-        auto search = counters.find(counter.name);
-        if(search == counters.end()) {
-            counters.insert({counter.name, std::ref(prometheus::BuildCounter()
-                .Name(counter.name)
-                .Help(counter.description)
-                .Register(*registry))});
-            search = counters.find(counter.name);
+    template<typename T, typename BuilderFn>
+    expected<prometheus::FamilyRef<T>, Util::Error> PrometheusHandler::getOrBuildMetricFamily(
+            std::string name, std::string description, BuilderFn newBuilder) {
+        auto search = metricFamilies.find(name);
+
+        if(search == metricFamilies.end()) {
+            const prometheus::FamilyRef<T> familyRef
+                = std::ref(newBuilder().Name(name).Help(description).Register(*registry));
+            metricFamilies.insert({name, prometheus::AnyFamilyRef(familyRef)});
+            search = metricFamilies.find(name);
         }
 
-        std::map<std::string, std::string> labels
-            = LabelHelper::createLabelMap(counter.labels, observation.labelValues);
-        prometheus::Family<prometheus::Counter>& promCounter = search->second;
-        promCounter.Add(labels).Increment(observation.value);
+        const prometheus::AnyFamilyRef anyFamilyRef = search->second;
+
+        if(auto familyRefPtr = get_if<prometheus::FamilyRef<T>>(&anyFamilyRef)) {
+            prometheus::FamilyRef<T> familyRef = *familyRefPtr;
+            return familyRef;
+        }
+
+        return unexpected<Util::Error>(Util::Error{
+            "A metric with this name, but a different type, already exists", 0
+        });
+    }
+
+    template<typename... L>
+    void PrometheusHandler::increment(const Counter<L...>& counter, Observation<uint64_t, L...> observation) {
+        auto metricFamilyRef = getOrBuildMetricFamily<prometheus::Counter, decltype(prometheus::BuildCounter)>(
+            counter.name, counter.description, prometheus::BuildCounter
+        );
+        
+        if(metricFamilyRef) {
+            std::map<std::string, std::string> labels
+                = LabelHelper::createLabelMap(counter.labels, observation.labelValues);
+            prometheus::Family<prometheus::Counter>& metricFamily = *metricFamilyRef;
+            metricFamily.Add(labels).Increment(observation.value);
+        }
     }
 
     template<typename... L>
     void PrometheusHandler::observe(const Summary<L...>& summary, Observation<double, L...> observation) {
-        auto search = summaries.find(summary.name);
-        if(search == summaries.end()) {
-            summaries.insert({summary.name, std::ref(prometheus::BuildSummary()
-                .Name(summary.name)
-                .Help(summary.description)
-                .Register(*registry))});
-            search = summaries.find(summary.name);
+        auto metricFamilyRef = getOrBuildMetricFamily<prometheus::Summary, decltype(prometheus::BuildSummary)>(
+            summary.name, summary.description, prometheus::BuildSummary
+        );
+        
+        if(metricFamilyRef) {
+            std::map<std::string, std::string> labels
+                = LabelHelper::createLabelMap(summary.labels, observation.labelValues);
+            prometheus::Family<prometheus::Summary>& metricFamily = *metricFamilyRef;
+            metricFamily.Add(labels, prometheus::Summary::Quantiles{
+                {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
+            }).Observe(observation.value);
         }
-
-        std::map<std::string, std::string> labels
-            = LabelHelper::createLabelMap(summary.labels, observation.labelValues);
-        prometheus::Family<prometheus::Summary>& promSummary = search->second;
-        promSummary.Add(labels, prometheus::Summary::Quantiles{
-            {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
-        }).Observe(observation.value);
     }
 }

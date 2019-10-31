@@ -119,6 +119,9 @@ cc_library(
     name = "prometheus_handler",
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
+        "//experimental:expected",
+        "//experimental:variant",
+        "//util:error",
         ":counter",
         ":metric",
         ":label_helper",
