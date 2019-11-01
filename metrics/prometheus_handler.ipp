@@ -55,10 +55,10 @@ namespace Dometer::Metrics {
         );
         
         if(metricFamilyRef) {
-            std::map<std::string, std::string> labels
-                = LabelHelper::createLabelMap(counter.labels, observation.labelValues);
             prometheus::Family<prometheus::Counter>& metricFamily = *metricFamilyRef;
-            metricFamily.Add(labels).Increment(observation.value);
+            metricFamily.Add(
+                LabelHelper::createLabelMap(counter.labels, observation.labelValues)
+            ).Increment(observation.value);
         }
     }
 
@@ -69,12 +69,13 @@ namespace Dometer::Metrics {
         );
         
         if(metricFamilyRef) {
-            std::map<std::string, std::string> labels
-                = LabelHelper::createLabelMap(summary.labels, observation.labelValues);
             prometheus::Family<prometheus::Summary>& metricFamily = *metricFamilyRef;
-            metricFamily.Add(labels, prometheus::Summary::Quantiles{
-                {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
-            }).Observe(observation.value);
+            metricFamily.Add(
+                LabelHelper::createLabelMap(summary.labels, observation.labelValues),
+                prometheus::Summary::Quantiles{
+                    {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
+                }
+            ).Observe(observation.value);
         }
     }
 }

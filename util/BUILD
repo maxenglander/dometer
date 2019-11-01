@@ -1,4 +1,13 @@
 cc_library(
+    name = "lru_map",
+    hdrs = [
+        "lru_map.hpp",
+        "lru_map.ipp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "callback",
     hdrs = ["callback.hpp"],
     visibility = ["//visibility:public"],

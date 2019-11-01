@@ -122,6 +122,7 @@ cc_library(
         "//experimental:expected",
         "//experimental:variant",
         "//util:error",
+        "//util:lru_map",
         ":counter",
         ":metric",
         ":label_helper",

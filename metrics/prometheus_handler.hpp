@@ -17,6 +17,7 @@
 #include "prometheus/registry.h"
 
 #include "util/error.hpp"
+#include "util/lru_map.hpp"
 
 namespace Util = Dometer::Util;
 using namespace std::experimental;
