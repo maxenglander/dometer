@@ -26,12 +26,14 @@ namespace prometheus {
     template<typename T>
     using FamilyRef = std::reference_wrapper<prometheus::Family<T>>;
     using AnyFamilyRef = variant<FamilyRef<Counter>, FamilyRef<Summary>>;
+    using AnyMetricPtr = variant<Counter*, Summary*>;
 }
 
 namespace Dometer::Metrics {
     class PrometheusHandler {
         public:
             PrometheusHandler(std::shared_ptr<prometheus::Registry>);
+            PrometheusHandler(std::shared_ptr<prometheus::Registry>, size_t);
 
             template<typename... L>
             void increment(const Counter<L...>&, Observation<uint64_t, L...>);
@@ -39,14 +41,19 @@ namespace Dometer::Metrics {
             template<typename... L>
             void observe(const Summary<L...>&, Observation<double, L...>);
         private:
+            int foo();
+
+            template<typename T>
+            void cacheMetric(T* t, std::string);
+
             template<typename T, typename BuilderFn>
             expected<prometheus::FamilyRef<T>, Util::Error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
 
-            std::unordered_map<std::string, prometheus::AnyFamilyRef> metricFamilies;
+            void handleMetricEviction(prometheus::AnyMetricPtr, std::string);
 
-            std::unordered_map<std::string, std::reference_wrapper<prometheus::Family<prometheus::Counter>>> counters;
-            std::unordered_map<std::string, std::reference_wrapper<prometheus::Family<prometheus::Summary>>> summaries;
             std::shared_ptr<prometheus::Registry> registry;
+            Util::LRUMap<prometheus::AnyMetricPtr, std::string> metricCache;
+            std::unordered_map<std::string, prometheus::AnyFamilyRef> metricFamilies;
     };
 }
 

@@ -12,7 +12,7 @@ namespace Dometer::Util {
     {}
 
     template<typename K, typename V>
-    LRUMap<K, V>::LRUMap(size_t maxSize, std::function<void(std::pair<K, V>)> onEvict)
+    LRUMap<K, V>::LRUMap(size_t maxSize, std::function<void(K, V)> onEvict)
             :   LRUMap(maxSize)
     {
         evictionListeners.push_back(onEvict);
@@ -20,17 +20,19 @@ namespace Dometer::Util {
 
     template<typename K, typename V>
     void LRUMap<K, V>::maybeEvict() {
+        if(list.size() == 0) return;
         while(list.size() > maxSize) {
             for(auto listener : evictionListeners) {
-                auto kv = list.pop_front();
-                map.erase(kv.first);
-                listener(kv);
+                auto vNode = list.back();
+                map.erase(vNode.first);
+                listener(vNode.first, vNode.second);
+                list.pop_back();
             }
         }
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::onEvict(std::function<void(std::pair<K, V>)> listener) {
+    void LRUMap<K, V>::onEvict(std::function<void(K, V)> listener) {
         evictionListeners.push_back(listener);
     }
 
@@ -38,15 +40,15 @@ namespace Dometer::Util {
     void LRUMap<K, V>::put(K key, V value) {
         auto search = map.find(key);
 
-        VNode vNode = NULL;
+        VNode vNode;
         if(search != map.end()) {
-            vNode = search->second;
+            auto vNode = search->second;
             list.erase(vNode);
-        } else {
-            vNode(key, value);
         }
 
-        list.push_back(vNode);
+        list.push_front({key, value});
+
+        map[key] = list.begin();
 
         maybeEvict();
     }

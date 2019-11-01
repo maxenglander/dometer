@@ -13,12 +13,12 @@ namespace Dometer::Util {
 
         public:
             LRUMap(size_t maxSize);
-            LRUMap(size_t maxSize, std::function<void(std::pair<K, V>)> onEvict);
-            void onEvict(std::function<void(std::pair<K, V>)>);
+            LRUMap(size_t maxSize, std::function<void(K, V)> onEvict);
+            void onEvict(std::function<void(K, V)>);
             void put(K, V);
         private:
             void maybeEvict();
-            std::vector<std::function<void(std::pair<K, V>)>> evictionListeners;
+            std::vector<std::function<void(K, V)>> evictionListeners;
             std::list<std::pair<K, V>> list;
             std::unordered_map<K, VNode> map;
             size_t maxSize;

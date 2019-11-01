@@ -19,11 +19,17 @@
 #include "prometheus/summary.h"
 
 #include "util/error.hpp"
+#include "util/lru_map.hpp"
 
 namespace Util = Dometer::Util;
 using namespace std::experimental;
 
 namespace Dometer::Metrics {
+    template<typename T>
+    void PrometheusHandler::cacheMetric(T* metric, std::string name) {
+        metricCache.put(metric, name);
+    }
+
     template<typename T, typename BuilderFn>
     expected<prometheus::FamilyRef<T>, Util::Error> PrometheusHandler::getOrBuildMetricFamily(
             std::string name, std::string description, BuilderFn newBuilder) {
@@ -56,9 +62,11 @@ namespace Dometer::Metrics {
         
         if(metricFamilyRef) {
             prometheus::Family<prometheus::Counter>& metricFamily = *metricFamilyRef;
-            metricFamily.Add(
+            prometheus::Counter& promCounter = metricFamily.Add(
                 LabelHelper::createLabelMap(counter.labels, observation.labelValues)
-            ).Increment(observation.value);
+            );
+            cacheMetric(&promCounter, counter.name);
+            promCounter.Increment(observation.value);
         }
     }
 
@@ -70,12 +78,14 @@ namespace Dometer::Metrics {
         
         if(metricFamilyRef) {
             prometheus::Family<prometheus::Summary>& metricFamily = *metricFamilyRef;
-            metricFamily.Add(
+            prometheus::Summary& promSummary = metricFamily.Add(
                 LabelHelper::createLabelMap(summary.labels, observation.labelValues),
                 prometheus::Summary::Quantiles{
                     {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
                 }
-            ).Observe(observation.value);
+            );
+            cacheMetric(&promSummary, summary.name);
+            promSummary.Observe(observation.value);
         }
     }
 }
