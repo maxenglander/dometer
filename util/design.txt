@@ -1,0 +1,5 @@
+LRU Map
+=======
+
+Need to support externally size-calculation methods.
+- Can create a protected size() method which subclasses can override

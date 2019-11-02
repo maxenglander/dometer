@@ -9,18 +9,27 @@
 namespace Dometer::Util {
     template<typename K, typename V>
     class LRUMap {
-        using VNode = typename std::list<std::pair<K, V>>::iterator;
+        using KVNode = typename std::list<std::pair<K, V>>::iterator;
 
         public:
             LRUMap(size_t maxSize);
-            LRUMap(size_t maxSize, std::function<void(K, V)> onEvict);
             void onEvict(std::function<void(K, V)>);
+            void onInsert(std::function<void(K, V)>);
             void put(K, V);
-        private:
+        protected:
+            void erase(K);
+            void evictOne();
+            void insert(K, V);
             void maybeEvict();
+            void notifyEvictionListeners(K, V);
+            void notifyInsertionListeners(K, V);
+            bool shouldEvict();
+            size_t size();
+        private:
             std::vector<std::function<void(K, V)>> evictionListeners;
+            std::vector<std::function<void(K, V)>> insertionListeners;
             std::list<std::pair<K, V>> list;
-            std::unordered_map<K, VNode> map;
+            std::unordered_map<K, KVNode> map;
             size_t maxSize;
     };
 }

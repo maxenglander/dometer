@@ -127,6 +127,8 @@ cc_library(
         ":metric",
         ":label_helper",
         ":observation",
+        ":prometheus_lru_map",
+        ":prometheus_types",
         ":summary",
     ],
     hdrs = [
@@ -134,6 +136,33 @@ cc_library(
         "prometheus_handler.ipp",
     ],
     srcs = ["prometheus_handler.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "prometheus_lru_map",
+    deps = [
+        "@com_github_jupp0r_prometheus_cpp//core",
+        "//experimental:variant",
+        "//util:lru_map",
+        ":prometheus_types",
+    ],
+    hdrs = [
+        "prometheus_lru_map.hpp",
+    ],
+    srcs = ["prometheus_lru_map.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "prometheus_types",
+    deps = [
+        "@com_github_jupp0r_prometheus_cpp//core"
+    ],
+    hdrs = [
+        "prometheus_types.hpp",
+    ],
+    srcs = [],
     visibility = ["//visibility:public"],
 )
 

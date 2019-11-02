@@ -14,12 +14,13 @@
 #include "metrics/metric.hpp"
 #include "metrics/observation.hpp"
 #include "metrics/prometheus_handler.hpp"
+#include "metrics/prometheus_lru_map.hpp"
+#include "metrics/prometheus_types.hpp"
 
 #include "prometheus/counter.h"
 #include "prometheus/summary.h"
 
 #include "util/error.hpp"
-#include "util/lru_map.hpp"
 
 namespace Util = Dometer::Util;
 using namespace std::experimental;
@@ -31,21 +32,21 @@ namespace Dometer::Metrics {
     }
 
     template<typename T, typename BuilderFn>
-    expected<prometheus::FamilyRef<T>, Util::Error> PrometheusHandler::getOrBuildMetricFamily(
+    expected<prometheus::ext::FamilyRef<T>, Util::Error> PrometheusHandler::getOrBuildMetricFamily(
             std::string name, std::string description, BuilderFn newBuilder) {
         auto search = metricFamilies.find(name);
 
         if(search == metricFamilies.end()) {
-            const prometheus::FamilyRef<T> familyRef
+            const prometheus::ext::FamilyRef<T> familyRef
                 = std::ref(newBuilder().Name(name).Help(description).Register(*registry));
-            metricFamilies.insert({name, prometheus::AnyFamilyRef(familyRef)});
+            metricFamilies.insert({name, prometheus::ext::AnyFamilyRef(familyRef)});
             search = metricFamilies.find(name);
         }
 
-        const prometheus::AnyFamilyRef anyFamilyRef = search->second;
+        const prometheus::ext::AnyFamilyRef anyFamilyRef = search->second;
 
-        if(auto familyRefPtr = get_if<prometheus::FamilyRef<T>>(&anyFamilyRef)) {
-            prometheus::FamilyRef<T> familyRef = *familyRefPtr;
+        if(auto familyRefPtr = get_if<prometheus::ext::FamilyRef<T>>(&anyFamilyRef)) {
+            prometheus::ext::FamilyRef<T> familyRef = *familyRefPtr;
             return familyRef;
         }
 
