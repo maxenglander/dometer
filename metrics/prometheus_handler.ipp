@@ -27,8 +27,8 @@ using namespace std::experimental;
 
 namespace Dometer::Metrics {
     template<typename T>
-    void PrometheusHandler::cacheMetric(T* metric, std::string name) {
-        metricCache.put(metric, name);
+    void PrometheusHandler::cacheMetric(T* metric, prometheus::ext::FamilyNameAndTimeSeriesCount meta) {
+        metricCache.put(metric, meta);
     }
 
     template<typename T, typename BuilderFn>
@@ -66,8 +66,8 @@ namespace Dometer::Metrics {
             prometheus::Counter& promCounter = metricFamily.Add(
                 LabelHelper::createLabelMap(counter.labels, observation.labelValues)
             );
-            cacheMetric(&promCounter, counter.name);
             promCounter.Increment(observation.value);
+            cacheMetric(&promCounter, { counter.name, 1 });
         }
     }
 
@@ -85,8 +85,8 @@ namespace Dometer::Metrics {
                     {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
                 }
             );
-            cacheMetric(&promSummary, summary.name);
             promSummary.Observe(observation.value);
+            cacheMetric(&promSummary, { summary.name, 2 + 4});
         }
     }
 }

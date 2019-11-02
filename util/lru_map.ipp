@@ -1,5 +1,4 @@
 #include <functional>
-#include <iostream>
 #include <list>
 #include <unordered_map>
 #include <vector>
@@ -13,15 +12,17 @@ namespace Dometer::Util {
     template<typename K, typename V>
     void LRUMap<K, V>::evictOne() {
         auto kvNode = list.back();
-        erase(kvNode.first);
-        notifyEvictionListeners(kvNode.first, kvNode.second);
+        auto key = list.back().first;
+        auto value = list.back().second;
+        erase(key);
+        notifyEvictionListeners(key, value);
     }
 
     template<typename K, typename V>
     void LRUMap<K, V>::erase(K key) {
         auto kvNode = map[key];
         list.erase(kvNode);
-        map.erase(kvNode->first);
+        map.erase(key);
     }
 
     template<typename K, typename V>
@@ -61,7 +62,6 @@ namespace Dometer::Util {
         insertionListeners.push_back(listener);
     }
 
-
     template<typename K, typename V>
     void LRUMap<K, V>::put(K key, V value) {
         auto search = map.find(key);
@@ -69,16 +69,16 @@ namespace Dometer::Util {
         if(search == map.end()) {
             insert(key, value);
             notifyInsertionListeners(key, value);
-            maybeEvict();
         } else {
             erase(search->first);
             insert(key, value);
         }
+
+        maybeEvict();
     }
 
     template<typename K, typename V>
     bool LRUMap<K, V>::shouldEvict() {
-        if(size() == 0) return false;
         return size() > maxSize;
     }
 

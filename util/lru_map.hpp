@@ -17,15 +17,16 @@ namespace Dometer::Util {
             void onInsert(std::function<void(K, V)>);
             void put(K, V);
         protected:
+            virtual bool shouldEvict();
+        private:
             void erase(K);
             void evictOne();
             void insert(K, V);
             void maybeEvict();
             void notifyEvictionListeners(K, V);
             void notifyInsertionListeners(K, V);
-            bool shouldEvict();
             size_t size();
-        private:
+
             std::vector<std::function<void(K, V)>> evictionListeners;
             std::vector<std::function<void(K, V)>> insertionListeners;
             std::list<std::pair<K, V>> list;

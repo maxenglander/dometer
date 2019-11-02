@@ -20,9 +20,10 @@ namespace Dometer::Metrics {
         });
     }
 
-    void PrometheusHandler::handleMetricEviction(prometheus::ext::AnyMetricPtr anyMetricPtr, std::string name) {
-        visit([this, name](auto&& metricPtr) {
-            auto search = metricFamilies.find(name);
+    void PrometheusHandler::handleMetricEviction(prometheus::ext::AnyMetricPtr anyMetricPtr,
+                                                 prometheus::ext::FamilyNameAndTimeSeriesCount meta) {
+        visit([this, &meta](auto&& metricPtr) {
+            auto search = metricFamilies.find(meta.familyName);
 
             if(search == metricFamilies.end()) return;
 
