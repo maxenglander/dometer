@@ -22,17 +22,17 @@
 
 #include "util/error.hpp"
 
-namespace Util = Dometer::Util;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     template<typename T>
     void PrometheusHandler::cacheMetric(T* metric, prometheus::ext::FamilyNameAndTimeSeriesCount meta) {
         metricCache.put(metric, meta);
     }
 
     template<typename T, typename BuilderFn>
-    expected<prometheus::ext::FamilyRef<T>, Util::Error> PrometheusHandler::getOrBuildMetricFamily(
+    expected<prometheus::ext::FamilyRef<T>, util::Error> PrometheusHandler::getOrBuildMetricFamily(
             std::string name, std::string description, BuilderFn newBuilder) {
         auto search = metricFamilies.find(name);
 
@@ -50,7 +50,7 @@ namespace Dometer::Metrics {
             return familyRef;
         }
 
-        return unexpected<Util::Error>(Util::Error{
+        return unexpected<util::Error>(util::Error{
             "A metric with this name, but a different type, already exists", 0
         });
     }

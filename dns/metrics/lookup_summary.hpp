@@ -3,8 +3,8 @@
 #include "dns/type.hpp"
 #include "metrics/summary.hpp"
 
-namespace Dometer::Dns::Metrics {
-    struct LookupSummary : Dometer::Metrics::Summary<std::string, std::string, Dometer::Dns::Type> {
+namespace dometer::dns::metrics {
+    struct LookupSummary : dometer::metrics::Summary<std::string, std::string, dometer::dns::Type> {
         static const LookupSummary INSTANCE;
 
         private:

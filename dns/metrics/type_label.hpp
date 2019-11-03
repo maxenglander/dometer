@@ -4,10 +4,10 @@
 #include "dns/type.hpp"
 #include "metrics/label.hpp"
 
-namespace Dometer::Dns::Metrics {
-    class TypeLabel : public Dometer::Metrics::Label<Dometer::Dns::Type> {
+namespace dometer::dns::metrics {
+    class TypeLabel : public dometer::metrics::Label<dometer::dns::Type> {
         public:
             TypeLabel(std::string name);
-            std::string toString(Dometer::Dns::Type) const;
+            std::string toString(dometer::dns::Type) const;
     };
 }

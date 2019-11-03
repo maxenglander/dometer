@@ -2,7 +2,7 @@
 
 #include "dns/opcode.hpp"
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     struct Header {
         const uint16_t id;
         const bool qr;

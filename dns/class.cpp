@@ -4,7 +4,7 @@
 
 #include "dns/class.hpp"
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     Class::Class(uint16_t value) : value(value) {}
 
     Class::operator uint16_t() const {

@@ -8,17 +8,17 @@
 #include "metrics/counter.hpp"
 #include "metrics/labels.hpp"
 
-namespace Dometer::Dns::Metrics {
+namespace dometer::dns::metrics {
     const QueryCounter QueryCounter::INSTANCE = QueryCounter();
 
     QueryCounter::QueryCounter()
-            :   Dometer::Metrics::Counter<std::string, std::string, Dometer::Dns::Type, bool>::Counter(
+            :   dometer::metrics::Counter<std::string, std::string, dometer::dns::Type, bool>::Counter(
                     "dns_query_received_count", "Count of DNS queries received by Dometer",
                     std::make_tuple(
-                        Dometer::Metrics::Labels::string("qclass"), 
-                        Dometer::Metrics::Labels::string("qname"),
+                        dometer::metrics::Labels::string("qclass"), 
+                        dometer::metrics::Labels::string("qname"),
                         Labels::type("qtype"),
-                        Dometer::Metrics::Labels::boolean("valid")
+                        dometer::metrics::Labels::boolean("valid")
                     )
                 )
     {}

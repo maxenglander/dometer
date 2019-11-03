@@ -5,25 +5,25 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     class Packet;
 }
 
-namespace Dns = Dometer::Dns;
-namespace Util = Dometer::Util;
+namespace Dns = dometer::dns;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     class ReplyEvent : public Event {
         public:
             ReplyEvent(
-                    const expected<Dns::Packet, Util::Error>& query,
-                    const expected<Packet, Util::Error>& reply);
-            const expected<Dns::Packet, Util::Error>& getQuery() const;
-            const expected<Dns::Packet, Util::Error>& getReply() const;
+                    const expected<dns::Packet, util::Error>& query,
+                    const expected<Packet, util::Error>& reply);
+            const expected<dns::Packet, util::Error>& getQuery() const;
+            const expected<dns::Packet, util::Error>& getReply() const;
             EventType getType() const;
         private:
-            const expected<Dns::Packet, Util::Error>& query;
-            const expected<Dns::Packet, Util::Error>& reply;
+            const expected<dns::Packet, util::Error>& query;
+            const expected<dns::Packet, util::Error>& reply;
     };
 }

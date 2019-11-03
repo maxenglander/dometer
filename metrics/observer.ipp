@@ -7,7 +7,7 @@
 #include "metrics/observer.hpp"
 #include "metrics/summary.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     template<typename Handler>
     Observer<Handler>::Observer(std::shared_ptr<Handler> handler) : handler(handler) {}
 

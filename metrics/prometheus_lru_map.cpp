@@ -3,20 +3,20 @@
 #include "metrics/prometheus_types.hpp"
 #include "prometheus/counter.h"
 
-namespace Util = Dometer::Util;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     PrometheusLRUMap::PrometheusLRUMap(size_t maxTimeSeries)
-        :    Util::LRUMap<prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount>(0),
+        :    util::LRUMap<prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount>(0),
              maxTimeSeries(maxTimeSeries), numTimeSeries(0)
     {
-        Util::LRUMap<prometheus::ext::AnyMetricPtr,
+        util::LRUMap<prometheus::ext::AnyMetricPtr,
                      prometheus::ext::FamilyNameAndTimeSeriesCount>::onEvict([this](auto metricPtr, auto meta) {
             this->numTimeSeries -= meta.timeSeriesCount;
         });
 
-        Util::LRUMap<prometheus::ext::AnyMetricPtr,
+        util::LRUMap<prometheus::ext::AnyMetricPtr,
                      prometheus::ext::FamilyNameAndTimeSeriesCount>::onInsert([this](auto metricPtr, auto meta) {
             this->numTimeSeries += meta.timeSeriesCount;
         });

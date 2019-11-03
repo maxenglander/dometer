@@ -7,9 +7,9 @@
 #include "metrics/label_helper.hpp"
 #include "util/tuple_helper.hpp"
 
-namespace Util = Dometer::Util;
+namespace util = dometer::util;
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     class LabelWriter {
         public:
             LabelWriter(std::map<std::string, std::string>& labels) : labels(labels) {}
@@ -28,11 +28,11 @@ namespace Dometer::Metrics {
             std::tuple<std::shared_ptr<Label<T>>...> labels, std::tuple<T...> values) {
         std::map<std::string, std::string> result;
         LabelWriter labelWriter(result);
-        auto zip = Util::TupleHelper::zip(labels, values);
+        auto zip = util::TupleHelper::zip(labels, values);
 
         constexpr int numLabels = sizeof...(T);
         for(int i = 0; i < numLabels; i++) {
-            Util::TupleHelper::visitAt(zip, i, labelWriter); 
+            util::TupleHelper::visitAt(zip, i, labelWriter); 
         }
 
         return result;

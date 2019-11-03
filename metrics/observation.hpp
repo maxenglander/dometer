@@ -4,7 +4,7 @@
 
 #include "metrics/metric.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     template<typename V, typename... L>
     struct Observation {
         Observation(V value, std::tuple<L...> labelValues);

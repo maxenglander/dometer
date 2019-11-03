@@ -11,31 +11,31 @@
 #include "util/callback_registry.hpp"
 #include "util/error.hpp"
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     class Packet;
 }
 
-namespace Dns = Dometer::Dns;
-namespace Util = Dometer::Util;
+namespace Dns = dometer::dns;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     class NativeResolvingHandler : public Handler {
         public:
             NativeResolvingHandler();
             NativeResolvingHandler(
                     std::chrono::steady_clock,
-                    Util::CallbackRegistry<EventType, std::shared_ptr<Event>>,
-                    Dns::Resolver::NativeResolver);
-            expected<size_t, Util::Error> handle(
+                    util::CallbackRegistry<EventType, std::shared_ptr<Event>>,
+                    dns::resolver::NativeResolver);
+            expected<size_t, util::Error> handle(
                     uint8_t *queryPtr, size_t querySize,
                     uint8_t *replyPtr, size_t replySize);
-            Handler& on(EventType, Util::Callback<std::shared_ptr<Event>>);
+            Handler& on(EventType, util::Callback<std::shared_ptr<Event>>);
         private:
-            expected<Dns::Packet, Util::Error> handle(expected<Dns::Packet, Util::Error>& query);
+            expected<dns::Packet, util::Error> handle(expected<dns::Packet, util::Error>& query);
             void notify(std::shared_ptr<Event>);
             const std::chrono::steady_clock clock;
-            Util::CallbackRegistry<EventType, std::shared_ptr<Event>> listeners;
-            const Dns::Resolver::NativeResolver resolver;
+            util::CallbackRegistry<EventType, std::shared_ptr<Event>> listeners;
+            const dns::resolver::NativeResolver resolver;
     };
 }

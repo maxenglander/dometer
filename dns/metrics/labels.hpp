@@ -6,10 +6,10 @@
 #include "dns/type.hpp"
 #include "metrics/label.hpp"
 
-namespace Dometer::Dns::Metrics {
+namespace dometer::dns::metrics {
     class Labels {
         public:
             Labels() = delete;
-            static std::shared_ptr<Dometer::Metrics::Label<Dometer::Dns::Type>> type(std::string);
+            static std::shared_ptr<dometer::metrics::Label<dometer::dns::Type>> type(std::string);
     };
 }

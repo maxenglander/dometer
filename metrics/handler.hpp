@@ -2,7 +2,7 @@
 
 #include "metrics/observation.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     class Handler {
         public:
             template<typename... L> void handle(Observation<double, L...>) {};

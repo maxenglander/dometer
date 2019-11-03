@@ -6,7 +6,7 @@
 #include "metrics/labels.hpp"
 #include "metrics/string_label.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     std::shared_ptr<Label<bool>> Labels::boolean(std::string name) {
         return std::make_shared<BooleanLabel>(name);
     }

@@ -4,10 +4,10 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Util;
+using namespace dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     LookupEvent::LookupEvent(
             const Packet& query,
             const expected<Packet, Error>& reply,

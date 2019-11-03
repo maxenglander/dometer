@@ -8,15 +8,15 @@
 #include "util/callback.hpp"
 #include "util/error.hpp"
 
-namespace Util = Dometer::Util;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     class Handler {
         public:
-            virtual expected<size_t, Util::Error> handle(
+            virtual expected<size_t, util::Error> handle(
                     uint8_t *queryPtr, size_t querySize,
                     uint8_t *replyPtr, size_t replySize) = 0;
-            virtual Handler& on(EventType, Util::Callback<std::shared_ptr<Event>>) = 0;
+            virtual Handler& on(EventType, util::Callback<std::shared_ptr<Event>>) = 0;
     };
 }

@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     class Class {
         public:
             Class(uint16_t value);

@@ -3,7 +3,7 @@
 #include "dns/class.hpp"
 #include "dns/type.hpp"
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     struct Question {
         std::string qname;
         Type qtype;

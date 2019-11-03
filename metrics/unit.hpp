@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     enum class Unit {
         NONE,
         SECONDS

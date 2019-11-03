@@ -5,9 +5,9 @@
 #include "prometheus/registry.h"
 #include "util/lru_map.hpp"
 
-namespace Util = Dometer::Util;
+namespace util = dometer::util;
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     PrometheusHandler::PrometheusHandler(std::shared_ptr<prometheus::Registry> registry)
         :   PrometheusHandler(registry, 3)
     {}

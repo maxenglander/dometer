@@ -8,12 +8,12 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Dns;
-using namespace Dometer::Util;
+using namespace dometer::dns;
+using namespace dometer::util;
 using namespace asio::ip;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     Server::Server() : Server(std::make_unique<NativeResolvingHandler>()) {}
 
     Server::Server(std::unique_ptr<Handler> handler)

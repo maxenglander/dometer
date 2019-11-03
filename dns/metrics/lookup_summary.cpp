@@ -10,19 +10,19 @@
 #include "metrics/summary.hpp"
 #include "metrics/unit.hpp"
 
-namespace Dometer::Dns::Metrics {
+namespace dometer::dns::metrics {
     const LookupSummary LookupSummary::INSTANCE = LookupSummary();
 
     LookupSummary::LookupSummary()
-            :   Dometer::Metrics::Summary<std::string, std::string, Dometer::Dns::Type>::Summary(
+            :   dometer::metrics::Summary<std::string, std::string, dometer::dns::Type>::Summary(
                     "dns_upstream_resolution_seconds", "Summary duration of DNS upstream resolutions",
                     std::make_tuple(
-                        Dometer::Metrics::Labels::string("qclass"), 
-                        Dometer::Metrics::Labels::string("qname"),
+                        dometer::metrics::Labels::string("qclass"), 
+                        dometer::metrics::Labels::string("qname"),
                         Labels::type("qtype")
                     ),
                     std::vector<double>{0.5, 0.9, 0.95, 0.99},
-                    Dometer::Metrics::Unit::SECONDS
+                    dometer::metrics::Unit::SECONDS
                 )
     {}
 }

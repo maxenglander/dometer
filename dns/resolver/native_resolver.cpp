@@ -15,18 +15,18 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-namespace Dns = Dometer::Dns;
-namespace Util = Dometer::Util;
+namespace Dns = dometer::dns;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Resolver {
+namespace dometer::dns::resolver {
     NativeResolver::NativeResolver()
         : NativeResolver(ResolutionMode::QUERY) {}
 
     NativeResolver::NativeResolver(ResolutionMode resolutionMode)
         : resolutionMode(resolutionMode) {}
 
-    expected<Dns::Packet, Util::Error> NativeResolver::resolve(
+    expected<dns::Packet, util::Error> NativeResolver::resolve(
             const std::string& qname, const Class& qclass, const Type& qtype) const {
         unsigned char buffer[PACKETSZ];
         memset(buffer, 0, PACKETSZ);
@@ -43,13 +43,13 @@ namespace Dometer::Dns::Resolver {
 
             // Nasty hack because res_* hides the length of packets from us
             for(int i = 0; i <= PACKETSZ; i++) {
-                auto reply = Dns::Packet::makePacket(buffer, i);
+                auto reply = dns::Packet::makePacket(buffer, i);
                 if(reply) return reply;
             }
 
-            return unexpected<Util::Error>(Util::Error{hstrerror(savedherrno), savedherrno});
+            return unexpected<util::Error>(util::Error{hstrerror(savedherrno), savedherrno});
         }
 
-        return Dns::Packet::makePacket(buffer, length);
+        return dns::Packet::makePacket(buffer, length);
     }
 }

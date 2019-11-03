@@ -6,10 +6,10 @@
 #include "dns/server/handler.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Util;
+using namespace dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     class Server {
         public:
             Server();

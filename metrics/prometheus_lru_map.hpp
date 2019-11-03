@@ -5,11 +5,11 @@
 #include "prometheus/summary.h"
 #include "util/lru_map.hpp"
 
-namespace Util = Dometer::Util;
+namespace util = dometer::util;
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     class PrometheusLRUMap
-            : public Util::LRUMap<prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount> {
+            : public util::LRUMap<prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount> {
         public:
             PrometheusLRUMap(size_t maxTimeSeries);
         protected:

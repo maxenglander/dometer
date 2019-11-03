@@ -5,8 +5,8 @@
 #include "dns/metrics/type_label.hpp"
 #include "metrics/label.hpp"
 
-namespace Dometer::Dns::Metrics {
-    std::shared_ptr<Dometer::Metrics::Label<Dns::Type>> Labels::type(std::string name) {
+namespace dometer::dns::metrics {
+    std::shared_ptr<dometer::metrics::Label<dns::Type>> Labels::type(std::string name) {
         return std::make_shared<TypeLabel>(name);
     }
 }

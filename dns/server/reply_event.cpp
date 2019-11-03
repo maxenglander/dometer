@@ -4,10 +4,10 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Util;
+using namespace dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     ReplyEvent::ReplyEvent(
                 const expected<Packet, Error>& query,
                 const expected<Packet, Error>& reply)

@@ -6,24 +6,24 @@
 #include "dns/type.hpp"
 #include "metrics/observation.hpp"
 
-namespace Dometer::Dns::Metrics {
+namespace dometer::dns::metrics {
     class QueryObservationBuilder
-            :    public Dometer::Metrics::ObservationBuilder<uint64_t, std::string, std::string, Dometer::Dns::Type, bool> {
+            :    public dometer::metrics::ObservationBuilder<uint64_t, std::string, std::string, dometer::dns::Type, bool> {
         public:
-            Dometer::Metrics::Observation<uint64_t, std::string, std::string, Dometer::Dns::Type, bool> build() const;
+            dometer::metrics::Observation<uint64_t, std::string, std::string, dometer::dns::Type, bool> build() const;
             QueryObservationBuilder& qclass(std::string);
             QueryObservationBuilder& qname(std::string);
-            QueryObservationBuilder& qtype(Dometer::Dns::Type);
+            QueryObservationBuilder& qtype(dometer::dns::Type);
             QueryObservationBuilder& valid(bool);
         private:
             std::string _qclass;
             std::string _qname;
-            Dometer::Dns::Type _qtype = Dometer::Dns::Type::A;
+            dometer::dns::Type _qtype = dometer::dns::Type::A;
             bool _valid;
     };
 
-    struct QueryObservation : Dometer::Metrics::Observation<uint64_t, std::string, std::string, Dometer::Dns::Type, bool> {
-        QueryObservation(uint64_t, std::tuple<std::string, std::string, Dometer::Dns::Type, bool>);
+    struct QueryObservation : dometer::metrics::Observation<uint64_t, std::string, std::string, dometer::dns::Type, bool> {
+        QueryObservation(uint64_t, std::tuple<std::string, std::string, dometer::dns::Type, bool>);
         static QueryObservationBuilder newBuilder();
         using Builder = QueryObservationBuilder;
     };

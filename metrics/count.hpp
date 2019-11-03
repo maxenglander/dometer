@@ -1,4 +1,4 @@
 #pragma once
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
 }

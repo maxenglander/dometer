@@ -2,7 +2,7 @@
 
 #include "metrics/descriptor.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     class Descriptors {
         public:
             Descriptors() = delete;

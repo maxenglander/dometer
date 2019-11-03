@@ -6,7 +6,7 @@
 #include "metrics/observation.hpp"
 #include "metrics/summary.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     template<typename Handler>
     class Observer {
         public:

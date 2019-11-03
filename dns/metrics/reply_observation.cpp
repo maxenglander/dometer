@@ -5,10 +5,10 @@
 #include "dns/metrics/reply_observation.hpp"
 #include "metrics/observation.hpp"
 
-namespace Dometer::Dns::Metrics {
+namespace dometer::dns::metrics {
     ReplyObservation::ReplyObservation(uint64_t value,
                     std::tuple<std::string, std::string, std::string, bool> labelValues)
-            :   Dometer::Metrics::Observation<uint64_t, std::string, std::string, std::string, bool>::Observation(
+            :   dometer::metrics::Observation<uint64_t, std::string, std::string, std::string, bool>::Observation(
                     value, labelValues
                 )
     {}
@@ -17,7 +17,7 @@ namespace Dometer::Dns::Metrics {
         return ReplyObservationBuilder();
     }
 
-    Dometer::Metrics::Observation<uint64_t, std::string, std::string, std::string, bool> ReplyObservationBuilder::build() const {
+    dometer::metrics::Observation<uint64_t, std::string, std::string, std::string, bool> ReplyObservationBuilder::build() const {
         return ReplyObservation(1, std::make_tuple(_qclass, _qname, _qtype, _valid));
     }
 

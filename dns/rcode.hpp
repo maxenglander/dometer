@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     enum class RCode {
         NOERROR = 0,
         FORMERR = 1,

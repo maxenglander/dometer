@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Dometer::Util {
+namespace dometer::util {
     struct Error {
         const std::string message;
         const int number;

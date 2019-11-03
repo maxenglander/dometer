@@ -7,7 +7,7 @@
 
 #include "metrics/label.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     struct LabelHelper {
         LabelHelper() = delete;
 

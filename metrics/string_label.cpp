@@ -2,7 +2,7 @@
 
 #include "metrics/string_label.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     StringLabel::StringLabel(std::string name) : Label::Label(name, "-") {}
 
     std::string StringLabel::toString(std::string value) const {

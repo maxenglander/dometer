@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     class Type {
         public:
             static const Type A;

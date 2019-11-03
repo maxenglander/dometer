@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     enum class OpCode {
         QUERY = 0,
         IQUERY = 1,

@@ -16,12 +16,12 @@
 #include "util/callback_registry.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Dns;
-using namespace Dometer::Dns::Resolver;
-using namespace Dometer::Util;
+using namespace dometer::dns;
+using namespace dometer::dns::resolver;
+using namespace dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     NativeResolvingHandler::NativeResolvingHandler()
         :   NativeResolvingHandler(
                 std::chrono::steady_clock(),
@@ -59,7 +59,7 @@ namespace Dometer::Dns::Server {
     expected<Packet, Error> NativeResolvingHandler::handle(expected<Packet, Error> &query) {
         if(!query) {
             return unexpected<Error>(query.error());
-        } else if(query->getOpCode() != Dns::OpCode::QUERY) {
+        } else if(query->getOpCode() != dns::OpCode::QUERY) {
             return Packet::notImplemented(*query);
         }
 

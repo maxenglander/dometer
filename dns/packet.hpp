@@ -11,16 +11,16 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-namespace Util = Dometer::Util;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     class Packet {
         public:
             static Packet copyPacket(const Packet& packet);
             static Packet formatError(const Packet& query); 
-            static expected<Packet, Util::Error> makePacket(uint8_t *bytePtr, size_t size);
-            static expected<Packet, Util::Error> makePacket(std::unique_ptr<uint8_t[]> bytes, size_t size);
+            static expected<Packet, util::Error> makePacket(uint8_t *bytePtr, size_t size);
+            static expected<Packet, util::Error> makePacket(std::unique_ptr<uint8_t[]> bytes, size_t size);
             static Packet notImplemented(const Packet& query); 
             static Packet serverFailure(const Packet& query); 
 
@@ -32,7 +32,7 @@ namespace Dometer::Dns {
             uint16_t getId() const;
             OpCode getOpCode() const;
             QR getQR() const;
-            expected<Question, Util::Error> getQuestion() const;
+            expected<Question, util::Error> getQuestion() const;
             bool getRA() const;
             uint8_t getRCode() const;
             bool getRD() const;

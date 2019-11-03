@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     enum class QR {
         QUERY = 0,
         REPLY = 1

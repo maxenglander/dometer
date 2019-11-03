@@ -7,10 +7,10 @@
 #include "dns/metrics/type_label.hpp"
 #include "metrics/observation.hpp"
 
-namespace Dometer::Dns::Metrics {
+namespace dometer::dns::metrics {
     LookupObservation::LookupObservation(double duration,
-                std::tuple<std::string, std::string, Dometer::Dns::Type> labelValues)
-            :   Dometer::Metrics::Observation<double, std::string, std::string, Dometer::Dns::Type>::Observation(
+                std::tuple<std::string, std::string, dometer::dns::Type> labelValues)
+            :   dometer::metrics::Observation<double, std::string, std::string, dometer::dns::Type>::Observation(
                     duration, labelValues
                 )
     {}
@@ -19,7 +19,7 @@ namespace Dometer::Dns::Metrics {
         return LookupObservationBuilder();
     }
 
-    Dometer::Metrics::Observation<double, std::string, std::string, Dometer::Dns::Type> LookupObservationBuilder::build() const {
+    dometer::metrics::Observation<double, std::string, std::string, dometer::dns::Type> LookupObservationBuilder::build() const {
         return LookupObservation(_duration, std::make_tuple(_qclass, _qname, _qtype));
     }
 
@@ -38,7 +38,7 @@ namespace Dometer::Dns::Metrics {
         return *this;
     }
 
-    LookupObservationBuilder& LookupObservationBuilder::qtype(Dometer::Dns::Type qtype) {
+    LookupObservationBuilder& LookupObservationBuilder::qtype(dometer::dns::Type qtype) {
         this->_qtype = qtype;
         return *this;
     }

@@ -5,7 +5,7 @@
 
 #include "util/lru_map.hpp"
 
-namespace Dometer::Util {
+namespace dometer::util {
     template<typename K, typename V>
     LRUMap<K, V>::LRUMap(size_t maxSize) : maxSize(maxSize) {}
 

@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     template<typename T>
     struct Label {
         Label() = delete;

@@ -8,7 +8,7 @@
 #include "metrics/type.hpp"
 #include "metrics/unit.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     template<typename V, typename... L>
     Metric<V, L...>::Metric(std::string name, std::string description,
                                  std::tuple<std::shared_ptr<Label<L>>...> labels, Type type, Unit unit)

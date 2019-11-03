@@ -4,7 +4,7 @@
 
 #include "dns/type.hpp"
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     const Type Type::A = Type(ns_t_a);
 
     Type::Type(uint16_t value) : value(value) {}

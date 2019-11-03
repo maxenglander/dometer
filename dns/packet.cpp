@@ -12,10 +12,10 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-using namespace Dometer::Util;
+using namespace dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     Packet Packet::copyPacket(const Packet& packet) {
         auto bytes = std::make_unique<uint8_t[]>(packet.size);
         uint8_t *bytePtr = packet;

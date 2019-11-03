@@ -2,8 +2,8 @@
 
 #include "metrics/counter.hpp"
 
-namespace Dometer::Dns::Metrics {
-    struct ReplyCounter : Dometer::Metrics::Counter<std::string, std::string, std::string, bool> {
+namespace dometer::dns::metrics {
+    struct ReplyCounter : dometer::metrics::Counter<std::string, std::string, std::string, bool> {
         static const ReplyCounter INSTANCE;
 
         private:

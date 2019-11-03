@@ -5,17 +5,17 @@
 #include "metrics/counter.hpp"
 #include "metrics/labels.hpp"
 
-namespace Dometer::Dns::Metrics {
+namespace dometer::dns::metrics {
     const ReplyCounter ReplyCounter::INSTANCE = ReplyCounter();
 
     ReplyCounter::ReplyCounter()
-            :   Dometer::Metrics::Counter<std::string, std::string, std::string, bool>::Counter(
+            :   dometer::metrics::Counter<std::string, std::string, std::string, bool>::Counter(
                     "dns_reply_sent_count", "Count of DNS replies returned by Dometer to clients",
                     std::make_tuple(
-                        Dometer::Metrics::Labels::string("qclass"), 
-                        Dometer::Metrics::Labels::string("qname"),
-                        Dometer::Metrics::Labels::string("qtype"),
-                        Dometer::Metrics::Labels::boolean("valid")
+                        dometer::metrics::Labels::string("qclass"), 
+                        dometer::metrics::Labels::string("qname"),
+                        dometer::metrics::Labels::string("qtype"),
+                        dometer::metrics::Labels::boolean("valid")
                     )
                 )
     {}

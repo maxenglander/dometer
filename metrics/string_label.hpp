@@ -2,7 +2,7 @@
 
 #include "metrics/label.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     struct StringLabel : Label<std::string> {
         StringLabel() = delete;
         StringLabel(std::string name);

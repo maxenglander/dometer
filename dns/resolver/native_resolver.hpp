@@ -8,20 +8,20 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     class Packet;
 }
 
-namespace Dns = Dometer::Dns;
-namespace Util = Dometer::Util;
+namespace Dns = dometer::dns;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Resolver {
+namespace dometer::dns::resolver {
     class NativeResolver {
         public:
             NativeResolver();
             NativeResolver(ResolutionMode);
-            expected<Dns::Packet, Util::Error> resolve(const std::string&, const Class&, const Type&) const;
+            expected<dns::Packet, util::Error> resolve(const std::string&, const Class&, const Type&) const;
         private:
             const ResolutionMode resolutionMode;
     };

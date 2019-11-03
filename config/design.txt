@@ -1,3 +1,22 @@
+file layout
+===========
+
+config/config.hpp
+config/v1/config.proto
+config/v1/config.pb.hpp
+config/v1/config.pb.cpp
+config/v1/dns.proto
+config/v1/dns_parser
+config/v1/metrics
+config/v1/metrics_parser
+config/v1/metrics_handler
+config/v1/metrics_handler_parser
+config/v1/metrics_prometheus_handler
+config/v1/metrics_prometheus_transport
+config/v1/parser
+
+config file structure
+=====================
 {
   "apiVersion": "1",
   "dns": {

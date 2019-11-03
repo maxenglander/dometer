@@ -20,10 +20,10 @@
 #include "util/error.hpp"
 #include "util/lru_map.hpp"
 
-namespace Util = Dometer::Util;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     class PrometheusHandler {
         public:
             PrometheusHandler(std::shared_ptr<prometheus::Registry>);
@@ -41,12 +41,12 @@ namespace Dometer::Metrics {
             void cacheMetric(T* t, prometheus::ext::FamilyNameAndTimeSeriesCount);
 
             template<typename T, typename BuilderFn>
-            expected<prometheus::ext::FamilyRef<T>, Util::Error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
+            expected<prometheus::ext::FamilyRef<T>, util::Error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
 
             void handleMetricEviction(prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount);
 
             std::shared_ptr<prometheus::Registry> registry;
-           // Util::LRUMap<prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount> metricCache;
+           // util::LRUMap<prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount> metricCache;
             PrometheusLRUMap metricCache;
             std::unordered_map<std::string, prometheus::ext::AnyFamilyRef> metricFamilies;
     };

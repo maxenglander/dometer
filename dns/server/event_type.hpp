@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     enum class EventType {
         LOOKUP,
         QUERY,
@@ -11,8 +11,8 @@ namespace Dometer::Dns::Server {
 }
 
 namespace std {
-    template <> struct hash<Dometer::Dns::Server::EventType> {
-        size_t operator()(const Dometer::Dns::Server::EventType& t) const noexcept {
+    template <> struct hash<dometer::dns::server::EventType> {
+        size_t operator()(const dometer::dns::server::EventType& t) const noexcept {
             return size_t(t);
         }
     };

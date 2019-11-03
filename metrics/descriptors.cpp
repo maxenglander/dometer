@@ -9,7 +9,7 @@
 #include "metrics/type.hpp"
 #include "metrics/unit.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     const Descriptor<std::string, std::string, std::string, bool> Descriptors::QUERY(
         "dns_query_count", "Count of DNS queries received",
         std::make_tuple(

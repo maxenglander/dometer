@@ -7,7 +7,7 @@
 
 #include "util/callback.hpp"
 
-namespace Dometer::Util {
+namespace dometer::util {
     template <class Key, class T>
     class CallbackRegistry {
         public:

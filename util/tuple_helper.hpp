@@ -5,7 +5,7 @@
 /**
  * @see https://stackoverflow.com/a/28998020/614660
  */
-namespace Dometer::Util {
+namespace dometer::util {
     template <std::size_t... S>
     struct Sequence {};
 

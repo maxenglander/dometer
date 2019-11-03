@@ -6,24 +6,24 @@
 #include "dns/type.hpp"
 #include "metrics/observation.hpp"
 
-namespace Dometer::Dns::Metrics {
+namespace dometer::dns::metrics {
     class LookupObservationBuilder
-            :    public Dometer::Metrics::ObservationBuilder<double, std::string, std::string, Dometer::Dns::Type> {
+            :    public dometer::metrics::ObservationBuilder<double, std::string, std::string, dometer::dns::Type> {
         public:
-            Dometer::Metrics::Observation<double, std::string, std::string, Dometer::Dns::Type> build() const;
+            dometer::metrics::Observation<double, std::string, std::string, dometer::dns::Type> build() const;
             LookupObservationBuilder& duration(double duration);
             LookupObservationBuilder& qclass(std::string);
             LookupObservationBuilder& qname(std::string);
-            LookupObservationBuilder& qtype(Dometer::Dns::Type);
+            LookupObservationBuilder& qtype(dometer::dns::Type);
         private:
             double _duration;
             std::string _qclass;
             std::string _qname;
-            Dometer::Dns::Type _qtype = Dometer::Dns::Type::A;
+            dometer::dns::Type _qtype = dometer::dns::Type::A;
     };
 
-    struct LookupObservation : Dometer::Metrics::Observation<double, std::string, std::string, Dometer::Dns::Type> {
-        LookupObservation(double, std::tuple<std::string, std::string, Dometer::Dns::Type>);
+    struct LookupObservation : dometer::metrics::Observation<double, std::string, std::string, dometer::dns::Type> {
+        LookupObservation(double, std::tuple<std::string, std::string, dometer::dns::Type>);
         static LookupObservationBuilder newBuilder();
         using Builder = LookupObservationBuilder;
     };

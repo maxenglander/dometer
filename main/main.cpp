@@ -23,24 +23,24 @@
 #include "prometheus/exposer.h"
 #include "prometheus/registry.h"
 
-namespace Dns = Dometer::Dns;
-namespace Metrics = Dometer::Metrics;
+namespace dns = dometer::dns;
+namespace metrics = dometer::metrics;
 using namespace std::experimental;
 
 int main(int argc, char **argv) {
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
-    Metrics::PrometheusHandler prometheusHandler(prometheusRegistry);
+    metrics::PrometheusHandler prometheusHandler(prometheusRegistry);
 
     prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
     prometheusExposer.RegisterCollectable(prometheusRegistry);
 
-    auto serverHandler = std::make_unique<Dns::Server::NativeResolvingHandler>();
+    auto serverHandler = std::make_unique<dns::server::NativeResolvingHandler>();
 
-    serverHandler->on(Dns::Server::EventType::LOOKUP, [&prometheusHandler](auto event) {
-        auto builder = Dns::Metrics::LookupObservation::newBuilder();
+    serverHandler->on(dns::server::EventType::LOOKUP, [&prometheusHandler](auto event) {
+        auto builder = dns::metrics::LookupObservation::newBuilder();
 
-        auto lookupEvent = std::dynamic_pointer_cast<Dns::Server::LookupEvent>(event);
+        auto lookupEvent = std::dynamic_pointer_cast<dns::server::LookupEvent>(event);
         auto query = lookupEvent->getQuery();
 
         if(query) {
@@ -57,13 +57,13 @@ int main(int argc, char **argv) {
             }
         }
 
-        prometheusHandler.observe(Dns::Metrics::LookupSummary::INSTANCE, builder.build());
+        prometheusHandler.observe(dns::metrics::LookupSummary::INSTANCE, builder.build());
     });
 
-    serverHandler->on(Dns::Server::EventType::QUERY, [&prometheusHandler](auto event) {
-        auto builder = Dns::Metrics::QueryObservation::newBuilder();
+    serverHandler->on(dns::server::EventType::QUERY, [&prometheusHandler](auto event) {
+        auto builder = dns::metrics::QueryObservation::newBuilder();
 
-        auto queryEvent = std::dynamic_pointer_cast<Dns::Server::QueryEvent>(event);
+        auto queryEvent = std::dynamic_pointer_cast<dns::server::QueryEvent>(event);
         auto query = queryEvent->getQuery();
 
         builder.valid(false);
@@ -77,13 +77,13 @@ int main(int argc, char **argv) {
             }
         }
 
-        prometheusHandler.increment(Dns::Metrics::QueryCounter::INSTANCE, builder.build());
+        prometheusHandler.increment(dns::metrics::QueryCounter::INSTANCE, builder.build());
     });
 
-    serverHandler->on(Dns::Server::EventType::REPLY, [&prometheusHandler](auto event) {
-        auto builder = Dns::Metrics::ReplyObservation::newBuilder();
+    serverHandler->on(dns::server::EventType::REPLY, [&prometheusHandler](auto event) {
+        auto builder = dns::metrics::ReplyObservation::newBuilder();
 
-        auto queryEvent = std::dynamic_pointer_cast<Dns::Server::ReplyEvent>(event);
+        auto queryEvent = std::dynamic_pointer_cast<dns::server::ReplyEvent>(event);
         auto reply = queryEvent->getReply();
 
         builder.valid(false);
@@ -97,10 +97,10 @@ int main(int argc, char **argv) {
             }
         }
 
-        prometheusHandler.increment(Dns::Metrics::ReplyCounter::INSTANCE, builder.build());
+        prometheusHandler.increment(dns::metrics::ReplyCounter::INSTANCE, builder.build());
     });
 
-    Dns::Server::Server server(std::move(serverHandler));
+    dns::server::Server server(std::move(serverHandler));
     auto result = server.serve();
     if(!result) {
         std::cerr << "failed to start DNS server: " + result.error().message

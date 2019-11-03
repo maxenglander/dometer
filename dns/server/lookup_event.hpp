@@ -7,28 +7,28 @@
 #include "experimental/expected.hpp"
 #include "util/error.hpp"
 
-namespace Dometer::Dns {
+namespace dometer::dns {
     class Packet;
 }
 
-namespace Dns = Dometer::Dns;
-namespace Util = Dometer::Util;
+namespace Dns = dometer::dns;
+namespace util = dometer::util;
 using namespace std::experimental;
 
-namespace Dometer::Dns::Server {
+namespace dometer::dns::server {
     class LookupEvent : public Event {
         public:
             LookupEvent(
-                    const Dns::Packet& query,
-                    const expected<Dns::Packet, Util::Error>& reply,
+                    const dns::Packet& query,
+                    const expected<dns::Packet, util::Error>& reply,
                     const std::chrono::microseconds duration);
             const std::chrono::microseconds getDuration() const;
-            const Dns::Packet& getQuery() const;
-            const expected<Dns::Packet, Util::Error>& getReply() const;
+            const dns::Packet& getQuery() const;
+            const expected<dns::Packet, util::Error>& getReply() const;
             EventType getType() const;
         private:
-            const Dns::Packet& query;
-            const expected<Dns::Packet, Util::Error>& reply;
+            const dns::Packet& query;
+            const expected<dns::Packet, util::Error>& reply;
             const std::chrono::microseconds duration;
     };
 }

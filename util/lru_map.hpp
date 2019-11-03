@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-namespace Dometer::Util {
+namespace dometer::util {
     template<typename K, typename V>
     class LRUMap {
         using KVNode = typename std::list<std::pair<K, V>>::iterator;

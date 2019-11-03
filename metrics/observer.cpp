@@ -2,5 +2,5 @@
 
 #include "metrics/observer.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
 }

@@ -5,7 +5,7 @@
 
 #include "metrics/label.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     class Labels {
         public:
             Labels() = delete;

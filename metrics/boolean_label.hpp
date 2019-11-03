@@ -4,7 +4,7 @@
 
 #include "metrics/label.hpp"
 
-namespace Dometer::Metrics {
+namespace dometer::metrics {
     struct BooleanLabel : Label<bool> {
         BooleanLabel() = delete;
         BooleanLabel(std::string);
