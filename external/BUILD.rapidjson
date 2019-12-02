@@ -1,0 +1,11 @@
+cc_library(
+    name = "rapidjson",
+    hdrs = glob([
+        "include/rapidjson/error/*.h",
+        "include/rapidjson/internal/*.h",
+        "include/rapidjson/msinttypes/*.h",
+        "include/rapidjson/*.h",
+    ]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+)

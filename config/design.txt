@@ -4,15 +4,15 @@ file layout
 config/config.hpp
 config/config_parser.hpp
 config/config_validator.hpp
-config/v1/config.hpp
-config/v1/config.json
-config/v1/config_validator.hpp
-config/v1/config_parser.hpp
 config/v1/metrics/handler.hpp
 config/v1/metrics/handler.json
 config/v1/metrics/prometheus_handler.hpp
 config/v1/metrics/prometheus_handler.json
 config/v1/server/server.hpp
+config/v1/config.hpp
+config/v1/config_validator.hpp
+config/v1/config_parser.hpp
+config/v1/schema.json
 
 interface
 =========

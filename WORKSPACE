@@ -24,16 +24,6 @@ http_archive(
     strip_prefix = "optional-1.0.0",
 )
 
-# Prometheus client library
-http_archive(
-    name = "com_github_jupp0r_prometheus_cpp",
-    strip_prefix = "prometheus-cpp-0.7.0",
-    urls = ["https://github.com/jupp0r/prometheus-cpp/archive/v0.7.0.zip"],
-    sha256 = "7838b5cd44bbb921f3c85ddf508a20327f8ffe2cabdc18f7c640995215cf2127"
-)
-load("@com_github_jupp0r_prometheus_cpp//:repositories.bzl", "prometheus_cpp_repositories")
-prometheus_cpp_repositories()
-
 # c++11 compatible implementation of c++17 std::variant
 http_archive(
     name = "com_github_mpark_variant",
@@ -50,4 +40,23 @@ http_archive(
     sha256 = "807eccd586c7f454bfc7908b6d0ef47f1c379026333f926e8981ecb0318ccd7d",
     build_file = "@//external:BUILD.asio",
     strip_prefix = "asio-1.14.0",
+)
+
+# Prometheus client library
+http_archive(
+    name = "com_github_jupp0r_prometheus_cpp",
+    strip_prefix = "prometheus-cpp-0.7.0",
+    urls = ["https://github.com/jupp0r/prometheus-cpp/archive/v0.7.0.zip"],
+    sha256 = "7838b5cd44bbb921f3c85ddf508a20327f8ffe2cabdc18f7c640995215cf2127"
+)
+load("@com_github_jupp0r_prometheus_cpp//:repositories.bzl", "prometheus_cpp_repositories")
+prometheus_cpp_repositories()
+
+# RapidJSON library
+http_archive(
+    name = "com_github_Tencent_rapidjson",
+    urls = ["https://github.com/Tencent/rapidjson/archive/v1.1.0.zip"],
+    sha256 = "8e00c38829d6785a2dfb951bb87c6974fa07dfe488aa5b25deec4b8bc0f6a3ab",
+    build_file = "@//external:BUILD.rapidjson",
+    strip_prefix = "rapidjson-1.1.0",
 )
