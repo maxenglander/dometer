@@ -1,6 +1,8 @@
-cc_library(
+genrule(
     name = "schema",
-    hdrs = ["schema.hpp"],
+    srcs = ["schema.json", "schema.hpp.tpl"],
+    outs = ["schema.hpp"],
+    cmd = "cat $(location schema.hpp.tpl) | SCHEMA=$$(cat $(location schema.json)) envsubst > $@",
     visibility = ["//visibility:public"],
 )
 
@@ -11,9 +13,8 @@ cc_library(
         "@com_github_tristanpenman_valijson//:valijson",
         "//experimental:expected",
         "//util:error",
-        ":schema",
     ],
-    hdrs = ["validator.hpp"],
+    hdrs = [":schema", "validator.hpp"],
     srcs = ["validator.cpp"],
     visibility = ["//visibility:public"],
 )
