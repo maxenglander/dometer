@@ -1,6 +1,14 @@
-namespace Dometer::Config {
+#include <string>
+
+#include "experimental/expected.hpp"
+
+#include "util/error.hpp"
+
+using namespace std::experimental;
+
+namespace dometer::config {
     class Validator {
         public:
-            void validate();
+            expected<void, util::Error> validate(std::string);
     };
 }

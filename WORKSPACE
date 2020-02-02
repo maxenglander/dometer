@@ -60,3 +60,12 @@ http_archive(
     build_file = "@//external:BUILD.rapidjson",
     strip_prefix = "rapidjson-1.1.0",
 )
+
+# Valijson library
+http_archive(
+    name = "com_github_tristanpenman_valijson",
+    urls = ["https://github.com/tristanpenman/valijson/archive/v0.2.zip"],
+    sha256 = "b5fa1106ad388408b9352223716bbfdd5650b2258f0ac8c4afb3d9d70b0a5e4d",
+    build_file = "@//external:BUILD.valijson",
+    strip_prefix = "valijson-0.2",
+)

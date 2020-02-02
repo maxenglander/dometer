@@ -5,6 +5,7 @@ cc_binary(
         "@com_github_jupp0r_prometheus_cpp//core",
         "@com_github_jupp0r_prometheus_cpp//pull",
         "@net_sourceforge_asio_asio//:asio",
+        "//config:validator",
         "//dns:packet",
         "//dns/metrics:lookup_observation",
         "//dns/metrics:lookup_summary",

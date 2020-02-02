@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 
+#include "config/validator.hpp"
 #include "dns/packet.hpp"
 #include "dns/metrics/lookup_observation.hpp"
 #include "dns/metrics/lookup_summary.hpp"
@@ -23,11 +24,22 @@
 #include "prometheus/exposer.h"
 #include "prometheus/registry.h"
 
+namespace config = dometer::config;
 namespace dns = dometer::dns;
 namespace metrics = dometer::metrics;
 using namespace std::experimental;
 
 int main(int argc, char **argv) {
+    auto validator = config::Validator();
+    auto validation = validator.validate("{\"apiVersion\":\"v0.1.0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"address\":\"udp://0.0.0.0:5353\",\"maxConnections\":100}}}}");
+    if(!validation) {
+        std::cout << "Failed to validate configuration" << std::endl;
+        std::cout << "================================" << std::endl;
+        std::cout << validation.error().message << std::endl;
+        return 1;
+    }
+    return 0;
+
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
     metrics::PrometheusHandler prometheusHandler(prometheusRegistry);

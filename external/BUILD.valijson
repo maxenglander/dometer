@@ -1,0 +1,13 @@
+cc_library(
+    name = "valijson",
+    hdrs = glob([
+        "include/compat/*.hpp",
+        "include/valijson/adapters/*.hpp",
+        "include/valijson/constraints/*.hpp",
+        "include/valijson/internal/*.hpp",
+        "include/valijson/utils/*.hpp",
+        "include/valijson/*.hpp",
+    ]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+)
