@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <deque>
 #include <iostream>
 #include <string>
 
@@ -60,22 +61,24 @@ namespace dometer::config {
             return {};
         }
 
-        unsigned int errorNumber = 0;
-        valijson::ValidationResults::Error validationError;
         std::string errorMessage;
-        while(validationResults.popError(validationError)) {
+        unsigned int errorIndex = validationResults.numErrors() - 1;
+        std::deque<valijson::ValidationResults::Error>::const_iterator errorIt = validationResults.begin();
+        for(; errorIt != validationResults.end(); errorIt++) {
+            valijson::ValidationResults::Error error = *errorIt;
+
             std::string context;
-            std::vector<std::string>::iterator it = validationError.context.begin();
-            for(; it != validationError.context.end(); it++) {
-                context += *it;
+            std::vector<std::string>::iterator contextIt = error.context.begin();
+            for(; contextIt != error.context.end(); contextIt++) {
+                context += *contextIt;
             }
 
-            if(errorNumber > 0) {
-                errorMessage += "\n";
+            if(errorIndex < validationResults.numErrors() - 1) {
+                errorMessage = "\n" + errorMessage;
             }
-            errorMessage += "Error #" + std::to_string(errorNumber)
-                         += " @" + context + ": " + validationError.description;
-            errorNumber++;
+            errorMessage = "@" + context + ": " + error.description
+                         + errorMessage;
+            errorIndex--;
         }
 
         return unexpected<util::Error>(util::Error{ errorMessage });
