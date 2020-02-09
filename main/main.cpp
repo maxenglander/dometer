@@ -2,7 +2,8 @@
 #include <iostream>
 #include <memory>
 
-#include "config/validator.hpp"
+#include "config/config_parser.hpp"
+#include "config/schema_validator.hpp"
 #include "dns/packet.hpp"
 #include "dns/metrics/lookup_observation.hpp"
 #include "dns/metrics/lookup_summary.hpp"
@@ -20,7 +21,6 @@
 #include "experimental/expected.hpp"
 #include "metrics/observer.hpp"
 #include "metrics/prometheus_handler.hpp"
-
 #include "prometheus/exposer.h"
 #include "prometheus/registry.h"
 
@@ -30,13 +30,18 @@ namespace metrics = dometer::metrics;
 using namespace std::experimental;
 
 int main(int argc, char **argv) {
-    auto validator = config::Validator();
-    auto validation = validator.validate("{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\",\"maxConnections\":100}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":10000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}");
+    std::string configString = "{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\",\"maxConnections\":100}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":10000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}";
+    auto validator = config::SchemaValidator();
+    auto validation = validator.validate(configString);
     if(!validation) {
-        std::cout << "Failed to validate configuration" << std::endl;
-        std::cout << "================================" << std::endl;
-        std::cout << validation.error().message << std::endl;
+        std::cerr << "Failed to validate configuration" << std::endl;
+        std::cerr << "================================" << std::endl;
+        std::cerr << validation.error().message << std::endl;
         return 1;
+    }
+    auto parser = config::ConfigParser();
+    if(parser.parse(configString)) {
+        std::cout << "Successfully parsed config" << std::endl;
     }
     return 0;
 

@@ -4,8 +4,8 @@ cc_binary(
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
         "@com_github_jupp0r_prometheus_cpp//pull",
-        "@net_sourceforge_asio_asio//:asio",
-        "//config:validator",
+        "//config:config_parser",
+        "//config:schema_validator",
         "//dns:packet",
         "//dns/metrics:lookup_observation",
         "//dns/metrics:lookup_summary",
@@ -23,8 +23,5 @@ cc_binary(
         "//experimental:expected",
         "//metrics:prometheus_handler",
         "//metrics:observer",
-    ],
-    linkopts = [
-        "-lresolv"
-    ],
+    ]
 )
