@@ -20,7 +20,7 @@ cc_binary(
         "//dns/server:query_event",
         "//dns/server:reply_event",
         "//dns/server:server",
-        "//experimental:expected",
+        "//x:expected",
         "//metrics:prometheus_handler",
         "//metrics:observer",
     ]

@@ -20,7 +20,7 @@ cc_library(
     name = "handler",
     deps = [
         "//dns:packet",
-        "//experimental:expected",
+        "//x:expected",
         "//util:callback",
         "//util:callback_registry",
         "//util:error",
@@ -36,7 +36,7 @@ cc_library(
     name = "lookup_event",
     deps = [
         "//dns:packet",
-        "//experimental:expected",
+        "//x:expected",
         "//util:error",
         ":event",
         ":event_type",
@@ -53,7 +53,7 @@ cc_library(
     deps = [
         "//dns:packet",
         "//dns/resolver:native_resolver",
-        "//experimental:expected",
+        "//x:expected",
         "//util:callback",
         "//util:callback_registry",
         "//util:error",
@@ -71,7 +71,7 @@ cc_library(
     name = "query_event",
     deps = [
         "//dns:packet",
-        "//experimental:expected",
+        "//x:expected",
         "//util:error",
         ":event",
         ":event_type",
@@ -85,7 +85,7 @@ cc_library(
     name = "reply_event",
     deps = [
         "//dns:packet",
-        "//experimental:expected",
+        "//x:expected",
         "//util:error",
         ":event",
         ":event_type",
@@ -101,7 +101,7 @@ cc_library(
     deps = [
         "@net_sourceforge_asio_asio//:asio",
         "//dns:packet",
-        "//experimental:expected",
+        "//x:expected",
         "//util:error",
         ":handler",
         ":native_resolving_handler",

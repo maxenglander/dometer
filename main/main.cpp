@@ -17,7 +17,7 @@
 #include "dns/server/query_event.hpp"
 #include "dns/server/reply_event.hpp"
 #include "dns/server/server.hpp"
-#include "experimental/expected.hpp"
+#include "x/expected.hpp"
 #include "metrics/observer.hpp"
 #include "metrics/prometheus_handler.hpp"
 #include "prometheus/exposer.h"
@@ -26,7 +26,7 @@
 namespace config = dometer::config;
 namespace dns = dometer::dns;
 namespace metrics = dometer::metrics;
-using namespace std::experimental;
+using namespace std::x;
 
 int main(int argc, char **argv) {
     std::string configString = "{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\",\"maxConnections\":100}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":10000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}";
@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
     }
 
     auto config = *parseResults;
+    std::cout << "DNS resolver type = " << config.dns.resolver.type << std::endl;
     std::cout << "DNS server transport bindAddress = " << config.dns.server.transport.bindAddress << std::endl;
 
     return 0;

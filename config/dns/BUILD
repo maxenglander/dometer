@@ -12,7 +12,7 @@ cc_library(
     hdrs = ["dns_factory.hpp"],
     srcs = ["dns_factory.cpp"],
     deps = [
-      "//config/dns/server:server",
+      "//config/dns/resolver:resolver_factory",
       "//config/dns/server:server_factory",
       ":dns",
     ],

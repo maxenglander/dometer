@@ -119,8 +119,8 @@ cc_library(
     name = "prometheus_handler",
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
-        "//experimental:expected",
-        "//experimental:variant",
+        "//x:expected",
+        "//x:variant",
         "//util:error",
         "//util:lru_map",
         ":counter",
@@ -143,7 +143,7 @@ cc_library(
     name = "prometheus_lru_map",
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
-        "//experimental:variant",
+        "//x:variant",
         "//util:lru_map",
         ":prometheus_types",
     ],

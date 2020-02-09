@@ -6,7 +6,7 @@
 
 #include "config/schema.hpp"
 #include "config/schema_validator.hpp"
-#include "experimental/expected.hpp"
+#include "x/expected.hpp"
 #include "rapidjson/error/en.h"
 #include "rapidjson/schema.h"
 #include "rapidjson/stringbuffer.h"
@@ -18,7 +18,7 @@
 #include "valijson/validator.hpp"
 #include "util/error.hpp"
 
-using namespace std::experimental;
+using namespace std::x;
 
 namespace dometer::config {
     SchemaValidator::SchemaValidator()

@@ -6,7 +6,7 @@ cc_library(
         "//dns:class",
         "//dns:packet",
         "//dns:type",
-        "//experimental:expected",
+        "//x:expected",
         "//util:error",
         ":resolution_mode",
     ],

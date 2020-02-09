@@ -3,14 +3,14 @@
 #include <memory>
 #include <string>
 
-#include "experimental/expected.hpp"
+#include "x/expected.hpp"
 #include "rapidjson/document.h"
 #include "valijson/schema.hpp"
 #include "valijson/validation_results.hpp"
 #include "valijson/validator.hpp"
 #include "util/error.hpp"
 
-using namespace std::experimental;
+using namespace std::x;
 
 namespace dometer::config {
     class SchemaValidator {

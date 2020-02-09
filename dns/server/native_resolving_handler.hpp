@@ -6,7 +6,7 @@
 #include "dns/resolver/native_resolver.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
-#include "experimental/expected.hpp"
+#include "x/expected.hpp"
 #include "util/callback.hpp"
 #include "util/callback_registry.hpp"
 #include "util/error.hpp"
@@ -17,7 +17,7 @@ namespace dometer::dns {
 
 namespace Dns = dometer::dns;
 namespace util = dometer::util;
-using namespace std::experimental;
+using namespace std::x;
 
 namespace dometer::dns::server {
     class NativeResolvingHandler : public Handler {

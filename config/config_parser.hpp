@@ -6,11 +6,11 @@
 #include "config/config.hpp"
 #include "config/config_factory.hpp"
 #include "config/schema_validator.hpp"
-#include "experimental/expected.hpp"
+#include "x/expected.hpp"
 #include "rapidjson/document.h"
 #include "util/error.hpp"
 
-using namespace std::experimental;
+using namespace std::x;
 namespace util = dometer::util;
 
 namespace dometer::config {

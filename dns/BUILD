@@ -18,7 +18,7 @@ cc_library(
     name = "packet",
     hdrs = ["packet.hpp"],
     deps = [
-        "//experimental:expected",
+        "//x:expected",
         "//util:error",
         ":class",
         ":opcode",

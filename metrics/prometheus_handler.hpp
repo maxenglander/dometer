@@ -4,7 +4,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "experimental/expected.hpp"
+#include "x/expected.hpp"
 
 #include "metrics/counter.hpp"
 #include "metrics/metric.hpp"
@@ -21,7 +21,7 @@
 #include "util/lru_map.hpp"
 
 namespace util = dometer::util;
-using namespace std::experimental;
+using namespace std::x;
 
 namespace dometer::metrics {
     class PrometheusHandler {

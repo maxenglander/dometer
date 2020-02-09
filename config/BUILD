@@ -25,7 +25,7 @@ cc_library(
     srcs = ["config_parser.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
-        "//experimental:expected",
+        "//x:expected",
         "//util:error",
         ":config",
         ":config_factory",
@@ -47,7 +47,7 @@ cc_library(
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
         "@com_github_tristanpenman_valijson//:valijson",
-        "//experimental:expected",
+        "//x:expected",
         "//util:error",
     ],
     hdrs = [

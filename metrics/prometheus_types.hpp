@@ -1,11 +1,11 @@
 #pragma once
 
-#include "experimental/variant.hpp"
+#include "x/variant.hpp"
 #include "prometheus/counter.h"
 #include "prometheus/family.h"
 #include "prometheus/summary.h"
 
-using namespace std::experimental;
+using namespace std::x;
 
 namespace prometheus::ext {
     struct FamilyNameAndTimeSeriesCount {

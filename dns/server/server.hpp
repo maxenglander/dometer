@@ -7,7 +7,7 @@
 #include "util/error.hpp"
 
 using namespace dometer::util;
-using namespace std::experimental;
+using namespace std::x;
 
 namespace dometer::dns::server {
     class Server {

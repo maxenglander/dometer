@@ -12,12 +12,12 @@
 #include "dns/packet.hpp"
 #include "dns/resolver/native_resolver.hpp"
 #include "dns/resolver/resolution_mode.hpp"
-#include "experimental/expected.hpp"
+#include "x/expected.hpp"
 #include "util/error.hpp"
 
 namespace Dns = dometer::dns;
 namespace util = dometer::util;
-using namespace std::experimental;
+using namespace std::x;
 
 namespace dometer::dns::resolver {
     NativeResolver::NativeResolver()
