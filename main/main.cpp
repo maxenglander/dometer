@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "config/config_parser.hpp"
-#include "config/schema_validator.hpp"
 #include "dns/packet.hpp"
 #include "dns/metrics/lookup_observation.hpp"
 #include "dns/metrics/lookup_summary.hpp"
@@ -31,18 +30,18 @@ using namespace std::experimental;
 
 int main(int argc, char **argv) {
     std::string configString = "{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\",\"maxConnections\":100}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":10000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}";
-    auto validator = config::SchemaValidator();
-    auto validation = validator.validate(configString);
-    if(!validation) {
-        std::cerr << "Failed to validate configuration" << std::endl;
-        std::cerr << "================================" << std::endl;
-        std::cerr << validation.error().message << std::endl;
+    auto parser = config::ConfigParser();
+    auto parseResults = parser.parse(configString);
+    if(!parseResults) {
+        std::cerr << "Failed to parse configuration" << std::endl;
+        std::cerr << "=============================" << std::endl;
+        std::cerr << parseResults.error().message << std::endl;
         return 1;
     }
-    auto parser = config::ConfigParser();
-    if(parser.parse(configString)) {
-        std::cout << "Successfully parsed config" << std::endl;
-    }
+
+    auto config = *parseResults;
+    std::cout << "DNS server transport bindAddress = " << config.dns.server.transport.bindAddress << std::endl;
+
     return 0;
 
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
