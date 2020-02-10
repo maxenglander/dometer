@@ -29,7 +29,7 @@ namespace metrics = dometer::metrics;
 using namespace std::x;
 
 int main(int argc, char **argv) {
-    std::string configString = "{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\",\"maxConnections\":100}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":10000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}";
+    std::string configString = "{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\",\"maxConnections\":100}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":20000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}";
     auto parser = config::ConfigParser();
     auto parseResults = parser.parse(configString);
     if(!parseResults) {
@@ -42,6 +42,7 @@ int main(int argc, char **argv) {
     auto config = *parseResults;
     std::cout << "DNS resolver type = " << config.dns.resolver.type << std::endl;
     std::cout << "DNS server transport bindAddress = " << config.dns.server.transport.bindAddress << std::endl;
+    std::cout << "DNS metrics handler[0] prometheus maxTimeSeries = " << config.metrics.handlers[0].prometheus.value().maxTimeSeries << std::endl;
 
     return 0;
 

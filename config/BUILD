@@ -14,6 +14,7 @@ cc_library(
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
         "//config/dns:dns_factory",
+        "//config/metrics:metrics_factory",
         ":config",
     ],
     visibility = ["//visibility:public"],
