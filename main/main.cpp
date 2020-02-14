@@ -38,12 +38,7 @@ int main(int argc, char **argv) {
         std::cerr << parseResults.error().message << std::endl;
         return 1;
     }
-
     auto config = *parseResults;
-    std::cout << "DNS resolver type = " << config.dns.resolver.type << std::endl;
-    std::cout << "DNS server transport bindAddress = " << config.dns.server.transport.bindAddress << std::endl;
-    std::cout << "DNS metrics handler[0] prometheus maxTimeSeries = " << config.metrics.handlers[0].prometheus.value().maxTimeSeries << std::endl;
-    std::cout << "DNS metrics handler[0] prometheus transports[0] exposer numThreads = " << config.metrics.handlers[0].prometheus.value().transports[0].exposer.value().numThreads << std::endl;
 
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
