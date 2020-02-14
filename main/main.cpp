@@ -17,11 +17,11 @@
 #include "dns/server/query_event.hpp"
 #include "dns/server/reply_event.hpp"
 #include "dns/server/server.hpp"
-#include "x/expected.hpp"
 #include "metrics/observer.hpp"
 #include "metrics/prometheus_handler.hpp"
 #include "prometheus/exposer.h"
 #include "prometheus/registry.h"
+#include "x/expected.hpp"
 
 namespace config = dometer::config;
 namespace dns = dometer::dns;
@@ -44,8 +44,6 @@ int main(int argc, char **argv) {
     std::cout << "DNS server transport bindAddress = " << config.dns.server.transport.bindAddress << std::endl;
     std::cout << "DNS metrics handler[0] prometheus maxTimeSeries = " << config.metrics.handlers[0].prometheus.value().maxTimeSeries << std::endl;
     std::cout << "DNS metrics handler[0] prometheus transports[0] exposer numThreads = " << config.metrics.handlers[0].prometheus.value().transports[0].exposer.value().numThreads << std::endl;
-
-    return 0;
 
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
@@ -120,10 +118,9 @@ int main(int argc, char **argv) {
     });
 
     dns::server::Server server(std::move(serverHandler));
-    auto result = server.serve();
+    auto result = server.serve(config.dns.server.transport.bindAddress);
     if(!result) {
-        std::cerr << "failed to start DNS server: " + result.error().message
-            + " (" + std::to_string(result.error().number) + ")" << std::endl;
+        std::cerr << "Failed to start DNS server [" + result.error().message + "]" << std::endl;
         return 1;
     }
 
