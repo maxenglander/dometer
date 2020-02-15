@@ -1,7 +1,7 @@
 #pragma once
 
 namespace dometer::dns::resolver {
-    enum class ResolutionMode {
+    enum class LibresolvFunction {
         QUERY,
         SEARCH
     };

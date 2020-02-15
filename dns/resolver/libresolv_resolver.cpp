@@ -10,8 +10,8 @@
 #include <string>
 
 #include "dns/packet.hpp"
+#include "dns/resolver/libresolv_function.hpp"
 #include "dns/resolver/libresolv_resolver.hpp"
-#include "dns/resolver/resolution_mode.hpp"
 #include "x/expected.hpp"
 #include "util/error.hpp"
 
@@ -21,10 +21,10 @@ using namespace std::x;
 
 namespace dometer::dns::resolver {
     LibresolvResolver::LibresolvResolver()
-        : LibresolvResolver(ResolutionMode::QUERY) {}
+        : LibresolvResolver(LibresolvFunction::QUERY) {}
 
-    LibresolvResolver::LibresolvResolver(ResolutionMode resolutionMode)
-        : resolutionMode(resolutionMode) {}
+    LibresolvResolver::LibresolvResolver(LibresolvFunction function)
+        : function(function) {}
 
     expected<dns::Packet, util::Error> LibresolvResolver::resolve(
             const std::string& qname, const Class& qclass, const Type& qtype) const {
@@ -32,7 +32,7 @@ namespace dometer::dns::resolver {
         memset(buffer, 0, PACKETSZ);
 
         int length;
-        if(resolutionMode == ResolutionMode::QUERY) {
+        if(function == LibresolvFunction::QUERY) {
             length = res_query(qname.c_str(), qclass, qtype, buffer, PACKETSZ);
         } else {
             length = res_search(qname.c_str(), qclass, qtype, buffer, PACKETSZ);
