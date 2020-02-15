@@ -13,9 +13,9 @@
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
 #include "dns/server/lookup_event.hpp"
-#include "dns/server/libresolv_resolving_handler.hpp"
 #include "dns/server/query_event.hpp"
 #include "dns/server/reply_event.hpp"
+#include "dns/server/resolving_handler.hpp"
 #include "dns/server/server.hpp"
 #include "metrics/observer.hpp"
 #include "metrics/prometheus_handler.hpp"
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
     prometheusExposer.RegisterCollectable(prometheusRegistry);
 
-    auto serverHandler = std::make_unique<dns::server::LibresolvResolvingHandler>();
+    auto serverHandler = std::make_unique<dns::server::ResolvingHandler>();
 
     serverHandler->on(dns::server::EventType::LOOKUP, [&prometheusHandler](auto event) {
         auto builder = dns::metrics::LookupObservation::newBuilder();

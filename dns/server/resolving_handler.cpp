@@ -8,9 +8,9 @@
 #include "dns/server/event.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/lookup_event.hpp"
-#include "dns/server/libresolv_resolving_handler.hpp"
 #include "dns/server/query_event.hpp"
 #include "dns/server/reply_event.hpp"
+#include "dns/server/resolving_handler.hpp"
 #include "x/expected.hpp"
 #include "util/callback.hpp"
 #include "util/callback_registry.hpp"
@@ -22,14 +22,14 @@ using namespace dometer::util;
 using namespace std::x;
 
 namespace dometer::dns::server {
-    LibresolvResolvingHandler::LibresolvResolvingHandler()
-        :   LibresolvResolvingHandler(
+    ResolvingHandler::ResolvingHandler()
+        :   ResolvingHandler(
                 std::chrono::steady_clock(),
                 CallbackRegistry<EventType, std::shared_ptr<Event>>(),
                 LibresolvResolver())
     {}
 
-    LibresolvResolvingHandler::LibresolvResolvingHandler(
+    ResolvingHandler::ResolvingHandler(
                 std::chrono::steady_clock clock,
                 CallbackRegistry<EventType, std::shared_ptr<Event>> listeners,
                 LibresolvResolver resolver)
@@ -38,7 +38,7 @@ namespace dometer::dns::server {
             resolver(resolver)
     {}
 
-    expected<size_t, Error> LibresolvResolvingHandler::handle(
+    expected<size_t, Error> ResolvingHandler::handle(
             uint8_t *queryPtr, size_t querySize,
             uint8_t *replyPtr, size_t replySize) {
         auto query = Packet::makePacket(queryPtr, querySize);
@@ -56,7 +56,7 @@ namespace dometer::dns::server {
         }
     }
 
-    expected<Packet, Error> LibresolvResolvingHandler::handle(expected<Packet, Error> &query) {
+    expected<Packet, Error> ResolvingHandler::handle(expected<Packet, Error> &query) {
         if(!query) {
             return unexpected<Error>(query.error());
         } else if(query->getOpCode() != dns::OpCode::QUERY) {
@@ -80,11 +80,11 @@ namespace dometer::dns::server {
         return reply;
     }
 
-    void LibresolvResolvingHandler::notify(std::shared_ptr<Event> event) {
+    void ResolvingHandler::notify(std::shared_ptr<Event> event) {
         listeners.notify(event->getType(), event);
     }
 
-    Handler& LibresolvResolvingHandler::on(EventType eventType, Callback<std::shared_ptr<Event>> listener) {
+    Handler& ResolvingHandler::on(EventType eventType, Callback<std::shared_ptr<Event>> listener) {
         listeners.on(eventType, listener);
         return *this;
     }

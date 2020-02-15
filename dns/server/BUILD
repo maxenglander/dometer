@@ -47,9 +47,9 @@ cc_library(
 )
 
 cc_library(
-    name = "libresolv_resolving_handler",
-    hdrs = ["libresolv_resolving_handler.hpp"],
-    srcs = ["libresolv_resolving_handler.cpp"],
+    name = "resolving_handler",
+    hdrs = ["resolving_handler.hpp"],
+    srcs = ["resolving_handler.cpp"],
     deps = [
         "//dns:packet",
         "//dns/resolver:libresolv_resolver",
@@ -104,7 +104,7 @@ cc_library(
         "//x:expected",
         "//util:error",
         ":handler",
-        ":libresolv_resolving_handler",
+        ":resolving_handler",
     ],
     srcs = ["server.cpp"],
     visibility = ["//visibility:public"],

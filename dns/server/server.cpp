@@ -5,7 +5,7 @@
 #include "dns/packet.hpp"
 #include "dns/server/server.hpp"
 #include "dns/server/handler.hpp"
-#include "dns/server/libresolv_resolving_handler.hpp"
+#include "dns/server/resolving_handler.hpp"
 #include "x/expected.hpp"
 #include "util/error.hpp"
 
@@ -15,7 +15,7 @@ using namespace asio::ip;
 using namespace std::x;
 
 namespace dometer::dns::server {
-    Server::Server() : Server(std::make_unique<LibresolvResolvingHandler>()) {}
+    Server::Server() : Server(std::make_unique<ResolvingHandler>()) {}
 
     Server::Server(std::unique_ptr<Handler> handler)
         :   handler(std::move(handler)),

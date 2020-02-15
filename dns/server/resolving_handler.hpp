@@ -20,10 +20,10 @@ namespace util = dometer::util;
 using namespace std::x;
 
 namespace dometer::dns::server {
-    class LibresolvResolvingHandler : public Handler {
+    class ResolvingHandler : public Handler {
         public:
-            LibresolvResolvingHandler();
-            LibresolvResolvingHandler(
+            ResolvingHandler();
+            ResolvingHandler(
                     std::chrono::steady_clock,
                     util::CallbackRegistry<EventType, std::shared_ptr<Event>>,
                     dns::resolver::LibresolvResolver);
