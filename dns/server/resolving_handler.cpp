@@ -4,7 +4,7 @@
 #include <thread>
 
 #include "dns/packet.hpp"
-#include "dns/resolver/libresolv_resolver.hpp"
+#include "dns/resolver/resolver.hpp"
 #include "dns/server/event.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/lookup_event.hpp"
@@ -22,17 +22,17 @@ using namespace dometer::util;
 using namespace std::x;
 
 namespace dometer::dns::server {
-    ResolvingHandler::ResolvingHandler()
+    ResolvingHandler::ResolvingHandler(std::shared_ptr<dns::resolver::Resolver> resolver)
         :   ResolvingHandler(
                 std::chrono::steady_clock(),
                 CallbackRegistry<EventType, std::shared_ptr<Event>>(),
-                LibresolvResolver())
+                resolver)
     {}
 
     ResolvingHandler::ResolvingHandler(
                 std::chrono::steady_clock clock,
                 CallbackRegistry<EventType, std::shared_ptr<Event>> listeners,
-                LibresolvResolver resolver)
+                std::shared_ptr<dns::resolver::Resolver> resolver)
         :   clock(clock),
             listeners(listeners),
             resolver(resolver)
@@ -69,7 +69,7 @@ namespace dometer::dns::server {
         }
 
         auto start = clock.now();
-        auto reply = resolver.resolve(question->qname, question->qclass, question->qtype);
+        auto reply = resolver->resolve(question->qname, question->qclass, question->qtype);
         auto end = clock.now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 

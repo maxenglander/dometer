@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 #include <memory>
 
 #include "asio.hpp"
@@ -15,8 +16,6 @@ using namespace asio::ip;
 using namespace std::x;
 
 namespace dometer::dns::server {
-    Server::Server() : Server(std::make_unique<ResolvingHandler>()) {}
-
     Server::Server(std::unique_ptr<Handler> handler)
         :   handler(std::move(handler)),
             ioContext(std::make_unique<asio::io_context>()),
@@ -122,6 +121,7 @@ namespace dometer::dns::server {
     }
 
     expected<void, Error> Server::serve(udp::endpoint endpoint) {
+        std::cout << "Binding to endpoint: " << endpoint << std::endl;
         expected<void, Error> result = openAndBindSocket(endpoint);
         if(!result) {
             return unexpected<Error>(result.error());

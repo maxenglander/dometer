@@ -30,9 +30,8 @@ cc_library(
         "//dns:class",
         "//dns:packet",
         "//dns:type",
+        "//util:error",
         "//x:expected",
-        "//util:error"
     ],
     visibility = ["//visibility:public"],
 )
-

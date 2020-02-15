@@ -10,6 +10,9 @@
 #include "dns/metrics/query_observation.hpp"
 #include "dns/metrics/reply_counter.hpp"
 #include "dns/metrics/reply_observation.hpp"
+#include "dns/resolver/resolver.hpp"
+#include "dns/resolver/libresolv_function.hpp"
+#include "dns/resolver/libresolv_resolver.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
 #include "dns/server/lookup_event.hpp"
@@ -46,8 +49,26 @@ int main(int argc, char **argv) {
 
     prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
     prometheusExposer.RegisterCollectable(prometheusRegistry);
+    
+    std::shared_ptr<dns::resolver::Resolver> resolver = nullptr;
+    if(config.dns.resolver.type == "libresolv") {
+        dns::resolver::LibresolvFunction libresolvFunction;
+        if(config.dns.resolver.libresolv.value().function == "query") {
+            libresolvFunction = dns::resolver::LibresolvFunction::QUERY;
+        } else if(config.dns.resolver.libresolv.value().function == "search") {
+            libresolvFunction = dns::resolver::LibresolvFunction::SEARCH;
+        } else {
+            std::cerr << "Could not find a libresolv function of requested type ("
+                + config.dns.resolver.libresolv.value().function + ")" << std::endl;
+            return 1;
+        }
+        resolver = std::static_pointer_cast<dns::resolver::Resolver>(std::make_shared<dns::resolver::LibresolvResolver>(libresolvFunction));
+    } else {
+        std::cerr << "Could not find a resolver of requested type (" + config.dns.resolver.type + ")" << std::endl;
+        return 1;
+    }
 
-    auto serverHandler = std::make_unique<dns::server::ResolvingHandler>();
+    auto serverHandler = std::make_unique<dns::server::ResolvingHandler>(resolver);
 
     serverHandler->on(dns::server::EventType::LOOKUP, [&prometheusHandler](auto event) {
         auto builder = dns::metrics::LookupObservation::newBuilder();

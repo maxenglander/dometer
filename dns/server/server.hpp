@@ -12,7 +12,6 @@ using namespace std::x;
 namespace dometer::dns::server {
     class Server {
         public:
-            Server();
             Server(std::unique_ptr<Handler>);
             expected<void, Error> serve(std::string);
             expected<void, Error> serve(std::string, uint16_t port);

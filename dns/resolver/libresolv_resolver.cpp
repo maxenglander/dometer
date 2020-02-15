@@ -28,6 +28,7 @@ namespace dometer::dns::resolver {
 
     expected<dns::Packet, util::Error> LibresolvResolver::resolve(
             const std::string& qname, const Class& qclass, const Type& qtype) const {
+        std::cout << "Handling resolve request" << std::endl;
         unsigned char buffer[PACKETSZ];
         memset(buffer, 0, PACKETSZ);
 
