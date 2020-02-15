@@ -3,6 +3,7 @@ cc_library(
     hdrs = ["dns.hpp"],
     deps = [
       "//config/dns/server:server",
+      "//dns/resolver:options",
     ],
     visibility = ["//visibility:public"],
 )

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "config/dns/resolver/libresolv.hpp"
+#include "dns/resolver/libresolv_options.hpp"
 #include "rapidjson/document.h"
 
 namespace dometer::config::dns::resolver {
     class LibresolvFactory {
         public:
-            Libresolv fromJson(const rapidjson::Value& jsonValue) const;
+            dometer::dns::resolver::LibresolvOptions fromJson(const rapidjson::Value& jsonValue) const;
     };
 }

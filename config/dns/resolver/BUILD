@@ -11,6 +11,8 @@ cc_library(
     srcs = ["libresolv_factory.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
+        "//dns/resolver:libresolv_function",
+        "//dns/resolver:libresolv_options",
         ":libresolv",
     ],
     visibility = ["//visibility:public"],
@@ -32,6 +34,7 @@ cc_library(
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
         "//x:optional",
+        "//dns/resolver:options",
         ":libresolv_factory",
         ":resolver",
     ],

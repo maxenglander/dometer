@@ -1,7 +1,7 @@
 #pragma once
 
 #include "config/dns/resolver/libresolv_factory.hpp"
-#include "config/dns/resolver/resolver_factory.hpp"
+#include "dns/resolver/options.hpp"
 #include "rapidjson/document.h"
 
 namespace dometer::config::dns::resolver {
@@ -9,7 +9,7 @@ namespace dometer::config::dns::resolver {
         public:
             ResolverFactory();
             ResolverFactory(LibresolvFactory);
-            Resolver fromJson(const rapidjson::Value& jsonValue) const;
+            dometer::dns::resolver::Options fromJson(const rapidjson::Value& jsonValue) const;
         private:
             const LibresolvFactory libresolvFactory;
     };

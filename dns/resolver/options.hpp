@@ -1,8 +1,10 @@
 #pragma once
 
+#include "dns/resolver/libresolv_options.hpp"
+#include "x/variant.hpp"
+
+using namespace std::x;
+
 namespace dometer::dns::resolver {
-    enum class LibresolvFunction {
-        QUERY,
-        SEARCH
-    };
+    using Options = variant<LibresolvOptions>;
 }

@@ -13,6 +13,8 @@ cc_binary(
         "//dns/metrics:query_observation",
         "//dns/metrics:reply_counter",
         "//dns/metrics:reply_observation",
+        "//dns/resolver:resolver",
+        "//dns/resolver:resolver_factory",
         "//dns/server:event_type",
         "//dns/server:handler",
         "//dns/server:lookup_event",
