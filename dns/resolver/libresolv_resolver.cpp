@@ -10,7 +10,7 @@
 #include <string>
 
 #include "dns/packet.hpp"
-#include "dns/resolver/native_resolver.hpp"
+#include "dns/resolver/libresolv_resolver.hpp"
 #include "dns/resolver/resolution_mode.hpp"
 #include "x/expected.hpp"
 #include "util/error.hpp"
@@ -20,13 +20,13 @@ namespace util = dometer::util;
 using namespace std::x;
 
 namespace dometer::dns::resolver {
-    NativeResolver::NativeResolver()
-        : NativeResolver(ResolutionMode::QUERY) {}
+    LibresolvResolver::LibresolvResolver()
+        : LibresolvResolver(ResolutionMode::QUERY) {}
 
-    NativeResolver::NativeResolver(ResolutionMode resolutionMode)
+    LibresolvResolver::LibresolvResolver(ResolutionMode resolutionMode)
         : resolutionMode(resolutionMode) {}
 
-    expected<dns::Packet, util::Error> NativeResolver::resolve(
+    expected<dns::Packet, util::Error> LibresolvResolver::resolve(
             const std::string& qname, const Class& qclass, const Type& qtype) const {
         unsigned char buffer[PACKETSZ];
         memset(buffer, 0, PACKETSZ);

@@ -1,7 +1,7 @@
 cc_library(
-    name = "native_resolver",
-    hdrs = ["native_resolver.hpp"],
-    srcs = ["native_resolver.cpp"],
+    name = "libresolv_resolver",
+    hdrs = ["libresolv_resolver.hpp"],
+    srcs = ["libresolv_resolver.cpp"],
     deps = [
         "//dns:class",
         "//dns:packet",

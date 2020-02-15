@@ -13,7 +13,7 @@
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
 #include "dns/server/lookup_event.hpp"
-#include "dns/server/native_resolving_handler.hpp"
+#include "dns/server/libresolv_resolving_handler.hpp"
 #include "dns/server/query_event.hpp"
 #include "dns/server/reply_event.hpp"
 #include "dns/server/server.hpp"
@@ -29,7 +29,7 @@ namespace metrics = dometer::metrics;
 using namespace std::x;
 
 int main(int argc, char **argv) {
-    std::string configString = "{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\",\"maxConnections\":100}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":20000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0:9090\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}";
+    std::string configString = "{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\"}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":20000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0:9090\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}";
     auto parser = config::ConfigParser();
     auto parseResults = parser.parse(configString);
     if(!parseResults) {
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
     prometheusExposer.RegisterCollectable(prometheusRegistry);
 
-    auto serverHandler = std::make_unique<dns::server::NativeResolvingHandler>();
+    auto serverHandler = std::make_unique<dns::server::LibresolvResolvingHandler>();
 
     serverHandler->on(dns::server::EventType::LOOKUP, [&prometheusHandler](auto event) {
         auto builder = dns::metrics::LookupObservation::newBuilder();

@@ -4,11 +4,11 @@
 #include <thread>
 
 #include "dns/packet.hpp"
-#include "dns/resolver/native_resolver.hpp"
+#include "dns/resolver/libresolv_resolver.hpp"
 #include "dns/server/event.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/lookup_event.hpp"
-#include "dns/server/native_resolving_handler.hpp"
+#include "dns/server/libresolv_resolving_handler.hpp"
 #include "dns/server/query_event.hpp"
 #include "dns/server/reply_event.hpp"
 #include "x/expected.hpp"
@@ -22,23 +22,23 @@ using namespace dometer::util;
 using namespace std::x;
 
 namespace dometer::dns::server {
-    NativeResolvingHandler::NativeResolvingHandler()
-        :   NativeResolvingHandler(
+    LibresolvResolvingHandler::LibresolvResolvingHandler()
+        :   LibresolvResolvingHandler(
                 std::chrono::steady_clock(),
                 CallbackRegistry<EventType, std::shared_ptr<Event>>(),
-                NativeResolver())
+                LibresolvResolver())
     {}
 
-    NativeResolvingHandler::NativeResolvingHandler(
+    LibresolvResolvingHandler::LibresolvResolvingHandler(
                 std::chrono::steady_clock clock,
                 CallbackRegistry<EventType, std::shared_ptr<Event>> listeners,
-                NativeResolver resolver)
+                LibresolvResolver resolver)
         :   clock(clock),
             listeners(listeners),
             resolver(resolver)
     {}
 
-    expected<size_t, Error> NativeResolvingHandler::handle(
+    expected<size_t, Error> LibresolvResolvingHandler::handle(
             uint8_t *queryPtr, size_t querySize,
             uint8_t *replyPtr, size_t replySize) {
         auto query = Packet::makePacket(queryPtr, querySize);
@@ -56,7 +56,7 @@ namespace dometer::dns::server {
         }
     }
 
-    expected<Packet, Error> NativeResolvingHandler::handle(expected<Packet, Error> &query) {
+    expected<Packet, Error> LibresolvResolvingHandler::handle(expected<Packet, Error> &query) {
         if(!query) {
             return unexpected<Error>(query.error());
         } else if(query->getOpCode() != dns::OpCode::QUERY) {
@@ -80,11 +80,11 @@ namespace dometer::dns::server {
         return reply;
     }
 
-    void NativeResolvingHandler::notify(std::shared_ptr<Event> event) {
+    void LibresolvResolvingHandler::notify(std::shared_ptr<Event> event) {
         listeners.notify(event->getType(), event);
     }
 
-    Handler& NativeResolvingHandler::on(EventType eventType, Callback<std::shared_ptr<Event>> listener) {
+    Handler& LibresolvResolvingHandler::on(EventType eventType, Callback<std::shared_ptr<Event>> listener) {
         listeners.on(eventType, listener);
         return *this;
     }

@@ -3,7 +3,7 @@
 #include <chrono>
 #include <memory>
 
-#include "dns/resolver/native_resolver.hpp"
+#include "dns/resolver/libresolv_resolver.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
 #include "x/expected.hpp"
@@ -20,13 +20,13 @@ namespace util = dometer::util;
 using namespace std::x;
 
 namespace dometer::dns::server {
-    class NativeResolvingHandler : public Handler {
+    class LibresolvResolvingHandler : public Handler {
         public:
-            NativeResolvingHandler();
-            NativeResolvingHandler(
+            LibresolvResolvingHandler();
+            LibresolvResolvingHandler(
                     std::chrono::steady_clock,
                     util::CallbackRegistry<EventType, std::shared_ptr<Event>>,
-                    dns::resolver::NativeResolver);
+                    dns::resolver::LibresolvResolver);
             expected<size_t, util::Error> handle(
                     uint8_t *queryPtr, size_t querySize,
                     uint8_t *replyPtr, size_t replySize);
@@ -36,6 +36,6 @@ namespace dometer::dns::server {
             void notify(std::shared_ptr<Event>);
             const std::chrono::steady_clock clock;
             util::CallbackRegistry<EventType, std::shared_ptr<Event>> listeners;
-            const dns::resolver::NativeResolver resolver;
+            const dns::resolver::LibresolvResolver resolver;
     };
 }

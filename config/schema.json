@@ -53,17 +53,10 @@
                 "bindAddress": {
                   "type": "string",
                   "default": "0.0.0.0:5353"
-                },
-                "maxConnections": {
-                  "type": "integer",
-                  "multipleOf": 1.0,
-                  "minimum": 0,
-                  "default": 100
                 }
               },
               "required": [
-                "bindAddress",
-                "maxConnections"
+                "bindAddress"
               ]
             }
           },

@@ -47,12 +47,12 @@ cc_library(
 )
 
 cc_library(
-    name = "native_resolving_handler",
-    hdrs = ["native_resolving_handler.hpp"],
-    srcs = ["native_resolving_handler.cpp"],
+    name = "libresolv_resolving_handler",
+    hdrs = ["libresolv_resolving_handler.hpp"],
+    srcs = ["libresolv_resolving_handler.cpp"],
     deps = [
         "//dns:packet",
-        "//dns/resolver:native_resolver",
+        "//dns/resolver:libresolv_resolver",
         "//x:expected",
         "//util:callback",
         "//util:callback_registry",
@@ -104,7 +104,7 @@ cc_library(
         "//x:expected",
         "//util:error",
         ":handler",
-        ":native_resolving_handler",
+        ":libresolv_resolving_handler",
     ],
     srcs = ["server.cpp"],
     visibility = ["//visibility:public"],

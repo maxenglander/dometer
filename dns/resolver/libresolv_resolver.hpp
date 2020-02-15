@@ -17,10 +17,10 @@ namespace util = dometer::util;
 using namespace std::x;
 
 namespace dometer::dns::resolver {
-    class NativeResolver {
+    class LibresolvResolver {
         public:
-            NativeResolver();
-            NativeResolver(ResolutionMode);
+            LibresolvResolver();
+            LibresolvResolver(ResolutionMode);
             expected<dns::Packet, util::Error> resolve(const std::string&, const Class&, const Type&) const;
         private:
             const ResolutionMode resolutionMode;
