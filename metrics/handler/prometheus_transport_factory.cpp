@@ -1,3 +1,4 @@
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -12,11 +13,10 @@ namespace dometer::metrics::handler {
     std::shared_ptr<prometheus::x::Transport> PrometheusTransportFactory::makeTransport(PrometheusTransportOptions options) {
         return std::x::visit(overloaded(
             [](PrometheusPullTransportOptions ppto) {
+                std::cout << "Creating pull transport bound to " << ppto.bindAddress << std::endl;
                 return std::make_shared<prometheus::x::Transport>(
                     std::x::in_place_index<0>,
-                    ppto.bindAddress,
-                    ppto.metricsPath,
-                    ppto.numThreads
+                    ppto.bindAddress
                 );
             }
         ), options);

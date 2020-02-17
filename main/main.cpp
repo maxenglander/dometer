@@ -49,13 +49,9 @@ int main(int argc, char **argv) {
 
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
-    metrics::handler::PrometheusHandler prometheusHandler(prometheusRegistry);
-    metrics::handler::PrometheusHandler promHandler
+    metrics::handler::PrometheusHandler prometheusHandler
         = metrics::handler::PrometheusHandlerFactory::makeHandler(
                 std::x::get<metrics::handler::PrometheusOptions>(config.metrics.handlers[0]));
-
-    prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
-    prometheusExposer.RegisterCollectable(prometheusRegistry);
 
     auto resolver = dns::resolver::ResolverFactory::makeResolver(config.dns.resolver);
     auto serverHandler = std::make_unique<dns::server::ResolvingHandler>(resolver);
