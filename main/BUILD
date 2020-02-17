@@ -2,8 +2,6 @@ cc_binary(
     name = "main",
     srcs = ["main.cpp"],
     deps = [
-        "@com_github_jupp0r_prometheus_cpp//core",
-        "@com_github_jupp0r_prometheus_cpp//pull",
         "//config:config_parser",
         "//config:schema_validator",
         "//dns:packet",
@@ -23,9 +21,9 @@ cc_binary(
         "//dns/server:resolving_handler",
         "//dns/server:server",
         "//metrics:observer",
-        "//metrics/handler:prometheus_handler",
-        "//metrics/handler:prometheus_handler_factory",
-        "//metrics/handler:prometheus_options",
+        "//metrics/handler:handler",
+        "//metrics/handler:handler_factory",
+        "//metrics/handler:options",
         "//x:expected",
         "//x:variant",
     ]

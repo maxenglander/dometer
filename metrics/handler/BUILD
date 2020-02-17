@@ -1,4 +1,32 @@
 cc_library(
+    name = "handler",
+    hdrs = ["handler.hpp", "handler.ipp"],
+    srcs = ["handler.cpp"],
+    deps = [
+        "//metrics:counter",
+        "//metrics:observation",
+        "//metrics:summary",
+        "//x:variant",
+        ":prometheus_handler",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "handler_factory",
+    hdrs = ["handler_factory.hpp"],
+    srcs = ["handler_factory.cpp"],
+    deps = [
+        "//x:variant",
+        ":handler",
+        ":options",
+        ":prometheus_handler_factory",
+        ":prometheus_options",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "options",
     hdrs = ["options.hpp"],
     deps = [
