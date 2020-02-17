@@ -1,4 +1,5 @@
 #include <type_traits>
+#include <vector>
 
 #include "metrics/handler/prometheus_handler.hpp"
 #include "metrics/handler/prometheus_types.hpp"
@@ -13,15 +14,21 @@ namespace dometer::metrics::handler {
     {}
 
     PrometheusHandler::PrometheusHandler(std::shared_ptr<prometheus::Registry> registry)
-        :   PrometheusHandler(registry, 10000)
+        :   PrometheusHandler(10000, registry)
     {}
 
     PrometheusHandler::PrometheusHandler(size_t maxTimeSeries)
-        :   PrometheusHandler(std::make_shared<prometheus::Registry>(), maxTimeSeries)
+        :   PrometheusHandler(maxTimeSeries, std::make_shared<prometheus::Registry>())
     {}
 
-    PrometheusHandler::PrometheusHandler(std::shared_ptr<prometheus::Registry> registry, size_t maxTimeSeries)
-        :   registry(registry), metricCache(maxTimeSeries)
+    PrometheusHandler::PrometheusHandler(size_t maxTimeSeries, std::shared_ptr<prometheus::Registry> registry)
+        :   PrometheusHandler(maxTimeSeries, registry, std::vector<prometheus::x::Transport>())
+    {}
+
+    PrometheusHandler::PrometheusHandler(size_t maxTimeSeries,
+                std::shared_ptr<prometheus::Registry> registry,
+                std::vector<prometheus::x::Transport> transports)
+        :   metricCache(maxTimeSeries), registry(registry), transports(transports)
     {
         metricCache.onEvict([this](auto k, auto v) {
             this->handleMetricEviction(k, v);

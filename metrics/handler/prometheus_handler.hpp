@@ -3,6 +3,7 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 #include "metrics/counter.hpp"
 #include "metrics/handler/prometheus_lru_map.hpp"
@@ -26,7 +27,8 @@ namespace dometer::metrics::handler {
             PrometheusHandler();
             PrometheusHandler(std::shared_ptr<prometheus::Registry>);
             PrometheusHandler(size_t);
-            PrometheusHandler(std::shared_ptr<prometheus::Registry>, size_t);
+            PrometheusHandler(size_t, std::shared_ptr<prometheus::Registry>);
+            PrometheusHandler(size_t, std::shared_ptr<prometheus::Registry>, std::vector<prometheus::x::Transport>);
 
             template<typename... L>
             void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);
@@ -42,9 +44,10 @@ namespace dometer::metrics::handler {
 
             void handleMetricEviction(prometheus::x::AnyMetricPtr, prometheus::x::FamilyNameAndTimeSeriesCount);
 
-            std::shared_ptr<prometheus::Registry> registry;
             PrometheusLRUMap metricCache;
             std::unordered_map<std::string, prometheus::x::AnyFamilyRef> metricFamilies;
+            std::shared_ptr<prometheus::Registry> registry;
+            std::vector<prometheus::x::Transport> transports;
     };
 }
 

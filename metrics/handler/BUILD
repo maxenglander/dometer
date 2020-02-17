@@ -53,6 +53,8 @@ cc_library(
     deps = [
         ":prometheus_handler",
         ":prometheus_options",
+        ":prometheus_transport_factory",
+        ":prometheus_types",
     ],
     visibility = ["//visibility:public"],
 )
@@ -75,6 +77,22 @@ cc_library(
 )
 
 cc_library(
+    name = "prometheus_transport_factory",
+    hdrs = ["prometheus_transport_factory.hpp"],
+    srcs = ["prometheus_transport_factory.cpp"],
+    deps = [
+        "@com_github_jupp0r_prometheus_cpp//core",
+        "@com_github_jupp0r_prometheus_cpp//pull",
+        "@com_github_jupp0r_prometheus_cpp//push",
+        "//x:variant",
+        ":prometheus_pull_transport_options",
+        ":prometheus_transport_options",
+        ":prometheus_types",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "prometheus_transport_options",
     deps = [
         "//x:variant",
@@ -87,7 +105,9 @@ cc_library(
 cc_library(
     name = "prometheus_types",
     deps = [
-        "@com_github_jupp0r_prometheus_cpp//core"
+        "@com_github_jupp0r_prometheus_cpp//core",
+        "@com_github_jupp0r_prometheus_cpp//pull",
+        "@com_github_jupp0r_prometheus_cpp//push",
     ],
     hdrs = [
         "prometheus_types.hpp",
