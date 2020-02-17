@@ -74,16 +74,32 @@ cc_library(
 )
 
 cc_library(
-    name = "metrics",
+    name = "observer",
     deps = [
-        ":counter_metric",
-        ":metric",
-        ":label",
-        ":labels",
-        ":unit",
+        "//metrics/handler:handler",
+        ":counter",
+        ":observation",
+        ":summary",
     ],
-    hdrs = ["metrics.hpp"],
-    srcs = ["metrics.cpp"],
+    hdrs = [
+        "observer.hpp",
+        "observer.ipp",
+    ],
+    srcs = ["observer.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "observer_factory",
+    deps = [
+        "//metrics/handler:handler_factory",
+        ":observer",
+        ":options",
+    ],
+    hdrs = [
+        "observer_factory.hpp",
+    ],
+    srcs = ["observer_factory.cpp"],
     visibility = ["//visibility:public"],
 )
 
@@ -101,17 +117,8 @@ cc_library(
 )
 
 cc_library(
-    name = "observer",
-    deps = [
-        ":counter",
-        ":observation",
-        ":summary",
-    ],
-    hdrs = [
-        "observer.hpp",
-        "observer.ipp",
-    ],
-    srcs = ["observer.cpp"],
+    name = "options",
+    hdrs = ["options.hpp"],
     visibility = ["//visibility:public"],
 )
 

@@ -21,10 +21,6 @@ cc_binary(
         "//dns/server:resolving_handler",
         "//dns/server:server",
         "//metrics:observer",
-        "//metrics/handler:handler",
-        "//metrics/handler:handler_factory",
-        "//metrics/handler:options",
-        "//x:expected",
-        "//x:variant",
+        "//metrics:observer_factory",
     ]
 )

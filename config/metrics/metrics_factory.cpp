@@ -1,8 +1,8 @@
 #include <vector>
 
 #include "config/metrics/handler/handler_factory.hpp"
-#include "config/metrics/metrics.hpp"
 #include "config/metrics/metrics_factory.hpp"
+#include "metrics/options.hpp"
 #include "metrics/handler/options.hpp"
 #include "rapidjson/document.h"
 
@@ -13,7 +13,7 @@ namespace dometer::config::metrics {
     MetricsFactory::MetricsFactory(dometer::config::metrics::handler::HandlerFactory handlerFactory)
         : handlerFactory(handlerFactory) {}
 
-    Metrics MetricsFactory::fromJson(const rapidjson::Value& jsonValue) const {
+    dometer::metrics::Options MetricsFactory::fromJson(const rapidjson::Value& jsonValue) const {
         assert(jsonValue.HasMember("handlers"));
         assert(jsonValue["handlers"].IsArray());
 
@@ -22,7 +22,7 @@ namespace dometer::config::metrics {
             handlers.push_back(handlerFactory.fromJson(jsonValue["handlers"][i]));
         }
 
-        return Metrics{
+        return dometer::metrics::Options{
             handlers
         };
     }

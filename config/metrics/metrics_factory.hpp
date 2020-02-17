@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config/metrics/handler/handler_factory.hpp"
+#include "metrics/options.hpp"
 #include "rapidjson/document.h"
 
 namespace dometer::config::metrics {
@@ -8,7 +9,7 @@ namespace dometer::config::metrics {
         public:
             MetricsFactory();
             MetricsFactory(dometer::config::metrics::handler::HandlerFactory);
-            Metrics fromJson(const rapidjson::Value& jsonValue) const;
+            dometer::metrics::Options fromJson(const rapidjson::Value& jsonValue) const;
         private:
             const dometer::config::metrics::handler::HandlerFactory handlerFactory;
     };

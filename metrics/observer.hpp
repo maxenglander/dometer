@@ -1,20 +1,20 @@
 #pragma once
 
-#include <memory>
+#include <vector>
 
 #include "metrics/counter.hpp"
+#include "metrics/handler/handler.hpp"
 #include "metrics/observation.hpp"
 #include "metrics/summary.hpp"
 
 namespace dometer::metrics {
-    template<typename Handler>
     class Observer {
         public:
-            Observer(std::shared_ptr<Handler>);
+            Observer(std::vector<dometer::metrics::handler::Handler>);
             template<typename... L> void increment(const Counter<L...>&, Observation<uint64_t, L...>);
             template<typename... L> void observe(const Summary<L...>&, Observation<double, L...>);
         private:
-            std::shared_ptr<Handler> handler;
+            std::vector<dometer::metrics::handler::Handler> handlers;
     };
 }
 

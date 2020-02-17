@@ -21,11 +21,8 @@
 #include "dns/server/reply_event.hpp"
 #include "dns/server/resolving_handler.hpp"
 #include "dns/server/server.hpp"
-#include "metrics/handler/handler.hpp"
-#include "metrics/handler/handler_factory.hpp"
-#include "metrics/handler/options.hpp"
-#include "x/expected.hpp"
-#include "x/variant.hpp"
+#include "metrics/observer.hpp"
+#include "metrics/observer_factory.hpp"
 
 namespace config = dometer::config;
 namespace dns = dometer::dns;
@@ -44,13 +41,12 @@ int main(int argc, char **argv) {
     }
     auto config = *parseResults;
 
-    metrics::handler::Handler handler
-        = metrics::handler::HandlerFactory::makeHandler(config.metrics.handlers[0]);
+    metrics::Observer observer = metrics::ObserverFactory::makeObserver(config.metrics);
 
     auto resolver = dns::resolver::ResolverFactory::makeResolver(config.dns.resolver);
     auto serverHandler = std::make_unique<dns::server::ResolvingHandler>(resolver);
 
-    serverHandler->on(dns::server::EventType::LOOKUP, [&handler](auto event) {
+    serverHandler->on(dns::server::EventType::LOOKUP, [&observer](auto event) {
         auto builder = dns::metrics::LookupObservation::newBuilder();
 
         auto lookupEvent = std::dynamic_pointer_cast<dns::server::LookupEvent>(event);
@@ -70,10 +66,10 @@ int main(int argc, char **argv) {
             }
         }
 
-        handler.observe(dns::metrics::LookupSummary::INSTANCE, builder.build());
+        observer.observe(dns::metrics::LookupSummary::INSTANCE, builder.build());
     });
 
-    serverHandler->on(dns::server::EventType::QUERY, [&handler](auto event) {
+    serverHandler->on(dns::server::EventType::QUERY, [&observer](auto event) {
         auto builder = dns::metrics::QueryObservation::newBuilder();
 
         auto queryEvent = std::dynamic_pointer_cast<dns::server::QueryEvent>(event);
@@ -90,10 +86,10 @@ int main(int argc, char **argv) {
             }
         }
 
-        handler.increment(dns::metrics::QueryCounter::INSTANCE, builder.build());
+        observer.increment(dns::metrics::QueryCounter::INSTANCE, builder.build());
     });
 
-    serverHandler->on(dns::server::EventType::REPLY, [&handler](auto event) {
+    serverHandler->on(dns::server::EventType::REPLY, [&observer](auto event) {
         auto builder = dns::metrics::ReplyObservation::newBuilder();
 
         auto queryEvent = std::dynamic_pointer_cast<dns::server::ReplyEvent>(event);
@@ -110,7 +106,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        handler.increment(dns::metrics::ReplyCounter::INSTANCE, builder.build());
+        observer.increment(dns::metrics::ReplyCounter::INSTANCE, builder.build());
     });
 
     dns::server::Server server(std::move(serverHandler));
