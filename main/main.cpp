@@ -23,9 +23,12 @@
 #include "dns/server/server.hpp"
 #include "metrics/observer.hpp"
 #include "metrics/prometheus_handler.hpp"
+#include "metrics/prometheus_handler_factory.hpp"
+#include "metrics/prometheus_options.hpp"
 #include "prometheus/exposer.h"
 #include "prometheus/registry.h"
 #include "x/expected.hpp"
+#include "x/variant.hpp"
 
 namespace config = dometer::config;
 namespace dns = dometer::dns;
@@ -47,13 +50,13 @@ int main(int argc, char **argv) {
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
     metrics::PrometheusHandler prometheusHandler(prometheusRegistry);
+    metrics::PrometheusHandler promHandler
+        = metrics::PrometheusHandlerFactory::makeHandler(std::x::get<metrics::PrometheusOptions>(config.metrics.handlers[0]));
 
     prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
     prometheusExposer.RegisterCollectable(prometheusRegistry);
 
-    std::shared_ptr<dns::resolver::Resolver> resolver
-        = dns::resolver::ResolverFactory::makeResolver(config.dns.resolver);
-
+    auto resolver = dns::resolver::ResolverFactory::makeResolver(config.dns.resolver);
     auto serverHandler = std::make_unique<dns::server::ResolvingHandler>(resolver);
 
     serverHandler->on(dns::server::EventType::LOOKUP, [&prometheusHandler](auto event) {

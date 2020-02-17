@@ -8,8 +8,16 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics {
+    PrometheusHandler::PrometheusHandler()
+        :   PrometheusHandler(std::make_shared<prometheus::Registry>())
+    {}
+
     PrometheusHandler::PrometheusHandler(std::shared_ptr<prometheus::Registry> registry)
-        :   PrometheusHandler(registry, 3)
+        :   PrometheusHandler(registry, 10000)
+    {}
+
+    PrometheusHandler::PrometheusHandler(size_t maxTimeSeries)
+        :   PrometheusHandler(std::make_shared<prometheus::Registry>(), maxTimeSeries)
     {}
 
     PrometheusHandler::PrometheusHandler(std::shared_ptr<prometheus::Registry> registry, size_t maxTimeSeries)

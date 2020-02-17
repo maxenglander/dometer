@@ -116,6 +116,15 @@ cc_library(
 )
 
 cc_library(
+    name = "options",
+    hdrs = ["options.hpp"],
+    deps = [
+        ":prometheus_options",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "prometheus_handler",
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
@@ -151,6 +160,44 @@ cc_library(
         "prometheus_lru_map.hpp",
     ],
     srcs = ["prometheus_lru_map.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "prometheus_handler_factory",
+    hdrs = ["prometheus_handler_factory.hpp"],
+    srcs = ["prometheus_handler_factory.cpp"],
+    deps = [
+        ":prometheus_handler",
+        ":prometheus_options",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "prometheus_options",
+    deps = [
+        "//x:variant",
+        ":prometheus_transport_options",
+    ],
+    hdrs = ["prometheus_options.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "prometheus_pull_transport_options",
+    deps = [],
+    hdrs = ["prometheus_pull_transport_options.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "prometheus_transport_options",
+    deps = [
+        "//x:variant",
+        ":prometheus_pull_transport_options",
+    ],
+    hdrs = ["prometheus_transport_options.hpp"],
     visibility = ["//visibility:public"],
 )
 

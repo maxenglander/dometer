@@ -26,7 +26,9 @@ using namespace std::x;
 namespace dometer::metrics {
     class PrometheusHandler {
         public:
+            PrometheusHandler();
             PrometheusHandler(std::shared_ptr<prometheus::Registry>);
+            PrometheusHandler(size_t);
             PrometheusHandler(std::shared_ptr<prometheus::Registry>, size_t);
 
             template<typename... L>
@@ -35,8 +37,6 @@ namespace dometer::metrics {
             template<typename... L>
             void observe(const Summary<L...>&, Observation<double, L...>);
         private:
-            int foo();
-
             template<typename T>
             void cacheMetric(T* t, prometheus::ext::FamilyNameAndTimeSeriesCount);
 
@@ -46,7 +46,6 @@ namespace dometer::metrics {
             void handleMetricEviction(prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount);
 
             std::shared_ptr<prometheus::Registry> registry;
-           // util::LRUMap<prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount> metricCache;
             PrometheusLRUMap metricCache;
             std::unordered_map<std::string, prometheus::ext::AnyFamilyRef> metricFamilies;
     };

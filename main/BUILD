@@ -22,8 +22,11 @@ cc_binary(
         "//dns/server:reply_event",
         "//dns/server:resolving_handler",
         "//dns/server:server",
-        "//x:expected",
         "//metrics:prometheus_handler",
+        "//metrics:prometheus_handler_factory",
+        "//metrics:prometheus_options",
         "//metrics:observer",
+        "//x:expected",
+        "//x:variant",
     ]
 )

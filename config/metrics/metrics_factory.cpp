@@ -3,6 +3,7 @@
 #include "config/metrics/handler/handler_factory.hpp"
 #include "config/metrics/metrics.hpp"
 #include "config/metrics/metrics_factory.hpp"
+#include "metrics/options.hpp"
 #include "rapidjson/document.h"
 
 namespace dometer::config::metrics {
@@ -16,7 +17,7 @@ namespace dometer::config::metrics {
         assert(jsonValue.HasMember("handlers"));
         assert(jsonValue["handlers"].IsArray());
 
-        std::vector<dometer::config::metrics::handler::Handler> handlers;
+        std::vector<dometer::metrics::Options> handlers;
         for(rapidjson::SizeType i = 0; i < jsonValue["handlers"].Size(); i++) {
             handlers.push_back(handlerFactory.fromJson(jsonValue["handlers"][i]));
         }
