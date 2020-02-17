@@ -22,5 +22,5 @@ namespace prometheus::x {
     using AnyFamilyRef = variant<FamilyRef<prometheus::Counter>, FamilyRef<prometheus::Summary>>;
     using AnyMetricPtr = variant<prometheus::Counter*, prometheus::Summary*>;
 
-    using Transport = variant<std::shared_ptr<prometheus::Exposer>, std::shared_ptr<prometheus::Gateway>>;
+    using Transport = variant<prometheus::Exposer, prometheus::Gateway>;
 }

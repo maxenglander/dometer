@@ -5,6 +5,12 @@
 namespace std::x {
     using mpark::get;
     using mpark::get_if;
+    using mpark::in_place;
+    using mpark::in_place_t;
+    using mpark::in_place_index;
+    using mpark::in_place_index_t;
+    using mpark::in_place_type;
+    using mpark::in_place_type_t;
     using mpark::variant;
     using mpark::visit;
 

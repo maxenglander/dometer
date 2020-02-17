@@ -28,7 +28,9 @@ namespace dometer::metrics::handler {
             PrometheusHandler(std::shared_ptr<prometheus::Registry>);
             PrometheusHandler(size_t);
             PrometheusHandler(size_t, std::shared_ptr<prometheus::Registry>);
-            PrometheusHandler(size_t, std::shared_ptr<prometheus::Registry>, std::vector<prometheus::x::Transport>);
+            PrometheusHandler(size_t,
+                              std::shared_ptr<prometheus::Registry>,
+                              std::vector<std::shared_ptr<prometheus::x::Transport>>);
 
             template<typename... L>
             void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);
@@ -47,7 +49,7 @@ namespace dometer::metrics::handler {
             PrometheusLRUMap metricCache;
             std::unordered_map<std::string, prometheus::x::AnyFamilyRef> metricFamilies;
             std::shared_ptr<prometheus::Registry> registry;
-            std::vector<prometheus::x::Transport> transports;
+            std::vector<std::shared_ptr<prometheus::x::Transport>> transports;
     };
 }
 

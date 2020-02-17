@@ -9,7 +9,7 @@
 
 namespace dometer::metrics::handler {
     PrometheusHandler PrometheusHandlerFactory::makeHandler(PrometheusOptions options) {
-        std::vector<prometheus::x::Transport> transports;
+        std::vector<std::shared_ptr<prometheus::x::Transport>> transports;
 
         for(auto it = options.transports.begin(); it < options.transports.end(); it++) {
             transports.push_back(PrometheusTransportFactory::makeTransport(*it));

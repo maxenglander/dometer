@@ -1,4 +1,5 @@
 #include <type_traits>
+#include <memory>
 #include <vector>
 
 #include "metrics/handler/prometheus_handler.hpp"
@@ -22,12 +23,12 @@ namespace dometer::metrics::handler {
     {}
 
     PrometheusHandler::PrometheusHandler(size_t maxTimeSeries, std::shared_ptr<prometheus::Registry> registry)
-        :   PrometheusHandler(maxTimeSeries, registry, std::vector<prometheus::x::Transport>())
+        :   PrometheusHandler(maxTimeSeries, registry, std::vector<std::shared_ptr<prometheus::x::Transport>>())
     {}
 
     PrometheusHandler::PrometheusHandler(size_t maxTimeSeries,
                 std::shared_ptr<prometheus::Registry> registry,
-                std::vector<prometheus::x::Transport> transports)
+                std::vector<std::shared_ptr<prometheus::x::Transport>> transports)
         :   metricCache(maxTimeSeries), registry(registry), transports(transports)
     {
         metricCache.onEvict([this](auto k, auto v) {
