@@ -2,10 +2,10 @@
 
 #include <vector>
 
-#include "metrics/options.hpp"
+#include "metrics/handler/options.hpp"
 
 namespace dometer::config::metrics {
     struct Metrics {
-        std::vector<dometer::metrics::Options> handlers;
+        std::vector<dometer::metrics::handler::Options> handlers;
     };
 }

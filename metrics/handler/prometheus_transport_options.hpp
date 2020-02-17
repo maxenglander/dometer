@@ -1,8 +1,8 @@
 #pragma once
 
-#include "metrics/prometheus_pull_transport_options.hpp"
+#include "metrics/handler/prometheus_pull_transport_options.hpp"
 #include "x/variant.hpp"
 
-namespace dometer::metrics {
+namespace dometer::metrics::handler {
     using PrometheusTransportOptions = std::x::variant<PrometheusPullTransportOptions>;
 }

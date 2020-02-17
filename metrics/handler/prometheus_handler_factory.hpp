@@ -1,9 +1,9 @@
 #pragma once
 
-#include "metrics/prometheus_handler.hpp"
-#include "metrics/prometheus_options.hpp"
+#include "metrics/handler/prometheus_handler.hpp"
+#include "metrics/handler/prometheus_options.hpp"
 
-namespace dometer::metrics {
+namespace dometer::metrics::handler {
     class PrometheusHandlerFactory {
         public:
             static PrometheusHandler makeHandler(PrometheusOptions options);

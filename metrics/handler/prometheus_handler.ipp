@@ -6,47 +6,45 @@
 #include <tuple>
 #include <utility>
 
+#include "metrics/label_helper.hpp"
+#include "metrics/counter.hpp"
+#include "metrics/handler/prometheus_handler.hpp"
+#include "metrics/handler/prometheus_lru_map.hpp"
+#include "metrics/handler/prometheus_types.hpp"
+#include "metrics/metric.hpp"
+#include "metrics/observation.hpp"
+#include "prometheus/counter.h"
+#include "prometheus/summary.h"
+#include "util/error.hpp"
 #include "x/expected.hpp"
 #include "x/variant.hpp"
 
-#include "metrics/label_helper.hpp"
-#include "metrics/counter.hpp"
-#include "metrics/metric.hpp"
-#include "metrics/observation.hpp"
-#include "metrics/prometheus_handler.hpp"
-#include "metrics/prometheus_lru_map.hpp"
-#include "metrics/prometheus_types.hpp"
-
-#include "prometheus/counter.h"
-#include "prometheus/summary.h"
-
-#include "util/error.hpp"
 
 namespace util = dometer::util;
 using namespace std::x;
 
-namespace dometer::metrics {
+namespace dometer::metrics::handler {
     template<typename T>
-    void PrometheusHandler::cacheMetric(T* metric, prometheus::ext::FamilyNameAndTimeSeriesCount meta) {
+    void PrometheusHandler::cacheMetric(T* metric, prometheus::x::FamilyNameAndTimeSeriesCount meta) {
         metricCache.put(metric, meta);
     }
 
     template<typename T, typename BuilderFn>
-    expected<prometheus::ext::FamilyRef<T>, util::Error> PrometheusHandler::getOrBuildMetricFamily(
+    expected<prometheus::x::FamilyRef<T>, util::Error> PrometheusHandler::getOrBuildMetricFamily(
             std::string name, std::string description, BuilderFn newBuilder) {
         auto search = metricFamilies.find(name);
 
         if(search == metricFamilies.end()) {
-            const prometheus::ext::FamilyRef<T> familyRef
+            const prometheus::x::FamilyRef<T> familyRef
                 = std::ref(newBuilder().Name(name).Help(description).Register(*registry));
-            metricFamilies.insert({name, prometheus::ext::AnyFamilyRef(familyRef)});
+            metricFamilies.insert({name, prometheus::x::AnyFamilyRef(familyRef)});
             search = metricFamilies.find(name);
         }
 
-        const prometheus::ext::AnyFamilyRef anyFamilyRef = search->second;
+        const prometheus::x::AnyFamilyRef anyFamilyRef = search->second;
 
-        if(auto familyRefPtr = get_if<prometheus::ext::FamilyRef<T>>(&anyFamilyRef)) {
-            prometheus::ext::FamilyRef<T> familyRef = *familyRefPtr;
+        if(auto familyRefPtr = get_if<prometheus::x::FamilyRef<T>>(&anyFamilyRef)) {
+            prometheus::x::FamilyRef<T> familyRef = *familyRefPtr;
             return familyRef;
         }
 
@@ -56,7 +54,8 @@ namespace dometer::metrics {
     }
 
     template<typename... L>
-    void PrometheusHandler::increment(const Counter<L...>& counter, Observation<uint64_t, L...> observation) {
+    void PrometheusHandler::increment(const dometer::metrics::Counter<L...>& counter,
+            dometer::metrics::Observation<uint64_t, L...> observation) {
         auto metricFamilyRef = getOrBuildMetricFamily<prometheus::Counter, decltype(prometheus::BuildCounter)>(
             counter.name, counter.description, prometheus::BuildCounter
         );
@@ -72,7 +71,8 @@ namespace dometer::metrics {
     }
 
     template<typename... L>
-    void PrometheusHandler::observe(const Summary<L...>& summary, Observation<double, L...> observation) {
+    void PrometheusHandler::observe(const dometer::metrics::Summary<L...>& summary,
+            dometer::metrics::Observation<double, L...> observation) {
         auto metricFamilyRef = getOrBuildMetricFamily<prometheus::Summary, decltype(prometheus::BuildSummary)>(
             summary.name, summary.description, prometheus::BuildSummary
         );

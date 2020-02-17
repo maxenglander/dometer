@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace dometer::metrics {
+namespace dometer::metrics::handler {
     struct PrometheusPullTransportOptions {
         const std::string bindAddress;
         const std::string metricsPath;

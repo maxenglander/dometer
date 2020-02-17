@@ -2,7 +2,7 @@ cc_library(
     name = "metrics",
     hdrs = ["metrics.hpp"],
     deps = [
-        "//metrics:options",
+        "//metrics/handler:options",
     ],
     visibility = ["//visibility:public"],
 )

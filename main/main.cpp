@@ -22,9 +22,9 @@
 #include "dns/server/resolving_handler.hpp"
 #include "dns/server/server.hpp"
 #include "metrics/observer.hpp"
-#include "metrics/prometheus_handler.hpp"
-#include "metrics/prometheus_handler_factory.hpp"
-#include "metrics/prometheus_options.hpp"
+#include "metrics/handler/prometheus_handler.hpp"
+#include "metrics/handler/prometheus_handler_factory.hpp"
+#include "metrics/handler/prometheus_options.hpp"
 #include "prometheus/exposer.h"
 #include "prometheus/registry.h"
 #include "x/expected.hpp"
@@ -49,9 +49,10 @@ int main(int argc, char **argv) {
 
     auto prometheusRegistry = std::make_shared<prometheus::Registry>();
 
-    metrics::PrometheusHandler prometheusHandler(prometheusRegistry);
-    metrics::PrometheusHandler promHandler
-        = metrics::PrometheusHandlerFactory::makeHandler(std::x::get<metrics::PrometheusOptions>(config.metrics.handlers[0]));
+    metrics::handler::PrometheusHandler prometheusHandler(prometheusRegistry);
+    metrics::handler::PrometheusHandler promHandler
+        = metrics::handler::PrometheusHandlerFactory::makeHandler(
+                std::x::get<metrics::handler::PrometheusOptions>(config.metrics.handlers[0]));
 
     prometheus::Exposer prometheusExposer{"0.0.0.0:9090"};
     prometheusExposer.RegisterCollectable(prometheusRegistry);

@@ -4,26 +4,23 @@
 #include <memory>
 #include <unordered_map>
 
-#include "x/expected.hpp"
-
 #include "metrics/counter.hpp"
+#include "metrics/handler/prometheus_lru_map.hpp"
+#include "metrics/handler/prometheus_types.hpp"
 #include "metrics/metric.hpp"
 #include "metrics/observation.hpp"
-#include "metrics/prometheus_lru_map.hpp"
-#include "metrics/prometheus_types.hpp"
 #include "metrics/summary.hpp"
-
 #include "prometheus/counter.h"
 #include "prometheus/registry.h"
 #include "prometheus/summary.h"
-
 #include "util/error.hpp"
 #include "util/lru_map.hpp"
+#include "x/expected.hpp"
 
 namespace util = dometer::util;
 using namespace std::x;
 
-namespace dometer::metrics {
+namespace dometer::metrics::handler {
     class PrometheusHandler {
         public:
             PrometheusHandler();
@@ -32,23 +29,23 @@ namespace dometer::metrics {
             PrometheusHandler(std::shared_ptr<prometheus::Registry>, size_t);
 
             template<typename... L>
-            void increment(const Counter<L...>&, Observation<uint64_t, L...>);
+            void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);
 
             template<typename... L>
-            void observe(const Summary<L...>&, Observation<double, L...>);
+            void observe(const dometer::metrics::Summary<L...>&, dometer::metrics::Observation<double, L...>);
         private:
             template<typename T>
-            void cacheMetric(T* t, prometheus::ext::FamilyNameAndTimeSeriesCount);
+            void cacheMetric(T* t, prometheus::x::FamilyNameAndTimeSeriesCount);
 
             template<typename T, typename BuilderFn>
-            expected<prometheus::ext::FamilyRef<T>, util::Error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
+            expected<prometheus::x::FamilyRef<T>, util::Error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
 
-            void handleMetricEviction(prometheus::ext::AnyMetricPtr, prometheus::ext::FamilyNameAndTimeSeriesCount);
+            void handleMetricEviction(prometheus::x::AnyMetricPtr, prometheus::x::FamilyNameAndTimeSeriesCount);
 
             std::shared_ptr<prometheus::Registry> registry;
             PrometheusLRUMap metricCache;
-            std::unordered_map<std::string, prometheus::ext::AnyFamilyRef> metricFamilies;
+            std::unordered_map<std::string, prometheus::x::AnyFamilyRef> metricFamilies;
     };
 }
 
-#include "metrics/prometheus_handler.ipp"
+#include "metrics/handler/prometheus_handler.ipp"

@@ -5,7 +5,7 @@ cc_library(
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
         "//config/metrics/handler:prometheus_handler_factory",
-        "//metrics:options",
+        "//metrics/handler:options",
         "//x:optional",
     ],
     visibility = ["//visibility:public"],
@@ -18,7 +18,7 @@ cc_library(
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
         "//config/metrics/handler:prometheus_transport_factory",
-        "//metrics:prometheus_options",
+        "//metrics/handler:prometheus_options",
     ],
     visibility = ["//visibility:public"],
 )
@@ -29,7 +29,7 @@ cc_library(
     srcs = ["prometheus_pull_transport_factory.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
-        "//metrics:prometheus_pull_transport_options",
+        "//metrics/handler:prometheus_pull_transport_options",
     ],
     visibility = ["//visibility:public"],
 )
@@ -40,8 +40,8 @@ cc_library(
     srcs = ["prometheus_transport_factory.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
-        "//metrics:prometheus_transport_options",
-        ":prometheus_pull_transport_factory",
+        "//metrics/handler:prometheus_transport_options",
+        "prometheus_pull_transport_factory",
     ],
     visibility = ["//visibility:public"],
 )

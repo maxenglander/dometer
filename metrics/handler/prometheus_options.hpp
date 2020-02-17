@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "metrics/prometheus_transport_options.hpp"
+#include "metrics/handler/prometheus_transport_options.hpp"
 
-namespace dometer::metrics {
+namespace dometer::metrics::handler {
     struct PrometheusOptions {
         const unsigned int maxTimeSeries;
         const std::vector<PrometheusTransportOptions> transports;
