@@ -17,6 +17,7 @@
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
 #include "dns/server/lookup_event.hpp"
+#include "dns/server/observing_handler.hpp"
 #include "dns/server/query_event.hpp"
 #include "dns/server/reply_event.hpp"
 #include "dns/server/resolving_handler.hpp"
@@ -41,75 +42,12 @@ int main(int argc, char **argv) {
     }
     auto config = *parseResults;
 
-    metrics::Observer observer = metrics::ObserverFactory::makeObserver(config.metrics);
-
+    auto observer = metrics::ObserverFactory::makeObserver(config.metrics);
     auto resolver = dns::resolver::ResolverFactory::makeResolver(config.dns.resolver);
-    auto serverHandler = std::make_unique<dns::server::ResolvingHandler>(resolver);
+    auto resolvingHandler = std::make_shared<dns::server::ResolvingHandler>(resolver);
+    auto observingHandler = std::make_shared<dns::server::ObservingHandler>(resolvingHandler, observer);
+    dns::server::Server server(observingHandler);
 
-    serverHandler->on(dns::server::EventType::LOOKUP, [&observer](auto event) {
-        auto builder = dns::metrics::LookupObservation::newBuilder();
-
-        auto lookupEvent = std::dynamic_pointer_cast<dns::server::LookupEvent>(event);
-        auto query = lookupEvent->getQuery();
-
-        if(query) {
-            std::chrono::microseconds duration = lookupEvent->getDuration();
-            std::chrono::duration<double> asSeconds
-                = lookupEvent->getDuration();
-
-            auto question = query.getQuestion();
-            if(question) {
-                builder.qclass(question->qclass)
-                       .qname(question->qname)
-                       .qtype(question->qtype)
-                       .duration(asSeconds.count());
-            }
-        }
-
-        observer.observe(dns::metrics::LookupSummary::INSTANCE, builder.build());
-    });
-
-    serverHandler->on(dns::server::EventType::QUERY, [&observer](auto event) {
-        auto builder = dns::metrics::QueryObservation::newBuilder();
-
-        auto queryEvent = std::dynamic_pointer_cast<dns::server::QueryEvent>(event);
-        auto query = queryEvent->getQuery();
-
-        builder.valid(false);
-        if(query) {
-            auto question = query->getQuestion();
-            if(question) {
-                builder.qclass(question->qclass)
-                       .qname(question->qname)
-                       .qtype(question->qtype)
-                       .valid(true);
-            }
-        }
-
-        observer.increment(dns::metrics::QueryCounter::INSTANCE, builder.build());
-    });
-
-    serverHandler->on(dns::server::EventType::REPLY, [&observer](auto event) {
-        auto builder = dns::metrics::ReplyObservation::newBuilder();
-
-        auto queryEvent = std::dynamic_pointer_cast<dns::server::ReplyEvent>(event);
-        auto reply = queryEvent->getReply();
-
-        builder.valid(false);
-        if(reply) {
-            auto question = reply->getQuestion();
-            if(question) {
-                builder.qclass(question->qclass)
-                       .qname(question->qname)
-                       .qtype(question->qtype)
-                       .valid(true);
-            }
-        }
-
-        observer.increment(dns::metrics::ReplyCounter::INSTANCE, builder.build());
-    });
-
-    dns::server::Server server(std::move(serverHandler));
     auto result = server.serve(config.dns.server.transport.bindAddress);
     if(!result) {
         std::cerr << "Failed to start DNS server [" + result.error().message + "]" << std::endl;

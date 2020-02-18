@@ -24,10 +24,6 @@ using namespace std::x;
 namespace dometer::metrics::handler {
     class PrometheusHandler {
         public:
-            PrometheusHandler();
-            PrometheusHandler(std::shared_ptr<prometheus::Registry>);
-            PrometheusHandler(size_t);
-            PrometheusHandler(size_t, std::shared_ptr<prometheus::Registry>);
             PrometheusHandler(size_t,
                               std::shared_ptr<prometheus::Registry>,
                               std::vector<std::shared_ptr<prometheus::x::Transport>>);

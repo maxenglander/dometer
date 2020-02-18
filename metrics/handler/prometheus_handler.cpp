@@ -1,5 +1,6 @@
-#include <type_traits>
+#include <iostream>
 #include <memory>
+#include <type_traits>
 #include <vector>
 
 #include "metrics/handler/prometheus_handler.hpp"
@@ -10,22 +11,6 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler {
-    PrometheusHandler::PrometheusHandler()
-        :   PrometheusHandler(std::make_shared<prometheus::Registry>())
-    {}
-
-    PrometheusHandler::PrometheusHandler(std::shared_ptr<prometheus::Registry> registry)
-        :   PrometheusHandler(10000, registry)
-    {}
-
-    PrometheusHandler::PrometheusHandler(size_t maxTimeSeries)
-        :   PrometheusHandler(maxTimeSeries, std::make_shared<prometheus::Registry>())
-    {}
-
-    PrometheusHandler::PrometheusHandler(size_t maxTimeSeries, std::shared_ptr<prometheus::Registry> registry)
-        :   PrometheusHandler(maxTimeSeries, registry, std::vector<std::shared_ptr<prometheus::x::Transport>>())
-    {}
-
     PrometheusHandler::PrometheusHandler(size_t maxTimeSeries,
                 std::shared_ptr<prometheus::Registry> registry,
                 std::vector<std::shared_ptr<prometheus::x::Transport>> transports)

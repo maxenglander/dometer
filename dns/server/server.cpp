@@ -16,8 +16,8 @@ using namespace asio::ip;
 using namespace std::x;
 
 namespace dometer::dns::server {
-    Server::Server(std::unique_ptr<Handler> handler)
-        :   handler(std::move(handler)),
+    Server::Server(std::shared_ptr<Handler> handler)
+        :   handler(handler),
             ioContext(std::make_unique<asio::io_context>()),
             socket(std::make_unique<asio::ip::udp::socket>(*ioContext))
     { }

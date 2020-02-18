@@ -16,6 +16,7 @@ cc_binary(
         "//dns/server:event_type",
         "//dns/server:handler",
         "//dns/server:lookup_event",
+        "//dns/server:observing_handler",
         "//dns/server:query_event",
         "//dns/server:reply_event",
         "//dns/server:resolving_handler",

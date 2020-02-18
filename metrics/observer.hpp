@@ -10,6 +10,7 @@
 namespace dometer::metrics {
     class Observer {
         public:
+            Observer() = delete;
             Observer(std::vector<dometer::metrics::handler::Handler>);
             template<typename... L> void increment(const Counter<L...>&, Observation<uint64_t, L...>);
             template<typename... L> void observe(const Summary<L...>&, Observation<double, L...>);
