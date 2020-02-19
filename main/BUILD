@@ -4,24 +4,34 @@ cc_binary(
     deps = [
         "//config:config_parser",
         "//config:schema_validator",
-        "//dns:packet",
-        "//dns/metrics:lookup_observation",
-        "//dns/metrics:lookup_summary",
-        "//dns/metrics:query_counter",
-        "//dns/metrics:query_observation",
-        "//dns/metrics:reply_counter",
-        "//dns/metrics:reply_observation",
         "//dns/resolver:resolver",
         "//dns/resolver:resolver_factory",
         "//dns/server:event_type",
         "//dns/server:handler",
-        "//dns/server:lookup_event",
         "//dns/server:observing_handler",
-        "//dns/server:query_event",
-        "//dns/server:reply_event",
         "//dns/server:resolving_handler",
         "//dns/server:server",
         "//metrics:observer",
         "//metrics:observer_factory",
+        ":options",
+        ":options_parser",
     ]
+)
+
+cc_library(
+    name = "options",
+    hdrs = ["options.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "options_parser",
+    hdrs = ["options_parser.hpp"],
+    srcs = ["options_parser.cpp"],
+    deps = [
+        "//util:error",
+        "//x:expected",
+        ":options",
+    ],
+    visibility = ["//visibility:public"],
 )

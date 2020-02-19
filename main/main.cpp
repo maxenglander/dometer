@@ -3,25 +3,15 @@
 #include <memory>
 
 #include "config/config_parser.hpp"
-#include "dns/packet.hpp"
-#include "dns/metrics/lookup_observation.hpp"
-#include "dns/metrics/lookup_summary.hpp"
-#include "dns/metrics/query_counter.hpp"
-#include "dns/metrics/query_observation.hpp"
-#include "dns/metrics/reply_counter.hpp"
-#include "dns/metrics/reply_observation.hpp"
 #include "dns/resolver/resolver.hpp"
 #include "dns/resolver/resolver_factory.hpp"
-#include "dns/resolver/libresolv_function.hpp"
-#include "dns/resolver/libresolv_resolver.hpp"
 #include "dns/server/event_type.hpp"
 #include "dns/server/handler.hpp"
-#include "dns/server/lookup_event.hpp"
 #include "dns/server/observing_handler.hpp"
-#include "dns/server/query_event.hpp"
-#include "dns/server/reply_event.hpp"
 #include "dns/server/resolving_handler.hpp"
 #include "dns/server/server.hpp"
+#include "main/options.hpp"
+#include "main/options_parser.hpp"
 #include "metrics/observer.hpp"
 #include "metrics/observer_factory.hpp"
 
@@ -36,11 +26,24 @@ int main(int argc, char **argv) {
     auto parseResults = parser.parse(configString);
     if(!parseResults) {
         std::cerr << "Failed to parse configuration" << std::endl;
-        std::cerr << "=============================" << std::endl;
+        std::cerr << "====================================" << std::endl;
         std::cerr << parseResults.error().message << std::endl;
         return 1;
     }
     auto config = *parseResults;
+
+    auto options = dometer::main::OptionsParser::parse(argc, argv);
+    if(!options) {
+        std::cerr << "Failed to parse command-line options" << std::endl;
+        std::cerr << "====================================" << std::endl;
+        std::cerr << options.error().message << std::endl;
+        return 1;
+    } else {
+        std::cout << "Command-line options" << std::endl;
+        std::cerr << "====================================" << std::endl;
+        std::cout << "config=" << options->config << std::endl;
+        std::cout << "help=" << options->help << std::endl;
+    }
 
     auto observer = metrics::ObserverFactory::makeObserver(config.metrics);
     auto resolver = dns::resolver::ResolverFactory::makeResolver(config.dns.resolver);
