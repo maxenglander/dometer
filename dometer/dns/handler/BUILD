@@ -1,0 +1,62 @@
+cc_library(
+    name = "handler",
+    deps = [
+        "//dometer/dns:packet",
+        "//dometer/dns/event:event",
+        "//dometer/dns/event:event_type",
+        "//std/x:expected",
+        "//dometer/util:callback",
+        "//dometer/util:callback_registry",
+        "//dometer/util:error",
+    ],
+    hdrs = ["handler.hpp"],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "observing_handler",
+    hdrs = ["observing_handler.hpp"],
+    srcs = ["observing_handler.cpp"],
+    deps = [
+        "//dometer/dns:packet",
+        "//dometer/dns/event:event",
+        "//dometer/dns/event:event_type",
+        "//dometer/dns/event:lookup_event",
+        "//dometer/dns/event:query_event",
+        "//dometer/dns/event:reply_event",
+        "//dometer/dns/metrics:lookup_observation",
+        "//dometer/dns/metrics:query_counter",
+        "//dometer/dns/metrics:query_observation",
+        "//dometer/dns/metrics:reply_counter",
+        "//dometer/dns/metrics:reply_observation",
+        "//dometer/metrics:observer",
+        "//dometer/util:callback",
+        "//dometer/util:callback_registry",
+        "//dometer/util:error",
+        "//std/x:expected",
+        ":handler",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "resolving_handler",
+    hdrs = ["resolving_handler.hpp"],
+    srcs = ["resolving_handler.cpp"],
+    deps = [
+        "//dometer/dns:packet",
+        "//dometer/dns/event:event",
+        "//dometer/dns/event:event_type",
+        "//dometer/dns/event:lookup_event",
+        "//dometer/dns/event:query_event",
+        "//dometer/dns/event:reply_event",
+        "//dometer/dns/resolver:libresolv_resolver",
+        "//std/x:expected",
+        "//dometer/util:callback",
+        "//dometer/util:callback_registry",
+        "//dometer/util:error",
+        ":handler",
+    ],
+    visibility = ["//visibility:public"],
+)
