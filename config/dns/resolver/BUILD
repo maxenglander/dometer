@@ -6,9 +6,9 @@ cc_library(
 )
 
 cc_library(
-    name = "libresolv_factory",
-    hdrs = ["libresolv_factory.hpp"],
-    srcs = ["libresolv_factory.cpp"],
+    name = "libresolv_parser",
+    hdrs = ["libresolv_parser.hpp"],
+    srcs = ["libresolv_parser.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
         "//dns/resolver:libresolv_function",
@@ -28,14 +28,14 @@ cc_library(
 )
 
 cc_library(
-    name = "resolver_factory",
-    hdrs = ["resolver_factory.hpp"],
-    srcs = ["resolver_factory.cpp"],
+    name = "resolver_parser",
+    hdrs = ["resolver_parser.hpp"],
+    srcs = ["resolver_parser.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
         "//x:optional",
         "//dns/resolver:options",
-        ":libresolv_factory",
+        ":libresolv_parser",
         ":resolver",
     ],
     visibility = ["//visibility:public"],

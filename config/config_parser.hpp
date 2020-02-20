@@ -4,11 +4,12 @@
 #include <string>
 
 #include "config/config.hpp"
-#include "config/config_factory.hpp"
+#include "config/dns/dns_parser.hpp"
+#include "config/metrics/metrics_parser.hpp"
 #include "config/schema_validator.hpp"
-#include "x/expected.hpp"
 #include "rapidjson/document.h"
 #include "util/error.hpp"
+#include "x/expected.hpp"
 
 using namespace std::x;
 namespace util = dometer::util;
@@ -17,10 +18,15 @@ namespace dometer::config {
     class ConfigParser {
         public:
             ConfigParser();
-            ConfigParser(ConfigFactory, SchemaValidator);
-            expected<Config, util::Error> parse(std::string);
+            ConfigParser(dometer::config::dns::DnsParser,
+                         dometer::config::metrics::MetricsParser,
+                         SchemaValidator);
+            expected<Config, util::Error> fromJson(std::string);
+        protected:
+            Config fromJson(const rapidjson::Value&) const;
         private:
-            const ConfigFactory configFactory;
+            const dometer::config::dns::DnsParser dnsParser;
+            const dometer::config::metrics::MetricsParser metricsParser;
             SchemaValidator schemaValidator;
     };
 }

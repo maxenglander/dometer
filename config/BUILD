@@ -8,28 +8,16 @@ cc_library(
 )
 
 cc_library(
-    name = "config_factory",
-    hdrs = ["config_factory.hpp"],
-    srcs = ["config_factory.cpp"],
-    deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
-        "//config/dns:dns_factory",
-        "//config/metrics:metrics_factory",
-        ":config",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "config_parser",
     hdrs = ["config_parser.hpp"],
     srcs = ["config_parser.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
+        "//config/dns:dns_parser",
+        "//config/metrics:metrics_parser",
         "//x:expected",
         "//util:error",
         ":config",
-        ":config_factory",
         ":schema_validator",
     ],
     visibility = ["//visibility:public"],

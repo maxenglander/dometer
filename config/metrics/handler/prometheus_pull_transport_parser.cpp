@@ -1,9 +1,9 @@
-#include "config/metrics/handler/prometheus_pull_transport_factory.hpp"
+#include "config/metrics/handler/prometheus_pull_transport_parser.hpp"
 #include "metrics/handler/prometheus_pull_transport_options.hpp"
 #include "rapidjson/document.h"
 
 namespace dometer::config::metrics::handler {
-    dometer::metrics::handler::PrometheusPullTransportOptions PrometheusPullTransportFactory::fromJson(
+    dometer::metrics::handler::PrometheusPullTransportOptions PrometheusPullTransportParser::fromJson(
             const rapidjson::Value& jsonValue) const {
         assert(jsonValue.HasMember("bindAddress"));
         assert(jsonValue["bindAddress"].IsString());

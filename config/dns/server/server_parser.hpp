@@ -1,16 +1,16 @@
 #pragma once
 
 #include "config/dns/server/server.hpp"
-#include "config/dns/server/transport_factory.hpp"
+#include "config/dns/server/transport_parser.hpp"
 #include "rapidjson/document.h"
 
 namespace dometer::config::dns::server {
-    class ServerFactory {
+    class ServerParser {
         public:
-            ServerFactory();
-            ServerFactory(TransportFactory);
+            ServerParser();
+            ServerParser(TransportParser);
             Server fromJson(const rapidjson::Value& jsonValue) const;
         private:
-            const TransportFactory transportFactory;
+            const TransportParser transportParser;
     };
 }

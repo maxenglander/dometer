@@ -1,19 +1,19 @@
 #pragma once
 
 #include "config/config.hpp"
-#include "config/dns/dns_factory.hpp"
-#include "config/metrics/metrics_factory.hpp"
+#include "config/dns/dns_parser.hpp"
+#include "config/metrics/metrics_parser.hpp"
 #include "rapidjson/document.h"
 
 namespace dometer::config {
-    class ConfigFactory {
+    class ConfigParser {
         public:
-            ConfigFactory();
-            ConfigFactory(dometer::config::dns::DnsFactory,
-                          dometer::config::metrics::MetricsFactory);
+            ConfigParser();
+            ConfigParser(dometer::config::dns::DnsParser,
+                          dometer::config::metrics::MetricsParser);
             Config fromJson(const rapidjson::Value&) const;
         private:
-            const dometer::config::dns::DnsFactory dnsFactory;
-            const dometer::config::metrics::MetricsFactory metricsFactory;
+            const dometer::config::dns::DnsParser dnsParser;
+            const dometer::config::metrics::MetricsParser metricsParser;
     };
 }

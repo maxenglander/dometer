@@ -23,7 +23,7 @@ using namespace std::x;
 int main(int argc, char **argv) {
     std::string configString = "{\"apiVersion\":\"v0\",\"dns\":{\"resolver\":{\"type\":\"libresolv\",\"libresolv\":{\"function\":\"search\"}},\"server\":{\"transport\":{\"bindAddress\":\"0.0.0.0:5353\"}}},\"metrics\":{\"handlers\":[{\"type\":\"prometheus\",\"prometheus\":{\"maxTimeSeries\":20000,\"transports\":[{\"type\":\"pull\",\"exposer\":{\"bindAddress\":\"0.0.0.0:9090\",\"metricsPath\":\"/metrics\",\"numThreads\":2}}]}}]}}";
     auto parser = config::ConfigParser();
-    auto parseResults = parser.parse(configString);
+    auto parseResults = parser.fromJson(configString);
     if(!parseResults) {
         std::cerr << "Failed to parse configuration" << std::endl;
         std::cerr << "====================================" << std::endl;

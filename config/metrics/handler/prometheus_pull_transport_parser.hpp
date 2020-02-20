@@ -4,7 +4,7 @@
 #include "rapidjson/document.h"
 
 namespace dometer::config::metrics::handler {
-    class PrometheusPullTransportFactory {
+    class PrometheusPullTransportParser {
         public:
             dometer::metrics::handler::PrometheusPullTransportOptions fromJson(const rapidjson::Value& jsonValue) const;
     };
