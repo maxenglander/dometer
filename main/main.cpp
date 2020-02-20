@@ -4,9 +4,9 @@
 #include "config/config_parser.hpp"
 #include "dns/resolver/resolver.hpp"
 #include "dns/resolver/resolver_factory.hpp"
-#include "dns/server/handler.hpp"
-#include "dns/server/observing_handler.hpp"
-#include "dns/server/resolving_handler.hpp"
+#include "dns/handler/handler.hpp"
+#include "dns/handler/observing_handler.hpp"
+#include "dns/handler/resolving_handler.hpp"
 #include "dns/server/server.hpp"
 #include "main/options.hpp"
 #include "main/options_parser.hpp"
@@ -45,8 +45,8 @@ int main(int argc, char **argv) {
 
     auto observer = metrics::ObserverFactory::makeObserver(config.metrics);
     auto resolver = dns::resolver::ResolverFactory::makeResolver(config.dns.resolver);
-    auto resolvingHandler = std::make_shared<dns::server::ResolvingHandler>(resolver);
-    auto observingHandler = std::make_shared<dns::server::ObservingHandler>(resolvingHandler, observer);
+    auto resolvingHandler = std::make_shared<dns::handler::ResolvingHandler>(resolver);
+    auto observingHandler = std::make_shared<dns::handler::ObservingHandler>(resolvingHandler, observer);
     dns::server::Server server(observingHandler);
 
     auto result = server.serve(config.dns.server.transport.bindAddress);

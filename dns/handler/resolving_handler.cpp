@@ -5,67 +5,65 @@
 
 #include "dns/packet.hpp"
 #include "dns/resolver/resolver.hpp"
-#include "dns/server/event.hpp"
-#include "dns/server/event_type.hpp"
-#include "dns/server/lookup_event.hpp"
-#include "dns/server/query_event.hpp"
-#include "dns/server/reply_event.hpp"
-#include "dns/server/resolving_handler.hpp"
-#include "x/expected.hpp"
+#include "dns/event/event.hpp"
+#include "dns/event/event_type.hpp"
+#include "dns/event/lookup_event.hpp"
+#include "dns/event/query_event.hpp"
+#include "dns/event/reply_event.hpp"
+#include "dns/handler/resolving_handler.hpp"
 #include "util/callback.hpp"
 #include "util/callback_registry.hpp"
 #include "util/error.hpp"
+#include "x/expected.hpp"
 
-using namespace dometer::dns;
-using namespace dometer::dns::resolver;
-using namespace dometer::util;
-using namespace std::x;
+namespace dns = dometer::dns;
+namespace util = dometer::util;
 
-namespace dometer::dns::server {
+namespace dometer::dns::handler {
     ResolvingHandler::ResolvingHandler(std::shared_ptr<dns::resolver::Resolver> resolver)
         :   ResolvingHandler(
                 std::chrono::steady_clock(),
-                CallbackRegistry<EventType, std::shared_ptr<Event>>(),
+                util::CallbackRegistry<dns::event::EventType, std::shared_ptr<dns::event::Event>>(),
                 resolver)
     {}
 
     ResolvingHandler::ResolvingHandler(
                 std::chrono::steady_clock clock,
-                CallbackRegistry<EventType, std::shared_ptr<Event>> listeners,
+                util::CallbackRegistry<dns::event::EventType, std::shared_ptr<dns::event::Event>> listeners,
                 std::shared_ptr<dns::resolver::Resolver> resolver)
         :   clock(clock),
             listeners(listeners),
             resolver(resolver)
     {}
 
-    expected<size_t, Error> ResolvingHandler::handle(
+    std::x::expected<size_t, util::Error> ResolvingHandler::handle(
             uint8_t *queryPtr, size_t querySize,
             uint8_t *replyPtr, size_t replySize) {
-        auto query = Packet::makePacket(queryPtr, querySize);
-        notify(std::make_shared<QueryEvent>(query));
+        auto query = dns::Packet::makePacket(queryPtr, querySize);
+        notify(std::make_shared<dns::event::QueryEvent>(query));
 
         auto reply = handle(query);
-        notify(std::make_shared<ReplyEvent>(query, reply));
+        notify(std::make_shared<dns::event::ReplyEvent>(query, reply));
 
         if(reply) {
             uint8_t *replyPtrIn = *reply;
             std::copy(replyPtrIn, *reply + reply->size, replyPtr);
             return reply->size;
         } else {
-            return unexpected<Error>(reply.error());
+            return std::x::unexpected<util::Error>(reply.error());
         }
     }
 
-    expected<Packet, Error> ResolvingHandler::handle(expected<Packet, Error> &query) {
+    std::x::expected<dns::Packet, util::Error> ResolvingHandler::handle(std::x::expected<dns::Packet, util::Error> &query) {
         if(!query) {
-            return unexpected<Error>(query.error());
+            return std::x::unexpected<util::Error>(query.error());
         } else if(query->getOpCode() != dns::OpCode::QUERY) {
-            return Packet::notImplemented(*query);
+            return dns::Packet::notImplemented(*query);
         }
 
         auto question = query->getQuestion();
         if(!question) {
-            return Packet::formatError(*query);
+            return dns::Packet::formatError(*query);
         }
 
         auto start = clock.now();
@@ -75,16 +73,16 @@ namespace dometer::dns::server {
 
         if(reply) reply->setId(query->getId());
 
-        notify(std::make_shared<LookupEvent>(*query, reply, duration));
+        notify(std::make_shared<dns::event::LookupEvent>(*query, reply, duration));
 
         return reply;
     }
 
-    void ResolvingHandler::notify(std::shared_ptr<Event> event) {
+    void ResolvingHandler::notify(std::shared_ptr<dns::event::Event> event) {
         listeners.notify(event->getType(), event);
     }
 
-    Handler& ResolvingHandler::on(EventType eventType, Callback<std::shared_ptr<Event>> listener) {
+    Handler& ResolvingHandler::on(dns::event::EventType eventType, util::Callback<std::shared_ptr<dns::event::Event>> listener) {
         listeners.on(eventType, listener);
         return *this;
     }

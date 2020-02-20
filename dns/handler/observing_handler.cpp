@@ -4,31 +4,32 @@
 #include <thread>
 
 #include "dns/packet.hpp"
+#include "dns/event/event_type.hpp"
+#include "dns/event/lookup_event.hpp"
+#include "dns/event/query_event.hpp"
+#include "dns/event/reply_event.hpp"
+#include "dns/handler/handler.hpp"
+#include "dns/handler/observing_handler.hpp"
 #include "dns/metrics/lookup_observation.hpp"
 #include "dns/metrics/lookup_summary.hpp"
 #include "dns/metrics/query_counter.hpp"
 #include "dns/metrics/query_observation.hpp"
 #include "dns/metrics/reply_counter.hpp"
 #include "dns/metrics/reply_observation.hpp"
-#include "dns/server/event_type.hpp"
-#include "dns/server/handler.hpp"
-#include "dns/server/lookup_event.hpp"
-#include "dns/server/observing_handler.hpp"
-#include "dns/server/query_event.hpp"
-#include "dns/server/reply_event.hpp"
 #include "util/error.hpp"
 #include "x/expected.hpp"
 
+namespace dns = dometer::dns;
 namespace util = dometer::util;
 
-namespace dometer::dns::server {
-    ObservingHandler::ObservingHandler(std::shared_ptr<dns::server::Handler> handler,
+namespace dometer::dns::handler {
+    ObservingHandler::ObservingHandler(std::shared_ptr<dns::handler::Handler> handler,
                                        std::shared_ptr<dometer::metrics::Observer> observer)
         :   innerHandler(handler), observer(observer)
     {
-        innerHandler->on(dns::server::EventType::LOOKUP, [this](auto event) {
+        innerHandler->on(dns::event::EventType::LOOKUP, [this](auto event) {
             auto builder = dns::metrics::LookupObservation::newBuilder();
-            auto lookupEvent = std::dynamic_pointer_cast<dns::server::LookupEvent>(event);
+            auto lookupEvent = std::dynamic_pointer_cast<dns::event::LookupEvent>(event);
 
             if(auto query = lookupEvent->getQuery()) {
                 if(auto question = query.getQuestion()) {
@@ -43,9 +44,9 @@ namespace dometer::dns::server {
             this->observer->observe(dns::metrics::LookupSummary::INSTANCE, builder.build());
         });
 
-        innerHandler->on(dns::server::EventType::QUERY, [this](auto event) {
+        innerHandler->on(dns::event::EventType::QUERY, [this](auto event) {
             auto builder = dns::metrics::QueryObservation::newBuilder();
-            auto queryEvent = std::dynamic_pointer_cast<dns::server::QueryEvent>(event);
+            auto queryEvent = std::dynamic_pointer_cast<dns::event::QueryEvent>(event);
 
             builder.valid(false);
             if(auto query = queryEvent->getQuery()) {
@@ -61,9 +62,9 @@ namespace dometer::dns::server {
             this->observer->increment(dns::metrics::QueryCounter::INSTANCE, builder.build());
         });
 
-        innerHandler->on(dns::server::EventType::REPLY, [this](auto event) {
+        innerHandler->on(dns::event::EventType::REPLY, [this](auto event) {
             auto builder = dns::metrics::ReplyObservation::newBuilder();
-            auto queryEvent = std::dynamic_pointer_cast<dns::server::ReplyEvent>(event);
+            auto queryEvent = std::dynamic_pointer_cast<dns::event::ReplyEvent>(event);
 
             builder.valid(false);
             if(auto reply = queryEvent->getReply()) {
@@ -86,7 +87,8 @@ namespace dometer::dns::server {
         return innerHandler->handle(queryPtr, querySize, replyPtr, replySize);
     }
 
-    Handler& ObservingHandler::on(EventType eventType, util::Callback<std::shared_ptr<Event>> listener) {
+    Handler& ObservingHandler::on(dns::event::EventType eventType,
+                                  util::Callback<std::shared_ptr<dns::event::Event>> listener) {
         innerHandler->on(eventType, listener);
         return *this;
     }

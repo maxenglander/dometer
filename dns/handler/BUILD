@@ -1,0 +1,62 @@
+cc_library(
+    name = "handler",
+    deps = [
+        "//dns:packet",
+        "//dns/event:event",
+        "//dns/event:event_type",
+        "//x:expected",
+        "//util:callback",
+        "//util:callback_registry",
+        "//util:error",
+    ],
+    hdrs = ["handler.hpp"],
+    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "observing_handler",
+    hdrs = ["observing_handler.hpp"],
+    srcs = ["observing_handler.cpp"],
+    deps = [
+        "//dns:packet",
+        "//dns/event:event",
+        "//dns/event:event_type",
+        "//dns/event:lookup_event",
+        "//dns/event:query_event",
+        "//dns/event:reply_event",
+        "//dns/metrics:lookup_observation",
+        "//dns/metrics:query_counter",
+        "//dns/metrics:query_observation",
+        "//dns/metrics:reply_counter",
+        "//dns/metrics:reply_observation",
+        "//metrics:observer",
+        "//util:callback",
+        "//util:callback_registry",
+        "//util:error",
+        "//x:expected",
+        ":handler",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "resolving_handler",
+    hdrs = ["resolving_handler.hpp"],
+    srcs = ["resolving_handler.cpp"],
+    deps = [
+        "//dns:packet",
+        "//dns/event:event",
+        "//dns/event:event_type",
+        "//dns/event:lookup_event",
+        "//dns/event:query_event",
+        "//dns/event:reply_event",
+        "//dns/resolver:libresolv_resolver",
+        "//x:expected",
+        "//util:callback",
+        "//util:callback_registry",
+        "//util:error",
+        ":handler",
+    ],
+    visibility = ["//visibility:public"],
+)

@@ -1,16 +1,16 @@
 #include "dns/packet.hpp"
-#include "dns/server/event_type.hpp"
-#include "dns/server/lookup_event.hpp"
-#include "x/expected.hpp"
+#include "dns/event/event_type.hpp"
+#include "dns/event/lookup_event.hpp"
 #include "util/error.hpp"
+#include "x/expected.hpp"
 
-using namespace dometer::util;
-using namespace std::x;
+namespace dns = dometer::dns;
+namespace util = dometer::util;
 
-namespace dometer::dns::server {
+namespace dometer::dns::event {
     LookupEvent::LookupEvent(
-            const Packet& query,
-            const expected<Packet, Error>& reply,
+            const dns::Packet& query,
+            const std::x::expected<dns::Packet, util::Error>& reply,
             const std::chrono::microseconds duration)
         :   query(query), reply(reply), duration(duration) {}
 
@@ -18,11 +18,11 @@ namespace dometer::dns::server {
         return duration;
     }
 
-    const Packet& LookupEvent::getQuery() const {
+    const dns::Packet& LookupEvent::getQuery() const {
         return query;
     }
 
-    const expected<Packet, Error>& LookupEvent::getReply() const {
+    const std::x::expected<dns::Packet, util::Error>& LookupEvent::getReply() const {
         return reply;
     }
 

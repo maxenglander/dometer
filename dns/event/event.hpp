@@ -1,8 +1,8 @@
 #pragma once
 
-#include "dns/server/event_type.hpp"
+#include "dns/event/event_type.hpp"
 
-namespace dometer::dns::server {
+namespace dometer::dns::event {
     class Event {
         public:
             virtual EventType getType() const = 0;

@@ -4,36 +4,34 @@
 
 #include "asio.hpp"
 #include "dns/packet.hpp"
+#include "dns/handler/handler.hpp"
 #include "dns/server/server.hpp"
-#include "dns/server/handler.hpp"
-#include "dns/server/resolving_handler.hpp"
-#include "x/expected.hpp"
 #include "util/error.hpp"
+#include "x/expected.hpp"
 
-using namespace dometer::dns;
-using namespace dometer::util;
-using namespace asio::ip;
-using namespace std::x;
+namespace dns = dometer::dns;
+namespace ip = asio::ip;
+namespace util = dometer::util;
 
 namespace dometer::dns::server {
-    Server::Server(std::shared_ptr<Handler> handler)
+    Server::Server(std::shared_ptr<dns::handler::Handler> handler)
         :   handler(handler),
             ioContext(std::make_unique<asio::io_context>()),
-            socket(std::make_unique<asio::ip::udp::socket>(*ioContext))
+            socket(std::make_unique<ip::udp::socket>(*ioContext))
     { }
 
-    expected<void, Error> Server::openAndBindSocket(asio::ip::udp::endpoint endpoint) {
+    std::x::expected<void, util::Error> Server::openAndBindSocket(ip::udp::endpoint endpoint) {
         asio::error_code error;
         if(endpoint.address().is_v4()) {
-            socket->open(udp::v4(), error);
+            socket->open(ip::udp::v4(), error);
         } else {
-            return unexpected<Error>(Error{
+            return std::x::unexpected<util::Error>(util::Error{
                 "IPv6 addresses are not supported"
             });
         }
 
         if(error) {
-            return unexpected<Error>(Error{
+            return std::x::unexpected<util::Error>(util::Error{
                 "Failed to open socket [" + error.message() + "]",
                 error.value()
             });
@@ -41,7 +39,7 @@ namespace dometer::dns::server {
 
         socket->bind(endpoint, error);
         if(error) {
-            return unexpected<Error>(Error{
+            return std::x::unexpected<util::Error>(util::Error{
                 "Failed to bind socket [" + error.message() + "]",
                 error.value()
             });
@@ -50,10 +48,10 @@ namespace dometer::dns::server {
         return {};
     }
 
-    expected<void, Error> Server::serve(std::string bindAddress) {
+    std::x::expected<void, util::Error> Server::serve(std::string bindAddress) {
         size_t separator = bindAddress.find_last_of(':');
         if(separator == std::string::npos) {
-            return unexpected<Error>(Error{
+            return std::x::unexpected<util::Error>(util::Error{
                 "Expected to find a ':' character in bind address (" + bindAddress + ")"
             });
         }
@@ -70,7 +68,7 @@ namespace dometer::dns::server {
         try {
             port = std::stoi(portString);
         } catch(std::exception& e) {
-            return unexpected<Error>(Error{
+            return std::x::unexpected<util::Error>(util::Error{
                   "Failed to extract or parse port number (" + portString + ")"
                 + " from bindAddress (" + bindAddress + ") [" + e.what() + "]"
             });
@@ -86,7 +84,7 @@ namespace dometer::dns::server {
             unsigned char queryBuffer[4096];
             size_t queryLength = 0;
 
-            udp::endpoint remoteEndpoint;
+            ip::udp::endpoint remoteEndpoint;
             queryLength = socket->receive_from(
                     asio::buffer(queryBuffer, sizeof(queryBuffer)), remoteEndpoint, 0, error);
 
@@ -105,26 +103,26 @@ namespace dometer::dns::server {
         }
     }
 
-    expected<void, Error> Server::serve(std::string address, uint16_t port) {
+    std::x::expected<void, util::Error> Server::serve(std::string address, uint16_t port) {
         asio::error_code error;
         asio::ip::address address_ = asio::ip::make_address(address, error);
         if(error) {
-            return unexpected<Error>(Error{
+            return std::x::unexpected<util::Error>(util::Error{
               error.message(),
               error.value()
           });
         }
 
-        udp::endpoint endpoint(address_, port);
+        ip::udp::endpoint endpoint(address_, port);
 
         return serve(endpoint);
     }
 
-    expected<void, Error> Server::serve(udp::endpoint endpoint) {
+    std::x::expected<void, util::Error> Server::serve(ip::udp::endpoint endpoint) {
         std::cout << "Binding to endpoint: " << endpoint << std::endl;
-        expected<void, Error> result = openAndBindSocket(endpoint);
+        std::x::expected<void, util::Error> result = openAndBindSocket(endpoint);
         if(!result) {
-            return unexpected<Error>(result.error());
+            return std::x::unexpected<util::Error>(result.error());
         }
 
         listen();
