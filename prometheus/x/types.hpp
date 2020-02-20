@@ -9,8 +9,6 @@
 #include "prometheus/summary.h"
 #include "std/x/variant.hpp"
 
-using namespace std::x;
-
 namespace prometheus::x {
     struct FamilyNameAndTimeSeriesCount {
         std::string familyName;
@@ -19,8 +17,8 @@ namespace prometheus::x {
 
     template<typename T>
     using FamilyRef = std::reference_wrapper<prometheus::Family<T>>;
-    using AnyFamilyRef = variant<FamilyRef<prometheus::Counter>, FamilyRef<prometheus::Summary>>;
-    using AnyMetricPtr = variant<prometheus::Counter*, prometheus::Summary*>;
+    using AnyFamilyRef = std::x::variant<FamilyRef<prometheus::Counter>, FamilyRef<prometheus::Summary>>;
+    using AnyMetricPtr = std::x::variant<prometheus::Counter*, prometheus::Summary*>;
 
-    using Transport = variant<prometheus::Exposer, prometheus::Gateway>;
+    using Transport = std::x::variant<prometheus::Exposer, prometheus::Gateway>;
 }

@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "dometer/metrics/handler/prometheus_handler.hpp"
-#include "dometer/metrics/handler/prometheus_types.hpp"
 #include "prometheus/registry.h"
+#include "prometheus/x/types.hpp"
 #include "dometer/util/lru_map.hpp"
 
 namespace util = dometer::util;

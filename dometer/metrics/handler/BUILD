@@ -46,10 +46,10 @@ cc_library(
         "//dometer/metrics:summary",
         "//dometer/util:error",
         "//dometer/util:lru_map",
+        "//prometheus/x:types",
         "//std/x:expected",
         "//std/x:variant",
         ":prometheus_lru_map",
-        ":prometheus_types",
     ],
     hdrs = [
         "prometheus_handler.hpp",
@@ -64,8 +64,8 @@ cc_library(
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
         "//dometer/util:lru_map",
+        "//prometheus/x:types",
         "//std/x:variant",
-        ":prometheus_types",
     ],
     hdrs = [
         "prometheus_lru_map.hpp",
@@ -79,10 +79,10 @@ cc_library(
     hdrs = ["prometheus_handler_factory.hpp"],
     srcs = ["prometheus_handler_factory.cpp"],
     deps = [
+        "//prometheus/x:types",
         ":prometheus_handler",
         ":prometheus_options",
         ":prometheus_transport_factory",
-        ":prometheus_types",
     ],
     visibility = ["//visibility:public"],
 )
@@ -112,10 +112,10 @@ cc_library(
         "@com_github_jupp0r_prometheus_cpp//core",
         "@com_github_jupp0r_prometheus_cpp//pull",
         "@com_github_jupp0r_prometheus_cpp//push",
+        "//prometheus/x:types",
         "//std/x:variant",
         ":prometheus_pull_transport_options",
         ":prometheus_transport_options",
-        ":prometheus_types",
     ],
     visibility = ["//visibility:public"],
 )
@@ -127,19 +127,5 @@ cc_library(
         ":prometheus_pull_transport_options",
     ],
     hdrs = ["prometheus_transport_options.hpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "prometheus_types",
-    deps = [
-        "@com_github_jupp0r_prometheus_cpp//core",
-        "@com_github_jupp0r_prometheus_cpp//pull",
-        "@com_github_jupp0r_prometheus_cpp//push",
-    ],
-    hdrs = [
-        "prometheus_types.hpp",
-    ],
-    srcs = [],
     visibility = ["//visibility:public"],
 )

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "dometer/metrics/handler/prometheus_types.hpp"
+#include "dometer/util/lru_map.hpp"
 #include "prometheus/counter.h"
 #include "prometheus/summary.h"
-#include "dometer/util/lru_map.hpp"
+#include "prometheus/x/types.hpp"
 
 namespace util = dometer::util;
 

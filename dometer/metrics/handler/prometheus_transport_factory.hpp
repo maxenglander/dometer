@@ -3,7 +3,7 @@
 #include  <memory>
 
 #include "dometer/metrics/handler/prometheus_transport_options.hpp"
-#include "dometer/metrics/handler/prometheus_types.hpp"
+#include "prometheus/x/types.hpp"
 
 namespace dometer::metrics::handler {
     class PrometheusTransportFactory {

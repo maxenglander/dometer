@@ -1,7 +1,7 @@
 #include "std/x/variant.hpp"
 #include "dometer/metrics/handler/prometheus_lru_map.hpp"
-#include "dometer/metrics/handler/prometheus_types.hpp"
 #include "prometheus/counter.h"
+#include "prometheus/x/types.hpp"
 
 namespace util = dometer::util;
 using namespace std::x;
