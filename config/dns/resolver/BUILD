@@ -1,11 +1,4 @@
 cc_library(
-    name = "libresolv",
-    hdrs = ["libresolv.hpp"],
-    deps = [],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "libresolv_parser",
     hdrs = ["libresolv_parser.hpp"],
     srcs = ["libresolv_parser.cpp"],
@@ -13,16 +6,6 @@ cc_library(
         "@com_github_Tencent_rapidjson//:rapidjson",
         "//dns/resolver:libresolv_function",
         "//dns/resolver:libresolv_options",
-        ":libresolv",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "resolver",
-    hdrs = ["resolver.hpp"],
-    deps = [
-        "//x:optional",
     ],
     visibility = ["//visibility:public"],
 )
@@ -36,7 +19,6 @@ cc_library(
         "//x:optional",
         "//dns/resolver:options",
         ":libresolv_parser",
-        ":resolver",
     ],
     visibility = ["//visibility:public"],
 )
