@@ -13,12 +13,26 @@ cc_library(
     srcs = ["config_parser.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
+        "//x:expected",
+        "//util:error",
+        ":config",
+        ":internal_config_parser",
+        ":schema_validator",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "internal_config_parser",
+    hdrs = ["internal_config_parser.hpp"],
+    srcs = ["internal_config_parser.cpp"],
+    deps = [
+        "@com_github_Tencent_rapidjson//:rapidjson",
         "//config/dns:dns_parser",
         "//config/metrics:metrics_parser",
         "//x:expected",
         "//util:error",
         ":config",
-        ":schema_validator",
     ],
     visibility = ["//visibility:public"],
 )
