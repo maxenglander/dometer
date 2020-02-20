@@ -1,4 +1,7 @@
+#include <fstream>
+#include <iostream>
 #include <memory>
+#include <sstream>
 
 #include "config/config.hpp"
 #include "config/config_parser.hpp"
@@ -21,6 +24,15 @@ namespace dometer::config {
                                SchemaValidator schemaValidator)
         : internalConfigParser(internalConfigParser),
           schemaValidator(schemaValidator) {}
+
+    expected<Config, util::Error> ConfigParser::fromFile(std::string file) {
+        std::cout << "parsing config from file" << std::endl;
+        std::ifstream ifs(file.c_str());
+        std::stringstream sstr;
+        sstr << ifs.rdbuf();
+        std::cout << sstr.str() << std::endl;
+        return fromJson(sstr.str());
+    }
 
     expected<Config, util::Error> ConfigParser::fromJson(std::string json) {
         auto validation = schemaValidator.validate(json);

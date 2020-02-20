@@ -19,6 +19,7 @@ namespace dometer::config {
             ConfigParser();
             ConfigParser(InternalConfigParser,
                          SchemaValidator);
+            expected<Config, util::Error> fromFile(std::string);
             expected<Config, util::Error> fromJson(std::string);
         private:
             InternalConfigParser internalConfigParser;

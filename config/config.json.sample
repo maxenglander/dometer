@@ -1,0 +1,36 @@
+{
+  "apiVersion": "v0",
+  "dns": {
+    "resolver": {
+      "type": "libresolv",
+      "libresolv": {
+        "function": "search"
+      }
+    },
+    "server": {
+      "transport": {
+        "bindAddress": "0.0.0.0:5353"
+      }
+    }
+  },
+  "metrics": {
+    "handlers": [
+      {
+        "type": "prometheus",
+        "prometheus": {
+          "maxTimeSeries": 20000,
+          "transports": [
+            {
+              "type": "pull",
+              "exposer": {
+                "bindAddress": "0.0.0.0:9090",
+                "metricsPath": "/metrics",
+                "numThreads": 2
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

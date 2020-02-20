@@ -3,10 +3,8 @@ cc_binary(
     srcs = ["main.cpp"],
     deps = [
         "//config:config_parser",
-        "//config:schema_validator",
         "//dns/resolver:resolver",
         "//dns/resolver:resolver_factory",
-        "//dns/server:event_type",
         "//dns/server:handler",
         "//dns/server:observing_handler",
         "//dns/server:resolving_handler",
