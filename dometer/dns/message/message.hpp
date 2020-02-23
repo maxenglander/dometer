@@ -8,8 +8,8 @@
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/question.hpp"
 #include "dometer/dns/rcode.hpp"
-#include "std/x/expected.hpp"
 #include "dometer/util/error.hpp"
+#include "std/x/expected.hpp"
 
 namespace util = dometer::util;
 
@@ -42,13 +42,16 @@ namespace dometer::dns::message {
 
             operator uint8_t*() const;
 
-            const size_t size;
+            size_t size() const;
         private:
+            Message(uint8_t*, size_t);
+            Message(std::unique_ptr<uint8_t[]>, size_t);
             Message(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
 
             uint16_t getQDCount() const;
 
             std::unique_ptr<uint8_t[]> bytes;
+            size_t size_;
             ns_msg handle;
     };
 }

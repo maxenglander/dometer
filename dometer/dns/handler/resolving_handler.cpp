@@ -47,8 +47,8 @@ namespace dometer::dns::handler {
 
         if(reply) {
             uint8_t *replyPtrIn = *reply;
-            std::copy(replyPtrIn, *reply + reply->size, replyPtr);
-            return reply->size;
+            std::copy(replyPtrIn, *reply + reply->size(), replyPtr);
+            return reply->size();
         } else {
             return std::x::unexpected<util::Error>(reply.error());
         }

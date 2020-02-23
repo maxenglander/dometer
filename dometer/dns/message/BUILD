@@ -8,6 +8,7 @@ cc_library(
         "//dometer/dns:question",
         "//dometer/dns:rcode",
         "//dometer/dns:type",
+        "//dometer/util:array_helper",
         "//dometer/util:error",
         "//std/x:expected",
         "//std/x:unique",

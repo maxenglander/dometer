@@ -1,9 +1,6 @@
 cc_library(
-    name = "lru_map",
-    hdrs = [
-        "lru_map.hpp",
-        "lru_map.ipp",
-    ],
+    name = "array_helper",
+    hdrs = ["array_helper.hpp", "array_helper.ipp"],
     visibility = ["//visibility:public"],
 )
 
@@ -31,6 +28,15 @@ cc_library(
 cc_library(
     name = "enum_hasher",
     hdrs = ["enum_hasher.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "lru_map",
+    hdrs = [
+        "lru_map.hpp",
+        "lru_map.ipp",
+    ],
     visibility = ["//visibility:public"],
 )
 

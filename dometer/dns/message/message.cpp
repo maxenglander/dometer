@@ -9,6 +9,7 @@
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/rcode.hpp"
 #include "dometer/dns/message/message.hpp"
+#include "dometer/util/array_helper.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 #include "std/x/unique.hpp"
@@ -17,11 +18,11 @@ namespace util = dometer::util;
 
 namespace dometer::dns::message {
     Message Message::copyMessage(const Message& message) {
-        std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size]);
+        std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size()]);
         uint8_t *bytePtr = message;
-        size_t size = message.size;
+        size_t size = message.size();
         std::copy(bytePtr, bytePtr + size, bytes.get());
-        return *makeMessage(std::move(bytes), message.size);
+        return *makeMessage(std::move(bytes), size);
     }
 
     Message Message::formatError(const Message& message) {
@@ -69,16 +70,32 @@ namespace dometer::dns::message {
     {}
 
     Message::Message(Message&& message)
-        :   size(message.size),
-            bytes(std::move(message.bytes)),
-            handle(std::move(message.handle))
+        :   bytes(std::move(message.bytes)),
+            size_(message.size_),
+            handle(message.handle)
     {
         message.handle = {0};
+        message.size_ = 0;
+    }
+
+    Message::Message(uint8_t* bytePtr, size_t size)
+        :   Message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(bytePtr, size)), size)
+    {}
+
+    Message::Message(std::unique_ptr<uint8_t[]> bytes, size_t size)
+        :   bytes(std::move(bytes)),
+            size_(size)
+    {
+        if(size < 0 || size > PACKETSZ)
+            throw new std::runtime_error("Invalid message length (" + std::to_string(size) + ")");
+
+        if(ns_initparse(bytes.get(), this->size(), &handle) < 0)
+            throw new std::runtime_error("Failed to parse bytes into DNS message [" + std::string(strerror(errno)) + "]");
     }
 
     Message::Message(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
-        :   size(size),
-            bytes(std::move(bytes)),
+        :   bytes(std::move(bytes)),
+            size_(size),
             handle(handle)
     {}
 
@@ -163,6 +180,10 @@ namespace dometer::dns::message {
         byte4 |= static_cast<uint16_t>(rcode) & /*2^4*/0x000f;
         bytes[3] = byte4;
     }
+
+    size_t Message::size() const {
+        return size_;
+    };
 
     Message::operator uint8_t*() const {
         return bytes.get();
