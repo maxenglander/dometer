@@ -1,3 +1,4 @@
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -29,6 +30,7 @@ namespace dometer::metrics::handler {
             transports.push_back(transport);
         }
 
+        std::cout << "creating prometheus handler with max time series " << options.maxTimeSeries << std::endl;
         PrometheusHandler handler(options.maxTimeSeries, registry, transports);
 
         return handler;

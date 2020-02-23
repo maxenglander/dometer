@@ -18,7 +18,7 @@
       {
         "type": "prometheus",
         "prometheus": {
-          "maxTimeSeries": 5,
+          "maxTimeSeries": 50000,
           "transports": [
             {
               "type": "pull",

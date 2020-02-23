@@ -38,6 +38,7 @@ namespace dometer::metrics::handler {
             PrometheusHandler(size_t,
                               std::shared_ptr<prometheus::Registry>,
                               std::vector<std::shared_ptr<prometheus::x::Transport>>);
+            PrometheusHandler(const PrometheusHandler&);
 
             template<typename... L>
             void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);

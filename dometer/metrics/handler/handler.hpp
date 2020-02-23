@@ -13,7 +13,7 @@ namespace dometer::metrics::handler {
             public:
                 CounterIncrementer(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>&);
                 template <class ConcreteHandler>
-                void operator()(ConcreteHandler);
+                void operator()(ConcreteHandler&);
             private:
                 const dometer::metrics::Counter<L...>& counter;
                 dometer::metrics::Observation<uint64_t, L...>& observation;
@@ -24,7 +24,7 @@ namespace dometer::metrics::handler {
             public:
                 SummaryObserver(const dometer::metrics::Summary<L...>&, dometer::metrics::Observation<double, L...>&);
                 template <class ConcreteHandler>
-                void operator()(ConcreteHandler);
+                void operator()(ConcreteHandler&);
             private:
                 const dometer::metrics::Summary<L...>& summary;
                 dometer::metrics::Observation<double, L...>& observation;

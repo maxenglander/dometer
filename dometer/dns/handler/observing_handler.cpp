@@ -40,7 +40,6 @@ namespace dometer::dns::handler {
                 }
             }
 
-            std::cout << "incrementing lookup counter" << std::endl;
             this->observer->observe(dns::metrics::LookupSummary::INSTANCE, builder.build());
         });
 
@@ -58,7 +57,6 @@ namespace dometer::dns::handler {
                 }
             }
 
-            std::cout << "incrementing query counter" << std::endl;
             this->observer->increment(dns::metrics::QueryCounter::INSTANCE, builder.build());
         });
 
@@ -76,7 +74,6 @@ namespace dometer::dns::handler {
                 }
             }
 
-            std::cout << "incrementing reply counter" << std::endl;
             this->observer->increment(dns::metrics::ReplyCounter::INSTANCE, builder.build());
         });
     }

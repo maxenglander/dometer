@@ -16,7 +16,7 @@ namespace dometer::metrics::handler {
     
     template<typename... L>
     template<class ConcreteHandler>
-    void Handler::CounterIncrementer<L...>::operator()(ConcreteHandler handler) {
+    void Handler::CounterIncrementer<L...>::operator()(ConcreteHandler& handler) {
         handler.increment(counter, observation);
     }
 
@@ -30,7 +30,7 @@ namespace dometer::metrics::handler {
 
     template<typename... L>
     template<class ConcreteHandler>
-    void Handler::SummaryObserver<L...>::operator()(ConcreteHandler handler) {
+    void Handler::SummaryObserver<L...>::operator()(ConcreteHandler& handler) {
         handler.observe(summary, observation);
     }
 

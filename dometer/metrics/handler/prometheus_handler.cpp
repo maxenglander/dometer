@@ -16,18 +16,28 @@ namespace dometer::metrics::handler {
             prometheus::x::FamilyNameAndTimeSeriesCount& meta)
         :   metricFamilies(metricFamilies),
             meta(meta)
-    {}
-
+    {
+    }
                        
     PrometheusHandler::PrometheusHandler(size_t maxTimeSeries,
                 std::shared_ptr<prometheus::Registry> registry,
                 std::vector<std::shared_ptr<prometheus::x::Transport>> transports)
         :   metricCache(maxTimeSeries), registry(registry), transports(transports)
     {
+        std::cout << "constructing prometheus handler" << std::endl;
         metricCache.onEvict([this](prometheus::x::AnyMetricPtr anyMetricPtr,
                                    prometheus::x::FamilyNameAndTimeSeriesCount meta) {
             CacheEvictor evictFromCache(metricFamilies, meta);
             visit(evictFromCache, anyMetricPtr);
         });
+    }
+
+    PrometheusHandler::PrometheusHandler(const PrometheusHandler& handler)
+        : metricCache(handler.metricCache),
+          metricFamilies(handler.metricFamilies),
+          registry(handler.registry),
+          transports(handler.transports)
+    {
+        std::cout << "copying prometheus handler" << std::endl;
     }
 }
