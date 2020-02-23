@@ -6,8 +6,12 @@
 #include "dometer/metrics/handler/prometheus_handler_factory.hpp"
 #include "dometer/metrics/handler/prometheus_options.hpp"
 #include "dometer/metrics/handler/prometheus_transport_factory.hpp"
+#include "dometer/util/error.hpp"
 #include "prometheus/registry.h"
+#include "std/x/expected.hpp"
 #include "std/x/variant.hpp"
+
+namespace util = dometer::util;
 
 namespace dometer::metrics::handler {
     PrometheusHandlerFactory::CollectableRegistrar::CollectableRegistrar(std::shared_ptr<prometheus::Registry> registry)
@@ -19,20 +23,23 @@ namespace dometer::metrics::handler {
         transport.RegisterCollectable(registry);
     }
 
-    PrometheusHandler PrometheusHandlerFactory::makeHandler(PrometheusOptions options) {
+    std::x::expected<PrometheusHandler, util::Error> PrometheusHandlerFactory::makeHandler(PrometheusOptions options) {
         auto registry = std::make_shared<prometheus::Registry>();
         std::vector<std::shared_ptr<prometheus::x::Transport>> transports;
         CollectableRegistrar registrar(registry);
 
         for(auto it = options.transports.begin(); it < options.transports.end(); it++) {
-            auto transport = PrometheusTransportFactory::makeTransport(*it);
-            std::x::visit(registrar, *transport);
-            transports.push_back(transport);
+            auto transportResult = PrometheusTransportFactory::makeTransport(*it);
+            if(transportResult) {
+                auto transport = *transportResult;
+                std::x::visit(registrar, *transport);
+                transports.push_back(transport);
+            } else {
+                return std::x::unexpected<util::Error>(transportResult.error());
+            }
         }
 
-        std::cout << "creating prometheus handler with max time series " << options.maxTimeSeries << std::endl;
         PrometheusHandler handler(options.maxTimeSeries, registry, transports);
-
         return handler;
     }
 }

@@ -61,16 +61,22 @@ namespace dometer::main {
             printError("Failed to load config (path: " + options->config.value() + ")", parseResults.error().message); 
             return 1;
         }
-
         auto config = *parseResults;
-        auto observer = metrics::ObserverFactory::makeObserver(config.metrics);
+
+        auto observerResult = metrics::ObserverFactory::makeObserver(config.metrics);
+        if(!observerResult) {
+            printError("Failed to create metrics observer", observerResult.error().message);
+            return 1;
+        }
+        auto observer = *observerResult;
+
         auto resolver = dns::resolver::ResolverFactory::makeResolver(config.dns.resolver);
         auto resolvingHandler = std::make_shared<dns::handler::ResolvingHandler>(resolver);
         auto observingHandler = std::make_shared<dns::handler::ObservingHandler>(resolvingHandler, observer);
         dns::server::Server server(observingHandler);
         auto serveResult = server.serve(config.dns.server.transport.bindAddress);
         if(!serveResult) {
-            printError("Failed to start DNS server", serveResult.error());
+            printError("Failed to start DNS server", serveResult.error().message);
             return 1;
         }
 

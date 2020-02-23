@@ -93,6 +93,8 @@ cc_library(
     name = "observer_factory",
     deps = [
         "//dometer/metrics/handler:handler_factory",
+        "//dometer/util:error",
+        "//std/x:expected",
         ":observer",
         ":options",
     ],

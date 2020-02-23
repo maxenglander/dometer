@@ -3,14 +3,23 @@
 #include "dometer/metrics/handler/options.hpp"
 #include "dometer/metrics/handler/prometheus_handler_factory.hpp"
 #include "dometer/metrics/handler/prometheus_options.hpp"
+#include "std/x/expected.hpp"
 #include "std/x/variant.hpp"
 
+namespace util = dometer::util;
+
 namespace dometer::metrics::handler {
-    Handler HandlerFactory::makeHandler(Options options) {
-        return Handler(std::x::visit(std::x::overloaded(
+    std::x::expected<Handler, util::Error> HandlerFactory::makeHandler(Options options) {
+        auto concreteHandler = std::x::visit(std::x::overloaded(
             [](PrometheusOptions po) {
                 return PrometheusHandlerFactory::makeHandler(po);
             }
-        ), options));
+        ), options);
+
+        if(concreteHandler) {
+            return Handler(*concreteHandler);
+        } else {
+            return std::x::unexpected<util::Error>(concreteHandler.error());
+        }
     }
 }

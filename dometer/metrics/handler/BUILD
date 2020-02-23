@@ -17,6 +17,8 @@ cc_library(
     hdrs = ["handler_factory.hpp"],
     srcs = ["handler_factory.cpp"],
     deps = [
+        "//dometer/util:error",
+        "//std/x:expected",
         "//std/x:variant",
         ":handler",
         ":options",
@@ -79,7 +81,9 @@ cc_library(
     hdrs = ["prometheus_handler_factory.hpp"],
     srcs = ["prometheus_handler_factory.cpp"],
     deps = [
+        "//dometer/util:error",
         "//prometheus/x:types",
+        "//std/x:expected",
         ":prometheus_handler",
         ":prometheus_options",
         ":prometheus_transport_factory",
@@ -112,7 +116,9 @@ cc_library(
         "@com_github_jupp0r_prometheus_cpp//core",
         "@com_github_jupp0r_prometheus_cpp//pull",
         "@com_github_jupp0r_prometheus_cpp//push",
+        "//dometer/util:error",
         "//prometheus/x:types",
+        "//std/x:expected",
         "//std/x:variant",
         ":prometheus_pull_transport_options",
         ":prometheus_transport_options",

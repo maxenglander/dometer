@@ -4,7 +4,11 @@
 
 #include "dometer/metrics/handler/prometheus_handler.hpp"
 #include "dometer/metrics/handler/prometheus_options.hpp"
+#include "dometer/util/error.hpp"
 #include "prometheus/registry.h"
+#include "std/x/expected.hpp"
+
+namespace util = dometer::util;
 
 namespace dometer::metrics::handler {
     class PrometheusHandlerFactory {
@@ -18,6 +22,6 @@ namespace dometer::metrics::handler {
         };
 
         public:
-            static PrometheusHandler makeHandler(PrometheusOptions options);
+            static std::x::expected<PrometheusHandler, util::Error> makeHandler(PrometheusOptions options);
     };
 }

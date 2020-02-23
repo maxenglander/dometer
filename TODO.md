@@ -11,7 +11,8 @@ TODO
  - [x] write cli --help
  - [x] improve cli error messages (cli options)
  - [x] improve cli error messages (schema validation)
- - [ ] catch prometheus transport exceptions (CivetException)
+ - [x] catch prometheus transport exceptions (CivetException)
+ - [ ] nest errors for rich error context
  - [ ] add rcode to dns metrics
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] switch summary to histogram
