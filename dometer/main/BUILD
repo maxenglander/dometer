@@ -11,14 +11,25 @@ cc_binary(
         "//dometer/dns/server:server",
         "//dometer/metrics:observer",
         "//dometer/metrics:observer_factory",
+        ":help",
         ":options",
         ":options_parser",
     ]
 )
 
 cc_library(
+    name = "help",
+    hdrs = ["help.hpp"],
+    srcs = ["help.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "options",
     hdrs = ["options.hpp"],
+    deps = [
+        "//std/x:optional",
+    ],
     visibility = ["//visibility:public"],
 )
 

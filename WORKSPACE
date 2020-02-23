@@ -42,6 +42,15 @@ http_archive(
     strip_prefix = "asio-1.14.0",
 )
 
+# JsonCpp  library
+http_archive(
+    name = "com_github_open-source-parsers_jsoncpp",
+    urls = ["https://github.com/open-source-parsers/jsoncpp/archive/0.10.7.zip"],
+    sha256 = "165b2ac2f17601b500bf01b0b9a3b304f620986e0da5d988397d64f8f3c942c3",
+    build_file = "@//external:BUILD.jsoncpp",
+    strip_prefix = "jsoncpp-0.10.7",
+)
+
 # Prometheus client library
 http_archive(
     name = "com_github_jupp0r_prometheus_cpp",

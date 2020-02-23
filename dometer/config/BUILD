@@ -12,7 +12,7 @@ cc_library(
     hdrs = ["config_parser.hpp"],
     srcs = ["config_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/util:error",
         "//std/x:expected",
         "//std/x:unique",
@@ -28,7 +28,7 @@ cc_library(
     hdrs = ["internal_config_parser.hpp"],
     srcs = ["internal_config_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/config/dns:dns_parser",
         "//dometer/config/metrics:metrics_parser",
         "//std/x:expected",
@@ -49,7 +49,7 @@ genrule(
 cc_library(
     name = "schema_validator",
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "@com_github_tristanpenman_valijson//:valijson",
         "//dometer/util:error",
         "//std/x:expected",

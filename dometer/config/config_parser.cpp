@@ -7,8 +7,7 @@
 #include "dometer/config/config_parser.hpp"
 #include "dometer/config/internal_config_parser.hpp"
 #include "dometer/config/schema_validator.hpp"
-#include "rapidjson/document.h"
-#include "rapidjson/error/en.h"
+#include "json/json.h"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 
@@ -26,11 +25,15 @@ namespace dometer::config {
           schemaValidator(schemaValidator) {}
 
     expected<Config, util::Error> ConfigParser::fromFile(std::string file) {
-        std::cout << "parsing config from file" << std::endl;
         std::ifstream ifs(file.c_str());
+        if(!ifs.good()) {
+            return std::x::unexpected<util::Error>(util::Error{
+                "File does not exist or cannot be read."
+            });
+        }
+
         std::stringstream sstr;
         sstr << ifs.rdbuf();
-        std::cout << sstr.str() << std::endl;
         return fromJson(sstr.str());
     }
 
@@ -39,7 +42,7 @@ namespace dometer::config {
         if(!validation) {
             return unexpected<util::Error>(validation.error());
         } else {
-            rapidjson::Value* jsonValue = (*validation).release();
+            Json::Value* jsonValue = (*validation).release();
             return internalConfigParser.fromJson(*jsonValue);
         }
     }

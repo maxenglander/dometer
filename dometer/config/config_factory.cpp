@@ -2,7 +2,6 @@
 #include "dometer/config/config_parser.hpp"
 #include "dometer/config/dns/dns_parser.hpp"
 #include "dometer/config/metrics/metrics_parser.hpp"
-#include "rapidjson/document.h"
 
 namespace dometer::config {
     ConfigParser::ConfigParser()

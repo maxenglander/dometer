@@ -2,9 +2,11 @@
 
 #include <string>
 
+#include "std/x/optional.hpp"
+
 namespace dometer::main {
     struct Options {
-        const std::string config;
-        const bool help;
+        std::x::optional<std::string> config;
+        bool help;
     };
 }

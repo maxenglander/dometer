@@ -11,7 +11,7 @@ cc_library(
     hdrs = ["server_parser.hpp"],
     srcs = ["server_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         ":server",
         ":transport",
         ":transport_parser",
@@ -32,7 +32,7 @@ cc_library(
     hdrs = ["transport_parser.hpp"],
     srcs = ["transport_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         ":transport",
     ],
     visibility = ["//visibility:public"]

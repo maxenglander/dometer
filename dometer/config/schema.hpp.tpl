@@ -1,5 +1,5 @@
 namespace dometer::config {
-    const char * SCHEMA = R"SCHEMA(
+    const std::string SCHEMA = std::string(R"SCHEMA(
     ${SCHEMA}
-    )SCHEMA";
+    )SCHEMA");
 }

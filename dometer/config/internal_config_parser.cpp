@@ -1,10 +1,10 @@
+#include <cassert>
 #include <memory>
 
 #include "dometer/config/config.hpp"
 #include "dometer/config/internal_config_parser.hpp"
-#include "rapidjson/document.h"
-#include "rapidjson/error/en.h"
 #include "dometer/util/error.hpp"
+#include "json/json.h"
 #include "std/x/expected.hpp"
 
 using namespace std::x;
@@ -20,11 +20,11 @@ namespace dometer::config {
         : dnsParser(dnsParser),
           metricsParser(metricsParser) {}
 
-    Config InternalConfigParser::fromJson(const rapidjson::Value& jsonValue) const {
-        assert(jsonValue.HasMember("dns"));
-        assert(jsonValue["dns"].IsObject());
-        assert(jsonValue.HasMember("metrics"));
-        assert(jsonValue["metrics"].IsObject());
+    Config InternalConfigParser::fromJson(const Json::Value& jsonValue) const {
+        assert(jsonValue.isMember("dns"));
+        assert(jsonValue["dns"].isObject());
+        assert(jsonValue.isMember("metrics"));
+        assert(jsonValue["metrics"].isObject());
         return Config{
             dnsParser.fromJson(jsonValue["dns"]),
             metricsParser.fromJson(jsonValue["metrics"])

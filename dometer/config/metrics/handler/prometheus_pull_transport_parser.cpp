@@ -1,21 +1,23 @@
+#include <cassert>
+
 #include "dometer/config/metrics/handler/prometheus_pull_transport_parser.hpp"
 #include "dometer/metrics/handler/prometheus_pull_transport_options.hpp"
-#include "rapidjson/document.h"
+#include "json/json.h"
 
 namespace dometer::config::metrics::handler {
     dometer::metrics::handler::PrometheusPullTransportOptions PrometheusPullTransportParser::fromJson(
-            const rapidjson::Value& jsonValue) const {
-        assert(jsonValue.HasMember("bindAddress"));
-        assert(jsonValue["bindAddress"].IsString());
-        assert(jsonValue.HasMember("numThreads"));
-        assert(jsonValue["numThreads"].IsUint());
-        assert(jsonValue.HasMember("metricsPath"));
-        assert(jsonValue["metricsPath"].IsString());
+            const Json::Value& jsonValue) const {
+        assert(jsonValue.isMember("bindAddress"));
+        assert(jsonValue["bindAddress"].isString());
+        assert(jsonValue.isMember("numThreads"));
+        assert(jsonValue["numThreads"].isUInt());
+        assert(jsonValue.isMember("metricsPath"));
+        assert(jsonValue["metricsPath"].isString());
 
         return dometer::metrics::handler::PrometheusPullTransportOptions{
-            jsonValue["bindAddress"].GetString(),
-            jsonValue["metricsPath"].GetString(),
-            jsonValue["numThreads"].GetUint()
+            jsonValue["bindAddress"].asString(),
+            jsonValue["metricsPath"].asString(),
+            jsonValue["numThreads"].asUInt()
         };
     }
 }

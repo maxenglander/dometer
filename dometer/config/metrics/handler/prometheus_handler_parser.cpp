@@ -1,8 +1,10 @@
+#include <cassert>
+
 #include "dometer/config/metrics/handler/prometheus_handler_parser.hpp"
 #include "dometer/config/metrics/handler/prometheus_transport_parser.hpp"
 #include "dometer/metrics/handler/prometheus_options.hpp"
 #include "dometer/metrics/handler/prometheus_transport_options.hpp"
-#include "rapidjson/document.h"
+#include "json/json.h"
 
 namespace dometer::config::metrics::handler {
     PrometheusHandlerParser::PrometheusHandlerParser()
@@ -14,19 +16,19 @@ namespace dometer::config::metrics::handler {
         : transportParser(transportParser) {}
 
     dometer::metrics::handler::PrometheusOptions PrometheusHandlerParser::fromJson(
-            const rapidjson::Value& jsonValue) const {
-        assert(jsonValue.HasMember("maxTimeSeries"));
-        assert(jsonValue["maxTimeSeries"].IsUint());
-        assert(jsonValue.HasMember("transports"));
-        assert(jsonValue["transports"].IsArray());
+            const Json::Value& jsonValue) const {
+        assert(jsonValue.isMember("maxTimeSeries"));
+        assert(jsonValue["maxTimeSeries"].isUInt());
+        assert(jsonValue.isMember("transports"));
+        assert(jsonValue["transports"].isArray());
 
         std::vector<dometer::metrics::handler::PrometheusTransportOptions> transports;
-        for(rapidjson::SizeType i = 0; i < jsonValue["transports"].Size(); i++) {
+        for(Json::Value::ArrayIndex i = 0; i < jsonValue["transports"].size(); i++) {
             transports.push_back(transportParser.fromJson(jsonValue["transports"][i]));
         }
 
         return dometer::metrics::handler::PrometheusOptions{
-            jsonValue["maxTimeSeries"].GetUint(),
+            jsonValue["maxTimeSeries"].asUInt(),
             transports
         };
     }

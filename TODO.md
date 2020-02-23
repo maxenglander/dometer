@@ -8,8 +8,10 @@ TODO
  - [x] support c++11
  - [x] move dns/packet.{c,h}pp to dns/packet/
  - [x] extract dns/packet::make\* methods to separate class
- - [ ] improve cli error messages (cli options)
- - [ ] improve cli error messages (schema validation)
+ - [x] write cli --help
+ - [x] improve cli error messages (cli options)
+ - [x] improve cli error messages (schema validation)
+ - [ ] catch prometheus transport exceptions (CivetException)
  - [ ] add rcode to dns metrics
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] switch summary to histogram

@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <cassert>
 #include <deque>
 #include <iostream>
 #include <memory>
@@ -7,19 +7,14 @@
 #include "dometer/config/schema.hpp"
 #include "dometer/config/schema_validator.hpp"
 #include "dometer/util/error.hpp"
-#include "rapidjson/error/en.h"
-#include "rapidjson/schema.h"
-#include "rapidjson/stringbuffer.h"
-#include "valijson/adapters/rapidjson_adapter.hpp"
-#include "valijson/utils/rapidjson_utils.hpp"
+#include "json/json.h"
+#include "std/x/expected.hpp"
+#include "std/x/unique.hpp"
+#include "valijson/adapters/jsoncpp_adapter.hpp"
 #include "valijson/schema.hpp"
 #include "valijson/schema_parser.hpp"
 #include "valijson/validation_results.hpp"
 #include "valijson/validator.hpp"
-#include "std/x/expected.hpp"
-#include "std/x/unique.hpp"
-
-using namespace std::x;
 
 namespace dometer::config {
     SchemaValidator::SchemaValidator()
@@ -43,7 +38,7 @@ namespace dometer::config {
             if(errorIndex < validationResults.numErrors() - 1) {
                 errorMessage = "\n" + errorMessage;
             }
-            errorMessage = "@" + context + ": " + error.description
+            errorMessage = context + ": " + error.description
                          + errorMessage;
             errorIndex--;
         }
@@ -52,16 +47,20 @@ namespace dometer::config {
     }
 
     std::unique_ptr<valijson::Schema> SchemaValidator::getSchema() {
-        rapidjson::Document schemaDocument;
+        std::string errs;
+        Json::Value root;
+
+        Json::CharReaderBuilder rbuilder;
+        std::unique_ptr<Json::CharReader> const reader(rbuilder.newCharReader());
 
         // Failure interpret the Dometer JSON schema as a JSON document
         // indicates either a bug with RapidJSON or (more likely) a
         // improperly defined JSON document.
-        assert(!schemaDocument.Parse(SCHEMA).HasParseError());
+        assert(reader->parse(&SCHEMA[0], &SCHEMA[SCHEMA.size() - 1], &root, &errs));
 
         auto schema = std::x::make_unique<valijson::Schema>();
         valijson::SchemaParser schemaParser;
-        valijson::adapters::RapidJsonAdapter schemaDocumentAdapter(schemaDocument);
+        valijson::adapters::JsonCppAdapter schemaDocumentAdapter(root);
 
         try {
             schemaParser.populateSchema(schemaDocumentAdapter, *schema);
@@ -75,42 +74,46 @@ namespace dometer::config {
         return std::move(schema);
     }
 
-    expected<std::unique_ptr<rapidjson::Document>, util::Error> SchemaValidator::parse(std::string input) {
-        auto document = std::x::make_unique<rapidjson::Document>();
-        rapidjson::ParseResult result = document->Parse(input.c_str());
-        if(!result) {
-            return unexpected<util::Error>(util::Error{
-                rapidjson::GetParseError_En(result.Code()),
-                result.Code()
+    std::x::expected<std::unique_ptr<Json::Value>, util::Error> SchemaValidator::parse(std::string input) {
+        std::string errs;
+        auto root = std::x::make_unique<Json::Value>();
+
+        Json::CharReaderBuilder rbuilder;
+        std::unique_ptr<Json::CharReader> const reader(rbuilder.newCharReader());
+
+        if(!reader->parse(&input[0], &input[input.size() - 1], &(*root), &errs)) {
+            return std::x::unexpected<util::Error>(util::Error{
+                "Failed to parse JSON: " + errs,
+                0
             });
         }
 
-        return std::move(document);
+        return std::move(root);
     }
 
-    expected<std::unique_ptr<rapidjson::Value>, util::Error> SchemaValidator::validate(std::string input) {
+    std::x::expected<std::unique_ptr<Json::Value>, util::Error> SchemaValidator::validate(std::string input) {
         std::unique_ptr<valijson::Schema> schema = this->getSchema();
 
         auto parseResult = parse(input);
         if(!parseResult) {
-            return unexpected<util::Error>(parseResult.error());
+            return std::x::unexpected<util::Error>(parseResult.error());
         }
 
-        std::unique_ptr<rapidjson::Document> document = std::move(*parseResult);
+        std::unique_ptr<Json::Value> root = std::move(*parseResult);
 
-        auto validationResult = validate(*(schema.get()), *(document.get()));
+        auto validationResult = validate(*(schema.get()), *(root.get()));
         if(!validationResult) {
-            return unexpected<util::Error>(validationResult.error());
+            return std::x::unexpected<util::Error>(validationResult.error());
         }
 
-        return std::move(document);
+        return std::move(root);
     }
 
-    expected<void, util::Error> SchemaValidator::validate(const valijson::Schema& schema, const rapidjson::Document& document) {
+    std::x::expected<void, util::Error> SchemaValidator::validate(const valijson::Schema& schema, const Json::Value& root) {
         valijson::ValidationResults validationResults;
-        valijson::adapters::RapidJsonAdapter documentAdapter(document);
-        if(!validator.validate(schema, documentAdapter, &validationResults)) {
-            return unexpected<util::Error>(makeError(validationResults));
+        valijson::adapters::JsonCppAdapter valueAdapter(root);
+        if(!validator.validate(schema, valueAdapter, &validationResults)) {
+            return std::x::unexpected<util::Error>(makeError(validationResults));
         }
         return {};
     }

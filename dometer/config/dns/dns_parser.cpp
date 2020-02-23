@@ -1,8 +1,10 @@
+#include <cassert>
+
 #include "dometer/config/dns/dns.hpp"
 #include "dometer/config/dns/dns_parser.hpp"
 #include "dometer/config/dns/resolver/resolver_parser.hpp"
 #include "dometer/config/dns/server/server_parser.hpp"
-#include "rapidjson/document.h"
+#include "json/json.h"
 
 namespace dometer::config::dns {
     DnsParser::DnsParser()
@@ -13,11 +15,11 @@ namespace dometer::config::dns {
                            dometer::config::dns::server::ServerParser serverParser)
         : resolverParser(resolverParser), serverParser(serverParser) {}
 
-    Dns DnsParser::fromJson(const rapidjson::Value& jsonValue) const {
-        assert(jsonValue.HasMember("resolver"));
-        assert(jsonValue["resolver"].IsObject());
-        assert(jsonValue.HasMember("server"));
-        assert(jsonValue["server"].IsObject());
+    Dns DnsParser::fromJson(const Json::Value& jsonValue) const {
+        assert(jsonValue.isMember("resolver"));
+        assert(jsonValue["resolver"].isObject());
+        assert(jsonValue.isMember("server"));
+        assert(jsonValue["server"].isObject());
 
         return Dns{
             resolverParser.fromJson(jsonValue["resolver"]),

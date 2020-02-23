@@ -6,7 +6,7 @@
 #include "dometer/config/config.hpp"
 #include "dometer/config/internal_config_parser.hpp"
 #include "dometer/config/schema_validator.hpp"
-#include "rapidjson/document.h"
+#include "json/json.h"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 

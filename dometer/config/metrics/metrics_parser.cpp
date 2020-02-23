@@ -1,10 +1,11 @@
+#include <cassert>
 #include <vector>
 
 #include "dometer/config/metrics/handler/handler_parser.hpp"
 #include "dometer/config/metrics/metrics_parser.hpp"
 #include "dometer/metrics/options.hpp"
 #include "dometer/metrics/handler/options.hpp"
-#include "rapidjson/document.h"
+#include "json/json.h"
 
 namespace dometer::config::metrics {
     MetricsParser::MetricsParser()
@@ -13,12 +14,12 @@ namespace dometer::config::metrics {
     MetricsParser::MetricsParser(dometer::config::metrics::handler::HandlerParser handlerParser)
         : handlerParser(handlerParser) {}
 
-    dometer::metrics::Options MetricsParser::fromJson(const rapidjson::Value& jsonValue) const {
-        assert(jsonValue.HasMember("handlers"));
-        assert(jsonValue["handlers"].IsArray());
+    dometer::metrics::Options MetricsParser::fromJson(const Json::Value& jsonValue) const {
+        assert(jsonValue.isMember("handlers"));
+        assert(jsonValue["handlers"].isArray());
 
         std::vector<dometer::metrics::handler::Options> handlers;
-        for(rapidjson::SizeType i = 0; i < jsonValue["handlers"].Size(); i++) {
+        for(Json::Value::ArrayIndex i = 0; i < jsonValue["handlers"].size(); i++) {
             handlers.push_back(handlerParser.fromJson(jsonValue["handlers"][i]));
         }
 

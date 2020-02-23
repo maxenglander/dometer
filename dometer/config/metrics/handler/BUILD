@@ -3,7 +3,7 @@ cc_library(
     hdrs = ["handler_parser.hpp"],
     srcs = ["handler_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/config/metrics/handler:prometheus_handler_parser",
         "//dometer/metrics/handler:options",
         "//std/x:optional",
@@ -16,7 +16,7 @@ cc_library(
     hdrs = ["prometheus_handler_parser.hpp"],
     srcs = ["prometheus_handler_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/config/metrics/handler:prometheus_transport_parser",
         "//dometer/metrics/handler:prometheus_options",
     ],
@@ -28,7 +28,7 @@ cc_library(
     hdrs = ["prometheus_pull_transport_parser.hpp"],
     srcs = ["prometheus_pull_transport_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/metrics/handler:prometheus_pull_transport_options",
     ],
     visibility = ["//visibility:public"],
@@ -39,7 +39,7 @@ cc_library(
     hdrs = ["prometheus_transport_parser.hpp"],
     srcs = ["prometheus_transport_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/metrics/handler:prometheus_transport_options",
         "prometheus_pull_transport_parser",
     ],

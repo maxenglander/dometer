@@ -3,26 +3,24 @@
 #include <memory>
 #include <string>
 
+#include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
-#include "rapidjson/document.h"
+#include "json/json.h"
 #include "valijson/schema.hpp"
 #include "valijson/validation_results.hpp"
 #include "valijson/validator.hpp"
-#include "dometer/util/error.hpp"
-
-using namespace std::x;
 
 namespace dometer::config {
     class SchemaValidator {
         public:
             SchemaValidator();
             SchemaValidator(valijson::Validator);
-            expected<std::unique_ptr<rapidjson::Value>, util::Error> validate(std::string);
+            std::x::expected<std::unique_ptr<Json::Value>, util::Error> validate(std::string);
         private:
             util::Error makeError(valijson::ValidationResults);
             static std::unique_ptr<valijson::Schema> getSchema();
-            expected<std::unique_ptr<rapidjson::Document>, util::Error> parse(std::string);
-            expected<void, util::Error> validate(const valijson::Schema&, const rapidjson::Document&);
+            std::x::expected<std::unique_ptr<Json::Value>, util::Error> parse(std::string);
+            std::x::expected<void, util::Error> validate(const valijson::Schema&, const Json::Value&);
             valijson::Validator validator;
     };
 }

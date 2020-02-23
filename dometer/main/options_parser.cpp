@@ -18,8 +18,10 @@ namespace dometer::main {
         };
         const char* const shortOptions = "";
 
-        std::string config = "";
-        bool help = false;
+        Options options{
+            std::x::nullopt,
+            false
+        };
 
         opterr = 0;
         while(true) {
@@ -33,32 +35,27 @@ namespace dometer::main {
             
             switch(option) {
                 case 'c':
-                    config = std::string(optarg);
+                    options.config.emplace(std::string(optarg));
                     break;
                 case 'h':
-                    help = true;
+                    options.help = true;
                     break;
                 case '?': // Missing or ambiguous argument
                     if(optopt == 'c') {
                         return std::x::unexpected<util::Error>(util::Error{
-                            "--config requires an argument"
+                            "A specifed option (--config) was provided without a required argument (path)."
                         });
                     } else {
                         return std::x::unexpected<util::Error>(util::Error{
-                            "unrecognized option: " + std::string(argv[optind - 1])
+                            "A provided option is not recognized (" + std::string(argv[optind - 1]) + ")."
                         });
                     }
                 default:
-                    return Options{
-                        config,
-                        true
-                    };
+                    options.config = "";
+                    options.help = true;
             }
         }
 
-        return Options{
-            config,
-            help
-        };
+        return options;
     }
 }

@@ -3,7 +3,7 @@ cc_library(
     hdrs = ["libresolv_parser.hpp"],
     srcs = ["libresolv_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/dns/resolver:libresolv_function",
         "//dometer/dns/resolver:libresolv_options",
     ],
@@ -15,7 +15,7 @@ cc_library(
     hdrs = ["resolver_parser.hpp"],
     srcs = ["resolver_parser.cpp"],
     deps = [
-        "@com_github_Tencent_rapidjson//:rapidjson",
+        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//std/x:optional",
         "//dometer/dns/resolver:options",
         ":libresolv_parser",
