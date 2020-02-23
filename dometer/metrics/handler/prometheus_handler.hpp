@@ -23,6 +23,17 @@ using namespace std::x;
 
 namespace dometer::metrics::handler {
     class PrometheusHandler {
+        class CacheEvictor {
+            public:
+                CacheEvictor(std::unordered_map<std::string, prometheus::x::AnyFamilyRef>&,
+                             prometheus::x::FamilyNameAndTimeSeriesCount&);
+                template <class MetricPtr>
+                void operator()(MetricPtr&&);
+            private:
+                std::unordered_map<std::string, prometheus::x::AnyFamilyRef>& metricFamilies;
+                prometheus::x::FamilyNameAndTimeSeriesCount& meta;
+        };
+
         public:
             PrometheusHandler(size_t,
                               std::shared_ptr<prometheus::Registry>,
@@ -39,8 +50,6 @@ namespace dometer::metrics::handler {
 
             template<typename T, typename BuilderFn>
             expected<prometheus::x::FamilyRef<T>, util::Error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
-
-            void handleMetricEviction(prometheus::x::AnyMetricPtr, prometheus::x::FamilyNameAndTimeSeriesCount);
 
             PrometheusLRUMap metricCache;
             std::unordered_map<std::string, prometheus::x::AnyFamilyRef> metricFamilies;

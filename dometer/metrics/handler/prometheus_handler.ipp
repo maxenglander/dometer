@@ -24,6 +24,19 @@ namespace util = dometer::util;
 using namespace std::x;
 
 namespace dometer::metrics::handler {
+    template <class MetricPtr>
+    void PrometheusHandler::CacheEvictor::operator()(MetricPtr&& metricPtr) {
+        auto search = metricFamilies.find(meta.familyName);
+        if(search == metricFamilies.end()) return;
+        auto anyFamilyRef = search->second;
+
+        using MetricType = typename std::decay<decltype(*metricPtr)>::type;
+        if(auto familyPtr = get_if<prometheus::x::FamilyRef<MetricType>>(&anyFamilyRef)) {
+            prometheus::Family<MetricType>& family = *familyPtr;
+            family.Remove(metricPtr);
+        }
+    }
+
     template<typename T>
     void PrometheusHandler::cacheMetric(T* metric, prometheus::x::FamilyNameAndTimeSeriesCount meta) {
         metricCache.put(metric, meta);

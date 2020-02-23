@@ -13,6 +13,12 @@ cc_library(
 )
 
 cc_library(
+    name = "unique",
+    hdrs = ["unique.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "variant",
     hdrs = ["variant.hpp"],
     deps = ["@com_github_mpark_variant//:variant"],

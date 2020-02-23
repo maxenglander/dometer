@@ -1,0 +1,2 @@
+namespace dometer::metrics::handler {
+}

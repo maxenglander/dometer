@@ -9,15 +9,16 @@
 #include "dometer/dns/packet.hpp"
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/rcode.hpp"
-#include "std/x/expected.hpp"
 #include "dometer/util/error.hpp"
+#include "std/x/expected.hpp"
+#include "std/x/unique.hpp"
 
 using namespace dometer::util;
 using namespace std::x;
 
 namespace dometer::dns {
     Packet Packet::copyPacket(const Packet& packet) {
-        auto bytes = std::make_unique<uint8_t[]>(packet.size);
+        std::unique_ptr<uint8_t[]> bytes(new uint8_t[packet.size]);
         uint8_t *bytePtr = packet;
         size_t size = packet.size;
         std::copy(bytePtr, bytePtr + size, bytes.get());
@@ -32,7 +33,7 @@ namespace dometer::dns {
     }
 
     expected<Packet, Error> Packet::makePacket(uint8_t *bytePtr, size_t size) {
-        auto bytes = std::make_unique<uint8_t[]>(size);
+        std::unique_ptr<uint8_t[]> bytes(new uint8_t[size]);
         std::copy(bytePtr, bytePtr + size, bytes.get());
         return makePacket(std::move(bytes), size);
     }
@@ -71,8 +72,10 @@ namespace dometer::dns {
     Packet::Packet(Packet&& packet)
         :   size(packet.size),
             bytes(std::move(packet.bytes)),
-            handle(std::exchange(packet.handle, {0}))
-    {}
+            handle(std::move(packet.handle))
+    {
+        packet.handle = {0};
+    }
 
     Packet::Packet(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
         :   size(size),

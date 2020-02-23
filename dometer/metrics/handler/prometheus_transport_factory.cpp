@@ -11,7 +11,7 @@ namespace dometer::metrics::handler {
         return std::x::visit(std::x::overloaded(
             [](PrometheusPullTransportOptions ppto) {
                 return std::make_shared<prometheus::x::Transport>(
-                    std::x::in_place_index<0>,
+                    std::x::in_place_index<0>(),
                     ppto.bindAddress,
                     ppto.metricsPath,
                     ppto.numThreads

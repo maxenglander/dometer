@@ -8,6 +8,7 @@
 #include "dometer/dns/server/server.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
+#include "std/x/unique.hpp"
 
 namespace dns = dometer::dns;
 namespace ip = asio::ip;
@@ -16,8 +17,8 @@ namespace util = dometer::util;
 namespace dometer::dns::server {
     Server::Server(std::shared_ptr<dns::handler::Handler> handler)
         :   handler(handler),
-            ioContext(std::make_unique<asio::io_context>()),
-            socket(std::make_unique<ip::udp::socket>(*ioContext))
+            ioContext(std::x::make_unique<asio::io_context>()),
+            socket(std::x::make_unique<ip::udp::socket>(*ioContext))
     { }
 
     std::x::expected<void, util::Error> Server::openAndBindSocket(ip::udp::endpoint endpoint) {

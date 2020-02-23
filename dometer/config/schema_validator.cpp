@@ -6,7 +6,7 @@
 
 #include "dometer/config/schema.hpp"
 #include "dometer/config/schema_validator.hpp"
-#include "std/x/expected.hpp"
+#include "dometer/util/error.hpp"
 #include "rapidjson/error/en.h"
 #include "rapidjson/schema.h"
 #include "rapidjson/stringbuffer.h"
@@ -16,7 +16,8 @@
 #include "valijson/schema_parser.hpp"
 #include "valijson/validation_results.hpp"
 #include "valijson/validator.hpp"
-#include "dometer/util/error.hpp"
+#include "std/x/expected.hpp"
+#include "std/x/unique.hpp"
 
 using namespace std::x;
 
@@ -58,7 +59,7 @@ namespace dometer::config {
         // improperly defined JSON document.
         assert(!schemaDocument.Parse(SCHEMA).HasParseError());
 
-        auto schema = std::make_unique<valijson::Schema>();
+        auto schema = std::x::make_unique<valijson::Schema>();
         valijson::SchemaParser schemaParser;
         valijson::adapters::RapidJsonAdapter schemaDocumentAdapter(schemaDocument);
 
@@ -75,7 +76,7 @@ namespace dometer::config {
     }
 
     expected<std::unique_ptr<rapidjson::Document>, util::Error> SchemaValidator::parse(std::string input) {
-        auto document = std::make_unique<rapidjson::Document>();
+        auto document = std::x::make_unique<rapidjson::Document>();
         rapidjson::ParseResult result = document->Parse(input.c_str());
         if(!result) {
             return unexpected<util::Error>(util::Error{

@@ -13,8 +13,9 @@ cc_library(
     srcs = ["config_parser.cpp"],
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
-        "//std/x:expected",
         "//dometer/util:error",
+        "//std/x:expected",
+        "//std/x:unique",
         ":config",
         ":internal_config_parser",
         ":schema_validator",
@@ -50,8 +51,9 @@ cc_library(
     deps = [
         "@com_github_Tencent_rapidjson//:rapidjson",
         "@com_github_tristanpenman_valijson//:valijson",
-        "//std/x:expected",
         "//dometer/util:error",
+        "//std/x:expected",
+        "//std/x:unique",
     ],
     hdrs = [
         ":schema",

@@ -18,8 +18,9 @@ cc_library(
     name = "packet",
     hdrs = ["packet.hpp"],
     deps = [
-        "//std/x:expected",
         "//dometer/util:error",
+        "//std/x:expected",
+        "//std/x:unique",
         ":class",
         ":opcode",
         ":qr",
