@@ -3,7 +3,7 @@
 #include <memory>
 #include <thread>
 
-#include "dometer/dns/packet.hpp"
+#include "dometer/dns/message/message.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/dns/event/event.hpp"
 #include "dometer/dns/event/event_type.hpp"
@@ -39,7 +39,7 @@ namespace dometer::dns::handler {
     std::x::expected<size_t, util::Error> ResolvingHandler::handle(
             uint8_t *queryPtr, size_t querySize,
             uint8_t *replyPtr, size_t replySize) {
-        auto query = dns::Packet::makePacket(queryPtr, querySize);
+        auto query = dns::message::Message::makeMessage(queryPtr, querySize);
         notify(std::make_shared<dns::event::QueryEvent>(query));
 
         auto reply = handle(query);
@@ -54,16 +54,16 @@ namespace dometer::dns::handler {
         }
     }
 
-    std::x::expected<dns::Packet, util::Error> ResolvingHandler::handle(std::x::expected<dns::Packet, util::Error> &query) {
+    std::x::expected<dns::message::Message, util::Error> ResolvingHandler::handle(std::x::expected<dns::message::Message, util::Error> &query) {
         if(!query) {
             return std::x::unexpected<util::Error>(query.error());
         } else if(query->getOpCode() != dns::OpCode::QUERY) {
-            return dns::Packet::notImplemented(*query);
+            return dns::message::Message::notImplemented(*query);
         }
 
         auto question = query->getQuestion();
         if(!question) {
-            return dns::Packet::formatError(*query);
+            return dns::message::Message::formatError(*query);
         }
 
         auto start = clock.now();

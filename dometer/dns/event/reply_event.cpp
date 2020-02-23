@@ -1,4 +1,4 @@
-#include "dometer/dns/packet.hpp"
+#include "dometer/dns/message/message.hpp"
 #include "dometer/dns/event/event_type.hpp"
 #include "dometer/dns/event/reply_event.hpp"
 #include "dometer/util/error.hpp"
@@ -9,15 +9,15 @@ namespace util = dometer::util;
 
 namespace dometer::dns::event {
     ReplyEvent::ReplyEvent(
-                const std::x::expected<dns::Packet, util::Error>& query,
-                const std::x::expected<dns::Packet, util::Error>& reply)
+                const std::x::expected<dns::message::Message, util::Error>& query,
+                const std::x::expected<dns::message::Message, util::Error>& reply)
         :   query(query), reply(reply) {}
 
-    const std::x::expected<dns::Packet, util::Error>& ReplyEvent::getQuery() const {
+    const std::x::expected<dns::message::Message, util::Error>& ReplyEvent::getQuery() const {
         return query;
     }
 
-    const std::x::expected<dns::Packet, util::Error>& ReplyEvent::getReply() const {
+    const std::x::expected<dns::message::Message, util::Error>& ReplyEvent::getReply() const {
         return reply;
     }
 

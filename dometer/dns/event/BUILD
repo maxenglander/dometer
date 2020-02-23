@@ -16,7 +16,7 @@ cc_library(
 cc_library(
     name = "lookup_event",
     deps = [
-        "//dometer/dns:packet",
+        "//dometer/dns/message:message",
         "//dometer/util:error",
         "//std/x:expected",
         ":event",
@@ -30,7 +30,7 @@ cc_library(
 cc_library(
     name = "query_event",
     deps = [
-        "//dometer/dns:packet",
+        "//dometer/dns/message:message",
         "//dometer/util:error",
         "//std/x:expected",
         ":event",
@@ -44,7 +44,7 @@ cc_library(
 cc_library(
     name = "reply_event",
     deps = [
-        "//dometer/dns:packet",
+        "//dometer/dns/message:message",
         "//dometer/util:error",
         "//std/x:expected",
         ":event",

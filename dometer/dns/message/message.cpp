@@ -6,114 +6,113 @@
 
 #include "dometer/dns/class.hpp"
 #include "dometer/dns/opcode.hpp"
-#include "dometer/dns/packet.hpp"
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/rcode.hpp"
+#include "dometer/dns/message/message.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 #include "std/x/unique.hpp"
 
-using namespace dometer::util;
-using namespace std::x;
+namespace util = dometer::util;
 
-namespace dometer::dns {
-    Packet Packet::copyPacket(const Packet& packet) {
-        std::unique_ptr<uint8_t[]> bytes(new uint8_t[packet.size]);
-        uint8_t *bytePtr = packet;
-        size_t size = packet.size;
+namespace dometer::dns::message {
+    Message Message::copyMessage(const Message& message) {
+        std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size]);
+        uint8_t *bytePtr = message;
+        size_t size = message.size;
         std::copy(bytePtr, bytePtr + size, bytes.get());
-        return *makePacket(std::move(bytes), packet.size);
+        return *makeMessage(std::move(bytes), message.size);
     }
 
-    Packet Packet::formatError(const Packet& packet) {
-        auto reply = copyPacket(packet);
+    Message Message::formatError(const Message& message) {
+        auto reply = copyMessage(message);
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::FORMERR);
         return reply;
     }
 
-    expected<Packet, Error> Packet::makePacket(uint8_t *bytePtr, size_t size) {
+    std::x::expected<Message, util::Error> Message::makeMessage(uint8_t *bytePtr, size_t size) {
         std::unique_ptr<uint8_t[]> bytes(new uint8_t[size]);
         std::copy(bytePtr, bytePtr + size, bytes.get());
-        return makePacket(std::move(bytes), size);
+        return makeMessage(std::move(bytes), size);
     }
 
-    expected<Packet, Error> Packet::makePacket(std::unique_ptr<uint8_t[]> bytes, size_t size) {
+    std::x::expected<Message, util::Error> Message::makeMessage(std::unique_ptr<uint8_t[]> bytes, size_t size) {
         if(size < 0 || size > PACKETSZ)
-            return unexpected<Error>(Error{"Invalid packet length: " + std::to_string(size), 0});
+            return std::x::unexpected<util::Error>(util::Error{"Invalid message length: " + std::to_string(size), 0});
 
         ns_msg handle;
 
         if(ns_initparse(bytes.get(), size, &handle) < 0) {
-            return unexpected<Error>(Error({strerror(errno), errno}));
+            return std::x::unexpected<util::Error>(util::Error({strerror(errno), errno}));
         }
 
-        return Packet(std::move(bytes), handle, size);
+        return Message(std::move(bytes), handle, size);
     }
 
-    Packet Packet::notImplemented(const Packet& query) {
-        auto reply = copyPacket(query);;
+    Message Message::notImplemented(const Message& query) {
+        auto reply = copyMessage(query);;
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::NOTIMP);
         return reply;
     }
 
-    Packet Packet::serverFailure(const Packet& query) {
-        auto reply = copyPacket(query);
+    Message Message::serverFailure(const Message& query) {
+        auto reply = copyMessage(query);
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::SERVFAIL);
         return reply;
     }
 
-    Packet::Packet(const Packet& packet)
-        :   Packet(Packet::copyPacket(packet))
+    Message::Message(const Message& message)
+        :   Message(Message::copyMessage(message))
     {}
 
-    Packet::Packet(Packet&& packet)
-        :   size(packet.size),
-            bytes(std::move(packet.bytes)),
-            handle(std::move(packet.handle))
+    Message::Message(Message&& message)
+        :   size(message.size),
+            bytes(std::move(message.bytes)),
+            handle(std::move(message.handle))
     {
-        packet.handle = {0};
+        message.handle = {0};
     }
 
-    Packet::Packet(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
+    Message::Message(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
         :   size(size),
             bytes(std::move(bytes)),
             handle(handle)
     {}
 
-    Packet::~Packet() {}
+    Message::~Message() {}
 
-    bool Packet::getAA() const {
+    bool Message::getAA() const {
         return ns_msg_getflag(handle, ns_f_aa);
     }
 
-    uint16_t Packet::getId() const {
+    uint16_t Message::getId() const {
         return ns_msg_id(handle);
     }
 
-    OpCode Packet::getOpCode() const {
+    OpCode Message::getOpCode() const {
         return static_cast<OpCode>(ns_msg_getflag(handle, ns_f_opcode));
     }
 
-    uint16_t Packet::getQDCount() const {
+    uint16_t Message::getQDCount() const {
         return ns_msg_count(handle, ns_s_qd);
     }
 
-    QR Packet::getQR() const {
+    QR Message::getQR() const {
         return static_cast<QR>(ns_msg_getflag(handle, ns_f_qr));
     }
 
-    expected<Question, Error> Packet::getQuestion() const {
+    std::x::expected<Question, util::Error> Message::getQuestion() const {
         if(getQDCount() != 1)
-            return unexpected<Error>(Error{"qdcount is not equal to 1"});
+            return std::x::unexpected<util::Error>(util::Error{"qdcount is not equal to 1"});
 
         ns_rr question;
 
         ns_msg handle_ = handle;
         if(ns_parserr(&handle_, ns_s_qd, 0, &question) != 0)
-            return unexpected<Error>(Error{strerror(errno), errno});
+            return std::x::unexpected<util::Error>(util::Error{strerror(errno), errno});
 
         return Question{
             std::string(ns_rr_name(question)),
@@ -122,27 +121,27 @@ namespace dometer::dns {
         };
     }
 
-    bool Packet::getRA() const {
+    bool Message::getRA() const {
         return ns_msg_getflag(handle, ns_f_ra);
     }
 
-    uint8_t Packet::getRCode() const {
+    uint8_t Message::getRCode() const {
         return (uint8_t)ns_msg_getflag(handle, ns_f_rcode);
     }
 
-    bool Packet::getRD() const {
+    bool Message::getRD() const {
         return ns_msg_getflag(handle, ns_f_rd);
     }
 
-    bool Packet::getTC() const {
+    bool Message::getTC() const {
         return (bool)ns_msg_getflag(handle, ns_f_tc);
     }
-    void Packet::setId(uint16_t id) {
+    void Message::setId(uint16_t id) {
         bytes[0] = id >> 8;
         bytes[1] = id & 0xFF;
     }
 
-    void Packet::setQR(QR qr) {
+    void Message::setQR(QR qr) {
         // Includes "qr", "opcode", "aa" and "tc" flags
         uint8_t byte3 = bytes[2];
 
@@ -156,7 +155,7 @@ namespace dometer::dns {
         bytes[2] = byte3;
     }
 
-    void Packet::setRCode(RCode rcode) {
+    void Message::setRCode(RCode rcode) {
         // Includes "ra", "z", and "rcode" flags
         uint8_t byte4 = bytes[3];
 
@@ -165,7 +164,7 @@ namespace dometer::dns {
         bytes[3] = byte4;
     }
 
-    Packet::operator uint8_t*() const {
+    Message::operator uint8_t*() const {
         return bytes.get();
     }
 }

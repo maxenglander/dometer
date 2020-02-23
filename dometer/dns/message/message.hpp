@@ -13,19 +13,19 @@
 
 namespace util = dometer::util;
 
-namespace dometer::dns {
-    class Packet {
+namespace dometer::dns::message {
+    class Message {
         public:
-            static Packet copyPacket(const Packet& packet);
-            static Packet formatError(const Packet& query); 
-            static std::x::expected<Packet, util::Error> makePacket(uint8_t *bytePtr, size_t size);
-            static std::x::expected<Packet, util::Error> makePacket(std::unique_ptr<uint8_t[]> bytes, size_t size);
-            static Packet notImplemented(const Packet& query); 
-            static Packet serverFailure(const Packet& query); 
+            static Message copyMessage(const Message& message);
+            static Message formatError(const Message& query); 
+            static std::x::expected<Message, util::Error> makeMessage(uint8_t *bytePtr, size_t size);
+            static std::x::expected<Message, util::Error> makeMessage(std::unique_ptr<uint8_t[]> bytes, size_t size);
+            static Message notImplemented(const Message& query); 
+            static Message serverFailure(const Message& query); 
 
-            Packet(const Packet&);
-            Packet(Packet&&);
-            ~Packet();
+            Message(const Message&);
+            Message(Message&&);
+            ~Message();
 
             bool getAA() const;
             uint16_t getId() const;
@@ -44,7 +44,7 @@ namespace dometer::dns {
 
             const size_t size;
         private:
-            Packet(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
+            Message(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
 
             uint16_t getQDCount() const;
 

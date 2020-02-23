@@ -32,7 +32,7 @@ namespace dometer::dns::handler {
                     uint8_t *replyPtr, size_t replySize);
             Handler& on(dns::event::EventType, util::Callback<std::shared_ptr<dns::event::Event>>);
         private:
-            std::x::expected<dns::Packet, util::Error> handle(std::x::expected<dns::Packet, util::Error>& query);
+            std::x::expected<dns::message::Message, util::Error> handle(std::x::expected<dns::message::Message, util::Error>& query);
             void notify(std::shared_ptr<dns::event::Event>);
             const std::chrono::steady_clock clock;
             util::CallbackRegistry<dns::event::EventType, std::shared_ptr<dns::event::Event>> listeners;

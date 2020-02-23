@@ -5,7 +5,7 @@ cc_library(
         "@net_sourceforge_asio_asio//:asio",
         "//dometer/dns/handler:handler",
         "//dometer/dns/handler:resolving_handler",
-        "//dometer/dns:packet",
+        "//dometer/dns/message:message",
         "//dometer/util:error",
         "//std/x:expected",
         "//std/x:unique",

@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "asio.hpp"
-#include "dometer/dns/packet.hpp"
+#include "dometer/dns/message/message.hpp"
 #include "dometer/dns/handler/handler.hpp"
 #include "dometer/dns/server/server.hpp"
 #include "dometer/util/error.hpp"

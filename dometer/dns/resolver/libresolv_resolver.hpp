@@ -22,7 +22,7 @@ namespace dometer::dns::resolver {
         public:
             LibresolvResolver();
             LibresolvResolver(LibresolvFunction);
-            expected<dns::Packet, util::Error> resolve(const std::string&, const Class&, const Type&) const;
+            expected<dns::message::Message, util::Error> resolve(const std::string&, const Class&, const Type&) const;
         private:
             const LibresolvFunction function;
     };

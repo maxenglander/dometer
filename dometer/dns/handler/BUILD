@@ -1,7 +1,7 @@
 cc_library(
     name = "handler",
     deps = [
-        "//dometer/dns:packet",
+        "//dometer/dns/message:message",
         "//dometer/dns/event:event",
         "//dometer/dns/event:event_type",
         "//std/x:expected",
@@ -19,7 +19,7 @@ cc_library(
     hdrs = ["observing_handler.hpp"],
     srcs = ["observing_handler.cpp"],
     deps = [
-        "//dometer/dns:packet",
+        "//dometer/dns/message:message",
         "//dometer/dns/event:event",
         "//dometer/dns/event:event_type",
         "//dometer/dns/event:lookup_event",
@@ -45,7 +45,7 @@ cc_library(
     hdrs = ["resolving_handler.hpp"],
     srcs = ["resolving_handler.cpp"],
     deps = [
-        "//dometer/dns:packet",
+        "//dometer/dns/message:message",
         "//dometer/dns/event:event",
         "//dometer/dns/event:event_type",
         "//dometer/dns/event:lookup_event",

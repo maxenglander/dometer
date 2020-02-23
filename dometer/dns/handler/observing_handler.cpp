@@ -3,7 +3,7 @@
 #include <memory>
 #include <thread>
 
-#include "dometer/dns/packet.hpp"
+#include "dometer/dns/message/message.hpp"
 #include "dometer/dns/event/event_type.hpp"
 #include "dometer/dns/event/lookup_event.hpp"
 #include "dometer/dns/event/query_event.hpp"

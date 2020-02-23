@@ -15,24 +15,6 @@ cc_library(
 )
 
 cc_library(
-    name = "packet",
-    hdrs = ["packet.hpp"],
-    deps = [
-        "//dometer/util:error",
-        "//std/x:expected",
-        "//std/x:unique",
-        ":class",
-        ":opcode",
-        ":qr",
-        ":question",
-        ":rcode",
-        ":type",
-    ],
-    srcs = ["packet.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "qr",
     deps = [],
     hdrs = ["qr.hpp"],

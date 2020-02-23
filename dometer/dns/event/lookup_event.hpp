@@ -18,16 +18,16 @@ namespace dometer::dns::event {
     class LookupEvent : public Event {
         public:
             LookupEvent(
-                    const dns::Packet& query,
-                    const std::x::expected<dns::Packet, util::Error>& reply,
+                    const dns::message::Message& query,
+                    const std::x::expected<dns::message::Message, util::Error>& reply,
                     const std::chrono::microseconds duration);
             const std::chrono::microseconds getDuration() const;
-            const dns::Packet& getQuery() const;
-            const std::x::expected<dns::Packet, util::Error>& getReply() const;
+            const dns::message::Message& getQuery() const;
+            const std::x::expected<dns::message::Message, util::Error>& getReply() const;
             EventType getType() const;
         private:
-            const dns::Packet& query;
-            const std::x::expected<dns::Packet, util::Error>& reply;
+            const dns::message::Message& query;
+            const std::x::expected<dns::message::Message, util::Error>& reply;
             const std::chrono::microseconds duration;
     };
 }

@@ -1,4 +1,4 @@
-#include "dometer/dns/packet.hpp"
+#include "dometer/dns/message/message.hpp"
 #include "dometer/dns/event/event_type.hpp"
 #include "dometer/dns/event/lookup_event.hpp"
 #include "dometer/util/error.hpp"
@@ -9,8 +9,8 @@ namespace util = dometer::util;
 
 namespace dometer::dns::event {
     LookupEvent::LookupEvent(
-            const dns::Packet& query,
-            const std::x::expected<dns::Packet, util::Error>& reply,
+            const dns::message::Message& query,
+            const std::x::expected<dns::message::Message, util::Error>& reply,
             const std::chrono::microseconds duration)
         :   query(query), reply(reply), duration(duration) {}
 
@@ -18,11 +18,11 @@ namespace dometer::dns::event {
         return duration;
     }
 
-    const dns::Packet& LookupEvent::getQuery() const {
+    const dns::message::Message& LookupEvent::getQuery() const {
         return query;
     }
 
-    const std::x::expected<dns::Packet, util::Error>& LookupEvent::getReply() const {
+    const std::x::expected<dns::message::Message, util::Error>& LookupEvent::getReply() const {
         return reply;
     }
 

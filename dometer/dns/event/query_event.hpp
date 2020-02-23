@@ -15,10 +15,10 @@ namespace util = dometer::util;
 namespace dometer::dns::event {
     class QueryEvent : public Event {
         public:
-            QueryEvent(const std::x::expected<dns::Packet, util::Error>&);
-            const std::x::expected<dns::Packet, util::Error>& getQuery() const;
+            QueryEvent(const std::x::expected<dns::message::Message, util::Error>&);
+            const std::x::expected<dns::message::Message, util::Error>& getQuery() const;
             EventType getType() const;
         private:
-            const std::x::expected<dns::Packet, util::Error>& query;
+            const std::x::expected<dns::message::Message, util::Error>& query;
     };
 }

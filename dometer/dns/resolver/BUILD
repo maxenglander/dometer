@@ -21,7 +21,7 @@ cc_library(
     srcs = ["libresolv_resolver.cpp"],
     deps = [
         "//dometer/dns:class",
-        "//dometer/dns:packet",
+        "//dometer/dns/message:message",
         "//dometer/dns:type",
         "//dometer/util:error",
         "//std/x:expected",
@@ -47,8 +47,8 @@ cc_library(
     hdrs = ["resolver.hpp"],
     deps = [
         "//dometer/dns:class",
-        "//dometer/dns:packet",
         "//dometer/dns:type",
+        "//dometer/dns/message:message",
         "//dometer/util:error",
         "//std/x:expected",
     ],

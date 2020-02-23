@@ -16,13 +16,13 @@ namespace dometer::dns::event {
     class ReplyEvent : public Event {
         public:
             ReplyEvent(
-                    const std::x::expected<dns::Packet, util::Error>& query,
-                    const std::x::expected<dns::Packet, util::Error>& reply);
-            const std::x::expected<dns::Packet, util::Error>& getQuery() const;
-            const std::x::expected<dns::Packet, util::Error>& getReply() const;
+                    const std::x::expected<dns::message::Message, util::Error>& query,
+                    const std::x::expected<dns::message::Message, util::Error>& reply);
+            const std::x::expected<dns::message::Message, util::Error>& getQuery() const;
+            const std::x::expected<dns::message::Message, util::Error>& getReply() const;
             EventType getType() const;
         private:
-            const std::x::expected<dns::Packet, util::Error>& query;
-            const std::x::expected<dns::Packet, util::Error>& reply;
+            const std::x::expected<dns::message::Message, util::Error>& query;
+            const std::x::expected<dns::message::Message, util::Error>& reply;
     };
 }
