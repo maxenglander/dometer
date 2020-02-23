@@ -4,6 +4,7 @@
 #include <thread>
 
 #include "dometer/dns/message/message.hpp"
+#include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/dns/event/event.hpp"
 #include "dometer/dns/event/event_type.hpp"
@@ -39,7 +40,7 @@ namespace dometer::dns::handler {
     std::x::expected<size_t, util::Error> ResolvingHandler::handle(
             uint8_t *queryPtr, size_t querySize,
             uint8_t *replyPtr, size_t replySize) {
-        auto query = dns::message::Message::makeMessage(queryPtr, querySize);
+        auto query = dns::message::MessageFactory::makeMessage(queryPtr, querySize);
         notify(std::make_shared<dns::event::QueryEvent>(query));
 
         auto reply = handle(query);
@@ -58,12 +59,12 @@ namespace dometer::dns::handler {
         if(!query) {
             return std::x::unexpected<util::Error>(query.error());
         } else if(query->getOpCode() != dns::OpCode::QUERY) {
-            return dns::message::Message::notImplemented(*query);
+            return dns::message::MessageFactory::notImplemented(*query);
         }
 
         auto question = query->getQuestion();
         if(!question) {
-            return dns::message::Message::formatError(*query);
+            return dns::message::MessageFactory::formatError(*query);
         }
 
         auto start = clock.now();

@@ -17,56 +17,8 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    Message Message::copyMessage(const Message& message) {
-        std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size()]);
-        uint8_t *bytePtr = message;
-        size_t size = message.size();
-        std::copy(bytePtr, bytePtr + size, bytes.get());
-        return *makeMessage(std::move(bytes), size);
-    }
-
-    Message Message::formatError(const Message& message) {
-        auto reply = copyMessage(message);
-        reply.setQR(QR::REPLY);
-        reply.setRCode(RCode::FORMERR);
-        return reply;
-    }
-
-    std::x::expected<Message, util::Error> Message::makeMessage(uint8_t *bytePtr, size_t size) {
-        std::unique_ptr<uint8_t[]> bytes(new uint8_t[size]);
-        std::copy(bytePtr, bytePtr + size, bytes.get());
-        return makeMessage(std::move(bytes), size);
-    }
-
-    std::x::expected<Message, util::Error> Message::makeMessage(std::unique_ptr<uint8_t[]> bytes, size_t size) {
-        if(size < 0 || size > PACKETSZ)
-            return std::x::unexpected<util::Error>(util::Error{"Invalid message length: " + std::to_string(size), 0});
-
-        ns_msg handle;
-
-        if(ns_initparse(bytes.get(), size, &handle) < 0) {
-            return std::x::unexpected<util::Error>(util::Error({strerror(errno), errno}));
-        }
-
-        return Message(std::move(bytes), handle, size);
-    }
-
-    Message Message::notImplemented(const Message& query) {
-        auto reply = copyMessage(query);;
-        reply.setQR(QR::REPLY);
-        reply.setRCode(RCode::NOTIMP);
-        return reply;
-    }
-
-    Message Message::serverFailure(const Message& query) {
-        auto reply = copyMessage(query);
-        reply.setQR(QR::REPLY);
-        reply.setRCode(RCode::SERVFAIL);
-        return reply;
-    }
-
     Message::Message(const Message& message)
-        :   Message(Message::copyMessage(message))
+        :   Message(message.bytes.get(), message.size())
     {}
 
     Message::Message(Message&& message)
@@ -89,7 +41,7 @@ namespace dometer::dns::message {
         if(size < 0 || size > PACKETSZ)
             throw new std::runtime_error("Invalid message length (" + std::to_string(size) + ")");
 
-        if(ns_initparse(bytes.get(), this->size(), &handle) < 0)
+        if(ns_initparse(this->bytes.get(), this->size(), &handle) < 0)
             throw new std::runtime_error("Failed to parse bytes into DNS message [" + std::string(strerror(errno)) + "]");
     }
 

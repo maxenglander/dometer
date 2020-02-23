@@ -1,4 +1,5 @@
 #include <arpa/nameser.h>
+#include <exception>
 #include <memory>
 #include <stdint.h>
 #include <string.h>
@@ -18,11 +19,11 @@ namespace util = dometer::util;
 
 namespace dometer::dns::message {
     Message MessageFactory::copyMessage(const Message& message) {
-        std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size]);
+        std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size()]);
         uint8_t *bytePtr = message;
-        size_t size = message.size;
+        size_t size = message.size();
         std::copy(bytePtr, bytePtr + size, bytes.get());
-        return *makeMessage(std::move(bytes), message.size);
+        return *makeMessage(std::move(bytes), message.size());
     }
 
     Message MessageFactory::formatError(const Message& message) {
@@ -39,16 +40,11 @@ namespace dometer::dns::message {
     }
 
     std::x::expected<Message, util::Error> MessageFactory::makeMessage(std::unique_ptr<uint8_t[]> bytes, size_t size) {
-        if(size < 0 || size > PACKETSZ)
-            return std::x::unexpected<util::Error>(util::Error{"Invalid message length: " + std::to_string(size), 0});
-
-        ns_msg handle;
-
-        if(ns_initparse(bytes.get(), size, &handle) < 0) {
-            return std::x::unexpected<util::Error>(util::Error({strerror(errno), errno}));
+        try {
+            return Message(std::move(bytes), size);
+        } catch(std::runtime_error& e) {
+            return std::x::unexpected<util::Error>(util::Error{e.what(), 0});
         }
-
-        return Message(std::move(bytes), handle, size);
     }
 
     Message MessageFactory::notImplemented(const Message& query) {

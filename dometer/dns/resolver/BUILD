@@ -22,6 +22,7 @@ cc_library(
     deps = [
         "//dometer/dns:class",
         "//dometer/dns/message:message",
+        "//dometer/dns/message:message_factory",
         "//dometer/dns:type",
         "//dometer/util:error",
         "//std/x:expected",

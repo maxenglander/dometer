@@ -7,10 +7,10 @@ TODO
  - [x] move prometheus extensions to prometheus/x
  - [x] support c++11
  - [x] move dns/packet.{c,h}pp to dns/packet/
+ - [x] extract dns/packet::make\* methods to separate class
  - [ ] improve cli error messages (cli options)
  - [ ] improve cli error messages (schema validation)
  - [ ] add rcode to dns metrics
- - [ ] extract dns/packet::make\* methods to separate class
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] switch summary to histogram
  - [ ] write tests

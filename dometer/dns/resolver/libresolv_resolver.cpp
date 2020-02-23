@@ -10,10 +10,11 @@
 #include <string>
 
 #include "dometer/dns/message/message.hpp"
+#include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/resolver/libresolv_function.hpp"
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
-#include "std/x/expected.hpp"
 #include "dometer/util/error.hpp"
+#include "std/x/expected.hpp"
 
 namespace Dns = dometer::dns;
 namespace util = dometer::util;
@@ -43,13 +44,13 @@ namespace dometer::dns::resolver {
 
             // Nasty hack because res_* hides the length of messages from us
             for(int i = 0; i <= PACKETSZ; i++) {
-                auto reply = dns::message::Message::makeMessage(buffer, i);
+                auto reply = dns::message::MessageFactory::makeMessage(buffer, i);
                 if(reply) return reply;
             }
 
             return unexpected<util::Error>(util::Error{hstrerror(savedherrno), savedherrno});
         }
 
-        return dns::message::Message::makeMessage(buffer, length);
+        return dns::message::MessageFactory::makeMessage(buffer, length);
     }
 }

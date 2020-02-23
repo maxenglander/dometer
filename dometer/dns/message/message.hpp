@@ -16,13 +16,6 @@ namespace util = dometer::util;
 namespace dometer::dns::message {
     class Message {
         public:
-            static Message copyMessage(const Message& message);
-            static Message formatError(const Message& query); 
-            static std::x::expected<Message, util::Error> makeMessage(uint8_t *bytePtr, size_t size);
-            static std::x::expected<Message, util::Error> makeMessage(std::unique_ptr<uint8_t[]> bytes, size_t size);
-            static Message notImplemented(const Message& query); 
-            static Message serverFailure(const Message& query); 
-
             Message(const Message&);
             Message(Message&&);
             ~Message();
@@ -53,5 +46,7 @@ namespace dometer::dns::message {
             std::unique_ptr<uint8_t[]> bytes;
             size_t size_;
             ns_msg handle;
+
+            friend class MessageFactory;
     };
 }
