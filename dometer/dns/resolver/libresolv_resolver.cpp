@@ -48,7 +48,7 @@ namespace dometer::dns::resolver {
                 if(reply) return reply;
             }
 
-            return unexpected<util::Error>(util::Error{hstrerror(savedherrno), savedherrno});
+            return unexpected<util::Error>(util::Error(hstrerror(savedherrno), savedherrno));
         }
 
         return dns::message::MessageFactory::makeMessage(buffer, length);

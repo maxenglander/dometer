@@ -27,9 +27,9 @@ namespace dometer::config {
     expected<Config, util::Error> ConfigParser::fromFile(std::string file) {
         std::ifstream ifs(file.c_str());
         if(!ifs.good()) {
-            return std::x::unexpected<util::Error>(util::Error{
+            return std::x::unexpected<util::Error>(util::Error(
                 "File does not exist or cannot be read."
-            });
+            ));
         }
 
         std::stringstream sstr;

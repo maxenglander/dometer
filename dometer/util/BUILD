@@ -22,6 +22,10 @@ cc_library(
 cc_library(
     name = "error",
     hdrs = ["error.hpp"],
+    srcs = ["error.cpp"],
+    deps = [
+        "//std/x:optional",
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -37,6 +41,13 @@ cc_library(
         "lru_map.hpp",
         "lru_map.ipp",
     ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "string_helper",
+    hdrs = ["string_helper.hpp"],
+    srcs = ["string_helper.cpp"],
     visibility = ["//visibility:public"],
 )
 

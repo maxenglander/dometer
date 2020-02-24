@@ -24,7 +24,6 @@ namespace dometer::metrics::handler {
                 std::vector<std::shared_ptr<prometheus::x::Transport>> transports)
         :   metricCache(maxTimeSeries), registry(registry), transports(transports)
     {
-        std::cout << "constructing prometheus handler" << std::endl;
         metricCache.onEvict([this](prometheus::x::AnyMetricPtr anyMetricPtr,
                                    prometheus::x::FamilyNameAndTimeSeriesCount meta) {
             CacheEvictor evictFromCache(metricFamilies, meta);
@@ -38,6 +37,5 @@ namespace dometer::metrics::handler {
           registry(handler.registry),
           transports(handler.transports)
     {
-        std::cout << "copying prometheus handler" << std::endl;
     }
 }

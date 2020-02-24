@@ -62,11 +62,9 @@ namespace dometer::metrics::handler {
             return familyRef;
         }
 
-        std::cout << "failed to get prometheus family" << std::endl;
-
-        return std::x::unexpected<util::Error>(util::Error{
+        return std::x::unexpected<util::Error>(util::Error(
             "A metric with this name, but a different type, already exists", 0
-        });
+        ));
     }
 
     template<typename... L>

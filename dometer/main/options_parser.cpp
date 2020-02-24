@@ -42,13 +42,13 @@ namespace dometer::main {
                     break;
                 case '?': // Missing or ambiguous argument
                     if(optopt == 'c') {
-                        return std::x::unexpected<util::Error>(util::Error{
+                        return std::x::unexpected<util::Error>(util::Error(
                             "A specifed option (--config) was provided without a required argument (path)."
-                        });
+                        ));
                     } else {
-                        return std::x::unexpected<util::Error>(util::Error{
+                        return std::x::unexpected<util::Error>(util::Error(
                             "A provided option is not recognized (" + std::string(argv[optind - 1]) + ")."
-                        });
+                        ));
                     }
                 default:
                     options.config = "";

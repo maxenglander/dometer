@@ -43,8 +43,8 @@ namespace dometer::dns::message {
         try {
             return Message(std::move(bytes), size);
         } catch(std::runtime_error& e) {
-            return std::x::unexpected<util::Error>(util::Error{e.what(), 0});
-        }
+            return std::x::unexpected<util::Error>(util::Error(e.what(), 0));
+        } 
     }
 
     Message MessageFactory::notImplemented(const Message& query) {
