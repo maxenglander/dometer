@@ -12,7 +12,9 @@ TODO
  - [x] improve cli error messages (cli options)
  - [x] improve cli error messages (schema validation)
  - [x] catch prometheus transport exceptions (CivetException)
- - [ ] nest errors for rich error context
+ - [x] nest errors for rich error context in metrics/\*
+ - [ ] move config/server/factory to dns/server 
+ - [ ] create rich error context in dns/{handler,message,server,resolver}
  - [ ] add rcode to dns metrics
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] switch summary to histogram

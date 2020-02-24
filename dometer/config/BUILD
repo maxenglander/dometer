@@ -52,6 +52,7 @@ cc_library(
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "@com_github_tristanpenman_valijson//:valijson",
         "//dometer/util:error",
+        "//dometer/util:string_helper",
         "//std/x:expected",
         "//std/x:unique",
     ],

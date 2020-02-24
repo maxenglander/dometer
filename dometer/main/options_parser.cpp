@@ -43,7 +43,11 @@ namespace dometer::main {
                 case '?': // Missing or ambiguous argument
                     if(optopt == 'c') {
                         return std::x::unexpected<util::Error>(util::Error(
-                            "A specifed option (--config) was provided without a required argument (path)."
+                            "A specifed option was provided without a required argument.",
+                            std::vector<std::string>{
+                              "Specified option: --config",
+                              "Required argument: <path>"
+                            }
                         ));
                     } else {
                         return std::x::unexpected<util::Error>(util::Error(

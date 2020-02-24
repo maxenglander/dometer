@@ -13,6 +13,9 @@
 #include "dometer/main/options_parser.hpp"
 #include "dometer/metrics/observer.hpp"
 #include "dometer/metrics/observer_factory.hpp"
+#include "dometer/util/error.hpp"
+#include "dometer/util/error_encoder.hpp"
+#include "dometer/util/human_error_encoder.hpp"
 
 namespace config = dometer::config;
 namespace dns = dometer::dns;
@@ -20,32 +23,15 @@ namespace metrics = dometer::metrics;
 using namespace std::x;
 
 namespace dometer::main {
-    void printError(std::string message, std::string details) {
-        std::cerr << message << " [";
-        auto multiline =  details.find('\n', 0) != std::string::npos;
-        if(!multiline) {
-            std::cerr << details;
-        } else {
-            if(details.front() != '\n')
-                std::cerr << std::endl;
-            size_t pos;
-            std::string token;
-            while((pos = details.find('\n')) != std::string::npos) {
-                token = details.substr(0, pos);
-                std::cerr << "  " << token << std::endl;
-                details.erase(0, pos + 1);
-            }
-            std::cerr << "  " << details;
-            if(details.back() != '\n')
-                std::cerr << std::endl;
-        }
-        std::cerr << "]." << std::endl;
-    }
-
     int main(int argc, char **argv) {
+        util::HumanErrorEncoder errorEncoder;
+
         auto options = dometer::main::OptionsParser::parse(argc, argv);
         if(!options) {
-            printError("Invalid command line options", options.error().message);
+            std::cerr << errorEncoder.encode(util::Error(
+                "Failed to parse command line options.",
+                options.error()
+            ));
             return 1;
         } else if (options->help) {
             Help::printHelp();
@@ -58,14 +44,21 @@ namespace dometer::main {
         auto parser = config::ConfigParser();
         auto parseResults = parser.fromFile(options->config.value());
         if(!parseResults) {
-            printError("Failed to load config (path: " + options->config.value() + ")", parseResults.error().message); 
+            std::cerr << errorEncoder.encode(util::Error(
+                "Failed to load configuration.",
+                std::vector<std::string>{"Config file path: " + options->config.value()},
+                parseResults.error()
+            ));
             return 1;
         }
         auto config = *parseResults;
 
         auto observerResult = metrics::ObserverFactory::makeObserver(config.metrics);
         if(!observerResult) {
-            printError("Failed to create metrics observer", observerResult.error().message);
+            std::cerr << errorEncoder.encode(util::Error(
+                "Failed to create metrics observer.",
+                observerResult.error())
+            );
             return 1;
         }
         auto observer = *observerResult;
@@ -76,7 +69,10 @@ namespace dometer::main {
         dns::server::Server server(observingHandler);
         auto serveResult = server.serve(config.dns.server.transport.bindAddress);
         if(!serveResult) {
-            printError("Failed to start DNS server", serveResult.error().message);
+            std::cerr << errorEncoder.encode(util::Error(
+                "Failed to start DNS server",
+                serveResult.error()
+            ));
             return 1;
         }
 

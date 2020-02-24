@@ -5,17 +5,57 @@ Need to support externally size-calculation methods.
 - Can create a protected size() method which subclasses can override
 
 Error
-=====
+======
 
-Error
------
-.. Message: ...
-.. Details:
-.. - ...
-.. - ...
-.. Cause:
-.... Message: ...
+[Message].
+  Code: [Code]
+  Details:
+  - [0].
+  - [1].
+  Cause:
+    [Message].
+    Code: [Code]
     Details:
-    - ...
-    - ...
-    Cause:
+     - [0].
+     - [1].
+    Cause: [Message] ([Code]).
+
+Error: Something is not write.
+Code: 404
+Details:
+ - My name is bob.
+ - Your name is bob.
+Cause:
+  Error: Something is brab.
+  Code: 102
+  Details:
+  - Bebop bobob.
+  - Bimbip mimdib
+    
+
+
+f.startError()          Error:\n         {"error":{
+f.writeMessage()         [message]       "message":"[message]"
+f.writeCode()            ([code])        ,"code":"[code]"  
+
+print(Error)            [message] ([code]).
+                        Details:
+                          - [0].
+                          - [1].
+                        Cause:
+                          [message] (code).
+                          Details:
+                            - [0].
+                            - [1].
+
+
+Formatter(order=[message, code, details, cause])
+  - endCause
+  - endDetails
+  - endError
+  - startCause
+  - startError
+  - startDetails
+  - writeCode
+  - writeDetail
+  - writeMessage

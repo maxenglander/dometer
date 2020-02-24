@@ -7,6 +7,7 @@
 #include "dometer/config/schema.hpp"
 #include "dometer/config/schema_validator.hpp"
 #include "dometer/util/error.hpp"
+#include "dometer/util/string_helper.hpp"
 #include "json/json.h"
 #include "std/x/expected.hpp"
 #include "std/x/unique.hpp"
@@ -23,13 +24,9 @@ namespace dometer::config {
     SchemaValidator::SchemaValidator(valijson::Validator validator) : validator(validator) {}
 
     util::Error SchemaValidator::makeError(valijson::ValidationResults validationResults) {
-        std::string message;
-
-        unsigned int errorIndex = validationResults.numErrors() - 1;
-        std::deque<valijson::ValidationResults::Error>::const_iterator errorIt = validationResults.begin();
-
-        for(; errorIt != validationResults.end(); errorIt++) {
-            valijson::ValidationResults::Error error = *errorIt;
+        std::vector<std::string> details;
+        for(auto it = validationResults.begin(); it != validationResults.end(); it++) {
+            valijson::ValidationResults::Error error = *it;
 
             std::string context;
             std::vector<std::string>::iterator contextIt = error.context.begin();
@@ -37,15 +34,10 @@ namespace dometer::config {
                 context += *contextIt;
             }
 
-            if(errorIndex < validationResults.numErrors() - 1) {
-                message = "\n" + message;
-            }
-            message = context + ": " + error.description
-                         + message;
-            errorIndex--;
+            details.insert(details.begin(), context + ": " + error.description);
         }
 
-        return util::Error(message);
+        return util::Error("Failed to validate configuration against schema.", details);
     }
 
     std::unique_ptr<valijson::Schema> SchemaValidator::getSchema() {
@@ -85,8 +77,8 @@ namespace dometer::config {
 
         if(!reader->parse(&input[0], &input[input.size() - 1], &(*root), &errs)) {
             return std::x::unexpected<util::Error>(util::Error(
-                "Failed to parse JSON: " + errs,
-                0
+                "Failed to parse JSON.",
+                util::StringHelper::split('\n', errs)
             ));
         }
 

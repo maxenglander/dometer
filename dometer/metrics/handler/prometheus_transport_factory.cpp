@@ -1,4 +1,5 @@
 #include <memory>
+#include <vector>
 
 #include "dometer/metrics/handler/prometheus_pull_transport_options.hpp"
 #include "dometer/metrics/handler/prometheus_transport_factory.hpp"
@@ -26,7 +27,8 @@ namespace dometer::metrics::handler {
             ), options);
         } catch(std::exception& e) {
             return std::x::unexpected<util::Error>(util::Error(
-                "Failed to construct Prometheus pull transport [" + std::string(e.what()) + "]."
+                "Failed to construct Prometheus pull transport.",
+                std::vector<std::string>{ std::string(e.what()) }
             ));
         }
     }

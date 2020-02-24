@@ -23,8 +23,14 @@ cc_library(
     name = "error",
     hdrs = ["error.hpp"],
     srcs = ["error.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "error_encoder",
+    hdrs = ["error_encoder.hpp"],
     deps = [
-        "//std/x:optional",
+        ":error",
     ],
     visibility = ["//visibility:public"],
 )
@@ -32,6 +38,17 @@ cc_library(
 cc_library(
     name = "enum_hasher",
     hdrs = ["enum_hasher.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "human_error_encoder",
+    hdrs = ["human_error_encoder.hpp"],
+    srcs = ["human_error_encoder.cpp"],
+    deps = [
+        ":error",
+        ":error_encoder",
+    ],
     visibility = ["//visibility:public"],
 )
 

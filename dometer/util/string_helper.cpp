@@ -10,11 +10,13 @@ namespace dometer::util {
         std::size_t current, previous = 0;
         current = string.find(delimiter);
         while(current != std::string::npos) {
-            results.push_back(string.substr(previous, current - previous));
+            std::string substr = string.substr(previous, current - previous);
+            if(substr != "") results.push_back(substr);
             previous = current + 1;
-            current = string.find(delimiter);
+            current = string.find(delimiter, previous);
         }
-        results.push_back(string.substr(previous, current - previous));
+        std::string substr = string.substr(previous, current - previous);
+        if(substr != "") results.push_back(substr);
         return results;
     }
 }

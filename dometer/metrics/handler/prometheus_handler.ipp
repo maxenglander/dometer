@@ -31,7 +31,6 @@ namespace dometer::metrics::handler {
         using MetricType = typename std::decay<decltype(*metricPtr)>::type;
         if(auto familyPtr = get_if<prometheus::x::FamilyRef<MetricType>>(&anyFamilyRef)) {
             prometheus::Family<MetricType>& family = *familyPtr;
-            std::cout << "evicing a metric" << std::endl;
             family.Remove(metricPtr);
         }
     }
@@ -44,14 +43,10 @@ namespace dometer::metrics::handler {
     template<typename T, typename BuilderFn>
     std::x::expected<prometheus::x::FamilyRef<T>, util::Error> PrometheusHandler::getOrBuildMetricFamily(
             std::string name, std::string description, BuilderFn newBuilder) {
-        std::cout << "number of metric families: " << metricFamilies.size() << std::endl;
-        std::cout << "looking for metric family named " << name << std::endl;
         auto search = metricFamilies.find(name);
         if(search == metricFamilies.end()) {
-            std::cout << "did not find metric family named " << name << std::endl;
             const prometheus::x::FamilyRef<T> familyRef
                 = std::ref(newBuilder().Name(name).Help(description).Register(*registry));
-            std::cout << "inserting metric family named " << name << " into metric families" << std::endl;
             metricFamilies.insert({name, prometheus::x::AnyFamilyRef(familyRef)});
             search = metricFamilies.find(name);
         }

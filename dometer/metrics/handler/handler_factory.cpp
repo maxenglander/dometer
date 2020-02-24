@@ -19,7 +19,10 @@ namespace dometer::metrics::handler {
         if(concreteHandler) {
             return Handler(*concreteHandler);
         } else {
-            return std::x::unexpected<util::Error>(concreteHandler.error());
+            return std::x::unexpected<util::Error>(util::Error(
+                "Failed to create prometheus metrics handler.",
+                concreteHandler.error()
+            ));
         }
     }
 }
