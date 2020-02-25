@@ -16,7 +16,7 @@ TODO
  - [x] move config/server/server to dns/server/options
  - [x] move config/config.hpp to app/options.hpp
  - [x] create rich error context in dns/{handler,message,server,resolver}
- - [ ] rename dometer/main to dometer/cli
+ - [x] rename dometer/main to dometer/cli
  - [ ] add rcode to dns metrics
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] switch summary to histogram

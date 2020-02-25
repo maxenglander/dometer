@@ -2,14 +2,14 @@
 #include <iostream>
 #include <string>
 
-#include "dometer/main/options.hpp"
-#include "dometer/main/options_parser.hpp"
+#include "dometer/cli/options.hpp"
+#include "dometer/cli/options_parser.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 
 namespace util = dometer::util;
 
-namespace dometer::main {
+namespace dometer::cli {
     std::x::expected<Options, util::Error> OptionsParser::parse(int argc, char** argv) {
         const option longOptions[] = {
             {"config", required_argument, nullptr, 'c'},

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <ostream>
 
-#include "dometer/main/help.hpp"
+#include "dometer/cli/help.hpp"
 
-namespace dometer::main {
+namespace dometer::cli {
     void Help::printHelp() {
         printHelp(std::cerr);
     }

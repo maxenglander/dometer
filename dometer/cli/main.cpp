@@ -8,9 +8,9 @@
 #include "dometer/dns/handler/observing_handler.hpp"
 #include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/dns/server/server.hpp"
-#include "dometer/main/help.hpp"
-#include "dometer/main/options.hpp"
-#include "dometer/main/options_parser.hpp"
+#include "dometer/cli/help.hpp"
+#include "dometer/cli/options.hpp"
+#include "dometer/cli/options_parser.hpp"
 #include "dometer/metrics/observer.hpp"
 #include "dometer/metrics/handler/handler_factory.hpp"
 #include "dometer/util/error.hpp"
@@ -22,11 +22,11 @@ namespace dns = dometer::dns;
 namespace metrics = dometer::metrics;
 using namespace std::x;
 
-namespace dometer::main {
+namespace dometer::cli {
     int main(int argc, char **argv) {
         util::HumanErrorEncoder errorEncoder;
 
-        auto cliOptions = dometer::main::OptionsParser::parse(argc, argv);
+        auto cliOptions = dometer::cli::OptionsParser::parse(argc, argv);
         if(!cliOptions) {
             std::cerr << errorEncoder.encode(util::Error(
                 "Failed to parse command line options.",
@@ -81,5 +81,5 @@ namespace dometer::main {
 }
 
 int main(int argc, char **argv) {
-    return dometer::main::main(argc, argv);
+    return dometer::cli::main(argc, argv);
 }

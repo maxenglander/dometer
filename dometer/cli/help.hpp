@@ -2,7 +2,7 @@
 
 #include <ostream>
 
-namespace dometer::main {
+namespace dometer::cli {
     class Help {
         public:
             static void printHelp();

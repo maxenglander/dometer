@@ -4,7 +4,7 @@
 
 #include "std/x/optional.hpp"
 
-namespace dometer::main {
+namespace dometer::cli {
     struct Options {
         std::x::optional<std::string> config;
         bool help;
