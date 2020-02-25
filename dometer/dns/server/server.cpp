@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 #include "asio.hpp"
 #include "dometer/dns/message/message.hpp"
@@ -33,16 +34,16 @@ namespace dometer::dns::server {
 
         if(error) {
             return std::x::unexpected<util::Error>(util::Error(
-                "Failed to open socket [" + error.message() + "].",
-                error.value()
+                "Failed to open socket.",
+                util::Error(error.message(), error.value())
             ));
         }
 
         socket->bind(endpoint, error);
         if(error) {
             return std::x::unexpected<util::Error>(util::Error(
-                "Failed to bind socket [" + error.message() + "].",
-                error.value()
+                "Failed to bind socket.",
+                util::Error(error.message(), error.value())
             ));
         }
 
@@ -53,7 +54,8 @@ namespace dometer::dns::server {
         size_t separator = bindAddress.find_last_of(':');
         if(separator == std::string::npos) {
             return std::x::unexpected<util::Error>(util::Error(
-                "Expected to find a ':' character in bind address (" + bindAddress + ")."
+                "Expected to find a ':' character in bind address.",
+                std::vector<std::string>({"Bind address: " + bindAddress})
             ));
         }
 
@@ -70,8 +72,12 @@ namespace dometer::dns::server {
             port = std::stoi(portString);
         } catch(std::exception& e) {
             return std::x::unexpected<util::Error>(util::Error(
-                  "Failed to extract or parse port number (" + portString + ")"
-                + " from bindAddress (" + bindAddress + ") [" + e.what() + "]."
+                "Could not convert port portion of bind address to integer.",
+                std::vector<std::string>({
+                    "Bind address: " + bindAddress,
+                    "Port portion: " + portString
+                }),
+                util::Error(e.what())
             ));
         }
 
@@ -109,8 +115,11 @@ namespace dometer::dns::server {
         asio::ip::address address_ = asio::ip::make_address(address, error);
         if(error) {
             return std::x::unexpected<util::Error>(util::Error(
-              "Failed to construct an IP address from (" + address + ") [" + error.message() + "].",
-              error.value()
+              "Failed to parse IP address from address.",
+              std::vector<std::string>({
+                  "Address: " + address,
+              }),
+              util::Error(error.message(), error.value())
           ));
         }
 
@@ -122,7 +131,10 @@ namespace dometer::dns::server {
     std::x::expected<void, util::Error> Server::serve(ip::udp::endpoint endpoint) {
         std::x::expected<void, util::Error> result = openAndBindSocket(endpoint);
         if(!result) {
-            return std::x::unexpected<util::Error>(result.error());
+            return std::x::unexpected<util::Error>(util::Error(
+                "Failed to open and bind socket.",
+                result.error()
+            ));
         }
 
         listen();

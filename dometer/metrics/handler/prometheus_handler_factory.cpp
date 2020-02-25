@@ -36,7 +36,7 @@ namespace dometer::metrics::handler {
                 transports.push_back(transport);
             } else {
                 return std::x::unexpected<util::Error>(util::Error(
-                    "Failed to create Prometheus transport.",
+                    "Failed to create prometheus transport.",
                     transportResult.error()
                 ));
             }

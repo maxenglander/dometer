@@ -75,14 +75,17 @@ namespace dometer::dns::message {
 
     std::x::expected<Question, util::Error> Message::getQuestion() const {
         if(getQDCount() != 1)
-            return std::x::unexpected<util::Error>(util::Error("qdcount is not equal to 1"));
+            return std::x::unexpected<util::Error>(util::Error("Message qd count is not equal to 1."));
 
         ns_rr question;
 
         ns_msg handle_ = handle;
-        if(ns_parserr(&handle_, ns_s_qd, 0, &question) != 0)
-            return std::x::unexpected<util::Error>(util::Error(strerror(errno), errno));
-
+        if(ns_parserr(&handle_, ns_s_qd, 0, &question) != 0) {
+            return std::x::unexpected<util::Error>(util::Error(
+                "Failed to parse DNS question record.",
+                util::Error(strerror(errno), errno)
+            ));
+        }
         return Question{
             std::string(ns_rr_name(question)),
             Type(ns_rr_type(question)),

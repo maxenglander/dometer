@@ -51,13 +51,19 @@ namespace dometer::dns::handler {
             std::copy(replyPtrIn, *reply + reply->size(), replyPtr);
             return reply->size();
         } else {
-            return std::x::unexpected<util::Error>(reply.error());
+            return std::x::unexpected<util::Error>(util::Error(
+                "Failed to obtain a reply for the query.",
+                reply.error()
+            ));
         }
     }
 
     std::x::expected<dns::message::Message, util::Error> ResolvingHandler::handle(std::x::expected<dns::message::Message, util::Error> &query) {
         if(!query) {
-            return std::x::unexpected<util::Error>(query.error());
+            return std::x::unexpected<util::Error>(util::Error(
+                "The query is not valid.",
+                query.error()
+            ));
         } else if(query->getOpCode() != dns::OpCode::QUERY) {
             return dns::message::MessageFactory::notImplemented(*query);
         }

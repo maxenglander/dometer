@@ -90,14 +90,20 @@ namespace dometer::config {
 
         auto parseResult = parse(input);
         if(!parseResult) {
-            return std::x::unexpected<util::Error>(parseResult.error());
+            return std::x::unexpected<util::Error>(util::Error(
+                "Failed to parse JSON.",
+                parseResult.error()
+            ));
         }
 
         std::unique_ptr<Json::Value> root = std::move(*parseResult);
 
         auto validationResult = validate(*(schema.get()), *(root.get()));
         if(!validationResult) {
-            return std::x::unexpected<util::Error>(validationResult.error());
+            return std::x::unexpected<util::Error>(util::Error(
+                "Failed to validate JSON.",
+                validationResult.error()
+            ));
         }
 
         return std::move(root);

@@ -13,11 +13,14 @@ TODO
  - [x] improve cli error messages (schema validation)
  - [x] catch prometheus transport exceptions (CivetException)
  - [x] nest errors for rich error context in metrics/\*
- - [ ] move config/server/factory to dns/server 
- - [ ] create rich error context in dns/{handler,message,server,resolver}
+ - [x] move config/server/server to dns/server/options
+ - [x] move config/config.hpp to app/options.hpp
+ - [x] create rich error context in dns/{handler,message,server,resolver}
+ - [ ] rename dometer/main to dometer/cli
  - [ ] add rcode to dns metrics
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] switch summary to histogram
+ - [ ] add logging
  - [ ] write tests
  - [ ] write documentation
  - [ ] replace #include statements with forward declarations

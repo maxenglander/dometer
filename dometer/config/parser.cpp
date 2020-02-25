@@ -38,7 +38,10 @@ namespace dometer::config {
     expected<app::Options, util::Error> Parser::fromJson(std::string json) {
         auto validation = schemaValidator.validate(json);
         if(!validation) {
-            return unexpected<util::Error>(validation.error());
+            return unexpected<util::Error>(util::Error(
+                "Failed to parse config from JSON.",
+                validation.error()
+            ));
         } else {
             Json::Value* jsonValue = (*validation).release();
             return internalParser.fromJson(*jsonValue);
