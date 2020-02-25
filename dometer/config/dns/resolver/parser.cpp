@@ -2,18 +2,18 @@
 #include <string>
 
 #include "dometer/config/dns/resolver/libresolv_parser.hpp"
-#include "dometer/config/dns/resolver/resolver_parser.hpp"
+#include "dometer/config/dns/resolver/parser.hpp"
 #include "dometer/dns/resolver/options.hpp"
 #include "std/x/optional.hpp"
 #include "json/json.h"
 
 namespace dometer::config::dns::resolver {
-    ResolverParser::ResolverParser() : ResolverParser::ResolverParser(LibresolvParser()) {}
+    Parser::Parser() : Parser::Parser(LibresolvParser()) {}
 
-    ResolverParser::ResolverParser(LibresolvParser libresolvParser)
+    Parser::Parser(LibresolvParser libresolvParser)
         : libresolvParser(libresolvParser) {}
 
-    dometer::dns::resolver::Options ResolverParser::fromJson(const Json::Value& jsonValue) const {
+    dometer::dns::resolver::Options Parser::fromJson(const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("type"));
         assert(jsonValue["type"].isString());
         std::string type = jsonValue["type"].asString();

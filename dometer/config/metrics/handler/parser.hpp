@@ -5,10 +5,10 @@
 #include "json/json.h"
 
 namespace dometer::config::metrics::handler {
-    class HandlerParser {
+    class Parser {
         public:
-            HandlerParser();
-            HandlerParser(dometer::config::metrics::handler::PrometheusHandlerParser);
+            Parser();
+            Parser(dometer::config::metrics::handler::PrometheusHandlerParser);
             dometer::metrics::handler::Options fromJson(const Json::Value& jsonValue) const;
         private:
             dometer::config::metrics::handler::PrometheusHandlerParser prometheusParser;

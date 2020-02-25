@@ -1,7 +1,7 @@
 cc_library(
-    name = "handler_parser",
-    hdrs = ["handler_parser.hpp"],
-    srcs = ["handler_parser.cpp"],
+    name = "parser",
+    hdrs = ["parser.hpp"],
+    srcs = ["parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/config/metrics/handler:prometheus_handler_parser",

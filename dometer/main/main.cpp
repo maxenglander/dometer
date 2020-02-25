@@ -1,7 +1,7 @@
 #include <iostream>
 #include <memory>
 
-#include "dometer/config/config_parser.hpp"
+#include "dometer/config/parser.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/dns/resolver/resolver_factory.hpp"
 #include "dometer/dns/handler/handler.hpp"
@@ -41,7 +41,7 @@ namespace dometer::main {
             return 1;
         }
 
-        auto parser = config::ConfigParser();
+        auto parser = config::Parser();
         auto parseResults = parser.fromFile(cliOptions->config.value());
         if(!parseResults) {
             std::cerr << errorEncoder.encode(util::Error(

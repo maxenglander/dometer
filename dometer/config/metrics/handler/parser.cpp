@@ -1,17 +1,17 @@
 #include <cassert>
 
-#include "dometer/config/metrics/handler/handler_parser.hpp"
+#include "dometer/config/metrics/handler/parser.hpp"
 #include "dometer/metrics/handler/options.hpp"
 #include "json/json.h"
 
 namespace dometer::config::metrics::handler {
-    HandlerParser::HandlerParser()
-        : HandlerParser::HandlerParser(dometer::config::metrics::handler::PrometheusHandlerParser()) {}
+    Parser::Parser()
+        : Parser::Parser(dometer::config::metrics::handler::PrometheusHandlerParser()) {}
 
-    HandlerParser::HandlerParser(dometer::config::metrics::handler::PrometheusHandlerParser prometheusParser)
+    Parser::Parser(dometer::config::metrics::handler::PrometheusHandlerParser prometheusParser)
         : prometheusParser(prometheusParser) {}
 
-    dometer::metrics::handler::Options HandlerParser::fromJson(const Json::Value& jsonValue) const {
+    dometer::metrics::handler::Options Parser::fromJson(const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("type"));
         assert(jsonValue["type"].isString());
         std::string type = jsonValue["type"].asString();

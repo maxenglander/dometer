@@ -1,11 +1,11 @@
 cc_library(
-    name = "metrics_parser",
-    hdrs = ["metrics_parser.hpp"],
-    srcs = ["metrics_parser.cpp"],
+    name = "parser",
+    hdrs = ["parser.hpp"],
+    srcs = ["parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/app/metrics:options",
-        "//dometer/config/metrics/handler:handler_parser",
+        "//dometer/config/metrics/handler:parser",
     ],
     visibility = ["//visibility:public"],
 )

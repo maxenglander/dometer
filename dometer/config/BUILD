@@ -1,28 +1,28 @@
 cc_library(
-    name = "config_parser",
-    hdrs = ["config_parser.hpp"],
-    srcs = ["config_parser.cpp"],
+    name = "parser",
+    hdrs = ["parser.hpp"],
+    srcs = ["parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/app:options",
         "//dometer/util:error",
         "//std/x:expected",
         "//std/x:unique",
-        ":internal_config_parser",
+        ":internal_parser",
         ":schema_validator",
     ],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
-    name = "internal_config_parser",
-    hdrs = ["internal_config_parser.hpp"],
-    srcs = ["internal_config_parser.cpp"],
+    name = "internal_parser",
+    hdrs = ["internal_parser.hpp"],
+    srcs = ["internal_parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/app:options",
-        "//dometer/config/dns:dns_parser",
-        "//dometer/config/metrics:metrics_parser",
+        "//dometer/config/dns:parser",
+        "//dometer/config/metrics:parser",
         "//dometer/util:error",
         "//std/x:expected",
     ],

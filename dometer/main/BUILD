@@ -2,7 +2,7 @@ cc_binary(
     name = "main",
     srcs = ["main.cpp"],
     deps = [
-        "//dometer/config:config_parser",
+        "//dometer/config:parser",
         "//dometer/dns/resolver:resolver",
         "//dometer/dns/resolver:resolver_factory",
         "//dometer/dns/handler:handler",

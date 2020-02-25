@@ -4,8 +4,8 @@
 #include <sstream>
 
 #include "dometer/app/options.hpp"
-#include "dometer/config/config_parser.hpp"
-#include "dometer/config/internal_config_parser.hpp"
+#include "dometer/config/internal_parser.hpp"
+#include "dometer/config/parser.hpp"
 #include "dometer/config/schema_validator.hpp"
 #include "json/json.h"
 #include "dometer/util/error.hpp"
@@ -15,14 +15,14 @@ namespace app = dometer::app;
 namespace util = dometer::util;
 
 namespace dometer::config {
-    ConfigParser::ConfigParser()
-        : ConfigParser(InternalConfigParser(), SchemaValidator()) {}
+    Parser::Parser()
+        : Parser(InternalParser(), SchemaValidator()) {}
 
-    ConfigParser::ConfigParser(InternalConfigParser internalConfigParser, SchemaValidator schemaValidator)
-        : internalConfigParser(internalConfigParser),
+    Parser::Parser(InternalParser internalParser, SchemaValidator schemaValidator)
+        : internalParser(internalParser),
           schemaValidator(schemaValidator) {}
 
-    std::x::expected<app::Options, util::Error> ConfigParser::fromFile(std::string file) {
+    std::x::expected<app::Options, util::Error> Parser::fromFile(std::string file) {
         std::ifstream ifs(file.c_str());
         if(!ifs.good()) {
             return std::x::unexpected<util::Error>(util::Error(
@@ -35,13 +35,13 @@ namespace dometer::config {
         return fromJson(sstr.str());
     }
 
-    expected<app::Options, util::Error> ConfigParser::fromJson(std::string json) {
+    expected<app::Options, util::Error> Parser::fromJson(std::string json) {
         auto validation = schemaValidator.validate(json);
         if(!validation) {
             return unexpected<util::Error>(validation.error());
         } else {
             Json::Value* jsonValue = (*validation).release();
-            return internalConfigParser.fromJson(*jsonValue);
+            return internalParser.fromJson(*jsonValue);
         }
     }
 }

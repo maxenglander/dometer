@@ -1,7 +1,7 @@
 cc_library(
-    name = "server_parser",
-    hdrs = ["server_parser.hpp"],
-    srcs = ["server_parser.cpp"],
+    name = "parser",
+    hdrs = ["parser.hpp"],
+    srcs = ["parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//dometer/dns/server:options",

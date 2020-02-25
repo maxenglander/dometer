@@ -11,9 +11,9 @@ cc_library(
 )
 
 cc_library(
-    name = "resolver_parser",
-    hdrs = ["resolver_parser.hpp"],
-    srcs = ["resolver_parser.cpp"],
+    name = "parser",
+    hdrs = ["parser.hpp"],
+    srcs = ["parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
         "//std/x:optional",

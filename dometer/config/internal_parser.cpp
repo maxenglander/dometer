@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "dometer/app/options.hpp"
-#include "dometer/config/internal_config_parser.hpp"
+#include "dometer/config/internal_parser.hpp"
 #include "dometer/util/error.hpp"
 #include "json/json.h"
 #include "std/x/expected.hpp"
@@ -11,16 +11,16 @@ namespace app = dometer::app;
 namespace util = dometer::util;
 
 namespace dometer::config {
-    InternalConfigParser::InternalConfigParser()
-        : InternalConfigParser(dometer::config::dns::DnsParser(),
-                       dometer::config::metrics::MetricsParser()) {}
+    InternalParser::InternalParser()
+        : InternalParser(dometer::config::dns::Parser(),
+                       dometer::config::metrics::Parser()) {}
 
-    InternalConfigParser::InternalConfigParser(dometer::config::dns::DnsParser dnsParser,
-                               dometer::config::metrics::MetricsParser metricsParser)
+    InternalParser::InternalParser(dometer::config::dns::Parser dnsParser,
+                               dometer::config::metrics::Parser metricsParser)
         : dnsParser(dnsParser),
           metricsParser(metricsParser) {}
 
-    app::Options InternalConfigParser::fromJson(const Json::Value& jsonValue) const {
+    app::Options InternalParser::fromJson(const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("dns"));
         assert(jsonValue["dns"].isObject());
         assert(jsonValue.isMember("metrics"));
