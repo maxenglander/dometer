@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dometer/config/dns/server/server.hpp"
+#include "dometer/dns/server/options.hpp"
 #include "dometer/config/dns/server/transport_parser.hpp"
 #include "json/json.h"
 
@@ -9,7 +9,7 @@ namespace dometer::config::dns::server {
         public:
             ServerParser();
             ServerParser(TransportParser);
-            Server fromJson(const Json::Value& jsonValue) const;
+            dometer::dns::server::Options fromJson(const Json::Value& jsonValue) const;
         private:
             const TransportParser transportParser;
     };

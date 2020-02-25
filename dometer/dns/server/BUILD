@@ -1,4 +1,14 @@
 cc_library(
+    name = "options",
+    hdrs = ["options.hpp"],
+    deps = [
+        ":transport_options",
+    ],
+    visibility = ["//visibility:public"]
+)
+
+
+cc_library(
     name = "server",
     hdrs = ["server.hpp"],
     deps = [
@@ -12,4 +22,10 @@ cc_library(
     ],
     srcs = ["server.cpp"],
     visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "transport_options",
+    hdrs = ["transport_options.hpp"],
+    visibility = ["//visibility:public"]
 )

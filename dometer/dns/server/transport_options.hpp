@@ -2,8 +2,8 @@
 
 #include <string>
 
-namespace dometer::config::dns::server {
-    struct Transport {
+namespace dometer::dns::server {
+    struct TransportOptions {
         const std::string bindAddress;
     };
 }

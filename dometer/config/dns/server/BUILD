@@ -1,28 +1,12 @@
 cc_library(
-    name = "server",
-    hdrs = ["server.hpp"],
-    deps = [
-    ],
-    visibility = ["//visibility:public"]
-)
-
-cc_library(
     name = "server_parser",
     hdrs = ["server_parser.hpp"],
     srcs = ["server_parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
-        ":server",
-        ":transport",
+        "//dometer/dns/server:options",
+        "//dometer/dns/server:transport_options",
         ":transport_parser",
-    ],
-    visibility = ["//visibility:public"]
-)
-
-cc_library(
-    name = "transport",
-    hdrs = ["transport.hpp"],
-    deps = [
     ],
     visibility = ["//visibility:public"]
 )
@@ -33,7 +17,7 @@ cc_library(
     srcs = ["transport_parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
-        ":transport",
+        "//dometer/dns/server:transport_options",
     ],
     visibility = ["//visibility:public"]
 )

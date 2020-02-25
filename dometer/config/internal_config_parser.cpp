@@ -1,13 +1,13 @@
 #include <cassert>
 #include <memory>
 
-#include "dometer/config/config.hpp"
+#include "dometer/app/options.hpp"
 #include "dometer/config/internal_config_parser.hpp"
 #include "dometer/util/error.hpp"
 #include "json/json.h"
 #include "std/x/expected.hpp"
 
-using namespace std::x;
+namespace app = dometer::app;
 namespace util = dometer::util;
 
 namespace dometer::config {
@@ -20,12 +20,12 @@ namespace dometer::config {
         : dnsParser(dnsParser),
           metricsParser(metricsParser) {}
 
-    Config InternalConfigParser::fromJson(const Json::Value& jsonValue) const {
+    app::Options InternalConfigParser::fromJson(const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("dns"));
         assert(jsonValue["dns"].isObject());
         assert(jsonValue.isMember("metrics"));
         assert(jsonValue["metrics"].isObject());
-        return Config{
+        return app::Options{
             dnsParser.fromJson(jsonValue["dns"]),
             metricsParser.fromJson(jsonValue["metrics"])
         };
