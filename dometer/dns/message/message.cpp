@@ -38,11 +38,26 @@ namespace dometer::dns::message {
         :   bytes(std::move(bytes)),
             size_(size)
     {
-        if(size < 0 || size > PACKETSZ)
-            throw new std::runtime_error("Invalid message length (" + std::to_string(size) + ")");
+        if(size < 0 || size > PACKETSZ) {
+            throw util::Error(
+                "Invalid message length.",
+                std::vector<std::string>({
+                    "Min length: 0",
+                    "Max length: " + std::to_string(PACKETSZ),
+                    "Length: " + std::to_string(size)
+                })
+            );
+        }
 
-        if(ns_initparse(this->bytes.get(), this->size(), &handle) < 0)
-            throw new std::runtime_error("Failed to parse bytes into DNS message [" + std::string(strerror(errno)) + "]");
+        if(ns_initparse(this->bytes.get(), this->size(), &handle) < 0) {
+            throw util::Error(
+                "Failed to parse bytes into DNS message.",
+                util::Error(
+                    std::string(strerror(errno)),
+                    errno
+                )
+            );
+        }
     }
 
     Message::Message(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
@@ -97,8 +112,8 @@ namespace dometer::dns::message {
         return ns_msg_getflag(handle, ns_f_ra);
     }
 
-    uint8_t Message::getRCode() const {
-        return (uint8_t)ns_msg_getflag(handle, ns_f_rcode);
+    RCode Message::getRCode() const {
+        return RCode((uint8_t)ns_msg_getflag(handle, ns_f_rcode));
     }
 
     bool Message::getRD() const {

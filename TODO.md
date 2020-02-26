@@ -17,8 +17,12 @@ TODO
  - [x] move config/config.hpp to app/options.hpp
  - [x] create rich error context in dns/{handler,message,server,resolver}
  - [x] rename dometer/main to dometer/cli
- - [ ] add rcode to dns metrics
+ - [x] add rcode to dns metrics (reply count)
+ - [ ] add rcode to dns metrics (upstream resolution)
+ - [ ] eliminate exception-throwing from dns packet parsing path
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
+ - [ ] create metrics/handler package
+ - [ ] create metrics/handler/prometheus package
  - [ ] switch summary to histogram
  - [ ] add logging
  - [ ] write tests

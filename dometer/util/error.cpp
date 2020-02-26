@@ -16,6 +16,9 @@ namespace dometer::util {
         : Error(message, code, details, std::make_shared<Error>(cause)) {}
 
     Error::Error(std::string message, int code, std::vector<std::string> details, std::shared_ptr<Error> cause)
-        : message(message), code(code), details(details), cause(cause) {}
+        : std::runtime_error(message), message(message), code(code), details(details), cause(cause) {}
 
+    const char* Error::what() const throw() {
+        return message.c_str();
+    }
 }

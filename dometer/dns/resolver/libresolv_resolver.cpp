@@ -45,7 +45,9 @@ namespace dometer::dns::resolver {
             // Nasty hack because res_* hides the length of messages from us
             for(int i = 0; i <= PACKETSZ; i++) {
                 auto reply = dns::message::MessageFactory::makeMessage(buffer, i);
-                if(reply) return reply;
+                if(reply) {
+                    return reply;
+                }
             }
 
             return unexpected<util::Error>(util::Error(

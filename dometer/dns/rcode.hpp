@@ -1,12 +1,22 @@
 #pragma once
 
+#include <stdint.h>
+#include <string>
+
 namespace dometer::dns {
-    enum class RCode {
-        NOERROR = 0,
-        FORMERR = 1,
-        SERVFAIL = 2,
-        NXDOMAIN = 3,
-        NOTIMP = 4,
-        REFUSED = 5
+    class RCode {
+        public:
+            static const RCode NOERROR;
+            static const RCode FORMERR;
+            static const RCode SERVFAIL;
+            static const RCode NXDOMAIN;
+            static const RCode NOTIMPL;
+            static const RCode REFUSED;
+
+            RCode(uint8_t value);
+            operator uint8_t() const;
+            operator std::string() const;
+        private:
+            const uint8_t value;
     };
 }

@@ -7,8 +7,8 @@
 
 namespace dometer::dns::metrics {
     ReplyObservation::ReplyObservation(uint64_t value,
-                    std::tuple<std::string, std::string, std::string, bool> labelValues)
-            :   dometer::metrics::Observation<uint64_t, std::string, std::string, std::string, bool>::Observation(
+                    std::tuple<std::string, std::string, std::string, std::string, bool> labelValues)
+            :   dometer::metrics::Observation<uint64_t, std::string, std::string, std::string, std::string, bool>::Observation(
                     value, labelValues
                 )
     {}
@@ -17,8 +17,8 @@ namespace dometer::dns::metrics {
         return ReplyObservationBuilder();
     }
 
-    dometer::metrics::Observation<uint64_t, std::string, std::string, std::string, bool> ReplyObservationBuilder::build() const {
-        return ReplyObservation(1, std::make_tuple(_qclass, _qname, _qtype, _valid));
+    dometer::metrics::Observation<uint64_t, std::string, std::string, std::string, std::string, bool> ReplyObservationBuilder::build() const {
+        return ReplyObservation(1, std::make_tuple(_qclass, _qname, _qtype, _rcode, _valid));
     }
 
     ReplyObservationBuilder& ReplyObservationBuilder::qclass(std::string qclass) {
@@ -36,9 +36,13 @@ namespace dometer::dns::metrics {
         return *this;
     }
 
+    ReplyObservationBuilder& ReplyObservationBuilder::rcode(std::string rcode) {
+        this->_rcode = rcode;
+        return *this;
+    }
+
     ReplyObservationBuilder& ReplyObservationBuilder::valid(bool valid) {
         this->_valid = valid;
         return *this;
     }
-
 }

@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace dometer::util {
-    struct Error {
+    struct Error : public std::runtime_error {
         Error(std::exception&);
         Error(std::string);
         Error(std::string, std::vector<std::string>);
@@ -15,6 +15,8 @@ namespace dometer::util {
         Error(std::string, int, std::vector<std::string>);
         Error(std::string, int, Error);
         Error(std::string, int, std::vector<std::string>, Error);
+
+        const char* what() const throw();
 
         const std::string message;
         const int code;

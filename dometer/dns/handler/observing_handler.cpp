@@ -65,11 +65,13 @@ namespace dometer::dns::handler {
             auto queryEvent = std::dynamic_pointer_cast<dns::event::ReplyEvent>(event);
 
             builder.valid(false);
+            builder.rcode("-");
             if(auto reply = queryEvent->getReply()) {
                 if(auto question = reply->getQuestion()) {
                     builder.qclass(question->qclass)
                            .qname(question->qname)
                            .qtype(question->qtype)
+                           .rcode(reply->getRCode())
                            .valid(true);
                 }
             }

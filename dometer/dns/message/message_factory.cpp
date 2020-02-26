@@ -1,5 +1,6 @@
 #include <arpa/nameser.h>
 #include <exception>
+#include <iostream>
 #include <memory>
 #include <stdint.h>
 #include <string.h>
@@ -42,15 +43,15 @@ namespace dometer::dns::message {
     std::x::expected<Message, util::Error> MessageFactory::makeMessage(std::unique_ptr<uint8_t[]> bytes, size_t size) {
         try {
             return Message(std::move(bytes), size);
-        } catch(std::runtime_error& e) {
-            return std::x::unexpected<util::Error>(util::Error(e.what(), 0));
+        } catch(const util::Error& e) {
+            return std::x::unexpected<util::Error>(e);
         } 
     }
 
     Message MessageFactory::notImplemented(const Message& query) {
         auto reply = copyMessage(query);;
         reply.setQR(QR::REPLY);
-        reply.setRCode(RCode::NOTIMP);
+        reply.setRCode(RCode::NOTIMPL);
         return reply;
     }
 
