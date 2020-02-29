@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cctype>
+#include <errno.h>
 #include <iostream>
 #include <netdb.h>
 #include <resolv.h>
@@ -40,14 +41,18 @@ namespace dometer::dns::resolver {
         }
 
         if(length < 0) {
-            int savedherrno = h_errno;
+            if(errno > 0) {
+                return unexpected<util::Error>(util::Error(
+                    "Did not receive a reply",
+                    util::Error(strerror(errno), errno))
+                );
+            }
 
             // Nasty hack because res_* hides the length of messages from us
+            int savedherrno = h_errno;
             for(int i = 0; i <= PACKETSZ; i++) {
                 auto reply = dns::message::MessageFactory::makeMessage(buffer, i);
-                if(reply) {
-                    return reply;
-                }
+                if(reply) return reply;
             }
 
             return unexpected<util::Error>(util::Error(

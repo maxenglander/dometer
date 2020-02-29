@@ -1,6 +1,7 @@
 #include <string>
 #include <tuple>
 
+#include "dometer/dns/class.hpp"
 #include "dometer/dns/type.hpp"
 #include "dometer/dns/metrics/lookup_observation.hpp"
 #include "dometer/dns/metrics/lookup_summary.hpp"
@@ -9,8 +10,19 @@
 
 namespace dometer::dns::metrics {
     LookupObservation::LookupObservation(double duration,
-                std::tuple<std::string, std::string, dometer::dns::Type> labelValues)
-            :   dometer::metrics::Observation<double, std::string, std::string, dometer::dns::Type>::Observation(
+                std::tuple<
+                    /* qclass */dometer::dns::Class,
+                    /* qname  */std::string,
+                    /* qtype  */dometer::dns::Type,
+                    /* rcode  */std::string
+                > labelValues)
+            :   dometer::metrics::Observation<
+                    /* duration */double,
+                    /* qclass */dometer::dns::Class,
+                    /* qname  */std::string,
+                    /* qtype  */dometer::dns::Type,
+                    /* rcode  */std::string
+                >::Observation(
                     duration, labelValues
                 )
     {}
@@ -19,8 +31,12 @@ namespace dometer::dns::metrics {
         return LookupObservationBuilder();
     }
 
-    dometer::metrics::Observation<double, std::string, std::string, dometer::dns::Type> LookupObservationBuilder::build() const {
-        return LookupObservation(_duration, std::make_tuple(_qclass, _qname, _qtype));
+    dometer::metrics::Observation<double,
+                                  dometer::dns::Class,
+                                  std::string,
+                                  dometer::dns::Type,
+                                  std::string> LookupObservationBuilder::build() const {
+        return LookupObservation(_duration, std::make_tuple(_qclass, _qname, _qtype, _rcode));
     }
 
     LookupObservationBuilder& LookupObservationBuilder::duration(double seconds) {
@@ -28,7 +44,12 @@ namespace dometer::dns::metrics {
         return *this;
     }
 
-    LookupObservationBuilder& LookupObservationBuilder::qclass(std::string qclass) {
+    LookupObservationBuilder& LookupObservationBuilder::rcode(std::string rcode) {
+        this->_rcode = rcode;
+        return *this;
+    }
+
+    LookupObservationBuilder& LookupObservationBuilder::qclass(dometer::dns::Class qclass) {
         this->_qclass = qclass;
         return *this;
     }

@@ -5,6 +5,8 @@
 #include "dometer/dns/class.hpp"
 
 namespace dometer::dns {
+    const Class Class::IN = Class(ns_c_in);
+
     Class::Class(uint16_t value) : value(value) {}
 
     Class::operator uint16_t() const {

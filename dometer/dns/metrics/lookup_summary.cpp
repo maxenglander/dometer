@@ -2,7 +2,9 @@
 #include <tuple>
 #include <vector>
 
+#include "dometer/dns/class.hpp"
 #include "dometer/dns/type.hpp"
+#include "dometer/dns/metrics/class_label.hpp"
 #include "dometer/dns/metrics/labels.hpp"
 #include "dometer/dns/metrics/lookup_summary.hpp"
 #include "dometer/dns/metrics/type_label.hpp"
@@ -14,12 +16,13 @@ namespace dometer::dns::metrics {
     const LookupSummary LookupSummary::INSTANCE = LookupSummary();
 
     LookupSummary::LookupSummary()
-            :   dometer::metrics::Summary<std::string, std::string, dometer::dns::Type>::Summary(
-                    "dns_upstream_resolution_seconds", "Summary duration of DNS upstream resolutions",
+            :   dometer::metrics::Summary<dometer::dns::Class, std::string, dometer::dns::Type, std::string>::Summary(
+                    "dometer_dns_lookup_duration_seconds", "Latency of DNS lookup attempts.",
                     std::make_tuple(
-                        dometer::metrics::Labels::string("qclass"), 
+                        Labels::class_("qclass"), 
                         dometer::metrics::Labels::string("qname"),
-                        Labels::type("qtype")
+                        Labels::type("qtype"),
+                        dometer::metrics::Labels::string("rcode")
                     ),
                     std::vector<double>{0.5, 0.9, 0.95, 0.99},
                     dometer::metrics::Unit::SECONDS

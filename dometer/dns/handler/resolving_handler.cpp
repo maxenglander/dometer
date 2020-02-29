@@ -15,6 +15,7 @@
 #include "dometer/util/callback.hpp"
 #include "dometer/util/callback_registry.hpp"
 #include "dometer/util/error.hpp"
+#include "dometer/util/human_error_encoder.hpp"
 #include "std/x/expected.hpp"
 
 namespace dns = dometer::dns;
@@ -60,10 +61,13 @@ namespace dometer::dns::handler {
 
     std::x::expected<dns::message::Message, util::Error> ResolvingHandler::handle(std::x::expected<dns::message::Message, util::Error> &query) {
         if(!query) {
-            return std::x::unexpected<util::Error>(util::Error(
+            auto error = util::Error(
                 "The query is not valid.",
                 query.error()
-            ));
+            );
+            auto encoder = dometer::util::HumanErrorEncoder();
+            std::cerr << encoder.encode(error) << std::endl;
+            return std::x::unexpected<util::Error>(error);
         } else if(query->getOpCode() != dns::OpCode::QUERY) {
             return dns::message::MessageFactory::notImplemented(*query);
         }

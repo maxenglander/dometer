@@ -56,6 +56,7 @@ cc_library(
         "//dometer/util:callback",
         "//dometer/util:callback_registry",
         "//dometer/util:error",
+        "//dometer/util:human_error_encoder",
         "//std/x:expected",
         ":handler",
     ],

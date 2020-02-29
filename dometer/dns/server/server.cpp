@@ -101,11 +101,12 @@ namespace dometer::dns::server {
 
             unsigned char replyBuffer[4096];
 
-            auto replySize = handler->handle(queryBuffer, queryLength, replyBuffer, sizeof(replyBuffer));
-            if(replySize) {
-                socket->send_to(asio::buffer(replyBuffer, *replySize), remoteEndpoint, 0, error);
+            auto reply = handler->handle(queryBuffer, queryLength, replyBuffer, sizeof(replyBuffer));
+            if(reply) {
+                size_t replySize = *reply;
+                socket->send_to(asio::buffer(replyBuffer, replySize), remoteEndpoint, 0, error);
             } else {
-                socket->send_to(asio::buffer(""), remoteEndpoint, 0, error);
+                std::cerr << "Did not receive a UDP reply" << std::endl;
             }
         }
     }

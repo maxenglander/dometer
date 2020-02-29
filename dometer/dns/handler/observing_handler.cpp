@@ -30,53 +30,22 @@ namespace dometer::dns::handler {
         innerHandler->on(dns::event::EventType::LOOKUP, [this](std::shared_ptr<dns::event::Event> event) {
             auto builder = dns::metrics::LookupObservation::newBuilder();
             auto lookupEvent = std::dynamic_pointer_cast<dns::event::LookupEvent>(event);
+            auto query = lookupEvent->getQuery();
 
-            if(auto query = lookupEvent->getQuery()) {
-                if(auto question = query.getQuestion()) {
-                    builder.qclass(question->qclass)
-                           .qname(question->qname)
-                           .qtype(question->qtype)
-                           .duration(lookupEvent->getDuration().count());
+            if(auto question = query.getQuestion()) {
+                builder.qclass(question->qclass)
+                       .qname(question->qname)
+                       .qtype(question->qtype)
+                       .duration(lookupEvent->getDuration().count());
+                auto reply = lookupEvent->getReply();
+                if(reply) {
+                    builder.rcode(reply->getRCode());
+                } else {
+                    builder.rcode("-");
                 }
             }
 
             this->observer->observe(dns::metrics::LookupSummary::INSTANCE, builder.build());
-        });
-
-        innerHandler->on(dns::event::EventType::QUERY, [this](std::shared_ptr<dns::event::Event> event) {
-            auto builder = dns::metrics::QueryObservation::newBuilder();
-            auto queryEvent = std::dynamic_pointer_cast<dns::event::QueryEvent>(event);
-
-            builder.valid(false);
-            if(auto query = queryEvent->getQuery()) {
-                if(auto question = query->getQuestion()) {
-                    builder.qclass(question->qclass)
-                           .qname(question->qname)
-                           .qtype(question->qtype)
-                           .valid(true);
-                }
-            }
-
-            this->observer->increment(dns::metrics::QueryCounter::INSTANCE, builder.build());
-        });
-
-        innerHandler->on(dns::event::EventType::REPLY, [this](std::shared_ptr<dns::event::Event> event) {
-            auto builder = dns::metrics::ReplyObservation::newBuilder();
-            auto queryEvent = std::dynamic_pointer_cast<dns::event::ReplyEvent>(event);
-
-            builder.valid(false);
-            builder.rcode("-");
-            if(auto reply = queryEvent->getReply()) {
-                if(auto question = reply->getQuestion()) {
-                    builder.qclass(question->qclass)
-                           .qname(question->qname)
-                           .qtype(question->qtype)
-                           .rcode(reply->getRCode())
-                           .valid(true);
-                }
-            }
-
-            this->observer->increment(dns::metrics::ReplyCounter::INSTANCE, builder.build());
         });
     }
 
