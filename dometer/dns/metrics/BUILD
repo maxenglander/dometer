@@ -58,55 +58,6 @@ cc_library(
 )
 
 cc_library(
-    name = "query_counter",
-    deps = [
-        "//dometer/dns:type",
-        "//dometer/metrics:counter",
-        "//dometer/metrics:labels",
-        ":class_label",
-        ":labels",
-        ":type_label",
-    ],
-    hdrs = ["query_counter.hpp"],
-    srcs = ["query_counter.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "query_observation",
-    deps = [
-        "//dometer/dns:type",
-        "//dometer/metrics:observation",
-        ":query_counter",
-    ],
-    hdrs = ["query_observation.hpp"],
-    srcs = ["query_observation.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "reply_counter",
-    deps = [
-        "//dometer/metrics:counter",
-        "//dometer/metrics:labels",
-    ],
-    hdrs = ["reply_counter.hpp"],
-    srcs = ["reply_counter.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "reply_observation",
-    deps = [
-        "//dometer/metrics:observation",
-        ":reply_counter",
-    ],
-    hdrs = ["reply_observation.hpp"],
-    srcs = ["reply_observation.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "type_label",
     deps = [
         "//dometer/dns:type",
