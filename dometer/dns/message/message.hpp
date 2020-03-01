@@ -47,6 +47,7 @@ namespace dometer::dns::message {
             size_t size_;
             ns_msg handle;
 
-            friend class MessageFactory;
+            friend class Factory;
+            friend class Parser;
     };
 }

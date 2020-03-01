@@ -10,8 +10,9 @@
 #include <resolv.h>
 #include <string>
 
+#include "dometer/dns/message/factory.hpp"
 #include "dometer/dns/message/message.hpp"
-#include "dometer/dns/message/message_factory.hpp"
+#include "dometer/dns/message/parser.hpp"
 #include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/dns/resolver/libresolv_function.hpp"
@@ -68,7 +69,7 @@ namespace dometer::dns::resolver {
             // Nasty hack because res_* hides the length of messages from us
             int savedherrno = h_errno;
             for(int i = 0; i <= PACKETSZ; i++) {
-                auto reply = dns::message::MessageFactory::makeMessage(buffer, i);
+                auto reply = dns::message::Parser::parse(buffer, i);
                 if(reply) {
                     return *reply;
                 }
@@ -81,7 +82,7 @@ namespace dometer::dns::resolver {
             ));
         }
 
-        auto reply = dns::message::MessageFactory::makeMessage(buffer, length);
+        auto reply = dns::message::Parser::parse(buffer, length);
 
         if(reply) {
             return *reply;

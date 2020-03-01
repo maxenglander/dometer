@@ -4,7 +4,8 @@
 #include <thread>
 
 #include "dometer/dns/message/message.hpp"
-#include "dometer/dns/message/message_factory.hpp"
+#include "dometer/dns/message/factory.hpp"
+#include "dometer/dns/message/parser.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/dns/event/event.hpp"
 #include "dometer/dns/event/event_type.hpp"
@@ -41,7 +42,7 @@ namespace dometer::dns::handler {
     std::x::expected<size_t, util::Error> ResolvingHandler::handle(
             uint8_t *queryPtr, size_t querySize,
             uint8_t *replyPtr, size_t replySize) {
-        auto query = dns::message::MessageFactory::makeMessage(queryPtr, querySize);
+        auto query = dns::message::Parser::parse(queryPtr, querySize);
         notify(std::make_shared<dns::event::QueryEvent>(query));
 
         auto reply = handle(query);
@@ -69,12 +70,12 @@ namespace dometer::dns::handler {
             std::cerr << encoder.encode(error) << std::endl;
             return std::x::unexpected<util::Error>(error);
         } else if(query->getOpCode() != dns::OpCode::QUERY) {
-            return dns::message::MessageFactory::notImplemented(*query);
+            return dns::message::Factory::notImplemented(*query);
         }
 
         auto question = query->getQuestion();
         if(!question) {
-            return dns::message::MessageFactory::formatError(*query);
+            return dns::message::Factory::formatError(*query);
         }
 
         auto start = clock.now();

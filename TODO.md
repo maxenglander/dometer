@@ -18,7 +18,7 @@ TODO
  - [x] create rich error context in dns/{handler,message,server,resolver}
  - [x] rename dometer/main to dometer/cli
  - [x] add rcode to dns metrics (upstream resolution)
- - [ ] eliminate exception-throwing from dns packet parsing path
+ - [x] eliminate exception-throwing from dns packet parsing path
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] create metrics/handler package
  - [ ] create metrics/handler/prometheus package

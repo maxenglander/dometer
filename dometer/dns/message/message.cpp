@@ -1,4 +1,5 @@
 #include <arpa/nameser.h>
+#include <cassert>
 #include <memory>
 #include <stdint.h>
 #include <string.h>
@@ -38,26 +39,8 @@ namespace dometer::dns::message {
         :   bytes(std::move(bytes)),
             size_(size)
     {
-        if(size < 0 || size > PACKETSZ) {
-            throw util::Error(
-                "Invalid message length.",
-                std::vector<std::string>({
-                    "Min length: 0",
-                    "Max length: " + std::to_string(PACKETSZ),
-                    "Length: " + std::to_string(size)
-                })
-            );
-        }
-
-        if(ns_initparse(this->bytes.get(), this->size(), &handle) < 0) {
-            throw util::Error(
-                "Failed to parse bytes into DNS message.",
-                util::Error(
-                    std::string(strerror(errno)),
-                    errno
-                )
-            );
-        }
+        assert(size >= 0 && size <= PACKETSZ);
+        assert(ns_initparse(this->bytes.get(), this->size(), &handle) >= 0);
     }
 
     Message::Message(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
