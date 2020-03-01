@@ -12,13 +12,13 @@
 
 #include "dometer/dns/message/message.hpp"
 #include "dometer/dns/message/message_factory.hpp"
+#include "dometer/dns/resolver/error.hpp"
+#include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/dns/resolver/libresolv_function.hpp"
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
-#include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 
 namespace Dns = dometer::dns;
-namespace util = dometer::util;
 using namespace std::x;
 
 namespace dometer::dns::resolver {
@@ -28,7 +28,7 @@ namespace dometer::dns::resolver {
     LibresolvResolver::LibresolvResolver(LibresolvFunction function)
         : function(function) {}
 
-    expected<dns::message::Message, util::Error> LibresolvResolver::resolve(
+    expected<dns::message::Message, Error> LibresolvResolver::resolve(
             const std::string& qname, const Class& qclass, const Type& qtype) const {
         unsigned char buffer[PACKETSZ];
         memset(buffer, 0, PACKETSZ);
@@ -40,27 +40,57 @@ namespace dometer::dns::resolver {
             length = res_search(qname.c_str(), qclass, qtype, buffer, PACKETSZ);
         }
 
-        if(length < 0) {
-            if(errno > 0) {
-                return unexpected<util::Error>(util::Error(
-                    "Did not receive a reply",
-                    util::Error(strerror(errno), errno))
-                );
-            }
+        if(length > PACKETSZ) {
+            return unexpected<Error>(Error(
+                "Reply is too big.",
+                ErrorCode::MSGSIZE
+            ));
+        }
 
+        if(length < 0 && errno > 0) {
+            switch(errno) {
+                case ETIMEDOUT:
+                    return unexpected<Error>(Error(
+                        "Timed out waiting for reply.",
+                        ErrorCode::TIMEDOUT,
+                        dometer::util::Error(strerror(errno), errno))
+                    );
+                default:
+                    return unexpected<Error>(Error(
+                        "Did not receive a reply.",
+                        ErrorCode::OTHER,
+                        dometer::util::Error(strerror(errno), errno))
+                    );
+            }
+        }
+
+        if(length < 0) {
             // Nasty hack because res_* hides the length of messages from us
             int savedherrno = h_errno;
             for(int i = 0; i <= PACKETSZ; i++) {
                 auto reply = dns::message::MessageFactory::makeMessage(buffer, i);
-                if(reply) return reply;
+                if(reply) {
+                    return *reply;
+                }
             }
 
-            return unexpected<util::Error>(util::Error(
+            return unexpected<Error>(Error(
                 "Reply was invalid.",
-                util::Error(hstrerror(savedherrno), savedherrno))
-            );
+                ErrorCode::OTHER,
+                dometer::util::Error(hstrerror(savedherrno), savedherrno)
+            ));
         }
 
-        return dns::message::MessageFactory::makeMessage(buffer, length);
+        auto reply = dns::message::MessageFactory::makeMessage(buffer, length);
+
+        if(reply) {
+            return *reply;
+        } else {
+            return unexpected<Error>(Error(
+                "Failed to parse reply",
+                ErrorCode::PARSEERROR,
+                reply.error()
+            ));
+        }
     }
 }

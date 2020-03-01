@@ -58,7 +58,7 @@ namespace dometer::metrics::handler {
         }
 
         return std::x::unexpected<util::Error>(util::Error(
-            "A metric with this name, but a different type, already exists", 0
+            "A metric with this name, but a different type, already exists"
         ));
     }
 

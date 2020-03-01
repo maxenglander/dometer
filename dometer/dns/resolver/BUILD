@@ -1,4 +1,21 @@
 cc_library(
+    name = "error",
+    hdrs = ["error.hpp"],
+    srcs = ["error.cpp"],
+    deps = [
+        "//dometer/util:error",
+        ":error_code",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "error_code",
+    hdrs = ["error_code.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "libresolv_function",
     deps = [],
     hdrs = ["libresolv_function.hpp"],
@@ -24,8 +41,9 @@ cc_library(
         "//dometer/dns/message:message",
         "//dometer/dns/message:message_factory",
         "//dometer/dns:type",
-        "//dometer/util:error",
         "//std/x:expected",
+        ":error",
+        ":error_code",
         ":resolver",
         ":libresolv_function",
     ],
@@ -50,8 +68,8 @@ cc_library(
         "//dometer/dns:class",
         "//dometer/dns:type",
         "//dometer/dns/message:message",
-        "//dometer/util:error",
         "//std/x:expected",
+        ":error",
     ],
     visibility = ["//visibility:public"],
 )

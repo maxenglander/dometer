@@ -4,6 +4,7 @@
 
 #include "dometer/dns/class.hpp"
 #include "dometer/dns/type.hpp"
+#include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/libresolv_function.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "std/x/expected.hpp"
@@ -22,7 +23,7 @@ namespace dometer::dns::resolver {
         public:
             LibresolvResolver();
             LibresolvResolver(LibresolvFunction);
-            expected<dns::message::Message, util::Error> resolve(const std::string&, const Class&, const Type&) const;
+            expected<dns::message::Message, Error> resolve(const std::string&, const Class&, const Type&) const;
         private:
             const LibresolvFunction function;
     };

@@ -86,7 +86,11 @@ namespace dometer::dns::handler {
 
         notify(std::make_shared<dns::event::LookupEvent>(*query, reply, duration));
 
-        return reply;
+        if(reply) {
+            return *reply;
+        } else {
+            return std::x::unexpected<dometer::util::Error>(static_cast<dometer::util::Error>(reply.error()));
+        }
     }
 
     void ResolvingHandler::notify(std::shared_ptr<dns::event::Event> event) {

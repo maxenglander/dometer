@@ -32,6 +32,7 @@ namespace dometer::dns::handler {
             auto lookupEvent = std::dynamic_pointer_cast<dns::event::LookupEvent>(event);
             auto query = lookupEvent->getQuery();
 
+            //builder.error("-");
             if(auto question = query.getQuestion()) {
                 builder.qclass(question->qclass)
                        .qname(question->qname)
@@ -41,6 +42,18 @@ namespace dometer::dns::handler {
                 if(reply) {
                     builder.rcode(reply->getRCode());
                 } else {
+                    //builder.error("OTHER");
+                    switch(reply.error().code) {
+                        case ECONNREFUSED:
+                            //builder.error("ECONNREFUSED");
+                            break;
+                        case EMSGSIZE:
+                            //builder.error("EMSGSIZE");
+                            break;
+                        case ETIMEDOUT:
+                            //builder.error("ETIMEDOUT");
+                            break;
+                    }
                     builder.rcode("-");
                 }
             }

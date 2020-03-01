@@ -4,7 +4,7 @@
 
 #include "dometer/dns/event/event.hpp"
 #include "dometer/dns/event/event_type.hpp"
-#include "dometer/util/error.hpp"
+#include "dometer/dns/resolver/error.hpp"
 #include "std/x/expected.hpp"
 
 namespace dometer::dns {
@@ -19,15 +19,15 @@ namespace dometer::dns::event {
         public:
             LookupEvent(
                     const dns::message::Message& query,
-                    const std::x::expected<dns::message::Message, util::Error>& reply,
+                    const std::x::expected<dns::message::Message, dometer::dns::resolver::Error>& reply,
                     const std::chrono::microseconds duration);
             const std::chrono::microseconds getDuration() const;
             const dns::message::Message& getQuery() const;
-            const std::x::expected<dns::message::Message, util::Error>& getReply() const;
+            const std::x::expected<dns::message::Message, dometer::dns::resolver::Error>& getReply() const;
             EventType getType() const;
         private:
             const dns::message::Message& query;
-            const std::x::expected<dns::message::Message, util::Error>& reply;
+            const std::x::expected<dns::message::Message, dometer::dns::resolver::Error>& reply;
             const std::chrono::microseconds duration;
     };
 }

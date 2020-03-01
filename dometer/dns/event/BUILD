@@ -17,7 +17,7 @@ cc_library(
     name = "lookup_event",
     deps = [
         "//dometer/dns/message:message",
-        "//dometer/util:error",
+        "//dometer/dns/resolver:error",
         "//std/x:expected",
         ":event",
         ":event_type",
