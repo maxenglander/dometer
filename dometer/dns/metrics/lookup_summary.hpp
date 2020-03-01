@@ -7,7 +7,13 @@
 #include "dometer/metrics/summary.hpp"
 
 namespace dometer::dns::metrics {
-    struct LookupSummary : dometer::metrics::Summary<dometer::dns::Class, std::string, dometer::dns::Type, std::string> {
+    struct LookupSummary : dometer::metrics::Summary<
+                               /* error  */std::string,
+                               /* qclass */dometer::dns::Class,
+                               /* qname  */std::string,
+                               /* qtype  */dometer::dns::Type,
+                               /* rcode  */std::string
+                           > {
         static const LookupSummary INSTANCE;
 
         private:

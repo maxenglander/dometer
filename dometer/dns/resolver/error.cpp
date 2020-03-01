@@ -3,10 +3,10 @@
 
 namespace dometer::dns::resolver {
     Error::Error(std::string message, ErrorCode code)
-        : dometer::util::Error(message, (int)code)
+        : dometer::util::Error(message, (int)code), code(code)
     {}
 
     Error::Error(std::string message, ErrorCode code, dometer::util::Error cause)
-        : dometer::util::Error(message, (int)code, cause)
+        : dometer::util::Error(message, (int)code, cause), code(code)
     {}
 }

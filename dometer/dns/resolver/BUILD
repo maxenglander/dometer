@@ -12,6 +12,7 @@ cc_library(
 cc_library(
     name = "error_code",
     hdrs = ["error_code.hpp"],
+    srcs = ["error_code.cpp"],
     visibility = ["//visibility:public"],
 )
 

@@ -16,9 +16,16 @@ namespace dometer::dns::metrics {
     const LookupSummary LookupSummary::INSTANCE = LookupSummary();
 
     LookupSummary::LookupSummary()
-            :   dometer::metrics::Summary<dometer::dns::Class, std::string, dometer::dns::Type, std::string>::Summary(
+            :   dometer::metrics::Summary<
+                    /* error  */std::string,
+                    /* qclass */dometer::dns::Class,
+                    /* qname  */std::string,
+                    /* qtype  */dometer::dns::Type,
+                    /* rcode  */std::string
+                >::Summary(
                     "dometer_dns_lookup_duration_seconds", "Latency of DNS lookup attempts.",
                     std::make_tuple(
+                        dometer::metrics::Labels::string("error"),
                         Labels::class_("qclass"), 
                         dometer::metrics::Labels::string("qname"),
                         Labels::type("qtype"),

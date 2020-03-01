@@ -11,6 +11,7 @@
 namespace dometer::dns::metrics {
     LookupObservation::LookupObservation(double duration,
                 std::tuple<
+                    /* error  */std::string,
                     /* qclass */dometer::dns::Class,
                     /* qname  */std::string,
                     /* qtype  */dometer::dns::Type,
@@ -18,6 +19,7 @@ namespace dometer::dns::metrics {
                 > labelValues)
             :   dometer::metrics::Observation<
                     /* duration */double,
+                    /* error  */std::string,
                     /* qclass */dometer::dns::Class,
                     /* qname  */std::string,
                     /* qtype  */dometer::dns::Type,
@@ -32,15 +34,21 @@ namespace dometer::dns::metrics {
     }
 
     dometer::metrics::Observation<double,
+                                  std::string,
                                   dometer::dns::Class,
                                   std::string,
                                   dometer::dns::Type,
                                   std::string> LookupObservationBuilder::build() const {
-        return LookupObservation(_duration, std::make_tuple(_qclass, _qname, _qtype, _rcode));
+        return LookupObservation(_duration, std::make_tuple(_error, _qclass, _qname, _qtype, _rcode));
     }
 
     LookupObservationBuilder& LookupObservationBuilder::duration(double seconds) {
         this->_duration = seconds;
+        return *this;
+    }
+
+    LookupObservationBuilder& LookupObservationBuilder::error(std::string error) {
+        this->_error = error;
         return *this;
     }
 

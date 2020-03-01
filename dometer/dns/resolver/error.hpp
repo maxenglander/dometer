@@ -7,5 +7,7 @@ namespace dometer::dns::resolver {
     struct Error : public dometer::util::Error {
         Error(std::string, ErrorCode);
         Error(std::string, ErrorCode, dometer::util::Error);
+
+        const ErrorCode code;
     };
 }

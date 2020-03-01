@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace dometer::dns::resolver {
     enum class ErrorCode {
         NOERROR = 0,
@@ -9,4 +11,6 @@ namespace dometer::dns::resolver {
         TIMEDOUT = 4,
         OTHER = 255
     };
+    
+    std::string to_string(const ErrorCode&);
 }
