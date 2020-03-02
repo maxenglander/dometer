@@ -31,6 +31,10 @@ namespace dometer::dns::message {
         message.size_ = 0;
     }
 
+    Message::Message(std::vector<uint8_t> bytes)
+        :   Message(bytes.data(), bytes.size())
+    {}
+
     Message::Message(uint8_t* bytePtr, size_t size)
         :   Message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(bytePtr, size)), size)
     {}

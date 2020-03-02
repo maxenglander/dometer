@@ -37,6 +37,7 @@ namespace dometer::dns::message {
 
             size_t size() const;
         private:
+            Message(std::vector<uint8_t>);
             Message(uint8_t*, size_t);
             Message(std::unique_ptr<uint8_t[]>, size_t);
             Message(std::unique_ptr<uint8_t[]>, ns_msg, size_t);

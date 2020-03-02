@@ -1,0 +1,27 @@
+    [socket]->(bytes|error)
+      |  ^
+      v  |
+ (bytes) (bytes
+      |  |error)
+      |  |
+      v  |    /-->(question)--->\
+   [handler]-|                  |-[resolver]
+      |  ^    \<-(bytes|error)<-/
+      v  |
+ (bytes) (message
+      |  |error)
+      |  |
+      v  |
+    [parser]->(message|error)
+
+Events:
+- UdpReceive(bytes)
+- UdpReceiveFailure(error)
+- DnsParseQuery(query)
+- DnsParseQueryFailure(error)
+- DnsResolution(query,bytes,duration)
+- DnsResolutionFailure(query,duration,error)
+- DnsParseReply(query,reply)
+- DnsParseReplyFailure(query,error)
+- UdpSend(bytes)
+- UdpSendFailure(error)

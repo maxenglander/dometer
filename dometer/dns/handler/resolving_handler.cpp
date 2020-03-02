@@ -79,18 +79,24 @@ namespace dometer::dns::handler {
         }
 
         auto start = clock.now();
-        auto reply = resolver->resolve(question->qname, question->qclass, question->qtype);
+        auto resolution = resolver->resolve(question->qname, question->qclass, question->qtype);
         auto end = clock.now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
+        if(!resolution) {
+            return std::x::unexpected<dometer::util::Error>(static_cast<dometer::util::Error>(resolution.error()));
+        }
+
+        auto reply = dometer::dns::message::Parser::parse(*resolution);
+
         if(reply) reply->setId(query->getId());
 
-        notify(std::make_shared<dns::event::LookupEvent>(*query, reply, duration));
+        //notify(std::make_shared<dns::event::LookupEvent>(*query, reply, duration));
 
         if(reply) {
             return *reply;
         } else {
-            return std::x::unexpected<dometer::util::Error>(static_cast<dometer::util::Error>(reply.error()));
+            return std::x::unexpected<dometer::util::Error>(reply.error());
         }
     }
 

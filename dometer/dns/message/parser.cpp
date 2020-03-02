@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <utility>
+#include <vector>
 
 #include "dometer/dns/message/message.hpp"
 #include "dometer/dns/message/parser.hpp"
@@ -15,6 +16,10 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
+    std::x::expected<Message, util::Error> Parser::parse(std::vector<uint8_t> bytes) {
+        return parse(bytes.data(), bytes.size());
+    }
+
     std::x::expected<Message, util::Error> Parser::parse(uint8_t *bytePtr, size_t size) {
         std::unique_ptr<uint8_t[]> bytes(new uint8_t[size]);
         std::copy(bytePtr, bytePtr + size, bytes.get());

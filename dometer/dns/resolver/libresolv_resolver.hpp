@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "dometer/dns/class.hpp"
 #include "dometer/dns/type.hpp"
@@ -16,14 +17,13 @@ namespace dometer::dns {
 
 namespace dns = dometer::dns;
 namespace util = dometer::util;
-using namespace std::x;
 
 namespace dometer::dns::resolver {
     class LibresolvResolver : public Resolver {
         public:
             LibresolvResolver();
             LibresolvResolver(LibresolvFunction);
-            expected<dns::message::Message, Error> resolve(const std::string&, const Class&, const Type&) const;
+            std::x::expected<std::vector<uint8_t>, Error> resolve(const std::string&, const Class&, const Type&) const;
         private:
             const LibresolvFunction function;
     };
