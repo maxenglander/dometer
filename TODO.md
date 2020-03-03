@@ -23,6 +23,7 @@ TODO
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] create metrics/handler package
  - [ ] create metrics/handler/prometheus package
+ - [ ] make nice getter/seters for message
  - [ ] switch summary to histogram
  - [ ] add logging
  - [ ] write tests

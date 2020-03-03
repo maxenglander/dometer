@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <memory>
+#include <vector>
 
 #include "dometer/dns/event/event_type.hpp"
 #include "dometer/dns/handler/handler.hpp"
@@ -23,9 +24,7 @@ namespace dometer::dns::handler {
             ObservingHandler(
                     std::shared_ptr<Handler>,
                     std::shared_ptr<metrics::Observer>);
-            std::x::expected<size_t, util::Error> handle(
-                    uint8_t *queryPtr, size_t querySize,
-                    uint8_t *replyPtr, size_t replySize);
+            std::x::expected<std::vector<uint8_t>, util::Error> handle(uint64_t, std::vector<uint8_t> queryByte);
             Handler& on(dns::event::EventType, util::Callback<std::shared_ptr<dns::event::Event>>);
         private:
             const std::shared_ptr<Handler> innerHandler;

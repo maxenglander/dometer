@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <atomic>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -19,6 +20,7 @@ namespace dometer::dns::server {
     Server::Server(std::shared_ptr<dns::handler::Handler> handler)
         :   handler(handler),
             ioContext(std::x::make_unique<asio::io_context>()),
+            sessionCounter(0),
             socket(std::x::make_unique<ip::udp::socket>(*ioContext))
     { }
 
@@ -95,16 +97,15 @@ namespace dometer::dns::server {
             queryLength = socket->receive_from(
                     asio::buffer(queryBuffer, sizeof(queryBuffer)), remoteEndpoint, 0, error);
 
+            const uint64_t sessionId = ++sessionCounter;
+
             if(error) {
                 continue;
             }
 
-            unsigned char replyBuffer[4096];
-
-            auto reply = handler->handle(queryBuffer, queryLength, replyBuffer, sizeof(replyBuffer));
+            auto reply = handler->handle(sessionId, std::vector<uint8_t>(queryBuffer, queryBuffer + queryLength));
             if(reply) {
-                size_t replySize = *reply;
-                socket->send_to(asio::buffer(replyBuffer, replySize), remoteEndpoint, 0, error);
+                socket->send_to(asio::buffer(reply->data(), reply->size()), remoteEndpoint, 0, error);
             } else {
                 std::cerr << "Did not receive a UDP reply" << std::endl;
             }

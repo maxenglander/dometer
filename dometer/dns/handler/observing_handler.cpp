@@ -48,10 +48,10 @@ namespace dometer::dns::handler {
         });
     }
 
-    std::x::expected<size_t, util::Error> ObservingHandler::handle(
-            uint8_t *queryPtr, size_t querySize,
-            uint8_t *replyPtr, size_t replySize) {
-        return innerHandler->handle(queryPtr, querySize, replyPtr, replySize);
+    std::x::expected<std::vector<uint8_t>, util::Error> ObservingHandler::handle(
+        uint64_t sessionId, std::vector<uint8_t> queryBytes
+    ) {
+        return innerHandler->handle(sessionId, queryBytes);
     }
 
     Handler& ObservingHandler::on(dns::event::EventType eventType,

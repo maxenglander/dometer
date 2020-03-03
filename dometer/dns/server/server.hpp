@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <memory>
 
 #include "asio.hpp"
@@ -22,6 +23,7 @@ namespace dometer::dns::server {
 
             const std::shared_ptr<dns::handler::Handler> handler;
             const std::unique_ptr<asio::io_context> ioContext;
+            std::atomic<uint64_t> sessionCounter;
             const std::unique_ptr<asio::ip::udp::socket> socket;
     };
 }

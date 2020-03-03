@@ -39,37 +39,29 @@ namespace dometer::dns::handler {
             resolver(resolver)
     {}
 
-    std::x::expected<size_t, util::Error> ResolvingHandler::handle(
-            uint8_t *queryPtr, size_t querySize,
-            uint8_t *replyPtr, size_t replySize) {
-        auto query = dns::message::Parser::parse(queryPtr, querySize);
-        notify(std::make_shared<dns::event::QueryEvent>(query));
+    std::x::expected<std::vector<uint8_t>, util::Error> ResolvingHandler::handle(
+        uint64_t sessionId, std::vector<uint8_t> queryBytes
+    ) {
+        auto query = dns::message::Parser::parse(queryBytes);
+        auto reply = handle(sessionId, query);
 
-        auto reply = handle(query);
-        notify(std::make_shared<dns::event::ReplyEvent>(query, reply));
-
-        if(reply) {
-            uint8_t *replyPtrIn = *reply;
-            std::copy(replyPtrIn, *reply + reply->size(), replyPtr);
-            return reply->size();
-        } else {
-            return std::x::unexpected<util::Error>(util::Error(
-                "Failed to obtain a reply for the query.",
-                reply.error()
-            ));
+        if(!reply) {
+            return std::x::unexpected<util::Error>(reply.error());
         }
+
+        const uint8_t* replyPtr = *reply;
+        return std::vector<uint8_t>(replyPtr, replyPtr + reply->size());
     }
 
-    std::x::expected<dns::message::Message, util::Error> ResolvingHandler::handle(std::x::expected<dns::message::Message, util::Error> &query) {
+    std::x::expected<dns::message::Message, util::Error> ResolvingHandler::handle(
+        uint64_t sessionId,
+        std::x::expected<dns::message::Message, util::Error> &query
+    ) {
         if(!query) {
-            auto error = util::Error(
-                "The query is not valid.",
-                query.error()
-            );
-            auto encoder = dometer::util::HumanErrorEncoder();
-            std::cerr << encoder.encode(error) << std::endl;
-            return std::x::unexpected<util::Error>(error);
-        } else if(query->getOpCode() != dns::OpCode::QUERY) {
+            return std::x::unexpected<util::Error>(util::Error("The query is not valid.", query.error()));
+        }
+
+        if(query->getOpCode() != dns::OpCode::QUERY) {
             return dns::message::Factory::notImplemented(*query);
         }
 
@@ -89,11 +81,8 @@ namespace dometer::dns::handler {
 
         auto reply = dometer::dns::message::Parser::parse(*resolution);
 
-        if(reply) reply->setId(query->getId());
-
-        //notify(std::make_shared<dns::event::LookupEvent>(*query, reply, duration));
-
         if(reply) {
+            reply->setId(query->getId());
             return *reply;
         } else {
             return std::x::unexpected<dometer::util::Error>(reply.error());
