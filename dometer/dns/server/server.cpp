@@ -5,6 +5,10 @@
 #include <vector>
 
 #include "asio.hpp"
+#include "dometer/event/emitter.hpp"
+#include "dometer/dns/event/any_event.hpp"
+#include "dometer/dns/event/start_session_event.hpp"
+#include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/message/message.hpp"
 #include "dometer/dns/handler/handler.hpp"
 #include "dometer/dns/server/server.hpp"
@@ -17,8 +21,11 @@ namespace ip = asio::ip;
 namespace util = dometer::util;
 
 namespace dometer::dns::server {
-    Server::Server(std::shared_ptr<dns::handler::Handler> handler)
-        :   handler(handler),
+    Server::Server(
+            dometer::event::Emitter<dometer::dns::event::AnyEvent> emitter, 
+            std::shared_ptr<dns::handler::Handler> handler
+    )   :   emitter(emitter),
+            handler(handler),
             ioContext(std::x::make_unique<asio::io_context>()),
             sessionCounter(0),
             socket(std::x::make_unique<ip::udp::socket>(*ioContext))
@@ -98,6 +105,7 @@ namespace dometer::dns::server {
                     asio::buffer(queryBuffer, sizeof(queryBuffer)), remoteEndpoint, 0, error);
 
             const uint64_t sessionId = ++sessionCounter;
+            emitter.emit(dometer::dns::event::StartSessionEvent(sessionId));
 
             if(!error) {
                 auto reply = handler->handle(sessionId, std::vector<uint8_t>(queryBuffer, queryBuffer + queryLength));
@@ -107,6 +115,8 @@ namespace dometer::dns::server {
                     std::cerr << "Did not receive a UDP reply" << std::endl;
                 }
             }
+
+            emitter.emit(dometer::dns::event::StopSessionEvent(sessionId));
         }
     }
 

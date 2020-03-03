@@ -13,6 +13,10 @@ cc_library(
     hdrs = ["server.hpp"],
     deps = [
         "@net_sourceforge_asio_asio//:asio",
+        "//dometer/event:emitter",
+        "//dometer/dns/event:any_event",
+        "//dometer/dns/event:start_session_event",
+        "//dometer/dns/event:stop_session_event",
         "//dometer/dns/handler:handler",
         "//dometer/dns/handler:resolving_handler",
         "//dometer/dns/message:message",

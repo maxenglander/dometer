@@ -7,7 +7,8 @@ namespace dometer::dns::event {
     enum class EventType {
         PARSE_MESSAGE,
         RESOLVE_QUERY,
-        START_SESSION
+        START_SESSION,
+        STOP_SESSION
     };
 }
 

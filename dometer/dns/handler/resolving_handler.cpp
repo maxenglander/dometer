@@ -3,14 +3,13 @@
 #include <memory>
 #include <thread>
 
+#include "dometer/dns/event/any_event.hpp"
+#include "dometer/dns/event/parse_message_event.hpp"
+#include "dometer/dns/event/resolve_query_event.hpp"
 #include "dometer/dns/message/message.hpp"
 #include "dometer/dns/message/factory.hpp"
 #include "dometer/dns/message/parser.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
-#include "dometer/dns/event/event.hpp"
-#include "dometer/dns/event/event_type.hpp"
-#include "dometer/dns/event/parse_message_event.hpp"
-#include "dometer/dns/event/resolve_query_event.hpp"
 #include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/event/callback.hpp"
 #include "dometer/event/emitter.hpp"
@@ -22,13 +21,13 @@ namespace util = dometer::util;
 
 namespace dometer::dns::handler {
     ResolvingHandler::ResolvingHandler(
-        dometer::event::Emitter<std::shared_ptr<dometer::dns::event::Event>> emitter,
+        dometer::event::Emitter<dometer::dns::event::AnyEvent> emitter,
         std::shared_ptr<dns::resolver::Resolver> resolver
     ) : ResolvingHandler(std::chrono::steady_clock(), emitter, resolver) {}
 
     ResolvingHandler::ResolvingHandler(
                 std::chrono::steady_clock clock,
-                dometer::event::Emitter<std::shared_ptr<dns::event::Event>> emitter,
+                dometer::event::Emitter<dns::event::AnyEvent> emitter,
                 std::shared_ptr<dns::resolver::Resolver> resolver)
         :   clock(clock),
             emitter(emitter),
@@ -100,7 +99,7 @@ namespace dometer::dns::handler {
         uint64_t sessionId, std::vector<uint8_t> bytes
     ) {
         auto message = dometer::dns::message::Parser::parse(bytes);
-        emitter.emit(std::make_shared<dometer::dns::event::ParseMessageEvent>(sessionId, message));
+        emitter.emit(dometer::dns::event::ParseMessageEvent(sessionId, message));
         return message;
     }
 
@@ -112,7 +111,7 @@ namespace dometer::dns::handler {
         auto end = clock.now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        emitter.emit(std::make_shared<dometer::dns::event::ResolveQueryEvent>(
+        emitter.emit(dometer::dns::event::ResolveQueryEvent(
             sessionId, question, resolution, duration
         ));
 

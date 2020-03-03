@@ -1,4 +1,17 @@
 cc_library(
+    name = "any_event",
+    hdrs = ["any_event.hpp"],
+    deps = [
+        "//std/x:variant",
+        ":parse_message_event",
+        ":resolve_query_event",
+        ":start_session_event",
+        ":stop_session_event",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "event",
     deps = [
         ":event_type",
@@ -49,5 +62,16 @@ cc_library(
     ],
     hdrs = ["start_session_event.hpp"],
     srcs = ["start_session_event.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "stop_session_event",
+    deps = [
+        ":event",
+        ":event_type",
+    ],
+    hdrs = ["stop_session_event.hpp"],
+    srcs = ["stop_session_event.cpp"],
     visibility = ["//visibility:public"],
 )

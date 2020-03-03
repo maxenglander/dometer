@@ -4,8 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "dometer/dns/event/event.hpp"
-#include "dometer/dns/event/event_type.hpp"
+#include "dometer/dns/event/any_event.hpp"
 #include "dometer/dns/handler/handler.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/event/callback.hpp"
@@ -19,10 +18,10 @@ namespace dometer::dns::handler {
     class ResolvingHandler : public Handler {
         public:
             ResolvingHandler(
-                    dometer::event::Emitter<std::shared_ptr<dometer::dns::event::Event>>,
+                    dometer::event::Emitter<dometer::dns::event::AnyEvent>,
                     std::shared_ptr<dns::resolver::Resolver>);
             ResolvingHandler(std::chrono::steady_clock,
-                    dometer::event::Emitter<std::shared_ptr<dometer::dns::event::Event>>,
+                    dometer::event::Emitter<dometer::dns::event::AnyEvent>,
                     std::shared_ptr<dns::resolver::Resolver>);
             std::x::expected<std::vector<uint8_t>, util::Error> handle(uint64_t, std::vector<uint8_t>);
         private:
@@ -43,7 +42,7 @@ namespace dometer::dns::handler {
             );
 
             const std::chrono::steady_clock clock;
-            dometer::event::Emitter<std::shared_ptr<dometer::dns::event::Event>> emitter;
+            dometer::event::Emitter<dometer::dns::event::AnyEvent> emitter;
             const std::shared_ptr<dns::resolver::Resolver> resolver;
     };
 }

@@ -19,12 +19,13 @@ TODO
  - [x] rename dometer/main to dometer/cli
  - [x] add rcode to dns metrics (upstream resolution)
  - [x] eliminate exception-throwing from dns packet parsing path
- - [ ] separate dns parsing and resolution
+ - [x] separate dns parsing and resolution
  - [ ] move dns/\*.{c,h,i}.pp to dns/???
  - [ ] create metrics/handler package
  - [ ] create metrics/handler/prometheus package
  - [ ] make nice getter/seters for message
  - [ ] switch summary to histogram
+ - [ ] decompose handler
  - [ ] add logging
  - [ ] write tests
  - [ ] write documentation

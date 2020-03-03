@@ -2,11 +2,11 @@
 #include <memory>
 
 #include "dometer/config/parser.hpp"
+#include "dometer/dns/event/any_event.hpp"
+#include "dometer/dns/handler/handler.hpp"
+#include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/dns/resolver/resolver_factory.hpp"
-#include "dometer/dns/handler/handler.hpp"
-#include "dometer/dns/handler/observing_handler.hpp"
-#include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/dns/server/server.hpp"
 #include "dometer/cli/help.hpp"
 #include "dometer/cli/options.hpp"
@@ -64,11 +64,10 @@ namespace dometer::cli {
         }
         auto observer = std::make_shared<metrics::Observer>(*handlersResult);
 
-        auto emitter = event::Emitter<std::shared_ptr<dns::event::Event>>();
+        auto emitter = event::Emitter<dns::event::AnyEvent>();
         auto resolver = dns::resolver::ResolverFactory::makeResolver(appOptions.dns.resolver);
         auto resolvingHandler = std::make_shared<dns::handler::ResolvingHandler>(emitter, resolver);
-        auto observingHandler = std::make_shared<dns::handler::ObservingHandler>(resolvingHandler, observer);
-        dns::server::Server server(observingHandler);
+        dns::server::Server server(emitter, resolvingHandler);
         auto serveResult = server.serve(appOptions.dns.server.transport.bindAddress);
         if(!serveResult) {
             std::cerr << errorEncoder.encode(util::Error(
