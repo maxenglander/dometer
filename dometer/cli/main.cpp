@@ -3,6 +3,10 @@
 
 #include "dometer/config/parser.hpp"
 #include "dometer/dns/event/any_event.hpp"
+#include "dometer/dns/event/parse_message_event.hpp"
+#include "dometer/dns/event/resolve_query_event.hpp"
+#include "dometer/dns/event/start_session_event.hpp"
+#include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/handler/handler.hpp"
 #include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
@@ -17,6 +21,7 @@
 #include "dometer/util/error.hpp"
 #include "dometer/util/error_encoder.hpp"
 #include "dometer/util/human_error_encoder.hpp"
+#include "std/x/variant.hpp"
 
 namespace config = dometer::config;
 namespace dns = dometer::dns;
@@ -65,6 +70,19 @@ namespace dometer::cli {
         auto observer = std::make_shared<metrics::Observer>(*handlersResult);
 
         auto emitter = event::Emitter<dns::event::AnyEvent>();
+        emitter.on([&observer](const dometer::dns::event::AnyEvent& event) {
+            std::x::visit(std::x::overloaded(
+                [&observer](const dometer::dns::event::ParseMessageEvent parseMessageEvent) {
+                },
+                [&observer](const dometer::dns::event::ResolveQueryEvent resolveQueryEvent) {
+                },
+                [&observer](const dometer::dns::event::StartSessionEvent startSessionEvent) {
+                },
+                [&observer](const dometer::dns::event::StopSessionEvent stopSessionEvent) {
+                }
+            ), event);
+        });
+
         auto resolver = dns::resolver::ResolverFactory::makeResolver(appOptions.dns.resolver);
         auto resolvingHandler = std::make_shared<dns::handler::ResolvingHandler>(emitter, resolver);
         dns::server::Server server(emitter, resolvingHandler);
