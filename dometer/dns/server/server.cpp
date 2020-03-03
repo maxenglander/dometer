@@ -99,15 +99,13 @@ namespace dometer::dns::server {
 
             const uint64_t sessionId = ++sessionCounter;
 
-            if(error) {
-                continue;
-            }
-
-            auto reply = handler->handle(sessionId, std::vector<uint8_t>(queryBuffer, queryBuffer + queryLength));
-            if(reply) {
-                socket->send_to(asio::buffer(reply->data(), reply->size()), remoteEndpoint, 0, error);
-            } else {
-                std::cerr << "Did not receive a UDP reply" << std::endl;
+            if(!error) {
+                auto reply = handler->handle(sessionId, std::vector<uint8_t>(queryBuffer, queryBuffer + queryLength));
+                if(reply) {
+                    socket->send_to(asio::buffer(reply->data(), reply->size()), remoteEndpoint, 0, error);
+                } else {
+                    std::cerr << "Did not receive a UDP reply" << std::endl;
+                }
             }
         }
     }

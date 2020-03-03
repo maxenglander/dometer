@@ -25,7 +25,6 @@ namespace dometer::dns::handler {
                     std::shared_ptr<Handler>,
                     std::shared_ptr<metrics::Observer>);
             std::x::expected<std::vector<uint8_t>, util::Error> handle(uint64_t, std::vector<uint8_t> queryByte);
-            Handler& on(dns::event::EventType, util::Callback<std::shared_ptr<dns::event::Event>>);
         private:
             const std::shared_ptr<Handler> innerHandler;
             const std::shared_ptr<metrics::Observer> observer;

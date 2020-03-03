@@ -2,7 +2,7 @@
 
 #include <functional>
 
-namespace dometer::util {
+namespace dometer::event {
     template <typename T>
     using Callback = std::function<void(T)>;
 }

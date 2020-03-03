@@ -16,14 +16,9 @@
 
 Events:
 - SessionStart(id)
-- UdpReceive(id,bytes)
-- UdpReceiveFailure(id,error)
-- DnsParseQuery(id,query)
-- DnsParseQueryFailure(id, error)
-- DnsResolution(id,query,bytes,duration)
-- DnsResolutionFailure(id,query,duration,error)
-- DnsParseReply(id,query,reply)
-- DnsParseReplyFailure(id,query,error)
+- UdpReceive(id,bytes|error)
+- DnsLookup(id,query,bytes|error|,duration)
+- DnsParseMessage(id,message|error)
 - UdpSend(id,bytes)
 - UdpSendFailure(id,error)
 - SessionEnd(id)

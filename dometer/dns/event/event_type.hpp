@@ -1,12 +1,13 @@
 #pragma once
 
+#include <functional>
 #include <stddef.h>
 
 namespace dometer::dns::event {
     enum class EventType {
-        LOOKUP,
-        QUERY,
-        REPLY
+        PARSE_MESSAGE,
+        RESOLVE_QUERY,
+        START_SESSION
     };
 }
 

@@ -11,6 +11,7 @@
 #include "dometer/cli/help.hpp"
 #include "dometer/cli/options.hpp"
 #include "dometer/cli/options_parser.hpp"
+#include "dometer/event/emitter.hpp"
 #include "dometer/metrics/observer.hpp"
 #include "dometer/metrics/handler/handler_factory.hpp"
 #include "dometer/util/error.hpp"
@@ -63,8 +64,9 @@ namespace dometer::cli {
         }
         auto observer = std::make_shared<metrics::Observer>(*handlersResult);
 
+        auto emitter = event::Emitter<dns::event::EventType, std::shared_ptr<dns::event::Event>>();
         auto resolver = dns::resolver::ResolverFactory::makeResolver(appOptions.dns.resolver);
-        auto resolvingHandler = std::make_shared<dns::handler::ResolvingHandler>(resolver);
+        auto resolvingHandler = std::make_shared<dns::handler::ResolvingHandler>(emitter, resolver);
         auto observingHandler = std::make_shared<dns::handler::ObservingHandler>(resolvingHandler, observer);
         dns::server::Server server(observingHandler);
         auto serveResult = server.serve(appOptions.dns.server.transport.bindAddress);

@@ -4,39 +4,55 @@
 #include <memory>
 #include <vector>
 
+#include "dometer/dns/event/event.hpp"
 #include "dometer/dns/event/event_type.hpp"
 #include "dometer/dns/handler/handler.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
-#include "dometer/util/callback.hpp"
-#include "dometer/util/callback_registry.hpp"
+#include "dometer/event/callback.hpp"
+#include "dometer/event/emitter.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 
-namespace dometer::dns {
-    class Packet;
-}
-
-namespace dns = dometer::dns;
 namespace util = dometer::util;
 
 namespace dometer::dns::handler {
     class ResolvingHandler : public Handler {
         public:
             ResolvingHandler(
+                    dometer::event::Emitter<
+                        dometer::dns::event::EventType,
+                        std::shared_ptr<dometer::dns::event::Event>
+                    >,
                     std::shared_ptr<dns::resolver::Resolver>);
-            ResolvingHandler(
-                    std::chrono::steady_clock,
-                    util::CallbackRegistry<dns::event::EventType, std::shared_ptr<dns::event::Event>>,
+            ResolvingHandler(std::chrono::steady_clock,
+                    dometer::event::Emitter<
+                        dometer::dns::event::EventType,
+                        std::shared_ptr<dometer::dns::event::Event>
+                    >,
                     std::shared_ptr<dns::resolver::Resolver>);
             std::x::expected<std::vector<uint8_t>, util::Error> handle(uint64_t, std::vector<uint8_t>);
-            Handler& on(dns::event::EventType, util::Callback<std::shared_ptr<dns::event::Event>>);
         private:
             std::x::expected<dns::message::Message, util::Error> handle(
                 uint64_t, std::x::expected<dns::message::Message, util::Error>& query
             );
-            void notify(std::shared_ptr<dns::event::Event>);
+            std::x::expected<dns::message::Message, util::Error> handle(
+                uint64_t, dns::message::Message& query
+            );
+            std::x::expected<dns::message::Message, util::Error> handle(
+                uint64_t, dometer::dns::Question question
+            );
+            std::x::expected<dometer::dns::message::Message, util::Error> parseMessage(
+                uint64_t sessionId, std::vector<uint8_t> bytes
+            );
+            std::x::expected<std::vector<uint8_t>, util::Error> resolveQuery(
+                uint64_t sessionId, dometer::dns::Question&
+            );
+
             const std::chrono::steady_clock clock;
-            util::CallbackRegistry<dns::event::EventType, std::shared_ptr<dns::event::Event>> listeners;
+            dometer::event::Emitter<
+                dometer::dns::event::EventType,
+                std::shared_ptr<dometer::dns::event::Event>
+            > emitter;
             const std::shared_ptr<dns::resolver::Resolver> resolver;
     };
 }

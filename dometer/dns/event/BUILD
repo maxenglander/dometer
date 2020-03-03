@@ -14,43 +14,40 @@ cc_library(
 )
 
 cc_library(
-    name = "lookup_event",
+    name = "parse_message_event",
     deps = [
         "//dometer/dns/message:message",
+        "//dometer/util:error",
+        "//std/x:expected",
+        ":event",
+        ":event_type",
+    ],
+    hdrs = ["parse_message_event.hpp"],
+    srcs = ["parse_message_event.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "resolve_query_event",
+    deps = [
+        "//dometer/dns:question",
         "//dometer/dns/resolver:error",
         "//std/x:expected",
         ":event",
         ":event_type",
     ],
-    hdrs = ["lookup_event.hpp"],
-    srcs = ["lookup_event.cpp"],
+    hdrs = ["resolve_query_event.hpp"],
+    srcs = ["resolve_query_event.cpp"],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
-    name = "query_event",
+    name = "start_session_event",
     deps = [
-        "//dometer/dns/message:message",
-        "//dometer/util:error",
-        "//std/x:expected",
         ":event",
         ":event_type",
     ],
-    hdrs = ["query_event.hpp"],
-    srcs = ["query_event.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "reply_event",
-    deps = [
-        "//dometer/dns/message:message",
-        "//dometer/util:error",
-        "//std/x:expected",
-        ":event",
-        ":event_type",
-    ],
-    hdrs = ["reply_event.hpp"],
-    srcs = ["reply_event.cpp"],
+    hdrs = ["start_session_event.hpp"],
+    srcs = ["start_session_event.cpp"],
     visibility = ["//visibility:public"],
 )
