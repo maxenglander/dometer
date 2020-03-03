@@ -9,35 +9,23 @@
 #include "dometer/event/emitter.hpp"
 
 namespace dometer::event {
-    template <class Key, class T>
-    Emitter<Key, T>::Emitter() : Emitter<Key, T>(std::unordered_map<Key, std::vector<Callback<T>>>()) {}
+    template <class T>
+    Emitter<T>::Emitter() : Emitter<T>(std::vector<Callback<T>>()) {}
 
-    template <class Key, class T>
-    Emitter<Key, T>::Emitter(std::unordered_map<Key, std::vector<Callback<T>>> map) : map(map) {}
+    template <class T>
+    Emitter<T>::Emitter(std::vector<Callback<T>> callbacks) : callbacks(callbacks) {}
 
-    template <class Key, class T>
-    void Emitter<Key, T>::emit(Key k, T t) {
-        auto search = map.find(k);
-        if(search == map.end()) {
-            return;
-        }
-
-        auto list = search->second;
-        for(auto it = list.begin(); it != list.end(); it++) {
+    template <class T>
+    void Emitter<T>::emit(T t) {
+        for(auto it = callbacks.begin(); it != callbacks.end(); it++) {
             Callback<T> callback = *it;
             callback(t);
         }
     }
 
-    template <class Key, class T>
-    void Emitter<Key, T>::on(Key k, Callback<T> v) {
-        auto search = map.find(k);
-
-        if(search == map.end()) {
-            map[k] = std::vector<Callback<T>>();
-        }
-
-        map[k].push_back(v);
+    template <class T>
+    void Emitter<T>::on(Callback<T> v) {
+        callbacks.push_back(v);
     }
 }
 

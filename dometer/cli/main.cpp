@@ -64,7 +64,7 @@ namespace dometer::cli {
         }
         auto observer = std::make_shared<metrics::Observer>(*handlersResult);
 
-        auto emitter = event::Emitter<dns::event::EventType, std::shared_ptr<dns::event::Event>>();
+        auto emitter = event::Emitter<std::shared_ptr<dns::event::Event>>();
         auto resolver = dns::resolver::ResolverFactory::makeResolver(appOptions.dns.resolver);
         auto resolvingHandler = std::make_shared<dns::handler::ResolvingHandler>(emitter, resolver);
         auto observingHandler = std::make_shared<dns::handler::ObservingHandler>(resolvingHandler, observer);

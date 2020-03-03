@@ -22,16 +22,13 @@ namespace util = dometer::util;
 
 namespace dometer::dns::handler {
     ResolvingHandler::ResolvingHandler(
-        dometer::event::Emitter<
-            dometer::dns::event::EventType, 
-            std::shared_ptr<dometer::dns::event::Event>
-        > emitter,
+        dometer::event::Emitter<std::shared_ptr<dometer::dns::event::Event>> emitter,
         std::shared_ptr<dns::resolver::Resolver> resolver
     ) : ResolvingHandler(std::chrono::steady_clock(), emitter, resolver) {}
 
     ResolvingHandler::ResolvingHandler(
                 std::chrono::steady_clock clock,
-                dometer::event::Emitter<dns::event::EventType, std::shared_ptr<dns::event::Event>> emitter,
+                dometer::event::Emitter<std::shared_ptr<dns::event::Event>> emitter,
                 std::shared_ptr<dns::resolver::Resolver> resolver)
         :   clock(clock),
             emitter(emitter),
@@ -103,10 +100,7 @@ namespace dometer::dns::handler {
         uint64_t sessionId, std::vector<uint8_t> bytes
     ) {
         auto message = dometer::dns::message::Parser::parse(bytes);
-        emitter.emit(
-            dometer::dns::event::EventType::PARSE_MESSAGE,
-            std::make_shared<dometer::dns::event::ParseMessageEvent>(sessionId, message)
-        );
+        emitter.emit(std::make_shared<dometer::dns::event::ParseMessageEvent>(sessionId, message));
         return message;
     }
 
@@ -118,12 +112,9 @@ namespace dometer::dns::handler {
         auto end = clock.now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        emitter.emit(
-            dometer::dns::event::EventType::RESOLVE_QUERY,
-            std::make_shared<dometer::dns::event::ResolveQueryEvent>(
-                sessionId, question, resolution, duration
-            )
-        );
+        emitter.emit(std::make_shared<dometer::dns::event::ResolveQueryEvent>(
+            sessionId, question, resolution, duration
+        ));
 
         return resolution;
     }
