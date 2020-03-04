@@ -1,5 +1,6 @@
 #include <arpa/nameser.h>
 #include <cassert>
+#include <iostream>
 #include <memory>
 #include <stdint.h>
 #include <string.h>
@@ -19,8 +20,10 @@ namespace util = dometer::util;
 
 namespace dometer::dns::message {
     Message::Message(const Message& message)
-        :   Message(message.bytes.get(), message.size())
-    {}
+        :   Message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(message.bytes.get(), message.size())), message.size())
+    {
+        std::cout << "copy-constructed message" << std::endl;
+    }
 
     Message::Message(Message&& message)
         :   bytes(std::move(message.bytes)),
@@ -29,10 +32,11 @@ namespace dometer::dns::message {
     {
         message.handle = {0};
         message.size_ = 0;
+        std::cout << "moved message" << std::endl;
     }
 
     Message::Message(std::vector<uint8_t> bytes)
-        :   Message(bytes.data(), bytes.size())
+        :   Message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(bytes.data(), bytes.size())), bytes.size())
     {}
 
     Message::Message(uint8_t* bytePtr, size_t size)
@@ -53,7 +57,9 @@ namespace dometer::dns::message {
             handle(handle)
     {}
 
-    Message::~Message() {}
+    Message::~Message() {
+        std::cout << "destructing message" << std::endl;
+    }
 
     bool Message::getAA() const {
         return ns_msg_getflag(handle, ns_f_aa);

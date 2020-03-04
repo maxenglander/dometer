@@ -11,12 +11,13 @@ namespace util = dometer::util;
 namespace dometer::dns::event {
     class ParseMessageEvent : public Event {
         public:
-            ParseMessageEvent(const uint64_t sessionId, const std::x::expected<dns::message::Message, util::Error>&);
+            ParseMessageEvent(const uint64_t sessionId, const std::x::expected<dns::message::Message, util::Error>);
+            ParseMessageEvent(const ParseMessageEvent&);
             const std::x::expected<dometer::dns::message::Message, util::Error>& getMessage() const;
             const uint64_t getSessionId() const;
             EventType getType() const;
         private:
             const uint64_t sessionId;
-            const std::x::expected<dns::message::Message, util::Error>& message;
+            const std::x::expected<dns::message::Message, util::Error> message;
     };
 }

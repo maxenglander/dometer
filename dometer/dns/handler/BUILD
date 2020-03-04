@@ -20,7 +20,8 @@ cc_library(
     srcs = ["resolving_handler.cpp"],
     deps = [
         "//dometer/dns/event:any_event",
-        "//dometer/dns/event:parse_message_event",
+        "//dometer/dns/event:parse_query_event",
+        "//dometer/dns/event:parse_reply_event",
         "//dometer/dns/event:resolve_query_event",
         "//dometer/dns/message:message",
         "//dometer/dns/message:factory",

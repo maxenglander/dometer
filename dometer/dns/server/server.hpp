@@ -26,7 +26,8 @@ namespace dometer::dns::server {
             dometer::event::Emitter<dometer::dns::event::AnyEvent> emitter;
             const std::shared_ptr<dns::handler::Handler> handler;
             const std::unique_ptr<asio::io_context> ioContext;
-            std::atomic<uint64_t> sessionCounter;
+            uint64_t sessionCounter;
+            //std::atomic<uint64_t> sessionCounter;
             const std::unique_ptr<asio::ip::udp::socket> socket;
     };
 }

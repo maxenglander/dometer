@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "dometer/dns/event/parse_message_event.hpp"
 #include "dometer/dns/event/resolve_query_event.hpp"
 #include "dometer/dns/event/session.hpp"
@@ -6,15 +8,37 @@
 namespace dometer::dns::event {
     Session::Session(uint64_t sessionId) : sessionId(sessionId) {}
 
-    std::x::optional<ParseMessageEvent> Session::getParseQueryEvent() {
+    Session::Session(const Session& session)
+        : Session(session.getSessionId())
+    {
+        if(session.getParseQueryEvent()) {
+            setParseQueryEvent(session.getParseQueryEvent().value());
+        }
+        if(session.getParseReplyEvent()) {
+            setParseReplyEvent(session.getParseReplyEvent().value());
+        }
+        if(session.getResolveQueryEvent()) {
+            setResolveQueryEvent(session.getResolveQueryEvent().value());
+        }
+    }
+
+    Session::~Session() {
+        std::cout << "destructing session" << std::endl;
+    }
+
+    const uint64_t Session::getSessionId() const {
+        return sessionId;
+    }
+
+    std::x::optional<ParseMessageEvent> Session::getParseQueryEvent() const {
         return parseQueryEvent;
     }
 
-    std::x::optional<ParseMessageEvent> Session::getParseReplyEvent() {
+    std::x::optional<ParseMessageEvent> Session::getParseReplyEvent() const {
         return parseReplyEvent;
     }
 
-    std::x::optional<ResolveQueryEvent> Session::getResolveQueryEvent() {
+    std::x::optional<ResolveQueryEvent> Session::getResolveQueryEvent() const {
         return resolveQueryEvent;
     }
 

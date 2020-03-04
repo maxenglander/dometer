@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -14,6 +15,19 @@ namespace dometer::event {
 
     template <class T>
     Emitter<T>::Emitter(std::vector<Callback<T>> callbacks) : callbacks(callbacks) {}
+
+    template <class T>
+    Emitter<T>::Emitter(const Emitter<T>& emitter)
+        : Emitter<T>::Emitter(emitter.callbacks)
+    {
+        std::cout << "copy-constructed emitter" << std::endl;
+    }
+
+    template <class T>
+    Emitter<T>::~Emitter() {
+        std::cout << "destroyed emitter" << std::endl;
+    }
+
 
     template <class T>
     void Emitter<T>::emit(T t) {

@@ -4,7 +4,8 @@
 #include <thread>
 
 #include "dometer/dns/event/any_event.hpp"
-#include "dometer/dns/event/parse_message_event.hpp"
+#include "dometer/dns/event/parse_query_event.hpp"
+#include "dometer/dns/event/parse_reply_event.hpp"
 #include "dometer/dns/event/resolve_query_event.hpp"
 #include "dometer/dns/message/message.hpp"
 #include "dometer/dns/message/factory.hpp"
@@ -37,7 +38,7 @@ namespace dometer::dns::handler {
     std::x::expected<std::vector<uint8_t>, util::Error> ResolvingHandler::handle(
         uint64_t sessionId, std::vector<uint8_t> queryBytes
     ) {
-        auto query = parseMessage(sessionId, queryBytes);
+        auto query = parseQuery(sessionId, queryBytes);
         auto reply = handle(sessionId, query);
 
         if(query && reply) {
@@ -87,7 +88,7 @@ namespace dometer::dns::handler {
             return std::x::unexpected<dometer::util::Error>(static_cast<dometer::util::Error>(resolution.error()));
         }
 
-        auto reply = parseMessage(sessionId, *resolution);
+        auto reply = parseReply(sessionId, *resolution);
         if(!reply) {
             return std::x::unexpected<dometer::util::Error>(reply.error());
         }
@@ -95,12 +96,20 @@ namespace dometer::dns::handler {
         return *reply;
     }
 
-    std::x::expected<dometer::dns::message::Message, util::Error> ResolvingHandler::parseMessage(
+    std::x::expected<dometer::dns::message::Message, util::Error> ResolvingHandler::parseQuery(
         uint64_t sessionId, std::vector<uint8_t> bytes
     ) {
-        auto message = dometer::dns::message::Parser::parse(bytes);
-        emitter.emit(dometer::dns::event::ParseMessageEvent(sessionId, message));
-        return message;
+        auto query = dometer::dns::message::Parser::parse(bytes);
+        emitter.emit(dometer::dns::event::ParseQueryEvent(sessionId, query));
+        return query;
+    }
+
+    std::x::expected<dometer::dns::message::Message, util::Error> ResolvingHandler::parseReply(
+        uint64_t sessionId, std::vector<uint8_t> bytes
+    ) {
+        auto reply = dometer::dns::message::Parser::parse(bytes);
+        emitter.emit(dometer::dns::event::ParseReplyEvent(sessionId, reply));
+        return reply;
     }
 
     std::x::expected<std::vector<uint8_t>, util::Error> ResolvingHandler::resolveQuery(

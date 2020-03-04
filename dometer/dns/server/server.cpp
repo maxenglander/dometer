@@ -104,7 +104,7 @@ namespace dometer::dns::server {
             queryLength = socket->receive_from(
                     asio::buffer(queryBuffer, sizeof(queryBuffer)), remoteEndpoint, 0, error);
 
-            const uint64_t sessionId = ++sessionCounter;
+            const uint64_t sessionId = 1;//++sessionCounter;
             emitter.emit(dometer::dns::event::StartSessionEvent(sessionId));
 
             if(!error) {

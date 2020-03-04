@@ -8,9 +8,13 @@ namespace dometer::dns::event {
     class Session {
         public:
             Session(uint64_t sessionId);
-            std::x::optional<ParseMessageEvent> getParseQueryEvent();
-            std::x::optional<ParseMessageEvent> getParseReplyEvent();
-            std::x::optional<ResolveQueryEvent> getResolveQueryEvent();
+            Session(const Session&);
+            ~Session();
+
+            const uint64_t getSessionId() const;
+            std::x::optional<ParseMessageEvent> getParseQueryEvent() const;
+            std::x::optional<ParseMessageEvent> getParseReplyEvent() const;
+            std::x::optional<ResolveQueryEvent> getResolveQueryEvent() const;
             void setParseQueryEvent(ParseMessageEvent);
             void setParseReplyEvent(ParseMessageEvent);
             void setResolveQueryEvent(ResolveQueryEvent);

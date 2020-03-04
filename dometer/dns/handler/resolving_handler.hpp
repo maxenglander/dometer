@@ -34,7 +34,10 @@ namespace dometer::dns::handler {
             std::x::expected<dns::message::Message, util::Error> handle(
                 uint64_t, dometer::dns::Question question
             );
-            std::x::expected<dometer::dns::message::Message, util::Error> parseMessage(
+            std::x::expected<dometer::dns::message::Message, util::Error> parseQuery(
+                uint64_t sessionId, std::vector<uint8_t> bytes
+            );
+            std::x::expected<dometer::dns::message::Message, util::Error> parseReply(
                 uint64_t sessionId, std::vector<uint8_t> bytes
             );
             std::x::expected<std::vector<uint8_t>, util::Error> resolveQuery(

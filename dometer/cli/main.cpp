@@ -2,11 +2,7 @@
 #include <memory>
 
 #include "dometer/config/parser.hpp"
-#include "dometer/dns/event/any_event.hpp"
-#include "dometer/dns/event/parse_message_event.hpp"
-#include "dometer/dns/event/resolve_query_event.hpp"
-#include "dometer/dns/event/start_session_event.hpp"
-#include "dometer/dns/event/stop_session_event.hpp"
+#include "dometer/dns/eventmetrics/metric_recording_event_functor.hpp"
 #include "dometer/dns/handler/handler.hpp"
 #include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
@@ -68,19 +64,10 @@ namespace dometer::cli {
             return 1;
         }
         auto observer = std::make_shared<metrics::Observer>(*handlersResult);
-
         auto emitter = event::Emitter<dns::event::AnyEvent>();
-        emitter.on([&observer](const dometer::dns::event::AnyEvent& event) {
-            std::x::visit(std::x::overloaded(
-                [&observer](const dometer::dns::event::ParseMessageEvent parseMessageEvent) {
-                },
-                [&observer](const dometer::dns::event::ResolveQueryEvent resolveQueryEvent) {
-                },
-                [&observer](const dometer::dns::event::StartSessionEvent startSessionEvent) {
-                },
-                [&observer](const dometer::dns::event::StopSessionEvent stopSessionEvent) {
-                }
-            ), event);
+        auto metricRecordingEventFunctor = dometer::dns::eventmetrics::MetricRecordingEventFunctor(observer);
+        emitter.on([&metricRecordingEventFunctor](dns::event::AnyEvent event) {
+            metricRecordingEventFunctor(event);
         });
 
         auto resolver = dns::resolver::ResolverFactory::makeResolver(appOptions.dns.resolver);

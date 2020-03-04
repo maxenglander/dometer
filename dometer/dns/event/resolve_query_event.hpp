@@ -20,8 +20,8 @@ namespace dometer::dns::event {
         public:
             ResolveQueryEvent(
                     const uint64_t sessionId,
-                    const dometer::dns::Question& question,
-                    const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::Error>& resolution,
+                    const dometer::dns::Question question,
+                    const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::Error> resolution,
                     const std::chrono::microseconds duration);
             const std::chrono::microseconds getDuration() const;
             const dns::Question& getQuestion() const;
@@ -30,8 +30,8 @@ namespace dometer::dns::event {
             EventType getType() const;
         private:
             const uint64_t sessionId;
-            const dometer::dns::Question& question;
-            const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::Error>& resolution;
+            const dometer::dns::Question question;
+            const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::Error> resolution;
             const std::chrono::microseconds duration;
     };
 }

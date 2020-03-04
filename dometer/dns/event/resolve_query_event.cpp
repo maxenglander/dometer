@@ -9,8 +9,8 @@
 namespace dometer::dns::event {
     ResolveQueryEvent::ResolveQueryEvent(
             const uint64_t sessionId,
-            const dometer::dns::Question& question,
-            const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::Error>& resolution,
+            const dometer::dns::Question question,
+            const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::Error> resolution,
             const std::chrono::microseconds duration)
         :   sessionId(sessionId),
             question(question),

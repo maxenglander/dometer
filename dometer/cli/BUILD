@@ -3,11 +3,7 @@ cc_binary(
     srcs = ["main.cpp"],
     deps = [
         "//dometer/config:parser",
-        "//dometer/dns/event:any_event",
-        "//dometer/dns/event:parse_message_event",
-        "//dometer/dns/event:resolve_query_event",
-        "//dometer/dns/event:start_session_event",
-        "//dometer/dns/event:stop_session_event",
+        "//dometer/dns/eventmetrics:metric_recording_event_functor",
         "//dometer/dns/resolver:resolver",
         "//dometer/dns/resolver:resolver_factory",
         "//dometer/dns/handler:handler",
