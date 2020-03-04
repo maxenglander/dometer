@@ -55,6 +55,18 @@ cc_library(
 )
 
 cc_library(
+    name = "session",
+    hdrs = ["session.hpp"],
+    srcs = ["session.cpp"],
+    deps = [
+        "//std/x:optional",
+        ":parse_message_event",
+        ":resolve_query_event",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "start_session_event",
     deps = [
         ":event",
