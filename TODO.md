@@ -29,6 +29,7 @@ TODO
  - [ ] add logging
  - [ ] write tests
  - [ ] write documentation
+ - [ ] use cpp std coding style, lower cases
  - [ ] replace #include statements with forward declarations
  - [ ] create internal boundaries (e.g. ::internal or ::detail)
  - [ ] use cpp convention/style enforcer

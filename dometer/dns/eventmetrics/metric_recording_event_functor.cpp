@@ -25,106 +25,73 @@ namespace dometer::dns::eventmetrics {
         : observer(functor.observer),
           sessions(functor.sessions)
     {
-        std::cout << "copy-constructed functor" << std::endl;
     }
 
     MetricRecordingEventFunctor::~MetricRecordingEventFunctor() {
-        std::cout << "destroying functor" << std::endl;
     }
-
 
     void MetricRecordingEventFunctor::operator() (dometer::dns::event::AnyEvent anyEvent) {
         std::x::visit(std::x::overloaded(
             [&](const dometer::dns::event::ParseQueryEvent parseQueryEvent) {
                 const uint64_t sessionId = parseQueryEvent.getSessionId();
                 auto search = this->sessions.find(sessionId);
-                std::cout << "handling parse query event; checking for session = " << std::to_string(sessionId) << std::endl;
-                if(search != this->sessions.end()) {
-                    std::cout << "session exists, adding parse query event" << std::endl;
-                    search->second.setParseQueryEvent(parseQueryEvent);
-                }
+                if(search == this->sessions.end()) return;
+                search->second.setParseQueryEvent(parseQueryEvent);
             },
 
             [&](const dometer::dns::event::ParseReplyEvent parseReplyEvent) {
                 const uint64_t sessionId = parseReplyEvent.getSessionId();
-                std::cout << "handling parse reply event; checking for session = " << std::to_string(sessionId) << std::endl;
                 auto search = this->sessions.find(sessionId);
-                if(search != this->sessions.end()) {
-                    std::cout << "session exists, adding parse reply event" << std::endl;
-                    search->second.setParseReplyEvent(parseReplyEvent);
-                }
+                if(search == this->sessions.end()) return;
+                search->second.setParseReplyEvent(parseReplyEvent);
             },
 
             [&](const dometer::dns::event::ResolveQueryEvent resolveQueryEvent) {
                 const uint64_t sessionId = resolveQueryEvent.getSessionId();
-                std::cout << "handling resolve query event; checking for session = " << std::to_string(sessionId) << std::endl;
                 auto search = this->sessions.find(sessionId);
-                if(search != this->sessions.end()) {
-                    std::cout << "session exists, adding resolve query event" << std::endl;
-                    search->second.setResolveQueryEvent(resolveQueryEvent);
-                }
+                if(search == this->sessions.end()) return;
+                search->second.setResolveQueryEvent(resolveQueryEvent);
             },
 
             [&](const dometer::dns::event::StartSessionEvent startSessionEvent) {
-                std::cout << "creating new dns session" << std::endl;
                 this->sessions.emplace(
                     std::piecewise_construct,
                     std::forward_as_tuple<uint64_t>(startSessionEvent.getSessionId()),
                     std::forward_as_tuple<uint64_t>(startSessionEvent.getSessionId())
                 );
-                std::cout << "created new dns session, total sessions = " << std::to_string(this->sessions.size()) << std::endl;
             },
 
             [&](const dometer::dns::event::StopSessionEvent stopSessionEvent) {
-                std::cout << "stopping dns session, total sessions = " << std::to_string(this->sessions.size()) << std::endl;
+                auto search = this->sessions.find(stopSessionEvent.getSessionId());
+                if(search == this->sessions.end()) return;
 
-                const uint64_t sessionId = stopSessionEvent.getSessionId();
+                auto session = search->second;
+                this->sessions.erase(stopSessionEvent.getSessionId());
 
-                auto search = this->sessions.find(sessionId);
-                std::cout << "checking whether session exists: " << std::to_string(sessionId) << std::endl;
-                if(search != this->sessions.end()) {
-                    auto session = search->second;
-                    std::cout << "session exists, checking for resolve query event" << std::endl;
-                    auto resolveQueryEvent = session.getResolveQueryEvent();
-                    if(resolveQueryEvent) {
-                        std::cout << "resolve query event exists, building lookup observation" << std::endl;
-                        auto builder = dometer::dns::metrics::LookupObservation::newBuilder();
-                        auto parseQueryEvent = session.getParseQueryEvent();
-                        auto parseReplyEvent = session.getParseReplyEvent();
+                if(!session.getResolveQueryEvent()) return;
+                auto resolveQueryEvent = session.getResolveQueryEvent();
 
-                        if(!parseQueryEvent) {
-                            std::cerr << "parse query event unexpectedly absent" << std::endl;
-                        } else {
-                            std::cerr << "parse query event is present" << std::endl;
-                        }
+                auto builder = dometer::dns::metrics::LookupObservation::newBuilder();
 
-                        std::cout << "getting query" << std::endl;
-                        auto query = parseQueryEvent->getMessage();
-                        std::cout << "got query; getting question" << std::endl;
-                        auto question = query->getQuestion();
-                        std::cout << "got question; getting resolution" << std::endl;
-                        auto resolution = resolveQueryEvent->getResolution();
-                        std::cout << "got resolution; setting duration" << std::endl;
-                        builder.duration(resolveQueryEvent->getDuration().count());
-                        builder.error("-");
-                        builder.qclass(question->qclass);
-                        builder.qname(question->qname);
-                        builder.qtype(question->qtype);
-                        builder.rcode("-");
+                auto question = resolveQueryEvent->getQuestion();
+                builder.qclass(question.qclass)
+                       .qname(question.qname)
+                       .qtype(question.qtype);
 
-                        if(resolution) {
-                            auto reply = session.getParseReplyEvent()->getMessage();
-                            builder.rcode(reply->getRCode());
-                        } else {
-                            builder.error(dometer::dns::resolver::to_string(resolution.error().code));
-                        }
+                auto resolution = resolveQueryEvent->getResolution();
+                builder.duration(resolveQueryEvent->getDuration().count());
 
-
-                        this->observer->observe(dometer::dns::metrics::LookupSummary::INSTANCE, builder.build());
+                builder.error("-");
+                builder.rcode("-");
+                if(!resolution) {
+                    builder.error(dometer::dns::resolver::to_string(resolution.error().code));
+                } else if(auto parseReplyEvent = session.getParseReplyEvent()) {
+                    if(auto reply = parseReplyEvent->getMessage()) {
+                        builder.rcode(reply->getRCode());
                     }
                 }
 
-                this->sessions.erase(sessionId);
+                this->observer->observe(dometer::dns::metrics::LookupSummary::INSTANCE, builder.build());
             }
         ), anyEvent);
     }

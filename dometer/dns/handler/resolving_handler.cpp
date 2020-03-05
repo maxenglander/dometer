@@ -119,6 +119,7 @@ namespace dometer::dns::handler {
         auto resolution = resolver->resolve(question.qname, question.qclass, question.qtype);
         auto end = clock.now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "resolve duration: " << duration.count() << std::endl;
 
         emitter.emit(dometer::dns::event::ResolveQueryEvent(
             sessionId, question, resolution, duration

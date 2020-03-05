@@ -22,7 +22,6 @@ namespace dometer::dns::message {
     Message::Message(const Message& message)
         :   Message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(message.bytes.get(), message.size())), message.size())
     {
-        std::cout << "copy-constructed message" << std::endl;
     }
 
     Message::Message(Message&& message)
@@ -32,7 +31,6 @@ namespace dometer::dns::message {
     {
         message.handle = {0};
         message.size_ = 0;
-        std::cout << "moved message" << std::endl;
     }
 
     Message::Message(std::vector<uint8_t> bytes)
@@ -58,7 +56,6 @@ namespace dometer::dns::message {
     {}
 
     Message::~Message() {
-        std::cout << "destructing message" << std::endl;
     }
 
     bool Message::getAA() const {

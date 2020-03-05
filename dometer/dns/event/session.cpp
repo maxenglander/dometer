@@ -23,7 +23,6 @@ namespace dometer::dns::event {
     }
 
     Session::~Session() {
-        std::cout << "destructing session" << std::endl;
     }
 
     const uint64_t Session::getSessionId() const {

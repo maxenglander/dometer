@@ -20,12 +20,10 @@ namespace dometer::event {
     Emitter<T>::Emitter(const Emitter<T>& emitter)
         : Emitter<T>::Emitter(emitter.callbacks)
     {
-        std::cout << "copy-constructed emitter" << std::endl;
     }
 
     template <class T>
     Emitter<T>::~Emitter() {
-        std::cout << "destroyed emitter" << std::endl;
     }
 
 
