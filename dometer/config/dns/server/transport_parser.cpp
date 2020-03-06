@@ -5,12 +5,12 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::server {
-    dometer::dns::server::TransportOptions TransportParser::fromJson(const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("bindAddress"));
-        assert(jsonValue["bindAddress"].isString());
+    dometer::dns::server::transport_options transport_parser::fromJson(const Json::Value& json_value) const {
+        assert(json_value.isMember("bindAddress"));
+        assert(json_value["bindAddress"].isString());
 
-        return dometer::dns::server::TransportOptions{
-            jsonValue["bindAddress"].asString()
+        return dometer::dns::server::transport_options{
+            json_value["bindAddress"].asString()
         };
     }
 }

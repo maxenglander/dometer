@@ -10,23 +10,23 @@
 namespace util = dometer::util;
 
 namespace dometer::cli {
-    std::x::expected<Options, util::error> options_parser::parse(int argc, char** argv) {
-        const option longOptions[] = {
+    std::x::expected<options, util::error> options_parser::parse(int argc, char** argv) {
+        const option long_options[] = {
             {"config", required_argument, nullptr, 'c'},
             {"help", no_argument, nullptr, 'h'},
             {nullptr, no_argument, nullptr, 0}
         };
-        const char* const shortOptions = "";
+        const char* const short_options = "";
 
-        Options options{
+        options options_{
             std::x::nullopt,
             false
         };
 
         opterr = 0;
         while(true) {
-            int optionIndex = 0; 
-            const auto option = getopt_long(argc, argv, shortOptions, longOptions, &optionIndex);
+            int option_index = 0; 
+            const auto option = getopt_long(argc, argv, short_options, long_options, &option_index);
 
             if(option == -1) {
                 // No more arguments
@@ -35,10 +35,10 @@ namespace dometer::cli {
             
             switch(option) {
                 case 'c':
-                    options.config.emplace(std::string(optarg));
+                    options_.config.emplace(std::string(optarg));
                     break;
                 case 'h':
-                    options.help = true;
+                    options_.help = true;
                     break;
                 case '?': // Missing or ambiguous argument
                     if(optopt == 'c') {
@@ -55,11 +55,11 @@ namespace dometer::cli {
                         ));
                     }
                 default:
-                    options.config = "";
-                    options.help = true;
+                    options_.config = "";
+                    options_.help = true;
             }
         }
 
-        return options;
+        return options_;
     }
 }

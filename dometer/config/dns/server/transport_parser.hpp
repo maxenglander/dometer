@@ -4,8 +4,8 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::server {
-    class TransportParser {
+    class transport_parser {
         public:
-            dometer::dns::server::TransportOptions fromJson(const Json::Value& jsonValue) const;
+            dometer::dns::server::transport_options fromJson(const Json::Value&) const;
     };
 }

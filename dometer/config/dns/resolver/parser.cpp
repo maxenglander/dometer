@@ -8,20 +8,20 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::resolver {
-    parser::parser() : parser::parser(LibresolvParser()) {}
+    parser::parser() : parser::parser(libresolv_parser()) {}
 
-    parser::parser(LibresolvParser libresolvParser)
-        : libresolvParser(libresolvParser) {}
+    parser::parser(libresolv_parser _libresolv_parser)
+        : _libresolv_parser(_libresolv_parser) {}
 
-    dometer::dns::resolver::options parser::fromJson(const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("type"));
-        assert(jsonValue["type"].isString());
-        std::string type = jsonValue["type"].asString();
+    dometer::dns::resolver::options parser::fromJson(const Json::Value& json_value) const {
+        assert(json_value.isMember("type"));
+        assert(json_value["type"].isString());
+        std::string type = json_value["type"].asString();
 
         if(type == "libresolv") {
-            assert(jsonValue.isMember("libresolv"));
-            assert(jsonValue["libresolv"].isObject());
-            return libresolvParser.fromJson(jsonValue["libresolv"]);
+            assert(json_value.isMember("libresolv"));
+            assert(json_value["libresolv"].isObject());
+            return _libresolv_parser.fromJson(json_value["libresolv"]);
         }
 
         assert(false);

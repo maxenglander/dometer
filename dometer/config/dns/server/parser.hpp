@@ -8,9 +8,9 @@ namespace dometer::config::dns::server {
     class parser {
         public:
             parser();
-            parser(TransportParser);
-            dometer::dns::server::options fromJson(const Json::Value& jsonValue) const;
+            parser(transport_parser);
+            dometer::dns::server::options fromJson(const Json::Value&) const;
         private:
-            const TransportParser transportParser;
+            const transport_parser transport_parser_;
     };
 }

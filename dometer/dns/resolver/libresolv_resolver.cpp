@@ -23,9 +23,9 @@ using namespace std::x;
 
 namespace dometer::dns::resolver {
     LibresolvResolver::LibresolvResolver()
-        : LibresolvResolver(LibresolvFunction::QUERY) {}
+        : LibresolvResolver(libresolv_function::QUERY) {}
 
-    LibresolvResolver::LibresolvResolver(LibresolvFunction function)
+    LibresolvResolver::LibresolvResolver(libresolv_function function)
         : function(function) {}
 
     expected<std::vector<uint8_t>, error> LibresolvResolver::resolve(
@@ -35,7 +35,7 @@ namespace dometer::dns::resolver {
         memset(buffer, 0, PACKETSZ);
 
         int length;
-        if(function == LibresolvFunction::QUERY) {
+        if(function == libresolv_function::QUERY) {
             length = res_query(qname.c_str(), qclass, qtype, buffer, PACKETSZ);
         } else {
             length = res_search(qname.c_str(), qclass, qtype, buffer, PACKETSZ);

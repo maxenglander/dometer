@@ -7,14 +7,14 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::server {
-    parser::parser() : parser::parser(TransportParser()) {}
-    parser::parser(TransportParser transportParser) : transportParser(transportParser) {}
+    parser::parser() : parser::parser(transport_parser()) {}
+    parser::parser(transport_parser transport_parser_) : transport_parser_(transport_parser_) {}
 
-    dometer::dns::server::options parser::fromJson(const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("transport"));
-        assert(jsonValue["transport"].isObject());
+    dometer::dns::server::options parser::fromJson(const Json::Value& json_value) const {
+        assert(json_value.isMember("transport"));
+        assert(json_value["transport"].isObject());
         return dometer::dns::server::options{
-            transportParser.fromJson(jsonValue["transport"])
+            transport_parser_.fromJson(json_value["transport"])
         };
     }
 }

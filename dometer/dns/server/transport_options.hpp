@@ -3,7 +3,7 @@
 #include <string>
 
 namespace dometer::dns::server {
-    struct TransportOptions {
+    struct transport_options {
         const std::string bindAddress;
     };
 }

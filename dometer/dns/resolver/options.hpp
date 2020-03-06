@@ -6,5 +6,5 @@
 using namespace std::x;
 
 namespace dometer::dns::resolver {
-    using options = variant<LibresolvOptions>;
+    using options = variant<libresolv_options>;
 }

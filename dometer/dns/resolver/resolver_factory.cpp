@@ -10,13 +10,13 @@
 #include "std/x/variant.hpp"
 
 namespace dometer::dns::resolver {
-    std::shared_ptr<Resolver> resolver_factory::make_resolver(LibresolvOptions options) {
+    std::shared_ptr<Resolver> resolver_factory::make_resolver(libresolv_options options) {
         return std::make_shared<LibresolvResolver>(options.function);
     }
 
     std::shared_ptr<Resolver> resolver_factory::make_resolver(options options) {
         return std::x::visit(std::x::overloaded(
-            [](LibresolvOptions lro) {
+            [](libresolv_options lro) {
                 return make_resolver(lro);
             }
         ), options);

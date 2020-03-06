@@ -6,11 +6,11 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::resolver {
-    dometer::dns::resolver::LibresolvOptions LibresolvParser::fromJson(const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("function"));
-        assert(jsonValue["function"].isString());
+    dometer::dns::resolver::libresolv_options libresolv_parser::fromJson(const Json::Value& json_value) const {
+        assert(json_value.isMember("function"));
+        assert(json_value["function"].isString());
 
-        return dometer::dns::resolver::LibresolvOptions{
+        return dometer::dns::resolver::libresolv_options{
         };
     }
 }

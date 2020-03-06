@@ -4,8 +4,8 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::resolver {
-    class LibresolvParser {
+    class libresolv_parser {
         public:
-            dometer::dns::resolver::LibresolvOptions fromJson(const Json::Value& jsonValue) const;
+            dometer::dns::resolver::libresolv_options fromJson(const Json::Value&) const;
     };
 }

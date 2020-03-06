@@ -8,7 +8,7 @@
 namespace dometer::dns::resolver {
     class resolver_factory {
         public:
-            static std::shared_ptr<Resolver> make_resolver(LibresolvOptions);
+            static std::shared_ptr<Resolver> make_resolver(libresolv_options);
             static std::shared_ptr<Resolver> make_resolver(options);
     };
 }

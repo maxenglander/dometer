@@ -22,9 +22,9 @@ namespace dometer::dns::resolver {
     class LibresolvResolver : public Resolver {
         public:
             LibresolvResolver();
-            LibresolvResolver(LibresolvFunction);
+            LibresolvResolver(libresolv_function);
             std::x::expected<std::vector<uint8_t>, error> resolve(const std::string&, const Class&, const Type&) const;
         private:
-            const LibresolvFunction function;
+            const libresolv_function function;
     };
 }

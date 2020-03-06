@@ -4,6 +4,6 @@
 
 namespace dometer::dns::server {
     struct options {
-        const TransportOptions transport;
+        const transport_options transport;
     };
 }

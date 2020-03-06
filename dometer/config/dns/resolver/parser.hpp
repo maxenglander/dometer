@@ -8,9 +8,9 @@ namespace dometer::config::dns::resolver {
     class parser {
         public:
             parser();
-            parser(LibresolvParser);
-            dometer::dns::resolver::options fromJson(const Json::Value& jsonValue) const;
+            parser(libresolv_parser);
+            dometer::dns::resolver::options fromJson(const Json::Value&) const;
         private:
-            const LibresolvParser libresolvParser;
+            const libresolv_parser _libresolv_parser;
     };
 }
