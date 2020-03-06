@@ -5,23 +5,23 @@
 #include "std/x/optional.hpp"
 
 namespace dometer::dns::event {
-    class Session {
+    class session {
         public:
-            Session(uint64_t sessionId);
-            Session(const Session&);
-            ~Session();
+            session(uint64_t session_id);
+            session(const session&);
+            ~session();
 
-            const uint64_t getSessionId() const;
-            std::x::optional<parse_message_event> getParseQueryEvent() const;
-            std::x::optional<parse_message_event> getParseReplyEvent() const;
-            std::x::optional<resolve_query_event> getResolveQueryEvent() const;
-            void setParseQueryEvent(parse_message_event);
-            void setParseReplyEvent(parse_message_event);
-            void setResolveQueryEvent(resolve_query_event);
+            const uint64_t get_session_id() const;
+            std::x::optional<parse_message_event> get_parse_query_event() const;
+            std::x::optional<parse_message_event> get_parse_reply_event() const;
+            std::x::optional<resolve_query_event> get_resolve_query_event() const;
+            void set_parse_query_event(parse_message_event);
+            void set_parse_reply_event(parse_message_event);
+            void set_resolve_query_event(resolve_query_event);
         private:
-            const uint64_t sessionId;
-            std::x::optional<parse_message_event> parseQueryEvent;
-            std::x::optional<parse_message_event> parseReplyEvent;
-            std::x::optional<resolve_query_event> resolveQueryEvent;
+            const uint64_t session_id;
+            std::x::optional<parse_message_event> _parse_query_event;
+            std::x::optional<parse_message_event> _parse_reply_event;
+            std::x::optional<resolve_query_event> _resolve_query_event;
     };
 }

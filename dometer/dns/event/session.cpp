@@ -6,50 +6,50 @@
 #include "std/x/optional.hpp"
 
 namespace dometer::dns::event {
-    Session::Session(uint64_t sessionId) : sessionId(sessionId) {}
+    session::session(uint64_t session_id) : session_id(session_id) {}
 
-    Session::Session(const Session& session)
-        : Session(session.getSessionId())
+    session::session(const session& _session)
+        : session(_session.get_session_id())
     {
-        if(session.getParseQueryEvent()) {
-            setParseQueryEvent(session.getParseQueryEvent().value());
+        if(_session.get_parse_query_event()) {
+            set_parse_query_event(_session.get_parse_query_event().value());
         }
-        if(session.getParseReplyEvent()) {
-            setParseReplyEvent(session.getParseReplyEvent().value());
+        if(_session.get_parse_reply_event()) {
+            set_parse_reply_event(_session.get_parse_reply_event().value());
         }
-        if(session.getResolveQueryEvent()) {
-            setResolveQueryEvent(session.getResolveQueryEvent().value());
+        if(_session.get_resolve_query_event()) {
+            set_resolve_query_event(_session.get_resolve_query_event().value());
         }
     }
 
-    Session::~Session() {
+    session::~session() {
     }
 
-    const uint64_t Session::getSessionId() const {
-        return sessionId;
+    const uint64_t session::get_session_id() const {
+        return session_id;
     }
 
-    std::x::optional<parse_message_event> Session::getParseQueryEvent() const {
-        return parseQueryEvent;
+    std::x::optional<parse_message_event> session::get_parse_query_event() const {
+        return _parse_query_event;
     }
 
-    std::x::optional<parse_message_event> Session::getParseReplyEvent() const {
-        return parseReplyEvent;
+    std::x::optional<parse_message_event> session::get_parse_reply_event() const {
+        return _parse_reply_event;
     }
 
-    std::x::optional<resolve_query_event> Session::getResolveQueryEvent() const {
-        return resolveQueryEvent;
+    std::x::optional<resolve_query_event> session::get_resolve_query_event() const {
+        return _resolve_query_event;
     }
 
-    void Session::setParseQueryEvent(parse_message_event parseQueryEvent) {
-        this->parseQueryEvent.emplace(parseQueryEvent);
+    void session::set_parse_query_event(parse_message_event _parse_query_event) {
+        this->_parse_query_event.emplace(_parse_query_event);
     }
 
-    void Session::setParseReplyEvent(parse_message_event parseReplyEvent) {
-        this->parseReplyEvent.emplace(parseReplyEvent);
+    void session::set_parse_reply_event(parse_message_event _parse_reply_event) {
+        this->_parse_reply_event.emplace(_parse_reply_event);
     }
 
-    void Session::setResolveQueryEvent(resolve_query_event resolveQueryEvent) {
-        this->resolveQueryEvent.emplace(resolveQueryEvent);
+    void session::set_resolve_query_event(resolve_query_event _resolve_query_event) {
+        this->_resolve_query_event.emplace(_resolve_query_event);
     }
 }

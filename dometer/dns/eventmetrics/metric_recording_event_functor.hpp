@@ -16,6 +16,6 @@ namespace dometer::dns::eventmetrics {
             void operator () (dometer::dns::event::any_event);
         private:
             const std::shared_ptr<dometer::metrics::observer> observer;
-            std::unordered_map<uint64_t, dometer::dns::event::Session> sessions;
+            std::unordered_map<uint64_t, dometer::dns::event::session> sessions;
     };
 }

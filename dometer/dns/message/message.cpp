@@ -80,7 +80,7 @@ namespace dometer::dns::message {
         return static_cast<QR>(ns_msg_getflag(handle, ns_f_qr));
     }
 
-    std::x::expected<dometer::dns::question, util::error> message::getQuestion() const {
+    std::x::expected<dometer::dns::question, util::error> message::get_question() const {
         if(getQDCount() != 1)
             return std::x::unexpected<util::error>(util::error("message qd count is not equal to 1."));
 

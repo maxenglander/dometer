@@ -15,10 +15,10 @@
     [parser]->(message|error)
 
 Events:
-- SessionStart(id)
+- sessionStart(id)
 - UdpReceive(id,bytes|error)
 - DnsLookup(id,query,bytes|error|,duration)
 - DnsParseMessage(id,message|error)
 - UdpSend(id,bytes)
 - UdpSendFailure(id,error)
-- SessionEnd(id)
+- sessionEnd(id)

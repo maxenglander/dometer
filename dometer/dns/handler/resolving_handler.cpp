@@ -36,10 +36,10 @@ namespace dometer::dns::handler {
     {}
 
     std::x::expected<std::vector<uint8_t>, util::error> resolving_handler::handle(
-        uint64_t sessionId, std::vector<uint8_t> queryBytes
+        uint64_t session_id, std::vector<uint8_t> queryBytes
     ) {
-        auto query = parseQuery(sessionId, queryBytes);
-        auto reply = handle(sessionId, query);
+        auto query = parseQuery(session_id, queryBytes);
+        auto reply = handle(session_id, query);
 
         if(query && reply) {
             reply->setId(query->getId());
@@ -54,7 +54,7 @@ namespace dometer::dns::handler {
     }
 
     std::x::expected<dns::message::message, util::error> resolving_handler::handle(
-        uint64_t sessionId,
+        uint64_t session_id,
         std::x::expected<dns::message::message, util::error> &query
     ) {
         if(!query) {
@@ -65,30 +65,30 @@ namespace dometer::dns::handler {
             return dns::message::MessageFactory::notImplemented(*query);
         }
 
-        return handle(sessionId, *query);
+        return handle(session_id, *query);
     }
 
     std::x::expected<dns::message::message, util::error> resolving_handler::handle(
-        uint64_t sessionId, dns::message::message& query
+        uint64_t session_id, dns::message::message& query
     ) {
-        auto question = query.getQuestion();
+        auto question = query.get_question();
         if(!question) {
             return dns::message::MessageFactory::formaterror(query);
         }
 
-        return handle(sessionId, *question);
+        return handle(session_id, *question);
     }
 
     std::x::expected<dns::message::message, util::error> resolving_handler::handle(
-        uint64_t sessionId, dometer::dns::question question
+        uint64_t session_id, dometer::dns::question question
     ) {
-        auto resolution = resolveQuery(sessionId, question);
+        auto resolution = resolveQuery(session_id, question);
 
         if(!resolution) {
             return std::x::unexpected<dometer::util::error>(static_cast<dometer::util::error>(resolution.error()));
         }
 
-        auto reply = parseReply(sessionId, *resolution);
+        auto reply = parseReply(session_id, *resolution);
         if(!reply) {
             return std::x::unexpected<dometer::util::error>(reply.error());
         }
@@ -97,23 +97,23 @@ namespace dometer::dns::handler {
     }
 
     std::x::expected<dometer::dns::message::message, util::error> resolving_handler::parseQuery(
-        uint64_t sessionId, std::vector<uint8_t> bytes
+        uint64_t session_id, std::vector<uint8_t> bytes
     ) {
         auto query = dometer::dns::message::parser::parse(bytes);
-        emitter.emit(dometer::dns::event::parse_query_event(sessionId, query));
+        emitter.emit(dometer::dns::event::parse_query_event(session_id, query));
         return query;
     }
 
     std::x::expected<dometer::dns::message::message, util::error> resolving_handler::parseReply(
-        uint64_t sessionId, std::vector<uint8_t> bytes
+        uint64_t session_id, std::vector<uint8_t> bytes
     ) {
         auto reply = dometer::dns::message::parser::parse(bytes);
-        emitter.emit(dometer::dns::event::parse_reply_event(sessionId, reply));
+        emitter.emit(dometer::dns::event::parse_reply_event(session_id, reply));
         return reply;
     }
 
     std::x::expected<std::vector<uint8_t>, util::error> resolving_handler::resolveQuery(
-        uint64_t sessionId, dometer::dns::question& question
+        uint64_t session_id, dometer::dns::question& question
     ) {
         auto start = clock.now();
         auto resolution = resolver->resolve(question.qname, question.qclass, question.qtype);
@@ -122,7 +122,7 @@ namespace dometer::dns::handler {
         std::cout << "resolve duration: " << duration.count() << std::endl;
 
         emitter.emit(dometer::dns::event::resolve_query_event(
-            sessionId, question, resolution, duration
+            session_id, question, resolution, duration
         ));
 
         return resolution;

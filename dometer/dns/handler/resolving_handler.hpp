@@ -35,13 +35,13 @@ namespace dometer::dns::handler {
                 uint64_t, dometer::dns::question question
             );
             std::x::expected<dometer::dns::message::message, util::error> parseQuery(
-                uint64_t sessionId, std::vector<uint8_t> bytes
+                uint64_t session_id, std::vector<uint8_t> bytes
             );
             std::x::expected<dometer::dns::message::message, util::error> parseReply(
-                uint64_t sessionId, std::vector<uint8_t> bytes
+                uint64_t session_id, std::vector<uint8_t> bytes
             );
             std::x::expected<std::vector<uint8_t>, util::error> resolveQuery(
-                uint64_t sessionId, dometer::dns::question&
+                uint64_t session_id, dometer::dns::question&
             );
 
             const std::chrono::steady_clock clock;

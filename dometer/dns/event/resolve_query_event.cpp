@@ -17,19 +17,19 @@ namespace dometer::dns::event {
             duration(duration)
     {}
 
-    const std::chrono::microseconds resolve_query_event::getDuration() const {
+    const std::chrono::microseconds resolve_query_event::get_duration() const {
         return duration;
     }
 
-    const dometer::dns::question& resolve_query_event::getQuestion() const {
+    const dometer::dns::question& resolve_query_event::get_question() const {
         return question;
     }
 
-    const uint64_t resolve_query_event::getSessionId() const {
+    const uint64_t resolve_query_event::get_session_id() const {
         return session_id;
     }
 
-    const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::error>& resolve_query_event::getResolution() const {
+    const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::error>& resolve_query_event::get_resolution() const {
         return resolution;
     }
 }

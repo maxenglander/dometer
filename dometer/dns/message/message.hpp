@@ -24,7 +24,7 @@ namespace dometer::dns::message {
             uint16_t getId() const;
             OpCode getOpCode() const;
             QR getQR() const;
-            std::x::expected<question, util::error> getQuestion() const;
+            std::x::expected<question, util::error> get_question() const;
             bool getRA() const;
             RCode getRCode() const;
             bool getRD() const;
