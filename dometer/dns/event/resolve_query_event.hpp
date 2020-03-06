@@ -7,10 +7,6 @@
 #include "dometer/dns/resolver/error.hpp"
 #include "std/x/expected.hpp"
 
-namespace dometer::dns {
-    class Packet;
-}
-
 namespace util = dometer::util;
 
 namespace dometer::dns::event {

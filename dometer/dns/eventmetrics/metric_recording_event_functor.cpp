@@ -30,7 +30,7 @@ namespace dometer::dns::eventmetrics {
     metric_recording_event_functor::~metric_recording_event_functor() {
     }
 
-    void metric_recording_event_functor::operator() (dometer::dns::event::any_event anyEvent) {
+    void metric_recording_event_functor::operator() (dometer::dns::event::any_event any_event) {
         std::x::visit(std::x::overloaded(
             [&](const dometer::dns::event::parse_query_event parse_query_event) {
                 const uint64_t session_id = parse_query_event.get_session_id();
@@ -53,20 +53,20 @@ namespace dometer::dns::eventmetrics {
                 search->second.set_resolve_query_event(resolve_query_event);
             },
 
-            [&](const dometer::dns::event::start_session_event startsessionEvent) {
+            [&](const dometer::dns::event::start_session_event stop_session_event) {
                 this->sessions.emplace(
                     std::piecewise_construct,
-                    std::forward_as_tuple<uint64_t>(startsessionEvent.get_session_id()),
-                    std::forward_as_tuple<uint64_t>(startsessionEvent.get_session_id())
+                    std::forward_as_tuple<uint64_t>(stop_session_event.get_session_id()),
+                    std::forward_as_tuple<uint64_t>(stop_session_event.get_session_id())
                 );
             },
 
-            [&](const dometer::dns::event::stop_session_event stopsessionEvent) {
-                auto search = this->sessions.find(stopsessionEvent.get_session_id());
+            [&](const dometer::dns::event::stop_session_event stop_session_event) {
+                auto search = this->sessions.find(stop_session_event.get_session_id());
                 if(search == this->sessions.end()) return;
 
                 auto session = search->second;
-                this->sessions.erase(stopsessionEvent.get_session_id());
+                this->sessions.erase(stop_session_event.get_session_id());
 
                 if(!session.get_resolve_query_event()) return;
                 auto resolve_query_event = session.get_resolve_query_event();
@@ -91,8 +91,8 @@ namespace dometer::dns::eventmetrics {
                     }
                 }
 
-                this->observer->observe(dometer::dns::metrics::LookupSummary::INSTANCE, builder.build());
+                this->observer->observe(dometer::dns::metrics::lookup_summary::instance, builder.build());
             }
-        ), anyEvent);
+        ), any_event);
     }
 }

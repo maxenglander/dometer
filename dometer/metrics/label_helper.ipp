@@ -14,10 +14,10 @@ namespace dometer::metrics {
         public:
             LabelWriter(std::map<std::string, std::string>& labels) : labels(labels) {}
             template<typename T>
-            void operator()(std::pair<std::shared_ptr<Label<T>>, T> entry) const {
+            void operator()(std::pair<std::shared_ptr<label<T>>, T> entry) const {
                 auto label = entry.first;
                 auto value = entry.second;
-                labels[label->name] = label->toString(value);
+                labels[label->name] = label->to_string(value);
             }
         private:
             std::map<std::string, std::string>& labels;
@@ -25,7 +25,7 @@ namespace dometer::metrics {
 
     template<typename... T>
     std::map<std::string, std::string> LabelHelper::createLabelMap(
-            std::tuple<std::shared_ptr<Label<T>>...> labels, std::tuple<T...> values) {
+            std::tuple<std::shared_ptr<label<T>>...> labels, std::tuple<T...> values) {
         std::map<std::string, std::string> result;
         LabelWriter labelWriter(result);
         auto zip = util::TupleHelper::zip(labels, values);

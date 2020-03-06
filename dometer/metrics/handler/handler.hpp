@@ -22,11 +22,11 @@ namespace dometer::metrics::handler {
         template<typename... L>
         class SummaryObserver {
             public:
-                SummaryObserver(const dometer::metrics::Summary<L...>&, dometer::metrics::Observation<double, L...>&);
+                SummaryObserver(const dometer::metrics::summary<L...>&, dometer::metrics::Observation<double, L...>&);
                 template <class ConcreteHandler>
                 void operator()(ConcreteHandler&);
             private:
-                const dometer::metrics::Summary<L...>& summary;
+                const dometer::metrics::summary<L...>& summary;
                 dometer::metrics::Observation<double, L...>& observation;
         };
 
@@ -37,7 +37,7 @@ namespace dometer::metrics::handler {
             void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);
 
             template<typename... L>
-            void observe(const dometer::metrics::Summary<L...>&, dometer::metrics::Observation<double, L...>);
+            void observe(const dometer::metrics::summary<L...>&, dometer::metrics::Observation<double, L...>);
         private:
              std::x::variant<dometer::metrics::handler::prometheus::Handler> concreteHandler;
     };

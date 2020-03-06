@@ -12,7 +12,7 @@ namespace dometer::metrics {
         LabelHelper() = delete;
 
         template<typename... T>
-        static std::map<std::string, std::string> createLabelMap(std::tuple<std::shared_ptr<Label<T>>...>, std::tuple<T...>);
+        static std::map<std::string, std::string> createLabelMap(std::tuple<std::shared_ptr<label<T>>...>, std::tuple<T...>);
     };
 }
 

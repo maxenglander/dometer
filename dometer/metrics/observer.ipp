@@ -16,7 +16,7 @@ namespace dometer::metrics {
     }
 
     template<typename... L>
-    void observer::observe(const Summary<L...>& summary, Observation<double, L...> observation) {
+    void observer::observe(const summary<L...>& summary, Observation<double, L...> observation) {
         for(auto it = handlers.begin(); it < handlers.end(); it++) {
             it->observe(summary, observation);
         }

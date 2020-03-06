@@ -13,16 +13,16 @@
 #include "dometer/metrics/unit.hpp"
 
 namespace dometer::dns::metrics {
-    const LookupSummary LookupSummary::INSTANCE = LookupSummary();
+    const lookup_summary lookup_summary::instance = lookup_summary();
 
-    LookupSummary::LookupSummary()
-            :   dometer::metrics::Summary<
+    lookup_summary::lookup_summary()
+            :   dometer::metrics::summary<
                     /* error  */std::string,
                     /* qclass */dometer::dns::class_,
                     /* qname  */std::string,
                     /* qtype  */dometer::dns::type,
                     /* rcode  */std::string
-                >::Summary(
+                >::summary(
                     "dometer_dns_lookup_duration_seconds", "Latency of DNS lookup attempts.",
                     std::make_tuple(
                         dometer::metrics::Labels::string("error"),

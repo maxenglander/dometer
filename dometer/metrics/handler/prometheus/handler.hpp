@@ -44,7 +44,7 @@ namespace dometer::metrics::handler::prometheus {
             void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);
 
             template<typename... L>
-            void observe(const dometer::metrics::Summary<L...>&, dometer::metrics::Observation<double, L...>);
+            void observe(const dometer::metrics::summary<L...>&, dometer::metrics::Observation<double, L...>);
         private:
             template<typename T>
             void cacheMetric(T* t, ::prometheus::x::FamilyNameAndTimeSeriesCount);

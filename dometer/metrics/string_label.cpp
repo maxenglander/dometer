@@ -3,9 +3,9 @@
 #include "dometer/metrics/string_label.hpp"
 
 namespace dometer::metrics {
-    StringLabel::StringLabel(std::string name) : Label::Label(name, "-") {}
+    StringLabel::StringLabel(std::string name) : label::label(name, "-") {}
 
-    std::string StringLabel::toString(std::string value) const {
+    std::string StringLabel::to_string(std::string value) const {
         return value;
     }
 }

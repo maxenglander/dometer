@@ -80,7 +80,7 @@ namespace dometer::metrics::handler::prometheus {
     }
 
     template<typename... L>
-    void Handler::observe(const dometer::metrics::Summary<L...>& summary,
+    void Handler::observe(const dometer::metrics::summary<L...>& summary,
             dometer::metrics::Observation<double, L...> observation) {
         auto metricFamilyRef = getOrBuildMetricFamily<::prometheus::Summary, decltype(::prometheus::BuildSummary)>(
             summary.name, summary.description, ::prometheus::BuildSummary

@@ -22,7 +22,7 @@ namespace dometer::metrics::handler {
 
     template<typename... L>
     Handler::SummaryObserver<L...>::SummaryObserver(
-            const dometer::metrics::Summary<L...>& summary,
+            const dometer::metrics::summary<L...>& summary,
             dometer::metrics::Observation<double, L...>& observation)
         :   summary(summary),
             observation(observation) {
@@ -42,7 +42,7 @@ namespace dometer::metrics::handler {
     }
 
     template<typename... L>
-    void Handler::observe(const dometer::metrics::Summary<L...>& summary,
+    void Handler::observe(const dometer::metrics::summary<L...>& summary,
                           dometer::metrics::Observation<double, L...> observation) {
         SummaryObserver<L...> observeSummary(summary, observation);
         std::x::visit(observeSummary, this->concreteHandler);

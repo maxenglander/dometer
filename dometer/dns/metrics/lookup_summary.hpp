@@ -7,16 +7,16 @@
 #include "dometer/metrics/summary.hpp"
 
 namespace dometer::dns::metrics {
-    struct LookupSummary : dometer::metrics::Summary<
+    struct lookup_summary : dometer::metrics::summary<
                                /* error  */std::string,
                                /* qclass */dometer::dns::class_,
                                /* qname  */std::string,
                                /* qtype  */dometer::dns::type,
                                /* rcode  */std::string
                            > {
-        static const LookupSummary INSTANCE;
+        static const lookup_summary instance;
 
         private:
-            LookupSummary();
+            lookup_summary();
     };
 }

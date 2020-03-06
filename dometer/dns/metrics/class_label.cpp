@@ -3,9 +3,9 @@
 
 namespace dometer::dns::metrics {
     ClassLabel::ClassLabel(std::string name)
-            :    dometer::metrics::Label<dometer::dns::class_>::Label(name, dometer::dns::class_::IN) {}
+            :    dometer::metrics::label<dometer::dns::class_>::label(name, dometer::dns::class_::IN) {}
 
-    std::string ClassLabel::toString(dometer::dns::class_ class_) const {
+    std::string ClassLabel::to_string(dometer::dns::class_ class_) const {
         return class_;
     }
 }

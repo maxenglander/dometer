@@ -3,9 +3,9 @@
 
 namespace dometer::dns::metrics {
     TypeLabel::TypeLabel(std::string name)
-            :    dometer::metrics::Label<dometer::dns::type>::Label(name, dometer::dns::type::A) {}
+            :    dometer::metrics::label<dometer::dns::type>::label(name, dometer::dns::type::A) {}
 
-    std::string TypeLabel::toString(dometer::dns::type type) const {
+    std::string TypeLabel::to_string(dometer::dns::type type) const {
         return type;
     }
 }
