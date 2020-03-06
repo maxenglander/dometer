@@ -26,58 +26,58 @@ using namespace std::x;
 
 namespace dometer::cli {
     int main(int argc, char **argv) {
-        util::HumanErrorEncoder errorEncoder;
+        util::human_error_encoder error_encoder;
 
-        auto cliOptions = dometer::cli::OptionsParser::parse(argc, argv);
-        if(!cliOptions) {
-            std::cerr << errorEncoder.encode(util::Error(
+        auto cli_options = dometer::cli::options_parser::parse(argc, argv);
+        if(!cli_options) {
+            std::cerr << error_encoder.encode(util::error(
                 "Failed to parse command line options.",
-                cliOptions.error()
+                cli_options.error()
             ));
             return 1;
-        } else if (cliOptions->help) {
-            Help::printHelp();
+        } else if (cli_options->help) {
+            help::print_help();
             return 1;
-        } else if (!cliOptions->config) {
-            Help::printHelp();
+        } else if (!cli_options->config) {
+            help::print_help();
             return 1;
         }
 
-        auto parser = config::Parser();
-        auto parseResults = parser.fromFile(cliOptions->config.value());
-        if(!parseResults) {
-            std::cerr << errorEncoder.encode(util::Error(
+        auto parser = config::parser();
+        auto parse_results = parser.fromFile(cli_options->config.value());
+        if(!parse_results) {
+            std::cerr << error_encoder.encode(util::error(
                 "Failed to load configuration.",
-                std::vector<std::string>{"Config file path: " + cliOptions->config.value()},
-                parseResults.error()
+                std::vector<std::string>{"Config file path: " + cli_options->config.value()},
+                parse_results.error()
             ));
             return 1;
         }
-        auto appOptions = *parseResults;
+        auto app_options = *parse_results;
 
-        auto handlersResult = metrics::handler::HandlerFactory::makeHandlers(appOptions.metrics.handlers);
-        if(!handlersResult) {
-            std::cerr << errorEncoder.encode(util::Error(
+        auto handlers_result = metrics::handler::handler_factory::make_handlers(app_options.metrics.handlers);
+        if(!handlers_result) {
+            std::cerr << error_encoder.encode(util::error(
                 "Failed to create metrics handlers.",
-                handlersResult.error()
+                handlers_result.error()
             ));
             return 1;
         }
-        auto observer = std::make_shared<metrics::Observer>(*handlersResult);
-        auto emitter = event::Emitter<dns::event::AnyEvent>();
-        auto metricRecordingEventFunctor = dometer::dns::eventmetrics::MetricRecordingEventFunctor(observer);
-        emitter.on([&metricRecordingEventFunctor](dns::event::AnyEvent event) {
-            metricRecordingEventFunctor(event);
+        auto observer = std::make_shared<metrics::observer>(*handlers_result);
+        auto emitter = event::emitter<dns::event::any_event>();
+        auto metric_recording_event_functor = dometer::dns::eventmetrics::metric_recording_event_functor(observer);
+        emitter.on([&metric_recording_event_functor](dns::event::any_event event) {
+            metric_recording_event_functor(event);
         });
 
-        auto resolver = dns::resolver::ResolverFactory::makeResolver(appOptions.dns.resolver);
-        auto resolvingHandler = std::make_shared<dns::handler::ResolvingHandler>(emitter, resolver);
-        dns::server::Server server(emitter, resolvingHandler);
-        auto serveResult = server.serve(appOptions.dns.server.transport.bindAddress);
-        if(!serveResult) {
-            std::cerr << errorEncoder.encode(util::Error(
+        auto resolver = dns::resolver::resolver_factory::make_resolver(app_options.dns.resolver);
+        auto resolving_handler = std::make_shared<dns::handler::resolving_handler>(emitter, resolver);
+        dns::server::server server(emitter, resolving_handler);
+        auto serve_result = server.serve(app_options.dns.server.transport.bindAddress);
+        if(!serve_result) {
+            std::cerr << error_encoder.encode(util::error(
                 "Failed to start DNS server",
-                serveResult.error()
+                serve_result.error()
             ));
             return 1;
         }

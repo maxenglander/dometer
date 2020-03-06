@@ -4,11 +4,11 @@
 #include "dometer/cli/help.hpp"
 
 namespace dometer::cli {
-    void Help::printHelp() {
-        printHelp(std::cerr);
+    void help::print_help() {
+        print_help(std::cerr);
     }
 
-    void Help::printHelp(std::ostream& os) {
+    void help::print_help(std::ostream& os) {
         os << "Dometer." << std::endl;
         os << std::endl;
         os << "Usage:" << std::endl;

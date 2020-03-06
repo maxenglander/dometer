@@ -8,5 +8,5 @@
 #include "std/x/variant.hpp"
 
 namespace dometer::dns::event {
-    using AnyEvent = std::x::variant<ParseQueryEvent, ParseReplyEvent, ResolveQueryEvent, StartSessionEvent, StopSessionEvent>;
+    using any_event = std::x::variant<ParseQueryEvent, ParseReplyEvent, ResolveQueryEvent, StartSessionEvent, StopSessionEvent>;
 }

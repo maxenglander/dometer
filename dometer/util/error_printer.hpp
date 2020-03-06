@@ -3,9 +3,9 @@
 #include "dometer/util/error.hpp"
 
 namespace dometer::util {
-    class ErrorPrinter {
+    class errorPrinter {
         public:
-            ErrorPrinter(std::ostream);
-            void print(Error);
+            errorPrinter(std::ostream);
+            void print(error);
     };
 }

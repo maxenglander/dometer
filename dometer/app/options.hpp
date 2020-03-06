@@ -4,8 +4,8 @@
 #include "dometer/app/metrics/options.hpp"
 
 namespace dometer::app {
-    struct Options {
-        const dometer::app::dns::Options dns;
-        const dometer::app::metrics::Options metrics;
+    struct options {
+        const dometer::app::dns::options dns;
+        const dometer::app::metrics::options metrics;
     };
 }

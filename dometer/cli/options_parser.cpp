@@ -10,7 +10,7 @@
 namespace util = dometer::util;
 
 namespace dometer::cli {
-    std::x::expected<Options, util::Error> OptionsParser::parse(int argc, char** argv) {
+    std::x::expected<Options, util::error> options_parser::parse(int argc, char** argv) {
         const option longOptions[] = {
             {"config", required_argument, nullptr, 'c'},
             {"help", no_argument, nullptr, 'h'},
@@ -42,7 +42,7 @@ namespace dometer::cli {
                     break;
                 case '?': // Missing or ambiguous argument
                     if(optopt == 'c') {
-                        return std::x::unexpected<util::Error>(util::Error(
+                        return std::x::unexpected<util::error>(util::error(
                             "A specifed option was provided without a required argument.",
                             std::vector<std::string>{
                               "Specified option: --config",
@@ -50,7 +50,7 @@ namespace dometer::cli {
                             }
                         ));
                     } else {
-                        return std::x::unexpected<util::Error>(util::Error(
+                        return std::x::unexpected<util::error>(util::error(
                             "A provided option is not recognized (" + std::string(argv[optind - 1]) + ")."
                         ));
                     }

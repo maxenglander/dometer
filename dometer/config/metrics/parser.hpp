@@ -7,12 +7,12 @@
 namespace app = dometer::app;
 
 namespace dometer::config::metrics {
-    class Parser {
+    class parser {
         public:
-            Parser();
-            Parser(dometer::config::metrics::handler::Parser);
-            app::metrics::Options fromJson(const Json::Value& jsonValue) const;
+            parser();
+            parser(dometer::config::metrics::handler::parser);
+            app::metrics::options fromJson(const Json::Value& jsonValue) const;
         private:
-            const dometer::config::metrics::handler::Parser handlerParser;
+            const dometer::config::metrics::handler::parser handlerParser;
     };
 }

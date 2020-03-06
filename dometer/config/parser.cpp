@@ -15,17 +15,17 @@ namespace app = dometer::app;
 namespace util = dometer::util;
 
 namespace dometer::config {
-    Parser::Parser()
-        : Parser(InternalParser(), SchemaValidator()) {}
+    parser::parser()
+        : parser(InternalParser(), SchemaValidator()) {}
 
-    Parser::Parser(InternalParser internalParser, SchemaValidator schemaValidator)
+    parser::parser(InternalParser internalParser, SchemaValidator schemaValidator)
         : internalParser(internalParser),
           schemaValidator(schemaValidator) {}
 
-    std::x::expected<app::Options, util::Error> Parser::fromFile(std::string file) {
+    std::x::expected<app::options, util::error> parser::fromFile(std::string file) {
         std::ifstream ifs(file.c_str());
         if(!ifs.good()) {
-            return std::x::unexpected<util::Error>(util::Error(
+            return std::x::unexpected<util::error>(util::error(
                 "File does not exist or cannot be read."
             ));
         }
@@ -35,10 +35,10 @@ namespace dometer::config {
         return fromJson(sstr.str());
     }
 
-    expected<app::Options, util::Error> Parser::fromJson(std::string json) {
+    expected<app::options, util::error> parser::fromJson(std::string json) {
         auto validation = schemaValidator.validate(json);
         if(!validation) {
-            return unexpected<util::Error>(util::Error(
+            return unexpected<util::error>(util::error(
                 "Failed to parse config from JSON.",
                 validation.error()
             ));

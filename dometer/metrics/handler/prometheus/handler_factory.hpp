@@ -11,7 +11,7 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
-    class HandlerFactory {
+    class handler_factory {
         class CollectableRegistrar {
             public:
                 CollectableRegistrar(std::shared_ptr<::prometheus::Registry>);
@@ -22,6 +22,6 @@ namespace dometer::metrics::handler::prometheus {
         };
 
         public:
-            static std::x::expected<Handler, util::Error> makeHandler(Options options);
+            static std::x::expected<Handler, util::error> makeHandler(options options);
     };
 }

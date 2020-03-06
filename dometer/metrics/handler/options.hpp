@@ -4,5 +4,5 @@
 #include "std/x/variant.hpp"
 
 namespace dometer::metrics::handler {
-    using Options = std::x::variant<dometer::metrics::handler::prometheus::Options>;
+    using options = std::x::variant<dometer::metrics::handler::prometheus::options>;
 }

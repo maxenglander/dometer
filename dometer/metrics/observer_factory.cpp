@@ -11,19 +11,19 @@
 #include "std/x/expected.hpp"
 
 namespace dometer::metrics {
-    std::x::expected<std::shared_ptr<Observer>, util::Error> ObserverFactory::makeObserver(Options options) {
+    std::x::expected<std::shared_ptr<observer>, util::error> ObserverFactory::makeObserver(Options options) {
         std::vector<dometer::metrics::handler::Handler> handlers;
 
         for(auto it = options.handlers.begin(); it < options.handlers.end(); it++) {
             auto handler = dometer::metrics::handler::Factory::makeHandler(*it);
             if(!handler)
-                return std::x::unexpected<util::Error>(util::Error(
+                return std::x::unexpected<util::error>(util::error(
                     "Failed to create metrics handler.",
                     handler.error()
                 ));
             handlers.push_back(*handler);
         }
 
-        return std::make_shared<Observer>(handlers);
+        return std::make_shared<observer>(handlers);
     }
 }

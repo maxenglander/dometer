@@ -22,12 +22,13 @@ TODO
  - [x] separate dns parsing and resolution
  - [x] create metrics/handler package
  - [x] create metrics/handler/prometheus package
+ - [ ] use cpp std coding style, lower cases
  - [ ] make nice getter/setters for message
+ - [ ] make nice getter/setters for dns events
  - [ ] switch summary to histogram
  - [ ] add logging
  - [ ] write tests
  - [ ] write documentation
- - [ ] use cpp std coding style, lower cases
  - [ ] replace #include statements with forward declarations
  - [ ] create internal boundaries (e.g. ::internal or ::detail)
  - [ ] use cpp convention/style enforcer

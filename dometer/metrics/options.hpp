@@ -6,6 +6,6 @@
 
 namespace dometer::metrics {
     struct Options {
-        const std::vector<dometer::metrics::handler::Options> handlers;
+        const std::vector<dometer::metrics::handler::options> handlers;
     };
 }

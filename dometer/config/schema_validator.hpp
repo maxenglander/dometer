@@ -15,12 +15,12 @@ namespace dometer::config {
         public:
             SchemaValidator();
             SchemaValidator(valijson::Validator);
-            std::x::expected<std::unique_ptr<Json::Value>, util::Error> validate(std::string);
+            std::x::expected<std::unique_ptr<Json::Value>, util::error> validate(std::string);
         private:
-            util::Error makeError(valijson::ValidationResults);
+            util::error makeerror(valijson::ValidationResults);
             static std::unique_ptr<valijson::Schema> getSchema();
-            std::x::expected<std::unique_ptr<Json::Value>, util::Error> parse(std::string);
-            std::x::expected<void, util::Error> validate(const valijson::Schema&, const Json::Value&);
+            std::x::expected<std::unique_ptr<Json::Value>, util::error> parse(std::string);
+            std::x::expected<void, util::error> validate(const valijson::Schema&, const Json::Value&);
             valijson::Validator validator;
     };
 }

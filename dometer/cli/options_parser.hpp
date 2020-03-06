@@ -7,8 +7,8 @@
 namespace util = dometer::util;
 
 namespace dometer::cli {
-    class OptionsParser {
+    class options_parser {
         public:
-            static std::x::expected<Options, util::Error> parse(int argc, char** argv);
+            static std::x::expected<Options, util::error> parse(int argc, char** argv);
     };
 }

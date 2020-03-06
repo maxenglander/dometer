@@ -8,7 +8,7 @@
 namespace dometer::dns::event {
     class ParseReplyEvent : public ParseMessageEvent {
         public:
-            ParseReplyEvent(uint64_t, const std::x::expected<dometer::dns::message::Message, dometer::util::Error>);
+            ParseReplyEvent(uint64_t, const std::x::expected<dometer::dns::message::Message, dometer::util::error>);
             ParseReplyEvent(const ParseReplyEvent&);
     };
 }

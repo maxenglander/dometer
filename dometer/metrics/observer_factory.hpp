@@ -8,6 +8,6 @@
 namespace dometer::metrics {
     class ObserverFactory {
         public:
-            static std::x::expected<std::shared_ptr<Observer>, util::Error> makeObserver(Options options);
+            static std::x::expected<std::shared_ptr<observer>, util::error> makeObserver(Options options);
     };
 }

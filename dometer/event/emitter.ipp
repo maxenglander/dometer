@@ -11,24 +11,24 @@
 
 namespace dometer::event {
     template <class T>
-    Emitter<T>::Emitter() : Emitter<T>(std::vector<Callback<T>>()) {}
+    emitter<T>::emitter() : emitter<T>(std::vector<Callback<T>>()) {}
 
     template <class T>
-    Emitter<T>::Emitter(std::vector<Callback<T>> callbacks) : callbacks(callbacks) {}
+    emitter<T>::emitter(std::vector<Callback<T>> callbacks) : callbacks(callbacks) {}
 
     template <class T>
-    Emitter<T>::Emitter(const Emitter<T>& emitter)
-        : Emitter<T>::Emitter(emitter.callbacks)
+    emitter<T>::emitter(const emitter<T>& emitter)
+        : emitter<T>::emitter(emitter.callbacks)
     {
     }
 
     template <class T>
-    Emitter<T>::~Emitter() {
+    emitter<T>::~emitter() {
     }
 
 
     template <class T>
-    void Emitter<T>::emit(T t) {
+    void emitter<T>::emit(T t) {
         for(auto it = callbacks.begin(); it != callbacks.end(); it++) {
             Callback<T> callback = *it;
             callback(t);
@@ -36,7 +36,7 @@ namespace dometer::event {
     }
 
     template <class T>
-    void Emitter<T>::on(Callback<T> v) {
+    void emitter<T>::on(Callback<T> v) {
         callbacks.push_back(v);
     }
 }

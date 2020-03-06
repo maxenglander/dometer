@@ -6,9 +6,9 @@
 #include "dometer/dns/resolver/options.hpp"
 
 namespace dometer::dns::resolver {
-    class ResolverFactory {
+    class resolver_factory {
         public:
-            static std::shared_ptr<Resolver> makeResolver(LibresolvOptions);
-            static std::shared_ptr<Resolver> makeResolver(Options);
+            static std::shared_ptr<Resolver> make_resolver(LibresolvOptions);
+            static std::shared_ptr<Resolver> make_resolver(options);
     };
 }

@@ -5,11 +5,11 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::server {
-    class Parser {
+    class parser {
         public:
-            Parser();
-            Parser(TransportParser);
-            dometer::dns::server::Options fromJson(const Json::Value& jsonValue) const;
+            parser();
+            parser(TransportParser);
+            dometer::dns::server::options fromJson(const Json::Value& jsonValue) const;
         private:
             const TransportParser transportParser;
     };

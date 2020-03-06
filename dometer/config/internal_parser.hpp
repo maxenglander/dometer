@@ -17,11 +17,11 @@ namespace dometer::config {
     class InternalParser {
         public:
             InternalParser();
-            InternalParser(dometer::config::dns::Parser,
-                                dometer::config::metrics::Parser);
-            app::Options fromJson(const Json::Value&) const;
+            InternalParser(dometer::config::dns::parser,
+                                dometer::config::metrics::parser);
+            app::options fromJson(const Json::Value&) const;
         private:
-            const dometer::config::dns::Parser dnsParser;
-            const dometer::config::metrics::Parser metricsParser;
+            const dometer::config::dns::parser dnsParser;
+            const dometer::config::metrics::parser metricsParser;
     };
 }

@@ -14,7 +14,7 @@ namespace dometer::dns::message {
     class MessageFactory {
         public:
             static Message copyMessage(const Message& message);
-            static Message formatError(const Message& query); 
+            static Message formaterror(const Message& query); 
             static Message notImplemented(const Message& query); 
             static Message serverFailure(const Message& query); 
     };

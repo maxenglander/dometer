@@ -3,9 +3,9 @@
 #include <ostream>
 
 namespace dometer::cli {
-    class Help {
+    class help {
         public:
-            static void printHelp();
-            static void printHelp(std::ostream&);
+            static void print_help();
+            static void print_help(std::ostream&);
     };
 }

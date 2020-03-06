@@ -28,7 +28,7 @@ namespace dometer::dns::resolver {
     LibresolvResolver::LibresolvResolver(LibresolvFunction function)
         : function(function) {}
 
-    expected<std::vector<uint8_t>, Error> LibresolvResolver::resolve(
+    expected<std::vector<uint8_t>, error> LibresolvResolver::resolve(
         const std::string& qname, const Class& qclass, const Type& qtype
     ) const {
         unsigned char buffer[PACKETSZ];
@@ -42,9 +42,9 @@ namespace dometer::dns::resolver {
         }
 
         if(length > PACKETSZ) {
-            return unexpected<Error>(Error(
+            return unexpected<error>(error(
                 "Reply is too big.",
-                ErrorCode::MSGSIZE
+                errorCode::MSGSIZE
             ));
         }
 
@@ -55,16 +55,16 @@ namespace dometer::dns::resolver {
         if(length < 0 && errno > 0) {
             switch(errno) {
                 case ETIMEDOUT:
-                    return unexpected<Error>(Error(
+                    return unexpected<error>(error(
                         "Timed out waiting for reply.",
-                        ErrorCode::TIMEDOUT,
-                        dometer::util::Error(strerror(errno), errno))
+                        errorCode::TIMEDOUT,
+                        dometer::util::error(strerror(errno), errno))
                     );
                 default:
-                    return unexpected<Error>(Error(
+                    return unexpected<error>(error(
                         "Did not receive a reply.",
-                        ErrorCode::OTHER,
-                        dometer::util::Error(strerror(errno), errno))
+                        errorCode::OTHER,
+                        dometer::util::error(strerror(errno), errno))
                     );
             }
         }
@@ -72,16 +72,16 @@ namespace dometer::dns::resolver {
         // Nasty hack because res_* hides the length of messages from us
         int savedherrno = h_errno;
         for(int i = 0; i <= PACKETSZ; i++) {
-            auto reply = dns::message::Parser::parse(buffer, i);
+            auto reply = dns::message::parser::parse(buffer, i);
             if(reply) {
                 return std::vector<uint8_t>(buffer, buffer + i);
             }
         }
 
-        return unexpected<Error>(Error(
+        return unexpected<error>(error(
             "Reply was invalid.",
-            ErrorCode::OTHER,
-            dometer::util::Error(hstrerror(savedherrno), savedherrno)
+            errorCode::OTHER,
+            dometer::util::error(hstrerror(savedherrno), savedherrno)
         ));
     }
 }

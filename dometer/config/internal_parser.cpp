@@ -12,20 +12,20 @@ namespace util = dometer::util;
 
 namespace dometer::config {
     InternalParser::InternalParser()
-        : InternalParser(dometer::config::dns::Parser(),
-                       dometer::config::metrics::Parser()) {}
+        : InternalParser(dometer::config::dns::parser(),
+                       dometer::config::metrics::parser()) {}
 
-    InternalParser::InternalParser(dometer::config::dns::Parser dnsParser,
-                               dometer::config::metrics::Parser metricsParser)
+    InternalParser::InternalParser(dometer::config::dns::parser dnsParser,
+                               dometer::config::metrics::parser metricsParser)
         : dnsParser(dnsParser),
           metricsParser(metricsParser) {}
 
-    app::Options InternalParser::fromJson(const Json::Value& jsonValue) const {
+    app::options InternalParser::fromJson(const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("dns"));
         assert(jsonValue["dns"].isObject());
         assert(jsonValue.isMember("metrics"));
         assert(jsonValue["metrics"].isObject());
-        return app::Options{
+        return app::options{
             dnsParser.fromJson(jsonValue["dns"]),
             metricsParser.fromJson(jsonValue["metrics"])
         };

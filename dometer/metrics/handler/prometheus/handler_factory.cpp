@@ -14,16 +14,16 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
-    HandlerFactory::CollectableRegistrar::CollectableRegistrar(std::shared_ptr<::prometheus::Registry> registry)
+    handler_factory::CollectableRegistrar::CollectableRegistrar(std::shared_ptr<::prometheus::Registry> registry)
         :   registry(registry)
     {}
 
     template <class ConcreteTransport>
-    void HandlerFactory::CollectableRegistrar::operator()(ConcreteTransport& transport) {
+    void handler_factory::CollectableRegistrar::operator()(ConcreteTransport& transport) {
         transport.RegisterCollectable(registry);
     }
 
-    std::x::expected<Handler, util::Error> HandlerFactory::makeHandler(Options options) {
+    std::x::expected<Handler, util::error> handler_factory::makeHandler(options options) {
         auto registry = std::make_shared<::prometheus::Registry>();
         std::vector<std::shared_ptr<::prometheus::x::Transport>> transports;
         CollectableRegistrar registrar(registry);
@@ -35,7 +35,7 @@ namespace dometer::metrics::handler::prometheus {
                 std::x::visit(registrar, *transport);
                 transports.push_back(transport);
             } else {
-                return std::x::unexpected<util::Error>(util::Error(
+                return std::x::unexpected<util::error>(util::error(
                     "Failed to create prometheus transport.",
                     transportResult.error()
                 ));

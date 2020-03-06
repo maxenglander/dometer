@@ -5,23 +5,23 @@
 #include <vector>
 
 namespace dometer::util {
-    struct Error {
-        Error(const Error&);
-        Error(std::string);
-        Error(std::string, std::vector<std::string>);
-        Error(std::string, Error);
-        Error(std::string, std::vector<std::string>, Error);
-        Error(std::string, int);
-        Error(std::string, int, std::vector<std::string>);
-        Error(std::string, int, Error);
-        Error(std::string, int, std::vector<std::string>, Error);
+    struct error {
+        error(const error&);
+        error(std::string);
+        error(std::string, std::vector<std::string>);
+        error(std::string, error);
+        error(std::string, std::vector<std::string>, error);
+        error(std::string, int);
+        error(std::string, int, std::vector<std::string>);
+        error(std::string, int, error);
+        error(std::string, int, std::vector<std::string>, error);
 
         const std::string message;
         const int code;
         const std::vector<std::string> details;
-        const std::shared_ptr<Error> cause;
+        const std::shared_ptr<error> cause;
 
         private:
-            Error(std::string, int, std::vector<std::string>, std::shared_ptr<Error>);
+            error(std::string, int, std::vector<std::string>, std::shared_ptr<error>);
     };
 }

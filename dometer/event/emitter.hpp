@@ -8,12 +8,12 @@
 
 namespace dometer::event {
     template <class T>
-    class Emitter {
+    class emitter {
         public:
-            Emitter();
-            Emitter(std::vector<Callback<T>>);
-            Emitter(const Emitter&);
-            ~Emitter();
+            emitter();
+            emitter(std::vector<Callback<T>>);
+            emitter(const emitter&);
+            ~emitter();
             void emit(T t);
             void on(Callback<T> v);
         private:

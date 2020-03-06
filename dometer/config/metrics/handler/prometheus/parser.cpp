@@ -7,14 +7,14 @@
 #include "json/json.h"
 
 namespace dometer::config::metrics::handler::prometheus {
-    Parser::Parser()
-        : Parser::Parser(dometer::config::metrics::handler::prometheus::TransportParser()) {}
+    parser::parser()
+        : parser::parser(dometer::config::metrics::handler::prometheus::TransportParser()) {}
 
-    Parser::Parser(
+    parser::parser(
             dometer::config::metrics::handler::prometheus::TransportParser transportParser)
         : transportParser(transportParser) {}
 
-    dometer::metrics::handler::prometheus::Options Parser::fromJson(
+    dometer::metrics::handler::prometheus::options parser::fromJson(
             const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("maxTimeSeries"));
         assert(jsonValue["maxTimeSeries"].isUInt());
@@ -26,7 +26,7 @@ namespace dometer::config::metrics::handler::prometheus {
             transports.push_back(transportParser.fromJson(jsonValue["transports"][i]));
         }
 
-        return dometer::metrics::handler::prometheus::Options{
+        return dometer::metrics::handler::prometheus::options{
             jsonValue["maxTimeSeries"].asUInt(),
             transports
         };

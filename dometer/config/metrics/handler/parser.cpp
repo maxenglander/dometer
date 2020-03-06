@@ -5,13 +5,13 @@
 #include "json/json.h"
 
 namespace dometer::config::metrics::handler {
-    Parser::Parser()
-        : Parser::Parser(dometer::config::metrics::handler::prometheus::Parser()) {}
+    parser::parser()
+        : parser::parser(dometer::config::metrics::handler::prometheus::parser()) {}
 
-    Parser::Parser(dometer::config::metrics::handler::prometheus::Parser prometheusParser)
-        : prometheusParser(prometheusParser) {}
+    parser::parser(dometer::config::metrics::handler::prometheus::parser prometheus_parser)
+        : prometheus_parser(prometheus_parser) {}
 
-    dometer::metrics::handler::Options Parser::fromJson(const Json::Value& jsonValue) const {
+    dometer::metrics::handler::options parser::fromJson(const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("type"));
         assert(jsonValue["type"].isString());
         std::string type = jsonValue["type"].asString();
@@ -20,7 +20,7 @@ namespace dometer::config::metrics::handler {
             assert(jsonValue.isMember("prometheus"));
             assert(jsonValue["prometheus"].isObject());
 
-            return prometheusParser.fromJson(jsonValue["prometheus"]);
+            return prometheus_parser.fromJson(jsonValue["prometheus"]);
         } else {
             assert(false);
         }

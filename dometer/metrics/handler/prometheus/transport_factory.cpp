@@ -12,7 +12,7 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
-    std::x::expected<std::shared_ptr<::prometheus::x::Transport>, util::Error> TransportFactory::makeTransport(
+    std::x::expected<std::shared_ptr<::prometheus::x::Transport>, util::error> TransportFactory::makeTransport(
             TransportOptions options) {
         try {
             return std::x::visit(std::x::overloaded(
@@ -26,7 +26,7 @@ namespace dometer::metrics::handler::prometheus {
                 }
             ), options);
         } catch(std::exception& e) {
-            return std::x::unexpected<util::Error>(util::Error(
+            return std::x::unexpected<util::error>(util::error(
                 "Failed to construct  pull transport.",
                 std::vector<std::string>{ std::string(e.what()) }
             ));

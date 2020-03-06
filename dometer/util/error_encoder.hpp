@@ -6,8 +6,8 @@
 #include "dometer/util/error.hpp"
 
 namespace dometer::util {
-    class ErrorEncoder {
+    class error_encoder {
         public:
-           virtual std::string encode(Error) = 0;
+           virtual std::string encode(error) = 0;
     };
 }

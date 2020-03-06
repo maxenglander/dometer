@@ -50,7 +50,7 @@ namespace dometer::metrics::handler::prometheus {
             void cacheMetric(T* t, ::prometheus::x::FamilyNameAndTimeSeriesCount);
 
             template<typename T, typename BuilderFn>
-            expected<::prometheus::x::FamilyRef<T>, util::Error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
+            expected<::prometheus::x::FamilyRef<T>, util::error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
 
             LRUMap metricCache;
             std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef> metricFamilies;

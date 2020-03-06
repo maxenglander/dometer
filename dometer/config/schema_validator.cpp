@@ -23,7 +23,7 @@ namespace dometer::config {
 
     SchemaValidator::SchemaValidator(valijson::Validator validator) : validator(validator) {}
 
-    util::Error SchemaValidator::makeError(valijson::ValidationResults validationResults) {
+    util::error SchemaValidator::makeerror(valijson::ValidationResults validationResults) {
         std::vector<std::string> details;
         for(auto it = validationResults.begin(); it != validationResults.end(); it++) {
             valijson::ValidationResults::Error error = *it;
@@ -37,7 +37,7 @@ namespace dometer::config {
             details.insert(details.begin(), context + ": " + error.description);
         }
 
-        return util::Error("Failed to validate configuration against schema.", details);
+        return util::error("Failed to validate configuration against schema.", details);
     }
 
     std::unique_ptr<valijson::Schema> SchemaValidator::getSchema() {
@@ -68,7 +68,7 @@ namespace dometer::config {
         return std::move(schema);
     }
 
-    std::x::expected<std::unique_ptr<Json::Value>, util::Error> SchemaValidator::parse(std::string input) {
+    std::x::expected<std::unique_ptr<Json::Value>, util::error> SchemaValidator::parse(std::string input) {
         std::string errs;
         auto root = std::x::make_unique<Json::Value>();
 
@@ -76,7 +76,7 @@ namespace dometer::config {
         std::unique_ptr<Json::CharReader> const reader(rbuilder.newCharReader());
 
         if(!reader->parse(&input[0], &input[input.size() - 1], &(*root), &errs)) {
-            return std::x::unexpected<util::Error>(util::Error(
+            return std::x::unexpected<util::error>(util::error(
                 "Failed to parse JSON.",
                 util::StringHelper::split('\n', errs)
             ));
@@ -85,12 +85,12 @@ namespace dometer::config {
         return std::move(root);
     }
 
-    std::x::expected<std::unique_ptr<Json::Value>, util::Error> SchemaValidator::validate(std::string input) {
+    std::x::expected<std::unique_ptr<Json::Value>, util::error> SchemaValidator::validate(std::string input) {
         std::unique_ptr<valijson::Schema> schema = this->getSchema();
 
         auto parseResult = parse(input);
         if(!parseResult) {
-            return std::x::unexpected<util::Error>(util::Error(
+            return std::x::unexpected<util::error>(util::error(
                 "Failed to parse JSON.",
                 parseResult.error()
             ));
@@ -100,7 +100,7 @@ namespace dometer::config {
 
         auto validationResult = validate(*(schema.get()), *(root.get()));
         if(!validationResult) {
-            return std::x::unexpected<util::Error>(util::Error(
+            return std::x::unexpected<util::error>(util::error(
                 "Failed to validate JSON.",
                 validationResult.error()
             ));
@@ -109,11 +109,11 @@ namespace dometer::config {
         return std::move(root);
     }
 
-    std::x::expected<void, util::Error> SchemaValidator::validate(const valijson::Schema& schema, const Json::Value& root) {
+    std::x::expected<void, util::error> SchemaValidator::validate(const valijson::Schema& schema, const Json::Value& root) {
         valijson::ValidationResults validationResults;
         valijson::adapters::JsonCppAdapter valueAdapter(root);
         if(!validator.validate(schema, valueAdapter, &validationResults)) {
-            return std::x::unexpected<util::Error>(makeError(validationResults));
+            return std::x::unexpected<util::error>(makeerror(validationResults));
         }
         return {};
     }

@@ -5,7 +5,7 @@
 #include "dometer/metrics/observer.hpp"
 
 namespace dometer::metrics {
-    Observer::Observer(std::vector<dometer::metrics::handler::Handler> handlers)
+    observer::observer(std::vector<dometer::metrics::handler::Handler> handlers)
         : handlers(handlers) {
     }
 }

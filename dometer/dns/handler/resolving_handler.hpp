@@ -15,37 +15,37 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::handler {
-    class ResolvingHandler : public Handler {
+    class resolving_handler : public Handler {
         public:
-            ResolvingHandler(
-                    dometer::event::Emitter<dometer::dns::event::AnyEvent>,
+            resolving_handler(
+                    dometer::event::emitter<dometer::dns::event::any_event>,
                     std::shared_ptr<dns::resolver::Resolver>);
-            ResolvingHandler(std::chrono::steady_clock,
-                    dometer::event::Emitter<dometer::dns::event::AnyEvent>,
+            resolving_handler(std::chrono::steady_clock,
+                    dometer::event::emitter<dometer::dns::event::any_event>,
                     std::shared_ptr<dns::resolver::Resolver>);
-            std::x::expected<std::vector<uint8_t>, util::Error> handle(uint64_t, std::vector<uint8_t>);
+            std::x::expected<std::vector<uint8_t>, util::error> handle(uint64_t, std::vector<uint8_t>);
         private:
-            std::x::expected<dns::message::Message, util::Error> handle(
-                uint64_t, std::x::expected<dns::message::Message, util::Error>& query
+            std::x::expected<dns::message::Message, util::error> handle(
+                uint64_t, std::x::expected<dns::message::Message, util::error>& query
             );
-            std::x::expected<dns::message::Message, util::Error> handle(
+            std::x::expected<dns::message::Message, util::error> handle(
                 uint64_t, dns::message::Message& query
             );
-            std::x::expected<dns::message::Message, util::Error> handle(
+            std::x::expected<dns::message::Message, util::error> handle(
                 uint64_t, dometer::dns::Question question
             );
-            std::x::expected<dometer::dns::message::Message, util::Error> parseQuery(
+            std::x::expected<dometer::dns::message::Message, util::error> parseQuery(
                 uint64_t sessionId, std::vector<uint8_t> bytes
             );
-            std::x::expected<dometer::dns::message::Message, util::Error> parseReply(
+            std::x::expected<dometer::dns::message::Message, util::error> parseReply(
                 uint64_t sessionId, std::vector<uint8_t> bytes
             );
-            std::x::expected<std::vector<uint8_t>, util::Error> resolveQuery(
+            std::x::expected<std::vector<uint8_t>, util::error> resolveQuery(
                 uint64_t sessionId, dometer::dns::Question&
             );
 
             const std::chrono::steady_clock clock;
-            dometer::event::Emitter<dometer::dns::event::AnyEvent> emitter;
+            dometer::event::emitter<dometer::dns::event::any_event> emitter;
             const std::shared_ptr<dns::resolver::Resolver> resolver;
     };
 }

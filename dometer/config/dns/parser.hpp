@@ -8,14 +8,14 @@
 namespace app = dometer::app;
 
 namespace dometer::config::dns {
-    class Parser {
+    class parser {
         public:
-            Parser();
-            Parser(dometer::config::dns::resolver::Parser,
-                    dometer::config::dns::server::Parser);
-            app::dns::Options fromJson(const Json::Value& jsonValue) const;
+            parser();
+            parser(dometer::config::dns::resolver::parser,
+                   dometer::config::dns::server::parser);
+            app::dns::options fromJson(const Json::Value& jsonValue) const;
         private:
-            const dometer::config::dns::resolver::Parser resolverParser;
-            const dometer::config::dns::server::Parser serverParser;
+            const dometer::config::dns::resolver::parser resolverParser;
+            const dometer::config::dns::server::parser serverParser;
     };
 }

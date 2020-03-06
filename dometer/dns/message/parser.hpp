@@ -12,10 +12,10 @@ namespace util = dometer::util;
 namespace dometer::dns::message {
     class Message;
 
-    class Parser {
+    class parser {
         public:
-            static std::x::expected<Message, util::Error> parse(std::vector<uint8_t> bytes);
-            static std::x::expected<Message, util::Error> parse(uint8_t *bytePtr, size_t size);
-            static std::x::expected<Message, util::Error> parse(std::unique_ptr<uint8_t[]> bytes, size_t size);
+            static std::x::expected<Message, util::error> parse(std::vector<uint8_t> bytes);
+            static std::x::expected<Message, util::error> parse(uint8_t *bytePtr, size_t size);
+            static std::x::expected<Message, util::error> parse(std::unique_ptr<uint8_t[]> bytes, size_t size);
     };
 }

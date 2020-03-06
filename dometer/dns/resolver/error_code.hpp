@@ -3,7 +3,7 @@
 #include <string>
 
 namespace dometer::dns::resolver {
-    enum class ErrorCode {
+    enum class errorCode {
         NOERROR = 0,
         CONNREFUSED = 1,
         MSGSIZE = 2,
@@ -12,5 +12,5 @@ namespace dometer::dns::resolver {
         OTHER = 255
     };
     
-    std::string to_string(const ErrorCode&);
+    std::string to_string(const errorCode&);
 }

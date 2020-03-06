@@ -9,21 +9,21 @@
 namespace app = dometer::app;
 
 namespace dometer::config::dns {
-    Parser::Parser()
-        : Parser::Parser(dometer::config::dns::resolver::Parser(),
-                                 dometer::config::dns::server::Parser()) {}
+    parser::parser()
+        : parser::parser(dometer::config::dns::resolver::parser(),
+                                 dometer::config::dns::server::parser()) {}
 
-    Parser::Parser(dometer::config::dns::resolver::Parser resolverParser,
-                           dometer::config::dns::server::Parser serverParser)
+    parser::parser(dometer::config::dns::resolver::parser resolverParser,
+                           dometer::config::dns::server::parser serverParser)
         : resolverParser(resolverParser), serverParser(serverParser) {}
 
-    app::dns::Options Parser::fromJson(const Json::Value& jsonValue) const {
+    app::dns::options parser::fromJson(const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("resolver"));
         assert(jsonValue["resolver"].isObject());
         assert(jsonValue.isMember("server"));
         assert(jsonValue["server"].isObject());
 
-        return app::dns::Options{
+        return app::dns::options{
             resolverParser.fromJson(jsonValue["resolver"]),
             serverParser.fromJson(jsonValue["server"])
         };

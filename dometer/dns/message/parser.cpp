@@ -16,21 +16,21 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    std::x::expected<Message, util::Error> Parser::parse(std::vector<uint8_t> bytes) {
+    std::x::expected<Message, util::error> parser::parse(std::vector<uint8_t> bytes) {
         return parse(bytes.data(), bytes.size());
     }
 
-    std::x::expected<Message, util::Error> Parser::parse(uint8_t *bytePtr, size_t size) {
+    std::x::expected<Message, util::error> parser::parse(uint8_t *bytePtr, size_t size) {
         std::unique_ptr<uint8_t[]> bytes(new uint8_t[size]);
         std::copy(bytePtr, bytePtr + size, bytes.get());
         return parse(std::move(bytes), size);
     }
 
-    std::x::expected<Message, util::Error> Parser::parse(std::unique_ptr<uint8_t[]> bytes, size_t size) {
+    std::x::expected<Message, util::error> parser::parse(std::unique_ptr<uint8_t[]> bytes, size_t size) {
         ns_msg handle;
 
         if(size < 0 || size > PACKETSZ) {
-            return std::x::unexpected<util::Error>(util::Error(
+            return std::x::unexpected<util::error>(util::error(
                 "Invalid message length.",
                 std::vector<std::string>({
                     "Min length: 0",
@@ -41,9 +41,9 @@ namespace dometer::dns::message {
         }
 
         if(ns_initparse(bytes.get(), size, &handle) < 0) {
-            return std::x::unexpected<util::Error>(util::Error(
+            return std::x::unexpected<util::error>(util::error(
                 "Failed to parse bytes into DNS message.",
-                util::Error(
+                util::error(
                     std::string(strerror(errno)),
                     errno
                 )

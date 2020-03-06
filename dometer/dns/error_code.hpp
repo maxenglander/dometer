@@ -4,13 +4,13 @@
 #include <string>
 
 namespace dometer::dns {
-    class ErrorCode {
+    class errorCode {
         public:
-            static const ErrorCode NOERROR;
-            static const ErrorCode CONNREFUSED;
-            static const ErrorCode TIMEDOUT;
+            static const errorCode NOERROR;
+            static const errorCode CONNREFUSED;
+            static const errorCode TIMEDOUT;
 
-            ErrorCode(uint8_t value);
+            errorCode(uint8_t value);
             operator uint8_t() const;
             operator std::string() const;
         private:

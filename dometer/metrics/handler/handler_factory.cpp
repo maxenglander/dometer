@@ -11,30 +11,30 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler {
-    std::x::expected<Handler, util::Error> HandlerFactory::makeHandler(Options options) {
+    std::x::expected<Handler, util::error> handler_factory::makeHandler(options options) {
         auto concreteHandler = std::x::visit(std::x::overloaded(
-            [](dometer::metrics::handler::prometheus::Options po) {
-                return dometer::metrics::handler::prometheus::HandlerFactory::makeHandler(po);
+            [](dometer::metrics::handler::prometheus::options po) {
+                return dometer::metrics::handler::prometheus::handler_factory::makeHandler(po);
             }
         ), options);
 
         if(concreteHandler) {
             return Handler(*concreteHandler);
         } else {
-            return std::x::unexpected<util::Error>(util::Error(
+            return std::x::unexpected<util::error>(util::error(
                 "Failed to create prometheus metrics handler.",
                 concreteHandler.error()
             ));
         }
     }
 
-    std::x::expected<std::vector<Handler>, util::Error> HandlerFactory::makeHandlers(std::vector<Options> optionss) {
+    std::x::expected<std::vector<Handler>, util::error> handler_factory::make_handlers(std::vector<options> optionss) {
         std::vector<dometer::metrics::handler::Handler> handlers;
 
         for(auto it = optionss.begin(); it < optionss.end(); it++) {
             auto handler = makeHandler(*it);
             if(!handler) {
-                return std::x::unexpected<util::Error>(util::Error(
+                return std::x::unexpected<util::error>(util::error(
                     "Failed to create metrics handler.",
                     handler.error()
                 ));

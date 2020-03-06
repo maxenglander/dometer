@@ -1,19 +1,19 @@
 #include "dometer/dns/resolver/error_code.hpp"
 
 namespace dometer::dns::resolver {
-    std::string to_string(const ErrorCode& errorCode) {
+    std::string to_string(const errorCode& errorCode) {
         switch(errorCode) {
-            case ErrorCode::CONNREFUSED:
+            case errorCode::CONNREFUSED:
                 return "CONNREFUSED";
-            case ErrorCode::MSGSIZE:
+            case errorCode::MSGSIZE:
                 return "MSGSIZE";
-            case ErrorCode::NOERROR:
+            case errorCode::NOERROR:
                 return "NOERROR";
-            case ErrorCode::OTHER:
+            case errorCode::OTHER:
                 return "OTHER";
-            case ErrorCode::PARSEERROR:
+            case errorCode::PARSEERROR:
                 return "PARSEERROR";
-            case ErrorCode::TIMEDOUT:
+            case errorCode::TIMEDOUT:
                 return "TIMEDOUT";
         }
     }

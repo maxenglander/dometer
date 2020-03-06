@@ -6,12 +6,12 @@
 #include "dometer/util/human_error_encoder.hpp"
 
 namespace dometer::util {
-    std::string HumanErrorEncoder::encode(Error error) {
+    std::string human_error_encoder::encode(error error) {
         std::size_t depth = 0;
 
         std::string result = encode(error, depth);
 
-        std::shared_ptr<Error> cause = error.cause;
+        std::shared_ptr<dometer::util::error> cause = error.cause;
 
         while(cause) {
             result += indent(depth) + "Why:\n";
@@ -23,7 +23,7 @@ namespace dometer::util {
         return result;
     }
 
-    std::string HumanErrorEncoder::encode(Error error, std::size_t depth) {
+    std::string human_error_encoder::encode(error error, std::size_t depth) {
         std::string result = indent(depth) + error.message + "\n";
 
         if(error.code != 0)
@@ -37,7 +37,7 @@ namespace dometer::util {
         return result;
     }
 
-    std::string HumanErrorEncoder::indent(std::size_t depth) {
+    std::string human_error_encoder::indent(std::size_t depth) {
         std::string result;
         for(size_t i = 0; i < depth; i++)
             result += "  ";

@@ -7,11 +7,11 @@
 #include "dometer/util/error_encoder.hpp"
 
 namespace dometer::util {
-    class HumanErrorEncoder : public ErrorEncoder {
+    class human_error_encoder : public error_encoder {
         public:
-          std::string encode(Error);
+          std::string encode(error);
         private:
-          std::string encode(Error, size_t);
+          std::string encode(error, size_t);
           std::string indent(size_t);
     };
 }

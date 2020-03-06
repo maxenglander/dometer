@@ -9,14 +9,14 @@
 
 namespace dometer::metrics {
     template<typename... L>
-    void Observer::increment(const Counter<L...>& counter, Observation<uint64_t, L...> observation) {
+    void observer::increment(const Counter<L...>& counter, Observation<uint64_t, L...> observation) {
         for(auto it = handlers.begin(); it < handlers.end(); it++) {
             it->increment(counter, observation);
         }
     }
 
     template<typename... L>
-    void Observer::observe(const Summary<L...>& summary, Observation<double, L...> observation) {
+    void observer::observe(const Summary<L...>& summary, Observation<double, L...> observation) {
         for(auto it = handlers.begin(); it < handlers.end(); it++) {
             it->observe(summary, observation);
         }

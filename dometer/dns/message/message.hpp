@@ -24,7 +24,7 @@ namespace dometer::dns::message {
             uint16_t getId() const;
             OpCode getOpCode() const;
             QR getQR() const;
-            std::x::expected<Question, util::Error> getQuestion() const;
+            std::x::expected<Question, util::error> getQuestion() const;
             bool getRA() const;
             RCode getRCode() const;
             bool getRD() const;
@@ -49,6 +49,6 @@ namespace dometer::dns::message {
             ns_msg handle;
 
             friend class Factory;
-            friend class Parser;
+            friend class parser;
     };
 }

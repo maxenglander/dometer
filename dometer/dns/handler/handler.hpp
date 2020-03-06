@@ -14,6 +14,6 @@ namespace util = dometer::util;
 namespace dometer::dns::handler {
     class Handler {
         public:
-            virtual std::x::expected<std::vector<uint8_t>, util::Error> handle(uint64_t, std::vector<uint8_t>) = 0;
+            virtual std::x::expected<std::vector<uint8_t>, util::error> handle(uint64_t, std::vector<uint8_t>) = 0;
     };
 }

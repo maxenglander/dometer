@@ -25,10 +25,10 @@ namespace dometer::dns::message {
         uint8_t *bytePtr = message;
         size_t size = message.size();
         std::copy(bytePtr, bytePtr + size, bytes.get());
-        return *Parser::parse(std::move(bytes), message.size());
+        return *parser::parse(std::move(bytes), message.size());
     }
 
-    Message MessageFactory::formatError(const Message& message) {
+    Message MessageFactory::formaterror(const Message& message) {
         auto reply = copyMessage(message);
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::FORMERR);

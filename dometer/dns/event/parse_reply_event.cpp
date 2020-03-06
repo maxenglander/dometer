@@ -9,7 +9,7 @@ namespace util = dometer::util;
 
 namespace dometer::dns::event {
     ParseReplyEvent::ParseReplyEvent(const uint64_t sessionId,
-            const std::x::expected<dns::message::Message, util::Error> message)
+            const std::x::expected<dns::message::Message, util::error> message)
         : ParseMessageEvent(sessionId, message) {}
 
     ParseReplyEvent::ParseReplyEvent(const ParseReplyEvent& event)

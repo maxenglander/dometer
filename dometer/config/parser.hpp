@@ -14,12 +14,12 @@ namespace app = dometer::app;
 namespace util = dometer::util;
 
 namespace dometer::config {
-    class Parser {
+    class parser {
         public:
-            Parser();
-            Parser(InternalParser, SchemaValidator);
-            std::x::expected<app::Options, util::Error> fromFile(std::string);
-            std::x::expected<app::Options, util::Error> fromJson(std::string);
+            parser();
+            parser(InternalParser, SchemaValidator);
+            std::x::expected<app::options, util::error> fromFile(std::string);
+            std::x::expected<app::options, util::error> fromJson(std::string);
         private:
             InternalParser internalParser;
             SchemaValidator schemaValidator;

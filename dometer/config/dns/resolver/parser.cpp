@@ -8,12 +8,12 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::resolver {
-    Parser::Parser() : Parser::Parser(LibresolvParser()) {}
+    parser::parser() : parser::parser(LibresolvParser()) {}
 
-    Parser::Parser(LibresolvParser libresolvParser)
+    parser::parser(LibresolvParser libresolvParser)
         : libresolvParser(libresolvParser) {}
 
-    dometer::dns::resolver::Options Parser::fromJson(const Json::Value& jsonValue) const {
+    dometer::dns::resolver::options parser::fromJson(const Json::Value& jsonValue) const {
         assert(jsonValue.isMember("type"));
         assert(jsonValue["type"].isString());
         std::string type = jsonValue["type"].asString();

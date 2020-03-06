@@ -41,7 +41,7 @@ namespace dometer::metrics::handler::prometheus {
     }
 
     template<typename T, typename BuilderFn>
-    std::x::expected<::prometheus::x::FamilyRef<T>, util::Error> Handler::getOrBuildMetricFamily(
+    std::x::expected<::prometheus::x::FamilyRef<T>, util::error> Handler::getOrBuildMetricFamily(
             std::string name, std::string description, BuilderFn newBuilder) {
         auto search = metricFamilies.find(name);
         if(search == metricFamilies.end()) {
@@ -57,7 +57,7 @@ namespace dometer::metrics::handler::prometheus {
             return familyRef;
         }
 
-        return std::x::unexpected<util::Error>(util::Error(
+        return std::x::unexpected<util::error>(util::error(
             "A metric with this name, but a different type, already exists"
         ));
     }

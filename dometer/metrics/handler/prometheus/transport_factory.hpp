@@ -12,6 +12,6 @@ namespace util = dometer::util;
 namespace dometer::metrics::handler::prometheus {
     class TransportFactory {
         public:
-            static std::x::expected<std::shared_ptr<::prometheus::x::Transport>, util::Error> makeTransport(TransportOptions);
+            static std::x::expected<std::shared_ptr<::prometheus::x::Transport>, util::error> makeTransport(TransportOptions);
     };
 }

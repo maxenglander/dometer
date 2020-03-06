@@ -8,14 +8,14 @@
 #include "dometer/metrics/observer.hpp"
 
 namespace dometer::dns::eventmetrics {
-    class MetricRecordingEventFunctor {
+    class metric_recording_event_functor {
         public:
-            MetricRecordingEventFunctor(std::shared_ptr<dometer::metrics::Observer>);
-            MetricRecordingEventFunctor(const MetricRecordingEventFunctor&);
-            ~MetricRecordingEventFunctor();
-            void operator () (dometer::dns::event::AnyEvent);
+            metric_recording_event_functor(std::shared_ptr<dometer::metrics::observer>);
+            metric_recording_event_functor(const metric_recording_event_functor&);
+            ~metric_recording_event_functor();
+            void operator () (dometer::dns::event::any_event);
         private:
-            const std::shared_ptr<dometer::metrics::Observer> observer;
+            const std::shared_ptr<dometer::metrics::observer> observer;
             std::unordered_map<uint64_t, dometer::dns::event::Session> sessions;
     };
 }

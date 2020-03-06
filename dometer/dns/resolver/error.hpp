@@ -4,10 +4,10 @@
 #include "dometer/util/error.hpp"
 
 namespace dometer::dns::resolver {
-    struct Error : public dometer::util::Error {
-        Error(std::string, ErrorCode);
-        Error(std::string, ErrorCode, dometer::util::Error);
+    struct error : public dometer::util::error {
+        error(std::string, errorCode);
+        error(std::string, errorCode, dometer::util::error);
 
-        const ErrorCode code;
+        const errorCode code;
     };
 }

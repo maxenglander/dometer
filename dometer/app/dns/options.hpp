@@ -4,8 +4,8 @@
 #include "dometer/dns/resolver/options.hpp"
 
 namespace dometer::app::dns {
-    struct Options {
-        const dometer::dns::resolver::Options resolver;
-        const dometer::dns::server::Options server;
+    struct options {
+        const dometer::dns::resolver::options resolver;
+        const dometer::dns::server::options server;
     };
 }

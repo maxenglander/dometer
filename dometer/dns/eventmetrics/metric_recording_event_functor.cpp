@@ -17,20 +17,20 @@
 #include "std/x/variant.hpp"
 
 namespace dometer::dns::eventmetrics {
-    MetricRecordingEventFunctor::MetricRecordingEventFunctor(std::shared_ptr<dometer::metrics::Observer> observer)
+    metric_recording_event_functor::metric_recording_event_functor(std::shared_ptr<dometer::metrics::observer> observer)
         : observer(observer) 
     {}
 
-    MetricRecordingEventFunctor::MetricRecordingEventFunctor(const MetricRecordingEventFunctor& functor)
+    metric_recording_event_functor::metric_recording_event_functor(const metric_recording_event_functor& functor)
         : observer(functor.observer),
           sessions(functor.sessions)
     {
     }
 
-    MetricRecordingEventFunctor::~MetricRecordingEventFunctor() {
+    metric_recording_event_functor::~metric_recording_event_functor() {
     }
 
-    void MetricRecordingEventFunctor::operator() (dometer::dns::event::AnyEvent anyEvent) {
+    void metric_recording_event_functor::operator() (dometer::dns::event::any_event anyEvent) {
         std::x::visit(std::x::overloaded(
             [&](const dometer::dns::event::ParseQueryEvent parseQueryEvent) {
                 const uint64_t sessionId = parseQueryEvent.getSessionId();
