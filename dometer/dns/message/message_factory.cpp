@@ -10,8 +10,8 @@
 #include "dometer/dns/opcode.hpp"
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/rcode.hpp"
-#include "dometer/dns/message/factory.hpp"
 #include "dometer/dns/message/message.hpp"
+#include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/message/parser.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
@@ -20,7 +20,7 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    Message Factory::copyMessage(const Message& message) {
+    Message MessageFactory::copyMessage(const Message& message) {
         std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size()]);
         uint8_t *bytePtr = message;
         size_t size = message.size();
@@ -28,21 +28,21 @@ namespace dometer::dns::message {
         return *Parser::parse(std::move(bytes), message.size());
     }
 
-    Message Factory::formatError(const Message& message) {
+    Message MessageFactory::formatError(const Message& message) {
         auto reply = copyMessage(message);
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::FORMERR);
         return reply;
     }
 
-    Message Factory::notImplemented(const Message& query) {
+    Message MessageFactory::notImplemented(const Message& query) {
         auto reply = copyMessage(query);;
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::NOTIMPL);
         return reply;
     }
 
-    Message Factory::serverFailure(const Message& query) {
+    Message MessageFactory::serverFailure(const Message& query) {
         auto reply = copyMessage(query);
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::SERVFAIL);

@@ -4,44 +4,9 @@ cc_library(
     srcs = ["parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
-        "//dometer/config/metrics/handler:prometheus_handler_parser",
+        "//dometer/config/metrics/handler/prometheus:parser",
         "//dometer/metrics/handler:options",
         "//std/x:optional",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "prometheus_handler_parser",
-    hdrs = ["prometheus_handler_parser.hpp"],
-    srcs = ["prometheus_handler_parser.cpp"],
-    deps = [
-        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
-        "//dometer/config/metrics/handler:prometheus_transport_parser",
-        "//dometer/metrics/handler:prometheus_options",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "prometheus_pull_transport_parser",
-    hdrs = ["prometheus_pull_transport_parser.hpp"],
-    srcs = ["prometheus_pull_transport_parser.cpp"],
-    deps = [
-        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
-        "//dometer/metrics/handler:prometheus_pull_transport_options",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "prometheus_transport_parser",
-    hdrs = ["prometheus_transport_parser.hpp"],
-    srcs = ["prometheus_transport_parser.cpp"],
-    deps = [
-        "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
-        "//dometer/metrics/handler:prometheus_transport_options",
-        "prometheus_pull_transport_parser",
     ],
     visibility = ["//visibility:public"],
 )

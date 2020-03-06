@@ -1,6 +1,6 @@
 #include "dometer/metrics/handler/handler.hpp"
-#include "dometer/metrics/handler/prometheus_handler.hpp"
+#include "dometer/metrics/handler/prometheus/handler.hpp"
 
 namespace dometer::metrics::handler {
-    Handler::Handler(PrometheusHandler prometheusHandler) : concreteHandler(prometheusHandler) {}
+    Handler::Handler(dometer::metrics::handler::prometheus::Handler prometheusHandler) : concreteHandler(prometheusHandler) {}
 }

@@ -1,6 +1,7 @@
 cc_library(
-    name = "factory",
-    hdrs = ["factory.hpp"],
+    name = "message_factory",
+    hdrs = ["message_factory.hpp"],
+    srcs = ["message_factory.cpp"],
     deps = [
         "//dometer/dns:class",
         "//dometer/dns:opcode",
@@ -15,21 +16,6 @@ cc_library(
         ":message",
         ":parser",
     ],
-    srcs = ["factory.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "parser",
-    hdrs = ["parser.hpp"],
-    deps = [
-        "//dometer/util:array_helper",
-        "//dometer/util:error",
-        "//std/x:expected",
-        "//std/x:unique",
-        ":message",
-    ],
-    srcs = ["parser.cpp"],
     visibility = ["//visibility:public"],
 )
 
@@ -49,5 +35,19 @@ cc_library(
         "//std/x:unique",
     ],
     srcs = ["message.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "parser",
+    hdrs = ["parser.hpp"],
+    deps = [
+        "//dometer/util:array_helper",
+        "//dometer/util:error",
+        "//std/x:expected",
+        "//std/x:unique",
+        ":message",
+    ],
+    srcs = ["parser.cpp"],
     visibility = ["//visibility:public"],
 )

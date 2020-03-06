@@ -24,7 +24,7 @@ cc_library(
         "//dometer/dns/event:parse_reply_event",
         "//dometer/dns/event:resolve_query_event",
         "//dometer/dns/message:message",
-        "//dometer/dns/message:factory",
+        "//dometer/dns/message:message_factory",
         "//dometer/dns/message:parser",
         "//dometer/dns/resolver:libresolv_resolver",
         "//dometer/event:callback",

@@ -11,7 +11,7 @@ namespace util = dometer::util;
 namespace dometer::dns::message {
     class Message;
 
-    class Factory {
+    class MessageFactory {
         public:
             static Message copyMessage(const Message& message);
             static Message formatError(const Message& query); 

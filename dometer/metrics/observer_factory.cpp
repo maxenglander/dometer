@@ -2,8 +2,8 @@
 #include <memory>
 #include <vector>
 
+#include "dometer/metrics/handler/factory.hpp"
 #include "dometer/metrics/handler/handler.hpp"
-#include "dometer/metrics/handler/handler_factory.hpp"
 #include "dometer/metrics/observer.hpp"
 #include "dometer/metrics/observer_factory.hpp"
 #include "dometer/metrics/options.hpp"
@@ -15,7 +15,7 @@ namespace dometer::metrics {
         std::vector<dometer::metrics::handler::Handler> handlers;
 
         for(auto it = options.handlers.begin(); it < options.handlers.end(); it++) {
-            auto handler = dometer::metrics::handler::HandlerFactory::makeHandler(*it);
+            auto handler = dometer::metrics::handler::Factory::makeHandler(*it);
             if(!handler)
                 return std::x::unexpected<util::Error>(util::Error(
                     "Failed to create metrics handler.",

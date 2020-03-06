@@ -37,8 +37,8 @@ cc_library(
     srcs = ["libresolv_resolver.cpp"],
     deps = [
         "//dometer/dns:class",
-        "//dometer/dns/message:factory",
         "//dometer/dns/message:message",
+        "//dometer/dns/message:message_factory",
         "//dometer/dns/message:parser",
         "//dometer/dns:type",
         "//std/x:expected",

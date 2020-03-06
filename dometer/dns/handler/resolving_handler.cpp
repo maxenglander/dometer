@@ -8,7 +8,7 @@
 #include "dometer/dns/event/parse_reply_event.hpp"
 #include "dometer/dns/event/resolve_query_event.hpp"
 #include "dometer/dns/message/message.hpp"
-#include "dometer/dns/message/factory.hpp"
+#include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/message/parser.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/dns/handler/resolving_handler.hpp"
@@ -62,7 +62,7 @@ namespace dometer::dns::handler {
         }
 
         if(query->getOpCode() != dns::OpCode::QUERY) {
-            return dns::message::Factory::notImplemented(*query);
+            return dns::message::MessageFactory::notImplemented(*query);
         }
 
         return handle(sessionId, *query);
@@ -73,7 +73,7 @@ namespace dometer::dns::handler {
     ) {
         auto question = query.getQuestion();
         if(!question) {
-            return dns::message::Factory::formatError(query);
+            return dns::message::MessageFactory::formatError(query);
         }
 
         return handle(sessionId, *question);

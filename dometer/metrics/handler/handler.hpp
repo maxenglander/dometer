@@ -3,7 +3,7 @@
 #include "dometer/metrics/counter.hpp"
 #include "dometer/metrics/observation.hpp"
 #include "dometer/metrics/summary.hpp"
-#include "dometer/metrics/handler/prometheus_handler.hpp"
+#include "dometer/metrics/handler/prometheus/handler.hpp"
 #include "std/x/variant.hpp"
 
 namespace dometer::metrics::handler {
@@ -31,7 +31,7 @@ namespace dometer::metrics::handler {
         };
 
         public:
-            Handler(PrometheusHandler);
+            Handler(dometer::metrics::handler::prometheus::Handler);
 
             template<typename... L>
             void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);
@@ -39,7 +39,7 @@ namespace dometer::metrics::handler {
             template<typename... L>
             void observe(const dometer::metrics::Summary<L...>&, dometer::metrics::Observation<double, L...>);
         private:
-             std::x::variant<PrometheusHandler> concreteHandler;
+             std::x::variant<dometer::metrics::handler::prometheus::Handler> concreteHandler;
     };
 }
 

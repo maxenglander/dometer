@@ -20,12 +20,10 @@ TODO
  - [x] add rcode to dns metrics (upstream resolution)
  - [x] eliminate exception-throwing from dns packet parsing path
  - [x] separate dns parsing and resolution
- - [ ] move dns/\*.{c,h,i}.pp to dns/???
- - [ ] create metrics/handler package
- - [ ] create metrics/handler/prometheus package
- - [ ] make nice getter/seters for message
+ - [x] create metrics/handler package
+ - [x] create metrics/handler/prometheus package
+ - [ ] make nice getter/setters for message
  - [ ] switch summary to histogram
- - [ ] decompose handler
  - [ ] add logging
  - [ ] write tests
  - [ ] write documentation
@@ -34,3 +32,4 @@ TODO
  - [ ] create internal boundaries (e.g. ::internal or ::detail)
  - [ ] use cpp convention/style enforcer
  - [ ] remove unused deps from build files
+ - [ ] decompose handler

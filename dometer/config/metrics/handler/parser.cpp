@@ -6,9 +6,9 @@
 
 namespace dometer::config::metrics::handler {
     Parser::Parser()
-        : Parser::Parser(dometer::config::metrics::handler::PrometheusHandlerParser()) {}
+        : Parser::Parser(dometer::config::metrics::handler::prometheus::Parser()) {}
 
-    Parser::Parser(dometer::config::metrics::handler::PrometheusHandlerParser prometheusParser)
+    Parser::Parser(dometer::config::metrics::handler::prometheus::Parser prometheusParser)
         : prometheusParser(prometheusParser) {}
 
     dometer::metrics::handler::Options Parser::fromJson(const Json::Value& jsonValue) const {
