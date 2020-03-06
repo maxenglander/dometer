@@ -7,23 +7,23 @@
 #include "json/json.h"
 
 namespace dometer::config::metrics::handler::prometheus {
-    TransportParser::TransportParser()
-        : TransportParser(dometer::config::metrics::handler::prometheus::PullTransportParser()) {}
+    transport_parser::transport_parser()
+        : transport_parser(dometer::config::metrics::handler::prometheus::pull_transport_parser()) {}
 
-    TransportParser::TransportParser(dometer::config::metrics::handler::prometheus::PullTransportParser pullTransportParser)
-        : pullTransportParser(pullTransportParser) {}
+    transport_parser::transport_parser(dometer::config::metrics::handler::prometheus::pull_transport_parser pull_transport_parser)
+        : pull_transport_parser(pull_transport_parser) {}
 
-    dometer::metrics::handler::prometheus::TransportOptions TransportParser::fromJson(
-            const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("type"));
-        assert(jsonValue["type"].isString());
+    dometer::metrics::handler::prometheus::transport_options transport_parser::from_json(
+            const Json::Value& json_value) const {
+        assert(json_value.isMember("type"));
+        assert(json_value["type"].isString());
 
-        std::string type = jsonValue["type"].asString();
+        std::string type = json_value["type"].asString();
         if(type == "pull") {
-            assert(jsonValue.isMember("exposer"));
-            assert(jsonValue["exposer"].isObject());
+            assert(json_value.isMember("exposer"));
+            assert(json_value["exposer"].isObject());
 
-            return pullTransportParser.fromJson(jsonValue["exposer"]);
+            return pull_transport_parser.from_json(json_value["exposer"]);
         } else {
             assert(false);
         }

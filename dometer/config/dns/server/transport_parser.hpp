@@ -6,6 +6,6 @@
 namespace dometer::config::dns::server {
     class transport_parser {
         public:
-            dometer::dns::server::transport_options fromJson(const Json::Value&) const;
+            dometer::dns::server::transport_options from_json(const Json::Value&) const;
     };
 }

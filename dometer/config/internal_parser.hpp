@@ -14,14 +14,14 @@ namespace app = dometer::app;
 namespace util = dometer::util;
 
 namespace dometer::config {
-    class InternalParser {
+    class internal_parser {
         public:
-            InternalParser();
-            InternalParser(dometer::config::dns::parser,
+            internal_parser();
+            internal_parser(dometer::config::dns::parser,
                                 dometer::config::metrics::parser);
-            app::options fromJson(const Json::Value&) const;
+            app::options from_json(const Json::Value&) const;
         private:
-            const dometer::config::dns::parser dnsParser;
-            const dometer::config::metrics::parser metricsParser;
+            const dometer::config::dns::parser dns_parser;
+            const dometer::config::metrics::parser metrics_parser;
     };
 }

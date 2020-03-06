@@ -13,15 +13,15 @@ namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
     std::x::expected<std::shared_ptr<::prometheus::x::Transport>, util::error> TransportFactory::makeTransport(
-            TransportOptions options) {
+            transport_options options) {
         try {
             return std::x::visit(std::x::overloaded(
-                [](PullTransportOptions ppto) {
+                [](pull_transport_options ppto) {
                     return std::make_shared<::prometheus::x::Transport>(
                         std::x::in_place_index<0>(),
-                        ppto.bindAddress,
-                        ppto.metricsPath,
-                        ppto.numThreads
+                        ppto.bind_address,
+                        ppto.metrics_path,
+                        ppto.num_threads
                     );
                 }
             ), options);

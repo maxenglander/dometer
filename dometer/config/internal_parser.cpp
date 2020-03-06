@@ -11,23 +11,23 @@ namespace app = dometer::app;
 namespace util = dometer::util;
 
 namespace dometer::config {
-    InternalParser::InternalParser()
-        : InternalParser(dometer::config::dns::parser(),
+    internal_parser::internal_parser()
+        : internal_parser(dometer::config::dns::parser(),
                        dometer::config::metrics::parser()) {}
 
-    InternalParser::InternalParser(dometer::config::dns::parser dnsParser,
-                               dometer::config::metrics::parser metricsParser)
-        : dnsParser(dnsParser),
-          metricsParser(metricsParser) {}
+    internal_parser::internal_parser(dometer::config::dns::parser dns_parser,
+                               dometer::config::metrics::parser metrics_parser)
+        : dns_parser(dns_parser),
+          metrics_parser(metrics_parser) {}
 
-    app::options InternalParser::fromJson(const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("dns"));
-        assert(jsonValue["dns"].isObject());
-        assert(jsonValue.isMember("metrics"));
-        assert(jsonValue["metrics"].isObject());
+    app::options internal_parser::from_json(const Json::Value& json_value) const {
+        assert(json_value.isMember("dns"));
+        assert(json_value["dns"].isObject());
+        assert(json_value.isMember("metrics"));
+        assert(json_value["metrics"].isObject());
         return app::options{
-            dnsParser.fromJson(jsonValue["dns"]),
-            metricsParser.fromJson(jsonValue["metrics"])
+            dns_parser.from_json(json_value["dns"]),
+            metrics_parser.from_json(json_value["metrics"])
         };
     }
 }

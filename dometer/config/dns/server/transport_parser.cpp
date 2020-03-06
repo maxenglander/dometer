@@ -5,7 +5,7 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::server {
-    dometer::dns::server::transport_options transport_parser::fromJson(const Json::Value& json_value) const {
+    dometer::dns::server::transport_options transport_parser::from_json(const Json::Value& json_value) const {
         assert(json_value.isMember("bindAddress"));
         assert(json_value["bindAddress"].isString());
 

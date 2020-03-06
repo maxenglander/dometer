@@ -17,11 +17,11 @@ namespace dometer::config {
     class parser {
         public:
             parser();
-            parser(InternalParser, SchemaValidator);
-            std::x::expected<app::options, util::error> fromFile(std::string);
-            std::x::expected<app::options, util::error> fromJson(std::string);
+            parser(internal_parser, schema_validator);
+            std::x::expected<app::options, util::error> from_file(std::string);
+            std::x::expected<app::options, util::error> from_json(std::string);
         private:
-            InternalParser internalParser;
-            SchemaValidator schemaValidator;
+            internal_parser _internal_parser;
+            schema_validator _schema_validator;
     };
 }

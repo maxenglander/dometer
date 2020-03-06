@@ -13,19 +13,19 @@ namespace dometer::config::dns {
         : parser::parser(dometer::config::dns::resolver::parser(),
                                  dometer::config::dns::server::parser()) {}
 
-    parser::parser(dometer::config::dns::resolver::parser resolverParser,
-                           dometer::config::dns::server::parser serverParser)
-        : resolverParser(resolverParser), serverParser(serverParser) {}
+    parser::parser(dometer::config::dns::resolver::parser resolver_parser,
+                           dometer::config::dns::server::parser server_parser)
+        : resolver_parser(resolver_parser), server_parser(server_parser) {}
 
-    app::dns::options parser::fromJson(const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("resolver"));
-        assert(jsonValue["resolver"].isObject());
-        assert(jsonValue.isMember("server"));
-        assert(jsonValue["server"].isObject());
+    app::dns::options parser::from_json(const Json::Value& json_value) const {
+        assert(json_value.isMember("resolver"));
+        assert(json_value["resolver"].isObject());
+        assert(json_value.isMember("server"));
+        assert(json_value["server"].isObject());
 
         return app::dns::options{
-            resolverParser.fromJson(jsonValue["resolver"]),
-            serverParser.fromJson(jsonValue["server"])
+            resolver_parser.from_json(json_value["resolver"]),
+            server_parser.from_json(json_value["server"])
         };
     }
 }

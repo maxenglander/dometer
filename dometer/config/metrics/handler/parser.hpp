@@ -9,7 +9,7 @@ namespace dometer::config::metrics::handler {
         public:
             parser();
             parser(dometer::config::metrics::handler::prometheus::parser);
-            dometer::metrics::handler::options fromJson(const Json::Value& jsonValue) const;
+            dometer::metrics::handler::options from_json(const Json::Value&) const;
         private:
             dometer::config::metrics::handler::prometheus::parser prometheus_parser;
     };

@@ -13,16 +13,16 @@ namespace dometer::config::metrics {
     parser::parser()
         : parser::parser(dometer::config::metrics::handler::parser()) {}
 
-    parser::parser(dometer::config::metrics::handler::parser handlerParser)
-        : handlerParser(handlerParser) {}
+    parser::parser(dometer::config::metrics::handler::parser handler_parser)
+        : handler_parser(handler_parser) {}
 
-    dometer::app::metrics::options parser::fromJson(const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("handlers"));
-        assert(jsonValue["handlers"].isArray());
+    dometer::app::metrics::options parser::from_json(const Json::Value& json_value) const {
+        assert(json_value.isMember("handlers"));
+        assert(json_value["handlers"].isArray());
 
         std::vector<dometer::metrics::handler::options> handlers;
-        for(Json::Value::ArrayIndex i = 0; i < jsonValue["handlers"].size(); i++) {
-            handlers.push_back(handlerParser.fromJson(jsonValue["handlers"][i]));
+        for(Json::Value::ArrayIndex i = 0; i < json_value["handlers"].size(); i++) {
+            handlers.push_back(handler_parser.from_json(json_value["handlers"][i]));
         }
 
         return dometer::app::metrics::options{

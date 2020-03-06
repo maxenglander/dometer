@@ -11,14 +11,14 @@
 #include "valijson/validator.hpp"
 
 namespace dometer::config {
-    class SchemaValidator {
+    class schema_validator {
         public:
-            SchemaValidator();
-            SchemaValidator(valijson::Validator);
+            schema_validator();
+            schema_validator(valijson::Validator);
             std::x::expected<std::unique_ptr<Json::Value>, util::error> validate(std::string);
         private:
-            util::error makeerror(valijson::ValidationResults);
-            static std::unique_ptr<valijson::Schema> getSchema();
+            util::error make_error(valijson::ValidationResults);
+            static std::unique_ptr<valijson::Schema> get_schema();
             std::x::expected<std::unique_ptr<Json::Value>, util::error> parse(std::string);
             std::x::expected<void, util::error> validate(const valijson::Schema&, const Json::Value&);
             valijson::Validator validator;

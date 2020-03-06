@@ -5,12 +5,12 @@
 #include "json/json.h"
 
 namespace dometer::config::metrics::handler::prometheus {
-    class TransportParser {
+    class transport_parser {
         public:
-            TransportParser();
-            TransportParser(dometer::config::metrics::handler::prometheus::PullTransportParser);
-            dometer::metrics::handler::prometheus::TransportOptions fromJson(const Json::Value& jsonValue) const;
+            transport_parser();
+            transport_parser(dometer::config::metrics::handler::prometheus::pull_transport_parser);
+            dometer::metrics::handler::prometheus::transport_options from_json(const Json::Value&) const;
         private:
-            dometer::config::metrics::handler::prometheus::PullTransportParser pullTransportParser;
+            dometer::config::metrics::handler::prometheus::pull_transport_parser pull_transport_parser;
     };
 }

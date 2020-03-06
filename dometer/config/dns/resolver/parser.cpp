@@ -13,7 +13,7 @@ namespace dometer::config::dns::resolver {
     parser::parser(libresolv_parser _libresolv_parser)
         : _libresolv_parser(_libresolv_parser) {}
 
-    dometer::dns::resolver::options parser::fromJson(const Json::Value& json_value) const {
+    dometer::dns::resolver::options parser::from_json(const Json::Value& json_value) const {
         assert(json_value.isMember("type"));
         assert(json_value["type"].isString());
         std::string type = json_value["type"].asString();
@@ -21,7 +21,7 @@ namespace dometer::config::dns::resolver {
         if(type == "libresolv") {
             assert(json_value.isMember("libresolv"));
             assert(json_value["libresolv"].isObject());
-            return _libresolv_parser.fromJson(json_value["libresolv"]);
+            return _libresolv_parser.from_json(json_value["libresolv"]);
         }
 
         assert(false);

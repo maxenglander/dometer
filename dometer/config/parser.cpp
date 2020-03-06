@@ -16,13 +16,13 @@ namespace util = dometer::util;
 
 namespace dometer::config {
     parser::parser()
-        : parser(InternalParser(), SchemaValidator()) {}
+        : parser(internal_parser(), schema_validator()) {}
 
-    parser::parser(InternalParser internalParser, SchemaValidator schemaValidator)
-        : internalParser(internalParser),
-          schemaValidator(schemaValidator) {}
+    parser::parser(internal_parser _internal_parser, schema_validator _schema_validator)
+        : _internal_parser(_internal_parser),
+          _schema_validator(_schema_validator) {}
 
-    std::x::expected<app::options, util::error> parser::fromFile(std::string file) {
+    std::x::expected<app::options, util::error> parser::from_file(std::string file) {
         std::ifstream ifs(file.c_str());
         if(!ifs.good()) {
             return std::x::unexpected<util::error>(util::error(
@@ -32,19 +32,19 @@ namespace dometer::config {
 
         std::stringstream sstr;
         sstr << ifs.rdbuf();
-        return fromJson(sstr.str());
+        return from_json(sstr.str());
     }
 
-    expected<app::options, util::error> parser::fromJson(std::string json) {
-        auto validation = schemaValidator.validate(json);
+    expected<app::options, util::error> parser::from_json(std::string json) {
+        auto validation = _schema_validator.validate(json);
         if(!validation) {
             return unexpected<util::error>(util::error(
                 "Failed to parse config from JSON.",
                 validation.error()
             ));
         } else {
-            Json::Value* jsonValue = (*validation).release();
-            return internalParser.fromJson(*jsonValue);
+            Json::Value* json_value = (*validation).release();
+            return _internal_parser.from_json(*json_value);
         }
     }
 }

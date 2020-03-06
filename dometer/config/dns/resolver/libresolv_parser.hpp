@@ -6,6 +6,6 @@
 namespace dometer::config::dns::resolver {
     class libresolv_parser {
         public:
-            dometer::dns::resolver::libresolv_options fromJson(const Json::Value&) const;
+            dometer::dns::resolver::libresolv_options from_json(const Json::Value&) const;
     };
 }

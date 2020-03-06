@@ -11,8 +11,8 @@ namespace dometer::config::metrics {
         public:
             parser();
             parser(dometer::config::metrics::handler::parser);
-            app::metrics::options fromJson(const Json::Value& jsonValue) const;
+            app::metrics::options from_json(const Json::Value&) const;
         private:
-            const dometer::config::metrics::handler::parser handlerParser;
+            const dometer::config::metrics::handler::parser handler_parser;
     };
 }

@@ -7,6 +7,6 @@
 namespace dometer::metrics::handler::prometheus {
     struct options {
         const unsigned int maxTimeSeries;
-        const std::vector<TransportOptions> transports;
+        const std::vector<transport_options> transports;
     };
 }

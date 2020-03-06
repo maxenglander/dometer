@@ -44,7 +44,7 @@ namespace dometer::cli {
         }
 
         auto parser = config::parser();
-        auto parse_results = parser.fromFile(cli_options->config.value());
+        auto parse_results = parser.from_file(cli_options->config.value());
         if(!parse_results) {
             std::cerr << error_encoder.encode(util::error(
                 "Failed to load configuration.",

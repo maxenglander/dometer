@@ -10,11 +10,11 @@ namespace dometer::config::dns::server {
     parser::parser() : parser::parser(transport_parser()) {}
     parser::parser(transport_parser transport_parser_) : transport_parser_(transport_parser_) {}
 
-    dometer::dns::server::options parser::fromJson(const Json::Value& json_value) const {
+    dometer::dns::server::options parser::from_json(const Json::Value& json_value) const {
         assert(json_value.isMember("transport"));
         assert(json_value["transport"].isObject());
         return dometer::dns::server::options{
-            transport_parser_.fromJson(json_value["transport"])
+            transport_parser_.from_json(json_value["transport"])
         };
     }
 }

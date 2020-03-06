@@ -6,7 +6,7 @@
 #include "json/json.h"
 
 namespace dometer::config::dns::resolver {
-    dometer::dns::resolver::libresolv_options libresolv_parser::fromJson(const Json::Value& json_value) const {
+    dometer::dns::resolver::libresolv_options libresolv_parser::from_json(const Json::Value& json_value) const {
         assert(json_value.isMember("function"));
         assert(json_value["function"].isString());
 

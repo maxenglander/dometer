@@ -13,9 +13,9 @@ namespace dometer::config::dns {
             parser();
             parser(dometer::config::dns::resolver::parser,
                    dometer::config::dns::server::parser);
-            app::dns::options fromJson(const Json::Value& jsonValue) const;
+            app::dns::options from_json(const Json::Value&) const;
         private:
-            const dometer::config::dns::resolver::parser resolverParser;
-            const dometer::config::dns::server::parser serverParser;
+            const dometer::config::dns::resolver::parser resolver_parser;
+            const dometer::config::dns::server::parser server_parser;
     };
 }

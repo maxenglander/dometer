@@ -8,9 +8,9 @@ namespace dometer::config::metrics::handler::prometheus {
     class parser {
         public:
             parser();
-            parser(TransportParser);
-            dometer::metrics::handler::prometheus::options fromJson(const Json::Value& jsonValue) const;
+            parser(transport_parser);
+            dometer::metrics::handler::prometheus::options from_json(const Json::Value&) const;
         private:
-            dometer::config::metrics::handler::prometheus::TransportParser transportParser;
+            dometer::config::metrics::handler::prometheus::transport_parser _transport_parser;
     };
 }

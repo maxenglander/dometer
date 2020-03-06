@@ -11,16 +11,16 @@ namespace dometer::config::metrics::handler {
     parser::parser(dometer::config::metrics::handler::prometheus::parser prometheus_parser)
         : prometheus_parser(prometheus_parser) {}
 
-    dometer::metrics::handler::options parser::fromJson(const Json::Value& jsonValue) const {
-        assert(jsonValue.isMember("type"));
-        assert(jsonValue["type"].isString());
-        std::string type = jsonValue["type"].asString();
+    dometer::metrics::handler::options parser::from_json(const Json::Value& json_value) const {
+        assert(json_value.isMember("type"));
+        assert(json_value["type"].isString());
+        std::string type = json_value["type"].asString();
         
         if(type == "prometheus") {
-            assert(jsonValue.isMember("prometheus"));
-            assert(jsonValue["prometheus"].isObject());
+            assert(json_value.isMember("prometheus"));
+            assert(json_value["prometheus"].isObject());
 
-            return prometheus_parser.fromJson(jsonValue["prometheus"]);
+            return prometheus_parser.from_json(json_value["prometheus"]);
         } else {
             assert(false);
         }

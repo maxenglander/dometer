@@ -3,9 +3,9 @@
 #include <string>
 
 namespace dometer::metrics::handler::prometheus {
-    struct PullTransportOptions {
-        const std::string bindAddress;
-        const std::string metricsPath;
-        const unsigned int numThreads;
+    struct pull_transport_options {
+        const std::string bind_address;
+        const std::string metrics_path;
+        const unsigned int num_threads;
     };
 }
