@@ -14,17 +14,17 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    class Message {
+    class message {
         public:
-            Message(const Message&);
-            Message(Message&&);
-            ~Message();
+            message(const message&);
+            message(message&&);
+            ~message();
 
             bool getAA() const;
             uint16_t getId() const;
             OpCode getOpCode() const;
             QR getQR() const;
-            std::x::expected<Question, util::error> getQuestion() const;
+            std::x::expected<question, util::error> getQuestion() const;
             bool getRA() const;
             RCode getRCode() const;
             bool getRD() const;
@@ -37,10 +37,10 @@ namespace dometer::dns::message {
 
             size_t size() const;
         private:
-            Message(std::vector<uint8_t>);
-            Message(uint8_t*, size_t);
-            Message(std::unique_ptr<uint8_t[]>, size_t);
-            Message(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
+            message(std::vector<uint8_t>);
+            message(uint8_t*, size_t);
+            message(std::unique_ptr<uint8_t[]>, size_t);
+            message(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
 
             uint16_t getQDCount() const;
 

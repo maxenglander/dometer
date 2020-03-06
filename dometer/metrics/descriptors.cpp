@@ -18,6 +18,6 @@ namespace dometer::metrics {
             Labels::string("qtype"),
             Labels::boolean("valid")
         ),
-        Type::COUNTER, Unit::NONE
+        type::COUNTER, Unit::NONE
     );
 }

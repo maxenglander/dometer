@@ -2,8 +2,6 @@ cc_library(
     name = "handler",
     deps = [
         "//dometer/dns/message:message",
-        "//dometer/dns/event:event",
-        "//dometer/dns/event:event_type",
         "//dometer/event:callback",
         "//dometer/event:emitter",
         "//dometer/util:error",

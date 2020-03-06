@@ -16,17 +16,17 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    std::x::expected<Message, util::error> parser::parse(std::vector<uint8_t> bytes) {
+    std::x::expected<message, util::error> parser::parse(std::vector<uint8_t> bytes) {
         return parse(bytes.data(), bytes.size());
     }
 
-    std::x::expected<Message, util::error> parser::parse(uint8_t *bytePtr, size_t size) {
+    std::x::expected<message, util::error> parser::parse(uint8_t *bytePtr, size_t size) {
         std::unique_ptr<uint8_t[]> bytes(new uint8_t[size]);
         std::copy(bytePtr, bytePtr + size, bytes.get());
         return parse(std::move(bytes), size);
     }
 
-    std::x::expected<Message, util::error> parser::parse(std::unique_ptr<uint8_t[]> bytes, size_t size) {
+    std::x::expected<message, util::error> parser::parse(std::unique_ptr<uint8_t[]> bytes, size_t size) {
         ns_msg handle;
 
         if(size < 0 || size > PACKETSZ) {
@@ -50,6 +50,6 @@ namespace dometer::dns::message {
             ));
         }
 
-        return Message(std::move(bytes), handle, size);
+        return message(std::move(bytes), handle, size);
     }
 }

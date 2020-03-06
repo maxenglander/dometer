@@ -29,27 +29,27 @@ namespace dometer::dns::event {
         return sessionId;
     }
 
-    std::x::optional<ParseMessageEvent> Session::getParseQueryEvent() const {
+    std::x::optional<parse_message_event> Session::getParseQueryEvent() const {
         return parseQueryEvent;
     }
 
-    std::x::optional<ParseMessageEvent> Session::getParseReplyEvent() const {
+    std::x::optional<parse_message_event> Session::getParseReplyEvent() const {
         return parseReplyEvent;
     }
 
-    std::x::optional<ResolveQueryEvent> Session::getResolveQueryEvent() const {
+    std::x::optional<resolve_query_event> Session::getResolveQueryEvent() const {
         return resolveQueryEvent;
     }
 
-    void Session::setParseQueryEvent(ParseMessageEvent parseQueryEvent) {
+    void Session::setParseQueryEvent(parse_message_event parseQueryEvent) {
         this->parseQueryEvent.emplace(parseQueryEvent);
     }
 
-    void Session::setParseReplyEvent(ParseMessageEvent parseReplyEvent) {
+    void Session::setParseReplyEvent(parse_message_event parseReplyEvent) {
         this->parseReplyEvent.emplace(parseReplyEvent);
     }
 
-    void Session::setResolveQueryEvent(ResolveQueryEvent resolveQueryEvent) {
+    void Session::setResolveQueryEvent(resolve_query_event resolveQueryEvent) {
         this->resolveQueryEvent.emplace(resolveQueryEvent);
     }
 }

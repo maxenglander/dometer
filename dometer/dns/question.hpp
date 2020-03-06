@@ -4,9 +4,9 @@
 #include "dometer/dns/type.hpp"
 
 namespace dometer::dns {
-    struct Question {
+    struct question {
         std::string qname;
-        Type qtype;
-        Class qclass;
+        type qtype;
+        dns_class qclass;
     };
 }

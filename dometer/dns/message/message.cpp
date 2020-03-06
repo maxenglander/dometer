@@ -19,12 +19,14 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    Message::Message(const Message& message)
-        :   Message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(message.bytes.get(), message.size())), message.size())
+    message::message(const message& _message)
+        :   message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(
+                _message.bytes.get(), _message.size())), _message.size()
+            )
     {
     }
 
-    Message::Message(Message&& message)
+    message::message(message&& message)
         :   bytes(std::move(message.bytes)),
             size_(message.size_),
             handle(message.handle)
@@ -33,15 +35,15 @@ namespace dometer::dns::message {
         message.size_ = 0;
     }
 
-    Message::Message(std::vector<uint8_t> bytes)
-        :   Message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(bytes.data(), bytes.size())), bytes.size())
+    message::message(std::vector<uint8_t> bytes)
+        :   message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(bytes.data(), bytes.size())), bytes.size())
     {}
 
-    Message::Message(uint8_t* bytePtr, size_t size)
-        :   Message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(bytePtr, size)), size)
+    message::message(uint8_t* bytePtr, size_t size)
+        :   message(std::move(util::ArrayHelper::makeUniqueCopy<uint8_t>(bytePtr, size)), size)
     {}
 
-    Message::Message(std::unique_ptr<uint8_t[]> bytes, size_t size)
+    message::message(std::unique_ptr<uint8_t[]> bytes, size_t size)
         :   bytes(std::move(bytes)),
             size_(size)
     {
@@ -49,38 +51,38 @@ namespace dometer::dns::message {
         assert(ns_initparse(this->bytes.get(), this->size(), &handle) >= 0);
     }
 
-    Message::Message(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
+    message::message(std::unique_ptr<uint8_t[]> bytes, ns_msg handle, size_t size)
         :   bytes(std::move(bytes)),
             size_(size),
             handle(handle)
     {}
 
-    Message::~Message() {
+    message::~message() {
     }
 
-    bool Message::getAA() const {
+    bool message::getAA() const {
         return ns_msg_getflag(handle, ns_f_aa);
     }
 
-    uint16_t Message::getId() const {
+    uint16_t message::getId() const {
         return ns_msg_id(handle);
     }
 
-    OpCode Message::getOpCode() const {
+    OpCode message::getOpCode() const {
         return static_cast<OpCode>(ns_msg_getflag(handle, ns_f_opcode));
     }
 
-    uint16_t Message::getQDCount() const {
+    uint16_t message::getQDCount() const {
         return ns_msg_count(handle, ns_s_qd);
     }
 
-    QR Message::getQR() const {
+    QR message::getQR() const {
         return static_cast<QR>(ns_msg_getflag(handle, ns_f_qr));
     }
 
-    std::x::expected<Question, util::error> Message::getQuestion() const {
+    std::x::expected<dometer::dns::question, util::error> message::getQuestion() const {
         if(getQDCount() != 1)
-            return std::x::unexpected<util::error>(util::error("Message qd count is not equal to 1."));
+            return std::x::unexpected<util::error>(util::error("message qd count is not equal to 1."));
 
         ns_rr question;
 
@@ -91,34 +93,34 @@ namespace dometer::dns::message {
                 util::error(strerror(errno), errno)
             ));
         }
-        return Question{
+        return dometer::dns::question{
             std::string(ns_rr_name(question)),
-            Type(ns_rr_type(question)),
-            Class(ns_rr_class(question))
+            type(ns_rr_type(question)),
+            dns_class(ns_rr_class(question))
         };
     }
 
-    bool Message::getRA() const {
+    bool message::getRA() const {
         return ns_msg_getflag(handle, ns_f_ra);
     }
 
-    RCode Message::getRCode() const {
+    RCode message::getRCode() const {
         return RCode((uint8_t)ns_msg_getflag(handle, ns_f_rcode));
     }
 
-    bool Message::getRD() const {
+    bool message::getRD() const {
         return ns_msg_getflag(handle, ns_f_rd);
     }
 
-    bool Message::getTC() const {
+    bool message::getTC() const {
         return (bool)ns_msg_getflag(handle, ns_f_tc);
     }
-    void Message::setId(uint16_t id) {
+    void message::setId(uint16_t id) {
         bytes[0] = id >> 8;
         bytes[1] = id & 0xFF;
     }
 
-    void Message::setQR(QR qr) {
+    void message::setQR(QR qr) {
         // Includes "qr", "opcode", "aa" and "tc" flags
         uint8_t byte3 = bytes[2];
 
@@ -132,7 +134,7 @@ namespace dometer::dns::message {
         bytes[2] = byte3;
     }
 
-    void Message::setRCode(RCode rcode) {
+    void message::setRCode(RCode rcode) {
         // Includes "ra", "z", and "rcode" flags
         uint8_t byte4 = bytes[3];
 
@@ -141,11 +143,11 @@ namespace dometer::dns::message {
         bytes[3] = byte4;
     }
 
-    size_t Message::size() const {
+    size_t message::size() const {
         return size_;
     };
 
-    Message::operator uint8_t*() const {
+    message::operator uint8_t*() const {
         return bytes.get();
     }
 }

@@ -18,9 +18,9 @@ namespace dometer::dns::metrics {
     LookupSummary::LookupSummary()
             :   dometer::metrics::Summary<
                     /* error  */std::string,
-                    /* qclass */dometer::dns::Class,
+                    /* qclass */dometer::dns::dns_class,
                     /* qname  */std::string,
-                    /* qtype  */dometer::dns::Type,
+                    /* qtype  */dometer::dns::type,
                     /* rcode  */std::string
                 >::Summary(
                     "dometer_dns_lookup_duration_seconds", "Latency of DNS lookup attempts.",

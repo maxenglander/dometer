@@ -32,28 +32,28 @@ namespace dometer::dns::eventmetrics {
 
     void metric_recording_event_functor::operator() (dometer::dns::event::any_event anyEvent) {
         std::x::visit(std::x::overloaded(
-            [&](const dometer::dns::event::ParseQueryEvent parseQueryEvent) {
-                const uint64_t sessionId = parseQueryEvent.getSessionId();
+            [&](const dometer::dns::event::parse_query_event parseQueryEvent) {
+                const uint64_t sessionId = parseQueryEvent.get_session_id();
                 auto search = this->sessions.find(sessionId);
                 if(search == this->sessions.end()) return;
                 search->second.setParseQueryEvent(parseQueryEvent);
             },
 
-            [&](const dometer::dns::event::ParseReplyEvent parseReplyEvent) {
-                const uint64_t sessionId = parseReplyEvent.getSessionId();
+            [&](const dometer::dns::event::parse_reply_event parseReplyEvent) {
+                const uint64_t sessionId = parseReplyEvent.get_session_id();
                 auto search = this->sessions.find(sessionId);
                 if(search == this->sessions.end()) return;
                 search->second.setParseReplyEvent(parseReplyEvent);
             },
 
-            [&](const dometer::dns::event::ResolveQueryEvent resolveQueryEvent) {
+            [&](const dometer::dns::event::resolve_query_event resolveQueryEvent) {
                 const uint64_t sessionId = resolveQueryEvent.getSessionId();
                 auto search = this->sessions.find(sessionId);
                 if(search == this->sessions.end()) return;
                 search->second.setResolveQueryEvent(resolveQueryEvent);
             },
 
-            [&](const dometer::dns::event::StartSessionEvent startSessionEvent) {
+            [&](const dometer::dns::event::start_session_event startSessionEvent) {
                 this->sessions.emplace(
                     std::piecewise_construct,
                     std::forward_as_tuple<uint64_t>(startSessionEvent.getSessionId()),
@@ -61,7 +61,7 @@ namespace dometer::dns::eventmetrics {
                 );
             },
 
-            [&](const dometer::dns::event::StopSessionEvent stopSessionEvent) {
+            [&](const dometer::dns::event::stop_session_event stopSessionEvent) {
                 auto search = this->sessions.find(stopSessionEvent.getSessionId());
                 if(search == this->sessions.end()) return;
 
@@ -86,7 +86,7 @@ namespace dometer::dns::eventmetrics {
                 if(!resolution) {
                     builder.error(dometer::dns::resolver::to_string(resolution.error().code));
                 } else if(auto parseReplyEvent = session.getParseReplyEvent()) {
-                    if(auto reply = parseReplyEvent->getMessage()) {
+                    if(auto reply = parseReplyEvent->get_message()) {
                         builder.rcode(reply->getRCode());
                     }
                 }

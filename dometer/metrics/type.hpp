@@ -1,7 +1,7 @@
 #pragma once
 
 namespace dometer::metrics {
-    enum class Type {
+    enum class type {
         COUNTER,
         GUAGE,
         HISTOGRAM,

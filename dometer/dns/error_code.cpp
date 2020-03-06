@@ -5,15 +5,15 @@
 #include "dometer/dns/class.hpp"
 
 namespace dometer::dns {
-    const Class Class::IN = Class(ns_c_in);
+    const dns_class dns_class::IN = dns_class(ns_c_in);
 
-    Class::Class(uint16_t value) : value(value) {}
+    dns_class::dns_class(uint16_t value) : value(value) {}
 
-    Class::operator uint16_t() const {
+    dns_class::operator uint16_t() const {
         return value;
     }
 
-    Class::operator std::string() const {
+    dns_class::operator std::string() const {
         switch(value) {
             case ns_c_in:
                 return "IN";

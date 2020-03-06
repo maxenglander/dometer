@@ -3,8 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "dometer/dns/event/event.hpp"
-#include "dometer/dns/event/event_type.hpp"
 #include "std/x/expected.hpp"
 #include "dometer/util/error.hpp"
 

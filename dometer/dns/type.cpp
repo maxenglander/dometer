@@ -5,15 +5,15 @@
 #include "dometer/dns/type.hpp"
 
 namespace dometer::dns {
-    const Type Type::A = Type(ns_t_a);
+    const type type::A = type(ns_t_a);
 
-    Type::Type(uint16_t value) : value(value) {}
+    type::type(uint16_t value) : value(value) {}
 
-    Type::operator uint16_t() const {
+    type::operator uint16_t() const {
         return value;
     }
 
-    Type::operator std::string() const {
+    type::operator std::string() const {
         switch(value) {
             case ns_t_a:
                 return "A";

@@ -9,13 +9,13 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    class Message;
+    class message;
 
     class MessageFactory {
         public:
-            static Message copyMessage(const Message& message);
-            static Message formaterror(const Message& query); 
-            static Message notImplemented(const Message& query); 
-            static Message serverFailure(const Message& query); 
+            static message copyMessage(const message& message);
+            static message formaterror(const message& query); 
+            static message notImplemented(const message& query); 
+            static message serverFailure(const message& query); 
     };
 }

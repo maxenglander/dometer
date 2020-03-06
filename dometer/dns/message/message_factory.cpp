@@ -20,7 +20,7 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    Message MessageFactory::copyMessage(const Message& message) {
+    message MessageFactory::copyMessage(const message& message) {
         std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size()]);
         uint8_t *bytePtr = message;
         size_t size = message.size();
@@ -28,21 +28,21 @@ namespace dometer::dns::message {
         return *parser::parse(std::move(bytes), message.size());
     }
 
-    Message MessageFactory::formaterror(const Message& message) {
+    message MessageFactory::formaterror(const message& message) {
         auto reply = copyMessage(message);
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::FORMERR);
         return reply;
     }
 
-    Message MessageFactory::notImplemented(const Message& query) {
+    message MessageFactory::notImplemented(const message& query) {
         auto reply = copyMessage(query);;
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::NOTIMPL);
         return reply;
     }
 
-    Message MessageFactory::serverFailure(const Message& query) {
+    message MessageFactory::serverFailure(const message& query) {
         auto reply = copyMessage(query);
         reply.setQR(QR::REPLY);
         reply.setRCode(RCode::SERVFAIL);

@@ -5,9 +5,9 @@
 #include "dometer/metrics/label.hpp"
 
 namespace dometer::dns::metrics {
-    class ClassLabel : public dometer::metrics::Label<dometer::dns::Class> {
+    class ClassLabel : public dometer::metrics::Label<dometer::dns::dns_class> {
         public:
             ClassLabel(std::string name);
-            std::string toString(dometer::dns::Class) const;
+            std::string toString(dometer::dns::dns_class) const;
     };
 }

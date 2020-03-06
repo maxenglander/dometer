@@ -6,9 +6,9 @@
 #include "std/x/expected.hpp"
 
 namespace dometer::dns::event {
-    class ParseReplyEvent : public ParseMessageEvent {
+    class parse_reply_event : public parse_message_event {
         public:
-            ParseReplyEvent(uint64_t, const std::x::expected<dometer::dns::message::Message, dometer::util::error>);
-            ParseReplyEvent(const ParseReplyEvent&);
+            parse_reply_event(uint64_t, const std::x::expected<dometer::dns::message::message, dometer::util::error>);
+            parse_reply_event(const parse_reply_event&);
     };
 }

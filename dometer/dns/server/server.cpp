@@ -105,7 +105,7 @@ namespace dometer::dns::server {
                     asio::buffer(queryBuffer, sizeof(queryBuffer)), remoteEndpoint, 0, error);
 
             const uint64_t sessionId = 1;//++sessionCounter;
-            emitter.emit(dometer::dns::event::StartSessionEvent(sessionId));
+            emitter.emit(dometer::dns::event::start_session_event(sessionId));
 
             if(!error) {
                 auto reply = handler->handle(sessionId, std::vector<uint8_t>(queryBuffer, queryBuffer + queryLength));
@@ -116,7 +116,7 @@ namespace dometer::dns::server {
                 }
             }
 
-            emitter.emit(dometer::dns::event::StopSessionEvent(sessionId));
+            emitter.emit(dometer::dns::event::stop_session_event(sessionId));
         }
     }
 

@@ -13,44 +13,44 @@ namespace dometer::dns::metrics {
             :    public dometer::metrics::ObservationBuilder<
                             /* duration */double,
                             /* error    */std::string,
-                            /* qclass   */dometer::dns::Class,
+                            /* qclass   */dometer::dns::dns_class,
                             /* qname    */std::string,
-                            /* qtype    */dometer::dns::Type,
+                            /* qtype    */dometer::dns::type,
                             /* rcode    */std::string
                         > {
         public:
             dometer::metrics::Observation<
                             /* duration */double,
                             /* error    */std::string,
-                            /* qclass   */dometer::dns::Class,
+                            /* qclass   */dometer::dns::dns_class,
                             /* qname    */std::string,
-                            /* qtype    */dometer::dns::Type,
+                            /* qtype    */dometer::dns::type,
                             /* rcode    */std::string
                         > build() const;
             LookupObservationBuilder& duration(double duration);
             LookupObservationBuilder& error(std::string);
             LookupObservationBuilder& rcode(std::string);
-            LookupObservationBuilder& qclass(dometer::dns::Class);
+            LookupObservationBuilder& qclass(dometer::dns::dns_class);
             LookupObservationBuilder& qname(std::string);
-            LookupObservationBuilder& qtype(dometer::dns::Type);
+            LookupObservationBuilder& qtype(dometer::dns::type);
         private:
             double _duration;
             std::string _error;
             std::string _rcode;
-            dometer::dns::Class _qclass = dometer::dns::Class::IN;
+            dometer::dns::dns_class _qclass = dometer::dns::dns_class::IN;
             std::string _qname;
-            dometer::dns::Type _qtype = dometer::dns::Type::A;
+            dometer::dns::type _qtype = dometer::dns::type::A;
     };
 
     struct LookupObservation : dometer::metrics::Observation<
                                    /* duration */double,
                                    /* error    */std::string,
-                                   /* qclass   */dometer::dns::Class,
+                                   /* qclass   */dometer::dns::dns_class,
                                    /* qname    */std::string,
-                                   /* qtype    */dometer::dns::Type,
+                                   /* qtype    */dometer::dns::type,
                                    /* rcode    */std::string
                                > {
-        LookupObservation(double, std::tuple<std::string, dometer::dns::Class, std::string, dometer::dns::Type, std::string>);
+        LookupObservation(double, std::tuple<std::string, dometer::dns::dns_class, std::string, dometer::dns::type, std::string>);
         static LookupObservationBuilder newBuilder();
         using Builder = LookupObservationBuilder;
     };

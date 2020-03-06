@@ -1,14 +1,12 @@
 #pragma once
 
-#include "dometer/dns/event/event.hpp"
-#include "dometer/dns/event/event_type.hpp"
+#include <stdint.h>
 
 namespace dometer::dns::event {
-    class StopSessionEvent : public Event {
+    class stop_session_event {
         public:
-            StopSessionEvent(const uint64_t sessionId);
+            stop_session_event(const uint64_t sessionId);
             const uint64_t getSessionId() const;
-            EventType getType() const;
         private:
             const uint64_t sessionId;
     };

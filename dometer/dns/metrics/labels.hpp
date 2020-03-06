@@ -11,7 +11,7 @@ namespace dometer::dns::metrics {
     class Labels {
         public:
             Labels() = delete;
-            static std::shared_ptr<dometer::metrics::Label<dometer::dns::Class>> class_(std::string);
-            static std::shared_ptr<dometer::metrics::Label<dometer::dns::Type>> type(std::string);
+            static std::shared_ptr<dometer::metrics::Label<dometer::dns::dns_class>> class_(std::string);
+            static std::shared_ptr<dometer::metrics::Label<dometer::dns::type>> type(std::string);
     };
 }

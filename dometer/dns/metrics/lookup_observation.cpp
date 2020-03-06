@@ -12,17 +12,17 @@ namespace dometer::dns::metrics {
     LookupObservation::LookupObservation(double duration,
                 std::tuple<
                     /* error  */std::string,
-                    /* qclass */dometer::dns::Class,
+                    /* qclass */dometer::dns::dns_class,
                     /* qname  */std::string,
-                    /* qtype  */dometer::dns::Type,
+                    /* qtype  */dometer::dns::type,
                     /* rcode  */std::string
                 > labelValues)
             :   dometer::metrics::Observation<
                     /* duration */double,
                     /* error  */std::string,
-                    /* qclass */dometer::dns::Class,
+                    /* qclass */dometer::dns::dns_class,
                     /* qname  */std::string,
-                    /* qtype  */dometer::dns::Type,
+                    /* qtype  */dometer::dns::type,
                     /* rcode  */std::string
                 >::Observation(
                     duration, labelValues
@@ -35,9 +35,9 @@ namespace dometer::dns::metrics {
 
     dometer::metrics::Observation<double,
                                   std::string,
-                                  dometer::dns::Class,
+                                  dometer::dns::dns_class,
                                   std::string,
-                                  dometer::dns::Type,
+                                  dometer::dns::type,
                                   std::string> LookupObservationBuilder::build() const {
         return LookupObservation(_duration, std::make_tuple(_error, _qclass, _qname, _qtype, _rcode));
     }
@@ -57,7 +57,7 @@ namespace dometer::dns::metrics {
         return *this;
     }
 
-    LookupObservationBuilder& LookupObservationBuilder::qclass(dometer::dns::Class qclass) {
+    LookupObservationBuilder& LookupObservationBuilder::qclass(dometer::dns::dns_class qclass) {
         this->_qclass = qclass;
         return *this;
     }
@@ -67,7 +67,7 @@ namespace dometer::dns::metrics {
         return *this;
     }
 
-    LookupObservationBuilder& LookupObservationBuilder::qtype(dometer::dns::Type qtype) {
+    LookupObservationBuilder& LookupObservationBuilder::qtype(dometer::dns::type qtype) {
         this->_qtype = qtype;
         return *this;
     }
