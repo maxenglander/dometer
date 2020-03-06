@@ -4,10 +4,10 @@
 #include <string>
 
 namespace dometer::dns {
-    class dns_class {
+    class class_ {
         public:
-            static const dns_class IN;
-            dns_class(uint16_t value);
+            static const class_ IN;
+            class_(uint16_t value);
             operator uint16_t() const;
             operator std::string() const;
         private:

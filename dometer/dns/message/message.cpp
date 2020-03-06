@@ -96,7 +96,7 @@ namespace dometer::dns::message {
         return dometer::dns::question{
             std::string(ns_rr_name(question)),
             type(ns_rr_type(question)),
-            dns_class(ns_rr_class(question))
+            class_(ns_rr_class(question))
         };
     }
 

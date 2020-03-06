@@ -7,6 +7,6 @@ namespace dometer::dns {
     struct question {
         std::string qname;
         type qtype;
-        dns_class qclass;
+        class_ qclass;
     };
 }

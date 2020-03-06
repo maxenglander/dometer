@@ -12,7 +12,7 @@ namespace dometer::dns::resolver {
     class Resolver {
         public:
             virtual std::x::expected<std::vector<uint8_t>, error> resolve(
-                const std::string&, const dns_class&, const type&
+                const std::string&, const class_&, const type&
             ) const = 0;
     };
 }

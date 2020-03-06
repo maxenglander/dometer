@@ -9,7 +9,7 @@
 namespace dometer::dns::metrics {
     struct LookupSummary : dometer::metrics::Summary<
                                /* error  */std::string,
-                               /* qclass */dometer::dns::dns_class,
+                               /* qclass */dometer::dns::class_,
                                /* qname  */std::string,
                                /* qtype  */dometer::dns::type,
                                /* rcode  */std::string
