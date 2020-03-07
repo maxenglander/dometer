@@ -23,15 +23,15 @@ namespace util = dometer::util;
 namespace dometer::dns::server {
     server::server(
             dometer::event::emitter<dometer::dns::event::any_event> emitter, 
-            std::shared_ptr<dns::handler::Handler> handler
+            std::shared_ptr<dns::handler::handler> handler
     )   :   emitter(emitter),
             handler(handler),
-            ioContext(std::x::make_unique<asio::io_context>()),
-            sessionCounter(0),
-            socket(std::x::make_unique<ip::udp::socket>(*ioContext))
+            io_context(std::x::make_unique<asio::io_context>()),
+            session_counter(0),
+            socket(std::x::make_unique<ip::udp::socket>(*io_context))
     { }
 
-    std::x::expected<void, util::error> server::openAndBindSocket(ip::udp::endpoint endpoint) {
+    std::x::expected<void, util::error> server::open_and_bind_socket(ip::udp::endpoint endpoint) {
         asio::error_code error;
         if(endpoint.address().is_v4()) {
             socket->open(ip::udp::v4(), error);
@@ -59,32 +59,32 @@ namespace dometer::dns::server {
         return {};
     }
 
-    std::x::expected<void, util::error> server::serve(std::string bindAddress) {
-        size_t separator = bindAddress.find_last_of(':');
+    std::x::expected<void, util::error> server::serve(std::string bind_address) {
+        size_t separator = bind_address.find_last_of(':');
         if(separator == std::string::npos) {
             return std::x::unexpected<util::error>(util::error(
                 "Expected to find a ':' character in bind address.",
-                std::vector<std::string>({"Bind address: " + bindAddress})
+                std::vector<std::string>({"Bind address: " + bind_address})
             ));
         }
 
-        std::string host = bindAddress.substr(0, separator);
+        std::string host = bind_address.substr(0, separator);
         // Sring optional [] characters from around IPv6 address
         if(host.length() > 0 && host.front() == '[')
             host.erase(0, 1);
         if(host.length() > 0 && host.back() == ']')
             host.pop_back();
 
-        std::string portString = bindAddress.substr(separator + 1, std::string::npos);
+        std::string port_string = bind_address.substr(separator + 1, std::string::npos);
         int port;
         try {
-            port = std::stoi(portString);
+            port = std::stoi(port_string);
         } catch(std::exception& e) {
             return std::x::unexpected<util::error>(util::error(
                 "Could not convert port portion of bind address to integer.",
                 std::vector<std::string>({
-                    "Bind address: " + bindAddress,
-                    "Port portion: " + portString
+                    "Bind address: " + bind_address,
+                    "Port portion: " + port_string
                 }),
                 util::error(e.what())
             ));
@@ -97,20 +97,20 @@ namespace dometer::dns::server {
         asio::error_code error;
 
         for(;;) {
-            unsigned char queryBuffer[4096];
-            size_t queryLength = 0;
+            unsigned char query_buffer[4096];
+            size_t query_length = 0;
 
-            ip::udp::endpoint remoteEndpoint;
-            queryLength = socket->receive_from(
-                    asio::buffer(queryBuffer, sizeof(queryBuffer)), remoteEndpoint, 0, error);
+            ip::udp::endpoint remote_endpoint;
+            query_length = socket->receive_from(
+                    asio::buffer(query_buffer, sizeof(query_buffer)), remote_endpoint, 0, error);
 
-            const uint64_t session_id = 1;//++sessionCounter;
+            const uint64_t session_id = ++session_counter;
             emitter.emit(dometer::dns::event::start_session_event(session_id));
 
             if(!error) {
-                auto reply = handler->handle(session_id, std::vector<uint8_t>(queryBuffer, queryBuffer + queryLength));
+                auto reply = handler->handle(session_id, std::vector<uint8_t>(query_buffer, query_buffer + query_length));
                 if(reply) {
-                    socket->send_to(asio::buffer(reply->data(), reply->size()), remoteEndpoint, 0, error);
+                    socket->send_to(asio::buffer(reply->data(), reply->size()), remote_endpoint, 0, error);
                 } else {
                     std::cerr << "Did not receive a UDP reply" << std::endl;
                 }
@@ -139,7 +139,7 @@ namespace dometer::dns::server {
     }
 
     std::x::expected<void, util::error> server::serve(ip::udp::endpoint endpoint) {
-        std::x::expected<void, util::error> result = openAndBindSocket(endpoint);
+        std::x::expected<void, util::error> result = open_and_bind_socket(endpoint);
         if(!result) {
             return std::x::unexpected<util::error>(util::error(
                 "Failed to open and bind socket.",

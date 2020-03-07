@@ -1,12 +1,12 @@
 #pragma once
 
 namespace dometer::dns {
-    enum class OpCode {
-        QUERY = 0,
-        IQUERY = 1,
-        STATUS = 2,
-        NOTIFY = 4,
-        UPDATE = 5,
-        DSO = 6
+    enum class opcode {
+        query = 0,
+        iquery = 1,
+        status = 2,
+        notify = 4,
+        update = 5,
+        dso = 6
     };
 }

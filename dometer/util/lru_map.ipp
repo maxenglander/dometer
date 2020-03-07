@@ -7,83 +7,83 @@
 
 namespace dometer::util {
     template<typename K, typename V>
-    LRUMap<K, V>::LRUMap(size_t maxSize) : maxSize(maxSize) {}
+    lru_map<K, V>::lru_map(size_t max_size) : max_size(max_size) {}
 
     template<typename K, typename V>
-    void LRUMap<K, V>::evictOne() {
-        auto kvNode = list.back();
+    void lru_map<K, V>::evict_one() {
+        auto kv_node = list.back();
         auto key = list.back().first;
         auto value = list.back().second;
         erase(key);
-        notifyEvictionListeners(key, value);
+        notify_eviction_listeners(key, value);
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::erase(K key) {
-        auto kvNode = map[key];
-        list.erase(kvNode);
+    void lru_map<K, V>::erase(K key) {
+        auto kv_node = map[key];
+        list.erase(kv_node);
         map.erase(key);
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::insert(K key, V value) {
+    void lru_map<K, V>::insert(K key, V value) {
         list.push_front({key, value});
         map[key] = list.begin();
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::maybeEvict() {
-        while(shouldEvict()) {
-            evictOne();
+    void lru_map<K, V>::maybe_evict() {
+        while(should_evict()) {
+            evict_one();
         }
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::notifyEvictionListeners(K key, V value) {
-        for(auto listener : evictionListeners) {
+    void lru_map<K, V>::notify_eviction_listeners(K key, V value) {
+        for(auto listener : eviction_listeners) {
             listener(key, value);
         }
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::notifyInsertionListeners(K key, V value) {
-        for(auto listener : insertionListeners) {
+    void lru_map<K, V>::notify_insertion_listeners(K key, V value) {
+        for(auto listener : insertion_listeners) {
             listener(key, value);
         }
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::onEvict(std::function<void(K, V)> listener) {
-        evictionListeners.push_back(listener);
+    void lru_map<K, V>::on_evict(std::function<void(K, V)> listener) {
+        eviction_listeners.push_back(listener);
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::onInsert(std::function<void(K, V)> listener) {
-        insertionListeners.push_back(listener);
+    void lru_map<K, V>::on_insert(std::function<void(K, V)> listener) {
+        insertion_listeners.push_back(listener);
     }
 
     template<typename K, typename V>
-    void LRUMap<K, V>::put(K key, V value) {
+    void lru_map<K, V>::put(K key, V value) {
         auto search = map.find(key);
 
         if(search == map.end()) {
             insert(key, value);
-            notifyInsertionListeners(key, value);
+            notify_insertion_listeners(key, value);
         } else {
             erase(search->first);
             insert(key, value);
         }
 
-        maybeEvict();
+        maybe_evict();
     }
 
     template<typename K, typename V>
-    bool LRUMap<K, V>::shouldEvict() {
-        return size() > maxSize;
+    bool lru_map<K, V>::should_evict() {
+        return size() > max_size;
     }
 
     template<typename K, typename V>
-    size_t LRUMap<K, V>::size() {
+    size_t lru_map<K, V>::size() {
         return list.size();
     }
 }

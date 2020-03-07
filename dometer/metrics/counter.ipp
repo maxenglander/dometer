@@ -11,9 +11,9 @@
 
 namespace dometer::metrics {
     template<typename... L>
-    Counter<L...>::Counter(std::string name, std::string description,
+    counter<L...>::counter(std::string name, std::string description,
                                                std::tuple<std::shared_ptr<label<L>>...> labels)
-            :   metric<uint64_t, L...>::metric(name, description, labels, type::COUNTER, Unit::NONE)
+            :   metric<uint64_t, L...>::metric(name, description, labels, type::counter, unit::none)
     {
     }
 }

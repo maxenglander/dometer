@@ -4,16 +4,16 @@
 #include <string>
 
 namespace dometer::dns {
-    class RCode {
+    class rcode {
         public:
-            static const RCode NOERROR;
-            static const RCode FORMERR;
-            static const RCode SERVFAIL;
-            static const RCode NXDOMAIN;
-            static const RCode NOTIMPL;
-            static const RCode REFUSED;
+            static const rcode noerror;
+            static const rcode formerr;
+            static const rcode servfail;
+            static const rcode nxdomain;
+            static const rcode notimpl;
+            static const rcode refused;
 
-            RCode(uint8_t value);
+            rcode(uint8_t value);
             operator uint8_t() const;
             operator std::string() const;
         private:

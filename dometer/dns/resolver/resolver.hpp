@@ -9,7 +9,7 @@
 namespace dns = dometer::dns;
 
 namespace dometer::dns::resolver {
-    class Resolver {
+    class resolver {
         public:
             virtual std::x::expected<std::vector<uint8_t>, error> resolve(
                 const std::string&, const class_&, const type&

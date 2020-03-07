@@ -19,10 +19,10 @@ namespace dns = dometer::dns;
 namespace util = dometer::util;
 
 namespace dometer::dns::resolver {
-    class LibresolvResolver : public Resolver {
+    class libresolv_resolver : public resolver {
         public:
-            LibresolvResolver();
-            LibresolvResolver(libresolv_function);
+            libresolv_resolver();
+            libresolv_resolver(libresolv_function);
             std::x::expected<std::vector<uint8_t>, error> resolve(const std::string&, const class_&, const type&) const;
         private:
             const libresolv_function function;

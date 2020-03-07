@@ -10,14 +10,14 @@
 #include "dometer/metrics/unit.hpp"
 
 namespace dometer::metrics {
-    const Descriptor<std::string, std::string, std::string, bool> Descriptors::QUERY(
+    const descriptor<std::string, std::string, std::string, bool> descriptors::query(
         "dns_query_count", "Count of DNS queries received",
         std::make_tuple(
-            Labels::string("qclass"), 
-            Labels::string("qname"),
-            Labels::string("qtype"),
-            Labels::boolean("valid")
+            labels::string("qclass"), 
+            labels::string("qname"),
+            labels::string("qtype"),
+            labels::boolean("valid")
         ),
-        type::COUNTER, Unit::NONE
+        type::counter, unit::none
     );
 }

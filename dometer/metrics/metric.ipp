@@ -11,7 +11,9 @@
 namespace dometer::metrics {
     template<typename V, typename... L>
     metric<V, L...>::metric(std::string name, std::string description,
-                                 std::tuple<std::shared_ptr<label<L>>...> labels, dometer::metrics::type type, Unit unit)
+                            std::tuple<std::shared_ptr<label<L>>...> labels,
+                            dometer::metrics::type type,
+                            dometer::metrics::unit unit)
             :   name(name), description(description), labels(labels), type(type), unit(unit)
     {}
 }

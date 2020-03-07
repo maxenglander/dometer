@@ -1,10 +1,10 @@
 #include <vector>
 
 namespace dometer::metrics::handler {
-    class CompositeHandler {
+    class composite_handler {
         public:
-            CompositeHandler(std::vector<Handler> handlers);
+            composite_handler(std::vector<handler> handlers);
         private:
-            std::vector<Handler> handlers;
+            std::vector<handler> handlers;
     }
 }

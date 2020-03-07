@@ -11,29 +11,29 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
-    Handler::CacheEvictor::CacheEvictor(
-            std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>& metricFamilies,
+    handler::cache_evictor::cache_evictor(
+            std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>& metric_families,
             ::prometheus::x::FamilyNameAndTimeSeriesCount& meta)
-        :   metricFamilies(metricFamilies),
+        :   metric_families(metric_families),
             meta(meta)
     {
     }
                        
-    Handler::Handler(size_t maxTimeSeries,
+    handler::handler(size_t max_time_series,
                 std::shared_ptr<::prometheus::Registry> registry,
                 std::vector<std::shared_ptr<::prometheus::x::Transport>> transports)
-        :   metricCache(maxTimeSeries), registry(registry), transports(transports)
+        :   metric_cache(max_time_series), registry(registry), transports(transports)
     {
-        metricCache.onEvict([this](::prometheus::x::AnyMetricPtr anyMetricPtr,
+        metric_cache.on_evict([this](::prometheus::x::AnyMetricPtr any_metric_ptr,
                                    ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
-            CacheEvictor evictFromCache(metricFamilies, meta);
-            visit(evictFromCache, anyMetricPtr);
+            cache_evictor evict_from_cache(metric_families, meta);
+            visit(evict_from_cache, any_metric_ptr);
         });
     }
 
-    Handler::Handler(const Handler& handler)
-        : metricCache(handler.metricCache),
-          metricFamilies(handler.metricFamilies),
+    handler::handler(const handler& handler)
+        : metric_cache(handler.metric_cache),
+          metric_families(handler.metric_families),
           registry(handler.registry),
           transports(handler.transports)
     {

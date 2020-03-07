@@ -6,7 +6,7 @@
 
 namespace dometer::metrics {
     template<typename V, typename... L>
-    Observation<V, L...>::Observation(V value, std::tuple<L...> labelValues)
-            :   value(value), labelValues(labelValues)
+    observation<V, L...>::observation(V value, std::tuple<L...> label_values)
+            :   value(value), label_values(label_values)
     {};
 }

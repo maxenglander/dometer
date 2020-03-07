@@ -15,14 +15,14 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::handler {
-    class resolving_handler : public Handler {
+    class resolving_handler : public handler {
         public:
             resolving_handler(
                     dometer::event::emitter<dometer::dns::event::any_event>,
-                    std::shared_ptr<dns::resolver::Resolver>);
+                    std::shared_ptr<dns::resolver::resolver>);
             resolving_handler(std::chrono::steady_clock,
                     dometer::event::emitter<dometer::dns::event::any_event>,
-                    std::shared_ptr<dns::resolver::Resolver>);
+                    std::shared_ptr<dns::resolver::resolver>);
             std::x::expected<std::vector<uint8_t>, util::error> handle(uint64_t, std::vector<uint8_t>);
         private:
             std::x::expected<dns::message::message, util::error> handle(
@@ -34,18 +34,18 @@ namespace dometer::dns::handler {
             std::x::expected<dns::message::message, util::error> handle(
                 uint64_t, dometer::dns::question question
             );
-            std::x::expected<dometer::dns::message::message, util::error> parseQuery(
+            std::x::expected<dometer::dns::message::message, util::error> parse_query(
                 uint64_t session_id, std::vector<uint8_t> bytes
             );
-            std::x::expected<dometer::dns::message::message, util::error> parseReply(
+            std::x::expected<dometer::dns::message::message, util::error> parse_reply(
                 uint64_t session_id, std::vector<uint8_t> bytes
             );
-            std::x::expected<std::vector<uint8_t>, util::error> resolveQuery(
+            std::x::expected<std::vector<uint8_t>, util::error> resolve_query(
                 uint64_t session_id, dometer::dns::question&
             );
 
             const std::chrono::steady_clock clock;
             dometer::event::emitter<dometer::dns::event::any_event> emitter;
-            const std::shared_ptr<dns::resolver::Resolver> resolver;
+            const std::shared_ptr<dns::resolver::resolver> resolver;
     };
 }

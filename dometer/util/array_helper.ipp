@@ -8,9 +8,9 @@
 
 namespace dometer::util {
     template <typename T>
-    std::unique_ptr<T[]> ArrayHelper::makeUniqueCopy(T* tPtr, size_t size) {
+    std::unique_ptr<T[]> array_helper::make_unique_copy(T* t_ptr, size_t size) {
         std::unique_ptr<T[]> ts(new T[size]);
-        std::copy(tPtr, tPtr + size, ts.get());
+        std::copy(t_ptr, t_ptr + size, ts.get());
         return std::move(ts);
     }
 }

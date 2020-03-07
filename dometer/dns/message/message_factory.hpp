@@ -11,11 +11,11 @@ namespace util = dometer::util;
 namespace dometer::dns::message {
     class message;
 
-    class MessageFactory {
+    class message_factory {
         public:
-            static message copyMessage(const message& message);
-            static message formaterror(const message& query); 
-            static message notImplemented(const message& query); 
+            static message copy_message(const message& message);
+            static message format_error(const message& query); 
+            static message not_implemented(const message& query); 
             static message serverFailure(const message& query); 
     };
 }

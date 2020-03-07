@@ -6,9 +6,9 @@
 
 namespace dometer::metrics::handler {
     template<typename... L>
-    Handler::CounterIncrementer<L...>::CounterIncrementer(
-            const dometer::metrics::Counter<L...>& counter,
-            dometer::metrics::Observation<uint64_t, L...>& observation)
+    handler::counter_incrementer<L...>::counter_incrementer(
+            const dometer::metrics::counter<L...>& counter,
+            dometer::metrics::observation<uint64_t, L...>& observation)
         :   counter(counter),
             observation(observation) {
     }
@@ -16,35 +16,35 @@ namespace dometer::metrics::handler {
     
     template<typename... L>
     template<class ConcreteHandler>
-    void Handler::CounterIncrementer<L...>::operator()(ConcreteHandler& handler) {
+    void handler::counter_incrementer<L...>::operator()(ConcreteHandler& handler) {
         handler.increment(counter, observation);
     }
 
     template<typename... L>
-    Handler::SummaryObserver<L...>::SummaryObserver(
+    handler::summary_observer<L...>::summary_observer(
             const dometer::metrics::summary<L...>& summary,
-            dometer::metrics::Observation<double, L...>& observation)
+            dometer::metrics::observation<double, L...>& observation)
         :   summary(summary),
             observation(observation) {
     }
 
     template<typename... L>
     template<class ConcreteHandler>
-    void Handler::SummaryObserver<L...>::operator()(ConcreteHandler& handler) {
+    void handler::summary_observer<L...>::operator()(ConcreteHandler& handler) {
         handler.observe(summary, observation);
     }
 
     template<typename... L>
-    void Handler::increment(const dometer::metrics::Counter<L...>& counter,
-                            dometer::metrics::Observation<uint64_t, L...> observation) {
-        CounterIncrementer<L...> incrementCount(counter, observation); 
-        std::x::visit(incrementCount, this->concreteHandler);
+    void handler::increment(const dometer::metrics::counter<L...>& counter,
+                            dometer::metrics::observation<uint64_t, L...> observation) {
+        counter_incrementer<L...> incrementCount(counter, observation); 
+        std::x::visit(incrementCount, this->concrete_handler);
     }
 
     template<typename... L>
-    void Handler::observe(const dometer::metrics::summary<L...>& summary,
-                          dometer::metrics::Observation<double, L...> observation) {
-        SummaryObserver<L...> observeSummary(summary, observation);
-        std::x::visit(observeSummary, this->concreteHandler);
+    void handler::observe(const dometer::metrics::summary<L...>& summary,
+                          dometer::metrics::observation<double, L...> observation) {
+        summary_observer<L...> observeSummary(summary, observation);
+        std::x::visit(observeSummary, this->concrete_handler);
     }
 }

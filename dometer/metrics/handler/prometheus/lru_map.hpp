@@ -8,27 +8,27 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
-    class LRUMap
-            : public util::LRUMap<::prometheus::x::AnyMetricPtr, ::prometheus::x::FamilyNameAndTimeSeriesCount> {
-        class TimeSeriesChanger {
+    class lru_map
+            : public util::lru_map<::prometheus::x::AnyMetricPtr, ::prometheus::x::FamilyNameAndTimeSeriesCount> {
+        class time_series_changer {
             public:
-                TimeSeriesChanger(LRUMap&, bool);
+                time_series_changer(lru_map&, bool);
                 template <class MetricPtr, class Meta>
                 void operator()(MetricPtr, Meta);
             private:
-                LRUMap& parent;
+                lru_map& parent;
                 bool increment;
         };
 
         public:
-            LRUMap(size_t maxTimeSeries);
+            lru_map(size_t max_timer_series);
         protected:
-            bool shouldEvict() override;
+            bool should_evict() override;
         private:
-            TimeSeriesChanger decrementTimeSeries;
-            TimeSeriesChanger incrementTimeSeries;
+            time_series_changer decrement_time_series;
+            time_series_changer increment_time_series;
 
-            const size_t maxTimeSeries;
-            size_t numTimeSeries;
+            const size_t max_time_series;
+            size_t num_time_series;
     };
 }

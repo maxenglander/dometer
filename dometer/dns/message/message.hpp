@@ -20,18 +20,18 @@ namespace dometer::dns::message {
             message(message&&);
             ~message();
 
-            bool getAA() const;
-            uint16_t getId() const;
-            OpCode getOpCode() const;
-            QR getQR() const;
+            bool get_aa() const;
+            uint16_t get_id() const;
+            opcode get_opcode() const;
+            qr get_qr() const;
             std::x::expected<question, util::error> get_question() const;
-            bool getRA() const;
-            RCode getRCode() const;
-            bool getRD() const;
-            bool getTC() const;
-            void setId(uint16_t id);
-            void setQR(QR qr);
-            void setRCode(RCode rcode);
+            bool get_ra() const;
+            rcode get_rcode() const;
+            bool get_rd() const;
+            bool get_tc() const;
+            void set_id(uint16_t id);
+            void set_qr(qr qr);
+            void set_rcode(rcode rcode);
 
             operator uint8_t*() const;
 
@@ -42,13 +42,13 @@ namespace dometer::dns::message {
             message(std::unique_ptr<uint8_t[]>, size_t);
             message(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
 
-            uint16_t getQDCount() const;
+            uint16_t get_qd_count() const;
 
             std::unique_ptr<uint8_t[]> bytes;
             size_t size_;
             ns_msg handle;
 
-            friend class Factory;
+            friend class factory;
             friend class parser;
     };
 }

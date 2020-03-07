@@ -6,7 +6,7 @@
 namespace dometer::dns {
     class class_ {
         public:
-            static const class_ IN;
+            static const class_ in;
             class_(uint16_t value);
             operator uint16_t() const;
             operator std::string() const;

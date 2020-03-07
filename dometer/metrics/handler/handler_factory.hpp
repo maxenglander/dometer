@@ -12,7 +12,7 @@ namespace util = dometer::util;
 namespace dometer::metrics::handler {
     class handler_factory {
         public:
-            static std::x::expected<Handler, util::error> makeHandler(options options);
-            static std::x::expected<std::vector<Handler>, util::error> make_handlers(std::vector<options> options);
+            static std::x::expected<handler, util::error> make_handler(options options);
+            static std::x::expected<std::vector<handler>, util::error> make_handlers(std::vector<options> options);
     };
 }

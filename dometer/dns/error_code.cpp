@@ -5,7 +5,7 @@
 #include "dometer/dns/class.hpp"
 
 namespace dometer::dns {
-    const class_ class_::IN = class_(ns_c_in);
+    const class_ class_::in = class_(ns_c_in);
 
     class_::class_(uint16_t value) : value(value) {}
 
@@ -23,6 +23,6 @@ namespace dometer::dns {
                 return "HS";
         }
 
-        return "other";
+        return "OTHER";
     }
 }

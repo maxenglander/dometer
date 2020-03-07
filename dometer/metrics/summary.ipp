@@ -13,8 +13,8 @@
 namespace dometer::metrics {
     template<typename... L>
     summary<L...>::summary(std::string name, std::string description,
-                           std::tuple<std::shared_ptr<label<L>>...> labels, std::vector<double> quantiles, Unit unit)
-            :   metric<double, L...>::metric(name, description, labels, type::SUMMARY, unit),
+                           std::tuple<std::shared_ptr<label<L>>...> labels, std::vector<double> quantiles, unit unit)
+            :   metric<double, L...>::metric(name, description, labels, type::summary, unit),
                 quantiles(quantiles)
     {}
 }

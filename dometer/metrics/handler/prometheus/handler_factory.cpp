@@ -14,35 +14,35 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
-    handler_factory::CollectableRegistrar::CollectableRegistrar(std::shared_ptr<::prometheus::Registry> registry)
+    handler_factory::collectable_registrar::collectable_registrar(std::shared_ptr<::prometheus::Registry> registry)
         :   registry(registry)
     {}
 
     template <class ConcreteTransport>
-    void handler_factory::CollectableRegistrar::operator()(ConcreteTransport& transport) {
+    void handler_factory::collectable_registrar::operator()(ConcreteTransport& transport) {
         transport.RegisterCollectable(registry);
     }
 
-    std::x::expected<Handler, util::error> handler_factory::makeHandler(options options) {
+    std::x::expected<handler, util::error> handler_factory::make_handler(options _options) {
         auto registry = std::make_shared<::prometheus::Registry>();
         std::vector<std::shared_ptr<::prometheus::x::Transport>> transports;
-        CollectableRegistrar registrar(registry);
+        collectable_registrar registrar(registry);
 
-        for(auto it = options.transports.begin(); it < options.transports.end(); it++) {
-            auto transportResult = TransportFactory::makeTransport(*it);
-            if(transportResult) {
-                auto transport = *transportResult;
+        for(auto it = _options.transports.begin(); it < _options.transports.end(); it++) {
+            auto transport_result = transport_factory::make_transport(*it);
+            if(transport_result) {
+                auto transport = *transport_result;
                 std::x::visit(registrar, *transport);
                 transports.push_back(transport);
             } else {
                 return std::x::unexpected<util::error>(util::error(
                     "Failed to create prometheus transport.",
-                    transportResult.error()
+                    transport_result.error()
                 ));
             }
         }
 
-        Handler handler(options.maxTimeSeries, registry, transports);
+        handler handler(_options.max_time_series, registry, transports);
         return handler;
     }
 }

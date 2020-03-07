@@ -3,9 +3,9 @@
 #include "dometer/metrics/descriptor.hpp"
 
 namespace dometer::metrics {
-    class Descriptors {
+    class descriptors {
         public:
-            Descriptors() = delete;
-            static const Descriptor<std::string, std::string, std::string, bool> QUERY;
+            descriptors() = delete;
+            static const descriptor<std::string, std::string, std::string, bool> query;
     };
 }

@@ -25,14 +25,14 @@ namespace dometer::dns::metrics {
                 >::summary(
                     "dometer_dns_lookup_duration_seconds", "Latency of DNS lookup attempts.",
                     std::make_tuple(
-                        dometer::metrics::Labels::string("error"),
-                        Labels::class_("qclass"), 
-                        dometer::metrics::Labels::string("qname"),
-                        Labels::type("qtype"),
-                        dometer::metrics::Labels::string("rcode")
+                        dometer::metrics::labels::string("error"),
+                        labels::class_("qclass"), 
+                        dometer::metrics::labels::string("qname"),
+                        labels::type("qtype"),
+                        dometer::metrics::labels::string("rcode")
                     ),
                     std::vector<double>{0.5, 0.9, 0.95, 0.99},
-                    dometer::metrics::Unit::SECONDS
+                    dometer::metrics::unit::seconds
                 )
     {}
 }

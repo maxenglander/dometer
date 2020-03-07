@@ -2,9 +2,9 @@
 
 namespace dometer::metrics {
     enum class type {
-        COUNTER,
-        GUAGE,
-        HISTOGRAM,
-        SUMMARY
+        counter,
+        gauge,
+        histogram,
+        summary
     };
 }

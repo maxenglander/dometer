@@ -12,7 +12,7 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
-    std::x::expected<std::shared_ptr<::prometheus::x::Transport>, util::error> TransportFactory::makeTransport(
+    std::x::expected<std::shared_ptr<::prometheus::x::Transport>, util::error> transport_factory::make_transport(
             transport_options options) {
         try {
             return std::x::visit(std::x::overloaded(

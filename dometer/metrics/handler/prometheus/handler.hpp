@@ -22,38 +22,38 @@ namespace util = dometer::util;
 using namespace std::x;
 
 namespace dometer::metrics::handler::prometheus {
-    class Handler {
-        class CacheEvictor {
+    class handler {
+        class cache_evictor {
             public:
-                CacheEvictor(std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>&,
+                cache_evictor(std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>&,
                              ::prometheus::x::FamilyNameAndTimeSeriesCount&);
                 template <class MetricPtr>
                 void operator()(MetricPtr&&);
             private:
-                std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>& metricFamilies;
+                std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>& metric_families;
                 ::prometheus::x::FamilyNameAndTimeSeriesCount& meta;
         };
 
         public:
-            Handler(size_t,
-                              std::shared_ptr<::prometheus::Registry>,
-                              std::vector<std::shared_ptr<::prometheus::x::Transport>>);
-            Handler(const Handler&);
+            handler(size_t,
+                    std::shared_ptr<::prometheus::Registry>,
+                    std::vector<std::shared_ptr<::prometheus::x::Transport>>);
+            handler(const handler&);
 
             template<typename... L>
-            void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);
+            void increment(const dometer::metrics::counter<L...>&, dometer::metrics::observation<uint64_t, L...>);
 
             template<typename... L>
-            void observe(const dometer::metrics::summary<L...>&, dometer::metrics::Observation<double, L...>);
+            void observe(const dometer::metrics::summary<L...>&, dometer::metrics::observation<double, L...>);
         private:
             template<typename T>
-            void cacheMetric(T* t, ::prometheus::x::FamilyNameAndTimeSeriesCount);
+            void cache_metric(T* t, ::prometheus::x::FamilyNameAndTimeSeriesCount);
 
             template<typename T, typename BuilderFn>
-            expected<::prometheus::x::FamilyRef<T>, util::error> getOrBuildMetricFamily(std::string, std::string, BuilderFn);
+            expected<::prometheus::x::FamilyRef<T>, util::error> get_or_build_metric_family(std::string, std::string, BuilderFn);
 
-            LRUMap metricCache;
-            std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef> metricFamilies;
+            lru_map metric_cache;
+            std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef> metric_families;
             std::shared_ptr<::prometheus::Registry> registry;
             std::vector<std::shared_ptr<::prometheus::x::Transport>> transports;
     };

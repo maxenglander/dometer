@@ -3,14 +3,14 @@
 #include <string>
 
 namespace dometer::dns::resolver {
-    enum class errorCode {
-        NOERROR = 0,
-        CONNREFUSED = 1,
-        MSGSIZE = 2,
-        PARSEERROR = 3,
-        TIMEDOUT = 4,
-        OTHER = 255
+    enum class error_code {
+        noerror = 0,
+        connrefused = 1,
+        msgsize = 2,
+        parseerror = 3,
+        timedout = 4,
+        other = 255
     };
     
-    std::string to_string(const errorCode&);
+    std::string to_string(const error_code&);
 }

@@ -3,10 +3,10 @@
 #include <memory>
 
 namespace dometer::util {
-    class ArrayHelper {
+    class array_helper {
         public:
             template <typename T>
-            static std::unique_ptr<T[]> makeUniqueCopy(T*, size_t);
+            static std::unique_ptr<T[]> make_unique_copy(T*, size_t);
     };
 }
 

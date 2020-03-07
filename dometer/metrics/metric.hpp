@@ -11,12 +11,12 @@
 namespace dometer::metrics {
     template<typename V, typename... L>
     struct metric {
-        metric(std::string, std::string, std::tuple<std::shared_ptr<label<L>>...>, dometer::metrics::type, Unit);
+        metric(std::string, std::string, std::tuple<std::shared_ptr<label<L>>...>, dometer::metrics::type, unit);
         const std::string name;
         const std::string description;
         const std::tuple<std::shared_ptr<label<L>>...> labels;
         const dometer::metrics::type type;
-        const Unit unit;
+        const dometer::metrics::unit unit;
     };
 }
 

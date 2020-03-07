@@ -12,9 +12,9 @@ namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
     class handler_factory {
-        class CollectableRegistrar {
+        class collectable_registrar {
             public:
-                CollectableRegistrar(std::shared_ptr<::prometheus::Registry>);
+                collectable_registrar(std::shared_ptr<::prometheus::Registry>);
                 template <class ConcreteTransport>
                 void operator()(ConcreteTransport&);
             private:
@@ -22,6 +22,6 @@ namespace dometer::metrics::handler::prometheus {
         };
 
         public:
-            static std::x::expected<Handler, util::error> makeHandler(options options);
+            static std::x::expected<handler, util::error> make_handler(options options);
     };
 }

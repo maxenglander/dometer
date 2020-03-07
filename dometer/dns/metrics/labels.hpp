@@ -8,9 +8,9 @@
 #include "dometer/metrics/label.hpp"
 
 namespace dometer::dns::metrics {
-    class Labels {
+    class labels {
         public:
-            Labels() = delete;
+            labels() = delete;
             static std::shared_ptr<dometer::metrics::label<dometer::dns::class_>> class_(std::string);
             static std::shared_ptr<dometer::metrics::label<dometer::dns::type>> type(std::string);
     };

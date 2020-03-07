@@ -5,7 +5,7 @@
 #include "dometer/dns/type.hpp"
 
 namespace dometer::dns {
-    const type type::A = type(ns_t_a);
+    const type type::a = type(ns_t_a);
 
     type::type(uint16_t value) : value(value) {}
 
@@ -39,6 +39,6 @@ namespace dometer::dns {
                 return "ANY";
         }
 
-        return "other";
+        return "OTHER";
     }
 }

@@ -20,32 +20,32 @@
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    message MessageFactory::copyMessage(const message& message) {
+    message message_factory::copy_message(const message& message) {
         std::unique_ptr<uint8_t[]> bytes(new uint8_t[message.size()]);
-        uint8_t *bytePtr = message;
+        uint8_t *byte_ptr = message;
         size_t size = message.size();
-        std::copy(bytePtr, bytePtr + size, bytes.get());
+        std::copy(byte_ptr, byte_ptr + size, bytes.get());
         return *parser::parse(std::move(bytes), message.size());
     }
 
-    message MessageFactory::formaterror(const message& message) {
-        auto reply = copyMessage(message);
-        reply.setQR(QR::REPLY);
-        reply.setRCode(RCode::FORMERR);
+    message message_factory::format_error(const message& message) {
+        auto reply = copy_message(message);
+        reply.set_qr(qr::reply);
+        reply.set_rcode(rcode::formerr);
         return reply;
     }
 
-    message MessageFactory::notImplemented(const message& query) {
-        auto reply = copyMessage(query);;
-        reply.setQR(QR::REPLY);
-        reply.setRCode(RCode::NOTIMPL);
+    message message_factory::not_implemented(const message& query) {
+        auto reply = copy_message(query);;
+        reply.set_qr(qr::reply);
+        reply.set_rcode(rcode::notimpl);
         return reply;
     }
 
-    message MessageFactory::serverFailure(const message& query) {
-        auto reply = copyMessage(query);
-        reply.setQR(QR::REPLY);
-        reply.setRCode(RCode::SERVFAIL);
+    message message_factory::serverFailure(const message& query) {
+        auto reply = copy_message(query);
+        reply.set_qr(qr::reply);
+        reply.set_rcode(rcode::servfail);
         return reply;
     }
 }

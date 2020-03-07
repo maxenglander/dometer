@@ -6,9 +6,9 @@
 #include "dometer/metrics/label.hpp"
 
 namespace dometer::metrics {
-    class Labels {
+    class labels {
         public:
-            Labels() = delete;
+            labels() = delete;
             static std::shared_ptr<label<bool>> boolean(std::string);
             static std::shared_ptr<label<std::string>> string(std::string);
     };

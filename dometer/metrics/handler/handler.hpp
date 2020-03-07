@@ -7,39 +7,39 @@
 #include "std/x/variant.hpp"
 
 namespace dometer::metrics::handler {
-    class Handler {
+    class handler {
         template<typename... L>
-        class CounterIncrementer {
+        class counter_incrementer {
             public:
-                CounterIncrementer(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>&);
+                counter_incrementer(const dometer::metrics::counter<L...>&, dometer::metrics::observation<uint64_t, L...>&);
                 template <class ConcreteHandler>
                 void operator()(ConcreteHandler&);
             private:
-                const dometer::metrics::Counter<L...>& counter;
-                dometer::metrics::Observation<uint64_t, L...>& observation;
+                const dometer::metrics::counter<L...>& counter;
+                dometer::metrics::observation<uint64_t, L...>& observation;
         };
 
         template<typename... L>
-        class SummaryObserver {
+        class summary_observer {
             public:
-                SummaryObserver(const dometer::metrics::summary<L...>&, dometer::metrics::Observation<double, L...>&);
+                summary_observer(const dometer::metrics::summary<L...>&, dometer::metrics::observation<double, L...>&);
                 template <class ConcreteHandler>
                 void operator()(ConcreteHandler&);
             private:
                 const dometer::metrics::summary<L...>& summary;
-                dometer::metrics::Observation<double, L...>& observation;
+                dometer::metrics::observation<double, L...>& observation;
         };
 
         public:
-            Handler(dometer::metrics::handler::prometheus::Handler);
+            handler(dometer::metrics::handler::prometheus::handler);
 
             template<typename... L>
-            void increment(const dometer::metrics::Counter<L...>&, dometer::metrics::Observation<uint64_t, L...>);
+            void increment(const dometer::metrics::counter<L...>&, dometer::metrics::observation<uint64_t, L...>);
 
             template<typename... L>
-            void observe(const dometer::metrics::summary<L...>&, dometer::metrics::Observation<double, L...>);
+            void observe(const dometer::metrics::summary<L...>&, dometer::metrics::observation<double, L...>);
         private:
-             std::x::variant<dometer::metrics::handler::prometheus::Handler> concreteHandler;
+             std::x::variant<dometer::metrics::handler::prometheus::handler> concrete_handler;
     };
 }
 

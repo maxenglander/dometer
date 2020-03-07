@@ -5,9 +5,9 @@
 
 namespace dometer::dns::resolver {
     struct error : public dometer::util::error {
-        error(std::string, errorCode);
-        error(std::string, errorCode, dometer::util::error);
+        error(std::string, error_code);
+        error(std::string, error_code, dometer::util::error);
 
-        const errorCode code;
+        const error_code code;
     };
 }

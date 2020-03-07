@@ -5,20 +5,20 @@
 #include "dometer/dns/rcode.hpp"
 
 namespace dometer::dns {
-    const RCode RCode::NOERROR = RCode(0);
-    const RCode RCode::FORMERR = RCode(1);
-    const RCode RCode::SERVFAIL = RCode(2);
-    const RCode RCode::NXDOMAIN = RCode(3);
-    const RCode RCode::NOTIMPL = RCode(4);
-    const RCode RCode::REFUSED = RCode(5);
+    const rcode rcode::noerror = rcode(0);
+    const rcode rcode::formerr = rcode(1);
+    const rcode rcode::servfail = rcode(2);
+    const rcode rcode::nxdomain = rcode(3);
+    const rcode rcode::notimpl = rcode(4);
+    const rcode rcode::refused = rcode(5);
 
-    RCode::RCode(uint8_t value) : value(value) {}
+    rcode::rcode(uint8_t value) : value(value) {}
 
-    RCode::operator uint8_t() const {
+    rcode::operator uint8_t() const {
         return value;
     }
 
-    RCode::operator std::string() const {
+    rcode::operator std::string() const {
         switch(value) {
             case 0:
                 return "NOERROR";

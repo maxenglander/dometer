@@ -8,30 +8,30 @@
 
 namespace dometer::util {
     template<typename K, typename V>
-    class LRUMap {
-        using KVNode = typename std::list<std::pair<K, V>>::iterator;
+    class lru_map {
+        using kv_node = typename std::list<std::pair<K, V>>::iterator;
 
         public:
-            LRUMap(size_t maxSize);
-            void onEvict(std::function<void(K, V)>);
-            void onInsert(std::function<void(K, V)>);
+            lru_map(size_t max_size);
+            void on_evict(std::function<void(K, V)>);
+            void on_insert(std::function<void(K, V)>);
             void put(K, V);
         protected:
-            virtual bool shouldEvict();
+            virtual bool should_evict();
         private:
             void erase(K);
-            void evictOne();
+            void evict_one();
             void insert(K, V);
-            void maybeEvict();
-            void notifyEvictionListeners(K, V);
-            void notifyInsertionListeners(K, V);
+            void maybe_evict();
+            void notify_eviction_listeners(K, V);
+            void notify_insertion_listeners(K, V);
             size_t size();
 
-            std::vector<std::function<void(K, V)>> evictionListeners;
-            std::vector<std::function<void(K, V)>> insertionListeners;
+            std::vector<std::function<void(K, V)>> eviction_listeners;
+            std::vector<std::function<void(K, V)>> insertion_listeners;
             std::list<std::pair<K, V>> list;
-            std::unordered_map<K, KVNode> map;
-            size_t maxSize;
+            std::unordered_map<K, kv_node> map;
+            size_t max_size;
     };
 }
 

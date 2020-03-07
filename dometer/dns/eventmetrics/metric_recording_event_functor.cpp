@@ -71,7 +71,7 @@ namespace dometer::dns::eventmetrics {
                 if(!session.get_resolve_query_event()) return;
                 auto resolve_query_event = session.get_resolve_query_event();
 
-                auto builder = dometer::dns::metrics::LookupObservation::newBuilder();
+                auto builder = dometer::dns::metrics::lookup_observation::new_builder();
 
                 auto question = resolve_query_event->get_question();
                 builder.qclass(question.qclass)
@@ -87,7 +87,7 @@ namespace dometer::dns::eventmetrics {
                     builder.error(dometer::dns::resolver::to_string(resolution.error().code));
                 } else if(auto parse_reply_event = session.get_parse_reply_event()) {
                     if(auto reply = parse_reply_event->get_message()) {
-                        builder.rcode(reply->getRCode());
+                        builder.rcode(reply->get_rcode());
                     }
                 }
 

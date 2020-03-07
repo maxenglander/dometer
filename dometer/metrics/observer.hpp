@@ -11,11 +11,11 @@ namespace dometer::metrics {
     class observer {
         public:
             observer() = delete;
-            observer(std::vector<dometer::metrics::handler::Handler>);
-            template<typename... L> void increment(const Counter<L...>&, Observation<uint64_t, L...>);
-            template<typename... L> void observe(const summary<L...>&, Observation<double, L...>);
+            observer(std::vector<dometer::metrics::handler::handler>);
+            template<typename... L> void increment(const counter<L...>&, observation<uint64_t, L...>);
+            template<typename... L> void observe(const summary<L...>&, observation<double, L...>);
         private:
-            std::vector<dometer::metrics::handler::Handler> handlers;
+            std::vector<dometer::metrics::handler::handler> handlers;
     };
 }
 

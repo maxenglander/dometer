@@ -7,69 +7,69 @@
  */
 namespace dometer::util {
     template <std::size_t... S>
-    struct Sequence {};
+    struct sequence {};
 
     template <std::size_t N, std::size_t... S>
-    struct IndexSequence : IndexSequence<N - 1, N - 1, S...> {};
+    struct index_sequence : index_sequence<N - 1, N - 1, S...> {};
 
     template <std::size_t... S>
-    struct IndexSequence<0, S...> {
-        typedef Sequence<S...> type;
+    struct index_sequence<0, S...> {
+        typedef sequence<S...> type;
     };
 
 	template <size_t N>
-	struct TupleHelperImpl
+	struct tuple_helper_impl
 	{
 		template <typename F, typename T>
-		static void visitAt(T& tup, size_t idx, F fun)
+		static void visit_at(T& tup, size_t idx, F fun)
 		{
             if (idx == N - 1)
                 fun(std::get<N - 1>(tup));
 			else
-                TupleHelperImpl<N - 1>::visitAt(tup, idx, fun);
+                tuple_helper_impl<N - 1>::visit_at(tup, idx, fun);
 		}
 
         template <template <typename ...> class Tup1,
                   template <typename ...> class Tup2,
                   typename ...A, typename ...B,
                   std::size_t ...S>
-        static auto zip(Tup1<A...> tup1, Tup2<B...> tup2, Sequence<S...> s) ->
+        static auto zip(Tup1<A...> tup1, Tup2<B...> tup2, sequence<S...> s) ->
                 decltype(std::make_tuple(std::make_pair(std::get<S>(tup1), std::get<S>(tup2))...)) {
             return std::make_tuple(std::make_pair(std::get<S>(tup1), std::get<S>(tup2))...);
         }
 	};
 	 
 	template <>
-	struct TupleHelperImpl<0>
+	struct tuple_helper_impl<0>
 	{
 		template <typename F, typename T>
-		static void visitAt(T& tup, size_t idx, F fun) {
+		static void visit_at(T& tup, size_t idx, F fun) {
             assert(false);
         }
 	};
 	 
-    struct TupleHelper {
+    struct tuple_helper {
         template <typename F, typename... Ts>
-        static void visitAt(std::tuple<Ts...> const& tup, size_t idx, F fun)
+        static void visit_at(std::tuple<Ts...> const& tup, size_t idx, F fun)
         {
-            TupleHelperImpl<sizeof...(Ts)>::visitAt(tup, idx, fun);
+            tuple_helper_impl<sizeof...(Ts)>::visit_at(tup, idx, fun);
         }
          
         template <typename F, typename... Ts>
-        static void visitAt(std::tuple<Ts...>& tup, size_t idx, F fun)
+        static void visit_at(std::tuple<Ts...>& tup, size_t idx, F fun)
         {
-            TupleHelperImpl<sizeof...(Ts)>::visitAt(tup, idx, fun);
+            tuple_helper_impl<sizeof...(Ts)>::visit_at(tup, idx, fun);
         }
 
         template <template <typename ...> class Tup1,
                   template <typename ...> class Tup2,
                   typename... A, typename... B>
         static auto zip(Tup1<A...> tup1, Tup2<B...> tup2) ->
-                decltype(TupleHelperImpl<sizeof...(A)>::zip(tup1, tup2,
-                             typename IndexSequence<sizeof...(A)>::type())) {
+                decltype(tuple_helper_impl<sizeof...(A)>::zip(tup1, tup2,
+                             typename index_sequence<sizeof...(A)>::type())) {
             static_assert(sizeof...(A) == sizeof...(B));
-            return TupleHelperImpl<sizeof...(A)>::zip(tup1, tup2,
-                       typename IndexSequence<sizeof...(A)>::type());
+            return tuple_helper_impl<sizeof...(A)>::zip(tup1, tup2,
+                       typename index_sequence<sizeof...(A)>::type());
         }
     };
 }

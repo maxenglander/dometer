@@ -6,15 +6,15 @@
 
 namespace dometer::metrics {
     template<typename V, typename... L>
-    struct Observation {
-        Observation(V value, std::tuple<L...> labelValues);
+    struct observation {
+        observation(V value, std::tuple<L...> label_values);
         const V value;
-        const std::tuple<L...> labelValues;
+        const std::tuple<L...> label_values;
     };
 
     template<typename V, typename... L>
-    class ObservationBuilder {
-        virtual Observation<V, L...> build() const = 0;
+    class observation_builder {
+        virtual observation<V, L...> build() const = 0;
     };
 }
 
