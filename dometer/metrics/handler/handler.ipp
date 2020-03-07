@@ -44,7 +44,7 @@ namespace dometer::metrics::handler {
     template<typename... L>
     void handler::observe(const dometer::metrics::summary<L...>& summary,
                           dometer::metrics::observation<double, L...> observation) {
-        summary_observer<L...> observeSummary(summary, observation);
-        std::x::visit(observeSummary, this->concrete_handler);
+        summary_observer<L...> observe_summary(summary, observation);
+        std::x::visit(observe_summary, this->concrete_handler);
     }
 }

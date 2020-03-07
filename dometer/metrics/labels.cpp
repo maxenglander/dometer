@@ -8,10 +8,10 @@
 
 namespace dometer::metrics {
     std::shared_ptr<label<bool>> labels::boolean(std::string name) {
-        return std::make_shared<BooleanLabel>(name);
+        return std::make_shared<boolean_label>(name);
     }
 
     std::shared_ptr<label<std::string>> labels::string(std::string name) {
-        return std::make_shared<StringLabel>(name);
+        return std::make_shared<string_label>(name);
     }
 }

@@ -1,5 +1,5 @@
 namespace dometer::dns::resolver {
-    enum class ResolverType {
-        LIBRESOLV
+    enum class resolver_type {
+        libresolv
     };
 }

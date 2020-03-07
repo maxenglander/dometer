@@ -6,7 +6,7 @@ namespace dometer::dns {
     struct Header {
         const uint16_t id;
         const bool qr;
-        const Opcode opcode;
+        const opcode opcode;
         const bool aa;
         const bool tc;
         const bool rd;

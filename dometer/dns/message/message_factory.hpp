@@ -16,6 +16,6 @@ namespace dometer::dns::message {
             static message copy_message(const message& message);
             static message format_error(const message& query); 
             static message not_implemented(const message& query); 
-            static message serverFailure(const message& query); 
+            static message server_failure(const message& query); 
     };
 }

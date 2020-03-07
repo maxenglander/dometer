@@ -10,7 +10,7 @@ namespace dometer::dns::resolver {
             case error_code::noerror:
                 return "NOERROR";
             case error_code::other:
-                return "other";
+                return "OTHER";
             case error_code::parseerror:
                 return "PARSEERROR";
             case error_code::timedout:

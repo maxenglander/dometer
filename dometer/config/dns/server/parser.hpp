@@ -11,6 +11,6 @@ namespace dometer::config::dns::server {
             parser(transport_parser);
             dometer::dns::server::options from_json(const Json::Value&) const;
         private:
-            const transport_parser transport_parser_;
+            const transport_parser _transport_parser;
     };
 }

@@ -20,9 +20,9 @@ namespace dometer::dns::message {
         return parse(bytes.data(), bytes.size());
     }
 
-    std::x::expected<message, util::error> parser::parse(uint8_t *bytePtr, size_t size) {
+    std::x::expected<message, util::error> parser::parse(uint8_t *byte_ptr, size_t size) {
         std::unique_ptr<uint8_t[]> bytes(new uint8_t[size]);
-        std::copy(bytePtr, bytePtr + size, bytes.get());
+        std::copy(byte_ptr, byte_ptr + size, bytes.get());
         return parse(std::move(bytes), size);
     }
 

@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace dometer::util {
-    class StringHelper {
+    class string_helper {
         public:
             static std::vector<std::string> split(char, std::string);
     };

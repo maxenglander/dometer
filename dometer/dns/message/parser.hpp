@@ -14,8 +14,8 @@ namespace dometer::dns::message {
 
     class parser {
         public:
-            static std::x::expected<message, util::error> parse(std::vector<uint8_t> bytes);
-            static std::x::expected<message, util::error> parse(uint8_t *bytePtr, size_t size);
-            static std::x::expected<message, util::error> parse(std::unique_ptr<uint8_t[]> bytes, size_t size);
+            static std::x::expected<message, util::error> parse(std::vector<uint8_t>);
+            static std::x::expected<message, util::error> parse(uint8_t *, size_t);
+            static std::x::expected<message, util::error> parse(std::unique_ptr<uint8_t[]>, size_t);
     };
 }

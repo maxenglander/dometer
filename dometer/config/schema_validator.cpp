@@ -78,7 +78,7 @@ namespace dometer::config {
         if(!reader->parse(&input[0], &input[input.size() - 1], &(*root), &errs)) {
             return std::x::unexpected<util::error>(util::error(
                 "Failed to parse JSON.",
-                util::StringHelper::split('\n', errs)
+                util::string_helper::split('\n', errs)
             ));
         }
 

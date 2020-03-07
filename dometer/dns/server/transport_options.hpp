@@ -4,6 +4,6 @@
 
 namespace dometer::dns::server {
     struct transport_options {
-        const std::string bindAddress;
+        const std::string bind_address;
     };
 }

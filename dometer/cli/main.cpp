@@ -73,7 +73,7 @@ namespace dometer::cli {
         auto resolver = dns::resolver::resolver_factory::make_resolver(app_options.dns.resolver);
         auto resolving_handler = std::make_shared<dns::handler::resolving_handler>(emitter, resolver);
         dns::server::server server(emitter, resolving_handler);
-        auto serve_result = server.serve(app_options.dns.server.transport.bindAddress);
+        auto serve_result = server.serve(app_options.dns.server.transport.bind_address);
         if(!serve_result) {
             std::cerr << error_encoder.encode(util::error(
                 "Failed to start DNS server",

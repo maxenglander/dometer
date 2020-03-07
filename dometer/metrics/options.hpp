@@ -5,7 +5,7 @@
 #include "dometer/metrics/handler/options.hpp"
 
 namespace dometer::metrics {
-    struct Options {
+    struct options {
         const std::vector<dometer::metrics::handler::options> handlers;
     };
 }

@@ -4,7 +4,7 @@
 #include "dometer/util/string_helper.hpp"
 
 namespace dometer::util {
-    std::vector<std::string> StringHelper::split(char delimiter, std::string string) {
+    std::vector<std::string> string_helper::split(char delimiter, std::string string) {
         std::vector<std::string> results;
 
         std::size_t current, previous = 0;
