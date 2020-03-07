@@ -52,6 +52,6 @@ namespace dometer::dns::metrics {
                                > {
         lookup_observation(double, std::tuple<std::string, dometer::dns::class_, std::string, dometer::dns::type, std::string>);
         static lookup_observation_builder new_builder();
-        using Builder = lookup_observation_builder;
+        using builder = lookup_observation_builder;
     };
 }

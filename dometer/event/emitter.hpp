@@ -11,13 +11,13 @@ namespace dometer::event {
     class emitter {
         public:
             emitter();
-            emitter(std::vector<Callback<T>>);
+            emitter(std::vector<callback<T>>);
             emitter(const emitter&);
             ~emitter();
             void emit(T t);
-            void on(Callback<T> v);
+            void on(callback<T> v);
         private:
-            std::vector<Callback<T>> callbacks;
+            std::vector<callback<T>> callbacks;
     };
 }
 

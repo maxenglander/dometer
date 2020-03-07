@@ -4,5 +4,5 @@
 
 namespace dometer::event {
     template <typename T>
-    using Callback = std::function<void(T)>;
+    using callback = std::function<void(T)>;
 }

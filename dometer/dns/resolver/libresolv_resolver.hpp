@@ -11,10 +11,6 @@
 #include "std/x/expected.hpp"
 #include "dometer/util/error.hpp"
 
-namespace dometer::dns {
-    class Packet;
-}
-
 namespace dns = dometer::dns;
 namespace util = dometer::util;
 
