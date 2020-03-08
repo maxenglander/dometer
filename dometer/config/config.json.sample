@@ -9,7 +9,7 @@
     },
     "server": {
       "transport": {
-        "bindAddress": "0.0.0.0:5353"
+        "bindAddress": "0.0.0.0:6353"
       }
     }
   },

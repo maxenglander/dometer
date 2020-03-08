@@ -33,8 +33,8 @@ namespace dometer::dns {
                 return "NS";
             case ns_t_srv:
                 return "SRV";
-            case ns_t_ds:
-                return "DS";
+            //case ns_t_ds:
+            //    return "DS";
             case ns_t_any:
                 return "ANY";
         }

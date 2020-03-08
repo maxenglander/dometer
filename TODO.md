@@ -23,10 +23,13 @@ TODO
  - [x] create metrics/handler package
  - [x] create metrics/handler/prometheus package
  - [x] use cpp std coding style, lower cases
+ - [x] compile on mac os x
+ - [ ] get resolv\_wrapper to compile on os x
  - [ ] write tests
  - [ ] switch summary to histogram
  - [ ] write documentation
  - [ ] build cmake with bazel
+ - [ ] build envsubst with bazel (for generating schema)
  - [ ] make nice getter/setters for dns events
  - [ ] add logging
  - [ ] replace #include statements with forward declarations

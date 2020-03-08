@@ -34,6 +34,9 @@ cc_library(
         "//std/x:expected",
         "//std/x:unique",
     ],
+    copts = [
+        "-DBIND_8_COMPAT=1",
+    ],
     srcs = ["message.cpp"],
     visibility = ["//visibility:public"],
 )
@@ -47,6 +50,9 @@ cc_library(
         "//std/x:expected",
         "//std/x:unique",
         ":message",
+    ],
+    copts = [
+        "-DBIND_8_COMPAT=1",
     ],
     srcs = ["parser.cpp"],
     visibility = ["//visibility:public"],
