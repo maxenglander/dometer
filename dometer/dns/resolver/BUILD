@@ -36,6 +36,7 @@ cc_library(
     hdrs = ["libresolv_resolver.hpp"],
     srcs = ["libresolv_resolver.cpp"],
     deps = [
+        "@org_samba_cwrap_resolv_wrapper//:libresolv_wrapper",
         "//dometer/dns:class",
         "//dometer/dns/message:message",
         "//dometer/dns/message:message_factory",
@@ -49,6 +50,15 @@ cc_library(
     ],
     linkopts = ["-lresolv"],
     visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "libresolv_resolver_test",
+    srcs = ["libresolv_resolver_test.cpp"],
+    deps = [
+        "@org_samba_cwrap_resolv_wrapper//:libresolv_wrapper",
+        ":libresolv_resolver",
+    ],
 )
 
 cc_library(

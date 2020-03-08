@@ -1,0 +1,23 @@
+test/integration
+================
+
+Challenge: how to test Dometer connects to nameserver in resolv.conf?
+
+We can backup, replace, and restore /etc/resolv.conf with each integration test,
+but this is hacky and smelly. It's fine to do in a self-contained environment,
+like a Docker container, but bad news otherwise.
+
+Better: use resolv_wrapper to monkey-patch libresolv.
+
+Components:
+ - resolv_wrapper
+ - Dometer
+ - DNS client
+
+Harness:
+ - Configure resolv_wrapper
+ - Start/stop Dometer
+
+Test steps:
+ - Run query
+ - Verify result

@@ -2,6 +2,17 @@ workspace(name = "com_github_maxenglander_dometer")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# Bazel foreign rules
+http_archive(
+   name = "rules_foreign_cc",
+   sha256 = "450563dc2938f38566a59596bb30a3e905fbbcc35b3fff5a1791b122bc140465",
+   url = "https://github.com/bazelbuild/rules_foreign_cc/archive/456425521973736ef346d93d3d6ba07d807047df.zip",
+   strip_prefix = "rules_foreign_cc-456425521973736ef346d93d3d6ba07d807047df",
+)
+
+load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependencies")
+rules_foreign_cc_dependencies()
+
 ##########################################################################
 ### External libraries                                                 ###
 ##########################################################################
@@ -42,6 +53,15 @@ http_archive(
     strip_prefix = "asio-1.14.0",
 )
 
+# Google test
+http_archive(
+    name = "com_github_google_googletest",
+    url = "https://github.com/google/googletest/archive/release-1.10.0.zip",
+    sha256 = "94c634d499558a76fa649edb13721dce6e98fb1e7018dfaeba3cd7a083945e91",
+    build_file = "@//external:BUILD.googletest",
+    strip_prefix = "googletest-release-1.10.0",
+)
+
 # JsonCpp  library
 http_archive(
     name = "com_github_open-source-parsers_jsoncpp",
@@ -68,6 +88,15 @@ http_archive(
     sha256 = "8e00c38829d6785a2dfb951bb87c6974fa07dfe488aa5b25deec4b8bc0f6a3ab",
     build_file = "@//external:BUILD.rapidjson",
     strip_prefix = "rapidjson-1.1.0",
+)
+
+# Resolve wrapper
+http_archive(
+    name = "org_samba_cwrap_resolv_wrapper",
+    urls = ["https://ftp.samba.org/pub/cwrap/resolv_wrapper-1.1.5.tar.gz"],
+    sha256 = "e989fdaa1385bdf3ef7dbcb83b3f7f15c69e78ca6432e254be390b7c63e1b06c",
+    build_file = "@//external:BUILD.resolv_wrapper",
+    strip_prefix = "resolv_wrapper-1.1.5",
 )
 
 # Valijson library

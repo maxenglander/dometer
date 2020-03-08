@@ -22,10 +22,12 @@
 namespace config = dometer::config;
 namespace dns = dometer::dns;
 namespace metrics = dometer::metrics;
-using namespace std::x;
 
 namespace dometer::cli {
     int main(int argc, char **argv) {
+        char myenv[] = "RESOLV_WRAPPER_HOSTS=/tmp/fakehosts";
+        putenv(myenv);
+
         util::human_error_encoder error_encoder;
 
         auto cli_options = dometer::cli::options_parser::parse(argc, argv);

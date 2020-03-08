@@ -23,10 +23,11 @@ TODO
  - [x] create metrics/handler package
  - [x] create metrics/handler/prometheus package
  - [x] use cpp std coding style, lower cases
- - [ ] make nice getter/setters for dns events
- - [ ] switch summary to histogram
  - [ ] write tests
+ - [ ] switch summary to histogram
  - [ ] write documentation
+ - [ ] build cmake with bazel
+ - [ ] make nice getter/setters for dns events
  - [ ] add logging
  - [ ] replace #include statements with forward declarations
  - [ ] create internal boundaries (e.g. ::internal or ::detail)
