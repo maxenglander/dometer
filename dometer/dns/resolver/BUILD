@@ -36,6 +36,7 @@ cc_library(
     hdrs = ["libresolv_resolver.hpp"],
     srcs = ["libresolv_resolver.cpp"],
     deps = [
+        "@org_samba_cwrap_resolv_wrapper//:libresolv_wrapper",
         "//dometer/dns:class",
         "//dometer/dns/message:message",
         "//dometer/dns/message:message_factory",

@@ -93,10 +93,12 @@ http_archive(
 # Resolve wrapper
 http_archive(
     name = "org_samba_cwrap_resolv_wrapper",
-    urls = ["https://ftp.samba.org/pub/cwrap/resolv_wrapper-1.1.5.tar.gz"],
-    sha256 = "e989fdaa1385bdf3ef7dbcb83b3f7f15c69e78ca6432e254be390b7c63e1b06c",
+    #urls = ["https://ftp.samba.org/pub/cwrap/resolv_wrapper-1.1.5.tar.gz"],
+    urls = ["https://github.com/maxenglander/resolve_wrapper/archive/b73d274f61f5d94b6482fb639be0ff8d23746cf7.zip"],
+    sha256 = "e01e0c3aaa58d4fd56507b699797b0920956c9fd355cdfdae10aee5e8fee4b7c",
     build_file = "@//external:BUILD.resolv_wrapper",
-    strip_prefix = "resolv_wrapper-1.1.5",
+    #strip_prefix = "resolv_wrapper-1.1.5",
+    strip_prefix = "resolve_wrapper-b73d274f61f5d94b6482fb639be0ff8d23746cf7",
 )
 
 # Valijson library

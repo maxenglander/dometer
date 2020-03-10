@@ -7,13 +7,14 @@ all_content = filegroup(
 )
 
 cmake_external(
-    name = "libresolv_wrapper",
+    name = "resolv_wrapper",
     lib_source = ":all",
     make_commands = [
       "make",
       "make install",
     ],
     shared_libraries = select({
+        "@bazel_tools//src/conditions:darwin": ["libresolv_wrapper.0.dylib"],
         "//conditions:default": ["libresolv_wrapper.so.0"],
     }),
     visibility = ["//visibility:public"],
