@@ -35,6 +35,12 @@ cc_library(
 )
 
 cc_library(
+    name = "record",
+    hdrs = ["record.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "type",
     hdrs = ["type.hpp"],
     srcs = ["type.cpp"],
