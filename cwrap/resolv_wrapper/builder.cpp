@@ -1,5 +1,5 @@
-#include <cstdio>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 
 #include "cwrap/resolv_wrapper/builder.hpp"
@@ -12,18 +12,20 @@ namespace cwrap::resolv_wrapper {
     }
 
     hosts_builder& hosts_builder::add_a_record(std::string name, std::string data) {
-        _records.push_back(name + " " + data);
+        _records.push_back("A " + name + " " + data);
         return *this;
     }
 
     resolv_wrapper hosts_builder::build() {
-        char _template[MAXPATHLEN];
-        std::string name(std::tmpnam(nullptr));
-        auto stream = std::x::make_unique<std::fstream>(name, std::fstream::out);
+        file _file = file::make_temporary_file();
+
         for(auto it = _records.begin(); it < _records.end(); it++) {
-            *stream << *it << std::endl;
+            fprintf(&_file.handle(), "%s\n", it->c_str());
         }
 
-        return resolv_wrapper(self_destructing_file(name, std::move(stream)), wrap_mode::hosts);
+        // Close file so resolv_wrapper can read from it.
+        _file.close(); 
+
+        return resolv_wrapper(std::move(_file), wrap_mode::hosts);
     }
 }

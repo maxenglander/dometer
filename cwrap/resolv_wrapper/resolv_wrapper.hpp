@@ -12,6 +12,8 @@ namespace cwrap::resolv_wrapper {
             ~resolv_wrapper();
             void disable();
             void enable();
+            std::string file_name();
+            wrap_mode mode();
         private:
             file _file;
             wrap_mode _mode;

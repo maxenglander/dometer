@@ -11,7 +11,7 @@ cc_library(
         "googletest",
         "googletest/include",
     ],
-    linkopts = ["-pthread"],
+    linkopts = ["-lpthread"],
     visibility = ["//visibility:public"],
 )
 

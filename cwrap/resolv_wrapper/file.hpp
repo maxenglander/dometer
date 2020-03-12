@@ -1,26 +1,22 @@
 #pragma once
 
-#include <fstream>
+#include <functional>
 #include <memory>
 
 namespace cwrap::resolv_wrapper {
     class file {
         public:
-            file(std::string name, std::unique_ptr<std::fstream> stream);
+            static file make_temporary_file();
+
+            file(std::string name, std::unique_ptr<std::FILE, std::function<void(std::FILE*)>> pointer);
             file(const file&) = delete;
             file(file&&);
+            void close();
+            std::FILE& handle();
             std::string name();
-            std::fstream& stream();
         protected:
+            bool _moved;
             std::string _name;
-            std::unique_ptr<std::fstream> _stream;
-    };
-
-    class self_destructing_file : public file {
-        public:
-            self_destructing_file(std::string name, std::unique_ptr<std::fstream> stream);
-            self_destructing_file(const self_destructing_file&) = delete;
-            self_destructing_file(self_destructing_file&&);
-            ~self_destructing_file();
+            std::unique_ptr<std::FILE, std::function<void(std::FILE*)>> _pointer;
     };
 }

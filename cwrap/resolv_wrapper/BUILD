@@ -42,6 +42,7 @@ cc_test(
         "@com_github_google_googletest//:gtest_main",
         ":builder",
         ":resolv_wrapper",
+        ":wrap_mode",
     ],
     srcs = ["resolv_wrapper_test.cpp"],
 )
