@@ -44,6 +44,8 @@ cc_test(
         ":resolv_wrapper",
         ":wrap_mode",
     ],
+    copts = ["-DBIND_8_COMPAT"],
+    linkopts = ["-lresolv"],
     srcs = ["resolv_wrapper_test.cpp"],
 )
 
