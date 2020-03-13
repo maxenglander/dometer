@@ -3,11 +3,13 @@
 #include <arpa/nameser.h>
 #include <memory>
 #include <stdint.h>
+#include <vector>
 
 #include "dometer/dns/opcode.hpp"
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/question.hpp"
 #include "dometer/dns/rcode.hpp"
+#include "dometer/dns/record.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 
@@ -21,6 +23,7 @@ namespace dometer::dns::message {
             ~message();
 
             bool get_aa() const;
+            std::x::expected<std::vector<record>, util::error> get_answers() const;
             uint16_t get_id() const;
             opcode get_opcode() const;
             qr get_qr() const;
@@ -42,6 +45,7 @@ namespace dometer::dns::message {
             message(std::unique_ptr<uint8_t[]>, size_t);
             message(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
 
+            uint16_t get_an_count() const;
             uint16_t get_qd_count() const;
 
             std::unique_ptr<uint8_t[]> bytes;

@@ -1,9 +1,11 @@
+#pragma once
+
 #include "dometer/dns/type.hpp"
 
 namespace dometer::dns {
-    struct Record {
+    struct record {
         std::string name;
-        Type type;
-        std::string data;
+        type type;
+        std::string rdata;
     };
 }

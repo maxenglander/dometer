@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstdio>
 #include <functional>
 #include <memory>
+#include <string>
 
 namespace cwrap::resolv_wrapper {
     class file {

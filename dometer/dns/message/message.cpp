@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <cassert>
 #include <iostream>
@@ -10,6 +11,7 @@
 #include "dometer/dns/opcode.hpp"
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/rcode.hpp"
+#include "dometer/dns/record.hpp"
 #include "dometer/dns/message/message.hpp"
 #include "dometer/util/array_helper.hpp"
 #include "dometer/util/error.hpp"
@@ -62,6 +64,34 @@ namespace dometer::dns::message {
 
     bool message::get_aa() const {
         return ns_msg_getflag(handle, ns_f_aa);
+    }
+
+    uint16_t message::get_an_count() const {
+        return ns_msg_count(handle, ns_s_an);
+    }
+
+    std::x::expected<std::vector<dometer::dns::record>, util::error> message::get_answers() const {
+        std::vector<dometer::dns::record> answers;
+
+        ns_msg handle_ = handle;
+        for(int i = 0; i < get_an_count(); i++) {
+            ns_rr answer;
+
+            if(ns_parserr(&handle_, ns_s_an, i, &answer) != 0) {
+                return std::x::unexpected<util::error>(util::error(
+                    "Failed to parse DNS answer record.",
+                    util::error(strerror(errno), errno)
+                ));
+            }
+
+            answers.push_back(dometer::dns::record{
+                std::string(ns_rr_name(answer)),
+                dometer::dns::type(ns_rr_type(answer)),
+                std::string(inet_ntoa(*(struct in_addr*)ns_rr_rdata(answer)))
+            });
+        }
+
+        return answers;
     }
 
     uint16_t message::get_id() const {

@@ -15,7 +15,6 @@
 #include "dometer/event/callback.hpp"
 #include "dometer/event/emitter.hpp"
 #include "dometer/util/error.hpp"
-#include "dometer/util/human_error_encoder.hpp"
 #include "std/x/expected.hpp"
 
 namespace util = dometer::util;
@@ -119,7 +118,6 @@ namespace dometer::dns::handler {
         auto resolution = resolver->resolve(question.qname, question.qclass, question.qtype);
         auto end = clock.now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        std::cout << "resolve duration: " << duration.count() << std::endl;
 
         emitter.emit(dometer::dns::event::resolve_query_event(
             session_id, question, resolution, duration

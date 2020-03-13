@@ -26,7 +26,8 @@ namespace dometer::dns::resolver {
         : libresolv_resolver(libresolv_function::query) {}
 
     libresolv_resolver::libresolv_resolver(libresolv_function function)
-        : function(function) {}
+        : function(function) {
+    }
 
     expected<std::vector<uint8_t>, error> libresolv_resolver::resolve(
         const std::string& qname, const class_& qclass, const type& qtype
@@ -72,8 +73,7 @@ namespace dometer::dns::resolver {
         // Nasty hack because res_* hides the length of messages from us
         int savedherrno = h_errno;
         for(int i = 0; i <= PACKETSZ; i++) {
-            auto reply = dns::message::parser::parse(buffer, i);
-            if(reply) {
+            if(dns::message::parser::parse(buffer, i)) {
                 return std::vector<uint8_t>(buffer, buffer + i);
             }
         }
