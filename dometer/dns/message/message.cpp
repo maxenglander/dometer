@@ -87,6 +87,8 @@ namespace dometer::dns::message {
             answers.push_back(dometer::dns::record{
                 std::string(ns_rr_name(answer)),
                 dometer::dns::type(ns_rr_type(answer)),
+                dometer::dns::class_(ns_rr_class(answer)),
+                ns_rr_ttl(answer),
                 std::string(inet_ntoa(*(struct in_addr*)ns_rr_rdata(answer)))
             });
         }
@@ -145,6 +147,12 @@ namespace dometer::dns::message {
     bool message::get_tc() const {
         return (bool)ns_msg_getflag(handle, ns_f_tc);
     }
+
+    void message::set_an_count(uint16_t count) {
+        bytes[6] = count >> 8;
+        bytes[7] = count & 0xFF;
+    }
+
     void message::set_id(uint16_t id) {
         bytes[0] = id >> 8;
         bytes[1] = id & 0xFF;

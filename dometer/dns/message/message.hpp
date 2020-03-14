@@ -23,15 +23,18 @@ namespace dometer::dns::message {
             ~message();
 
             bool get_aa() const;
+            uint16_t get_an_count() const;
             std::x::expected<std::vector<record>, util::error> get_answers() const;
             uint16_t get_id() const;
             opcode get_opcode() const;
+            uint16_t get_qd_count() const;
             qr get_qr() const;
             std::x::expected<question, util::error> get_question() const;
             bool get_ra() const;
             rcode get_rcode() const;
             bool get_rd() const;
             bool get_tc() const;
+            void set_an_count(uint16_t count);
             void set_id(uint16_t id);
             void set_qr(qr qr);
             void set_rcode(rcode rcode);
@@ -44,9 +47,6 @@ namespace dometer::dns::message {
             message(uint8_t*, size_t);
             message(std::unique_ptr<uint8_t[]>, size_t);
             message(std::unique_ptr<uint8_t[]>, ns_msg, size_t);
-
-            uint16_t get_an_count() const;
-            uint16_t get_qd_count() const;
 
             std::unique_ptr<uint8_t[]> bytes;
             size_t size_;

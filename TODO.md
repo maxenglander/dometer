@@ -24,14 +24,16 @@ TODO
  - [x] create metrics/handler/prometheus package
  - [x] use cpp std coding style, lower cases
  - [x] compile on mac os x
- - [ ] get resolv\_wrapper to compile on os x
+ - [x] get resolv\_wrapper to compile on os x
  - [ ] write tests
  - [ ] switch summary to histogram
  - [ ] write documentation
  - [ ] build cmake with bazel
  - [ ] build envsubst with bazel (for generating schema)
+ - [ ] rename libresolv => bind
  - [ ] make nice getter/setters for dns events
  - [ ] add logging
+ - [ ] replace arpa methods with more robust dns packet manipulation library like ldns
  - [ ] replace #include statements with forward declarations
  - [ ] create internal boundaries (e.g. ::internal or ::detail)
  - [ ] use cpp convention/style enforcer

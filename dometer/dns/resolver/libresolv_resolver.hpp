@@ -9,10 +9,8 @@
 #include "dometer/dns/resolver/libresolv_function.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "std/x/expected.hpp"
-#include "dometer/util/error.hpp"
 
 namespace dns = dometer::dns;
-namespace util = dometer::util;
 
 namespace dometer::dns::resolver {
     class libresolv_resolver : public resolver {

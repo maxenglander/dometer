@@ -1,4 +1,23 @@
 cc_library(
+    name = "builder",
+    hdrs = ["builder.hpp"],
+    srcs = ["builder.cpp"],
+    deps = [
+        "//dometer/dns:qr",
+        "//dometer/dns:rcode",
+        "//dometer/dns:record",
+        "//dometer/util:error",
+        "//std/x:expected",
+        ":message",
+        ":parser",
+    ],
+    copts = [
+        "-DBIND_8_COMPAT",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "message",
     hdrs = ["message.hpp"],
     deps = [
@@ -54,6 +73,9 @@ cc_library(
     ],
     copts = [
         "-DBIND_8_COMPAT=1",
+    ],
+    linkopts = [
+        "-lresolv",
     ],
     srcs = ["parser.cpp"],
     visibility = ["//visibility:public"],
