@@ -12,7 +12,7 @@
 #include "gtest/gtest.h"
 
 namespace cwrap::resolv_wrapper {
-    TEST(HostsResolvWrapperTest, SetsEnvVarAndCreatesFileWithHosts) {
+    TEST(ResolvWrapperHostsTest, SetsEnvVarAndCreatesFileWithHosts) {
         ASSERT_EQ(getenv("RESOLV_WRAPPER_HOSTS"), nullptr);
 
         auto wrapper = builder::new_hosts_builder().build();
@@ -24,7 +24,7 @@ namespace cwrap::resolv_wrapper {
         ASSERT_STREQ(getenv("RESOLV_WRAPPER_HOSTS"), fname.c_str());
     }
 
-    TEST(HostsResolvWrapperTest, PopulatesFileWithRecords) {
+    TEST(ResolvWrapperHostsTest, PopulatesFileWithRecords) {
          auto wrapper = builder::new_hosts_builder()
              .add_a_record("hello.world", "1.2.3.4")
              .add_a_record("goodbye.world", "4.3.2.1")
@@ -40,12 +40,11 @@ namespace cwrap::resolv_wrapper {
         ASSERT_EQ(line, "A goodbye.world 4.3.2.1");
     }
 
-    TEST(HostsResolvWrapperTest, UnsetsEnvVarAndDeletesFile) {
+    TEST(ResolvWrapperHostsTest, UnsetsEnvVarAndDeletesFile) {
         std::string fname;
         {
             auto wrapper = builder::new_hosts_builder().build();
             fname = wrapper.file_name();
-            ASSERT_EQ(wrapper.mode(), wrap_mode::hosts);
         }
 
         struct stat buffer;
@@ -53,7 +52,7 @@ namespace cwrap::resolv_wrapper {
         ASSERT_EQ(getenv("RESOLV_WRAPPER_HOSTS"), nullptr);
     }
 
-    TEST(HostsResolvWrapperTest, AnswersQueryWithNoerror) {
+    TEST(ResolvWrapperHostsTest, AnswersQueryWithNoerror) {
          auto wrapper = builder::new_hosts_builder()
              .add_a_record("hello.world", "1.2.3.4")
              .build();

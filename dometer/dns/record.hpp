@@ -5,7 +5,7 @@
 namespace dometer::dns {
     struct record {
         std::string name;
-        type type;
+        dometer::dns::type type;
         std::string rdata;
     };
 }

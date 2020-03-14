@@ -37,7 +37,7 @@ cc_library(
 )
 
 cc_test(
-    name = "resolv_wrapper_test",
+    name = "resolv_wrapper_conf_test",
     deps = [
         "@com_github_google_googletest//:gtest_main",
         ":builder",
@@ -46,7 +46,20 @@ cc_test(
     ],
     copts = ["-DBIND_8_COMPAT"],
     linkopts = ["-lresolv"],
-    srcs = ["resolv_wrapper_test.cpp"],
+    srcs = ["resolv_wrapper_conf_test.cpp"],
+)
+
+cc_test(
+    name = "resolv_wrapper_hosts_test",
+    deps = [
+        "@com_github_google_googletest//:gtest_main",
+        ":builder",
+        ":resolv_wrapper",
+        ":wrap_mode",
+    ],
+    copts = ["-DBIND_8_COMPAT"],
+    linkopts = ["-lresolv"],
+    srcs = ["resolv_wrapper_hosts_test.cpp"],
 )
 
 cc_library(

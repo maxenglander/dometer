@@ -27,7 +27,7 @@ namespace dometer::dns::resolver {
     TEST_F(LibresolvResolverTest, ResolvesValidQuery) {
         libresolv_resolver resolver(libresolv_function::query);
 
-        auto resolve_result = resolver.resolve("hello.world", class_::in, type::a);
+        auto resolve_result = resolver.resolve("xhello.world", class_::in, type::a);
         ASSERT_TRUE(resolve_result) << resolve_result.error().message;
 
         auto bytes = *resolve_result;
