@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <memory>
+#include <thread>
 
 #include "asio.hpp"
 #include "dometer/event/emitter.hpp"
@@ -16,17 +17,20 @@ namespace dometer::dns::server {
     class server {
         public:
             server(dometer::event::emitter<dometer::dns::event::any_event>, std::shared_ptr<dns::handler::handler>);
-            std::x::expected<void, util::error> serve(std::string);
-            std::x::expected<void, util::error> serve(std::string, uint16_t port);
+            void join();
+            std::x::expected<void, util::error> start(std::string);
+            std::x::expected<void, util::error> start(std::string, uint16_t port);
         private:
-            void listen();
+            void accept_requests();
             std::x::expected<void, util::error> open_and_bind_socket(asio::ip::udp::endpoint);
-            std::x::expected<void, util::error> serve(asio::ip::udp::endpoint);
+            std::x::expected<void, util::error> start(asio::ip::udp::endpoint);
 
+            std::thread acceptor_thread;
             dometer::event::emitter<dometer::dns::event::any_event> emitter;
             const std::shared_ptr<dns::handler::handler> handler;
             const std::unique_ptr<asio::io_context> io_context;
             std::atomic<uint64_t> session_counter;
             const std::unique_ptr<asio::ip::udp::socket> socket;
+            asio::thread_pool worker_pool;
     };
 }

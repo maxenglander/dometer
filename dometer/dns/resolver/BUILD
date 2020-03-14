@@ -53,6 +53,7 @@ cc_library(
     linkopts = [
         "-lresolv"
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_test(

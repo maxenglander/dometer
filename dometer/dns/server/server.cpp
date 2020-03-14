@@ -28,8 +28,40 @@ namespace dometer::dns::server {
             handler(handler),
             io_context(std::x::make_unique<asio::io_context>()),
             session_counter(0),
-            socket(std::x::make_unique<ip::udp::socket>(*io_context))
+            socket(std::x::make_unique<ip::udp::socket>(*io_context)),
+            worker_pool(4)
     { }
+
+    void server::accept_requests() {
+        asio::error_code error;
+
+        for(;;) {
+            unsigned char query_buffer[4096];
+            size_t query_length = 0;
+
+            ip::udp::endpoint remote_endpoint;
+            query_length = socket->receive_from(
+                    asio::buffer(query_buffer, sizeof(query_buffer)), remote_endpoint, 0, error);
+
+            const uint64_t session_id = ++session_counter;
+            emitter.emit(dometer::dns::event::start_session_event(session_id));
+
+            if(!error) {
+                auto reply = handler->handle(session_id, std::vector<uint8_t>(query_buffer, query_buffer + query_length));
+                if(reply) {
+                    socket->send_to(asio::buffer(reply->data(), reply->size()), remote_endpoint, 0, error);
+                } else {
+                    std::cerr << "Did not receive a UDP reply" << std::endl;
+                }
+            }
+
+            emitter.emit(dometer::dns::event::stop_session_event(session_id));
+        }
+    }
+
+    void server::join() {
+        acceptor_thread.join();
+    }
 
     std::x::expected<void, util::error> server::open_and_bind_socket(ip::udp::endpoint endpoint) {
         asio::error_code error;
@@ -59,7 +91,7 @@ namespace dometer::dns::server {
         return {};
     }
 
-    std::x::expected<void, util::error> server::serve(std::string bind_address) {
+    std::x::expected<void, util::error> server::start(std::string bind_address) {
         size_t separator = bind_address.find_last_of(':');
         if(separator == std::string::npos) {
             return std::x::unexpected<util::error>(util::error(
@@ -90,37 +122,10 @@ namespace dometer::dns::server {
             ));
         }
 
-        return serve(host, port);
+        return start(host, port);
     }
 
-    void server::listen() {
-        asio::error_code error;
-
-        for(;;) {
-            unsigned char query_buffer[4096];
-            size_t query_length = 0;
-
-            ip::udp::endpoint remote_endpoint;
-            query_length = socket->receive_from(
-                    asio::buffer(query_buffer, sizeof(query_buffer)), remote_endpoint, 0, error);
-
-            const uint64_t session_id = ++session_counter;
-            emitter.emit(dometer::dns::event::start_session_event(session_id));
-
-            if(!error) {
-                auto reply = handler->handle(session_id, std::vector<uint8_t>(query_buffer, query_buffer + query_length));
-                if(reply) {
-                    socket->send_to(asio::buffer(reply->data(), reply->size()), remote_endpoint, 0, error);
-                } else {
-                    std::cerr << "Did not receive a UDP reply" << std::endl;
-                }
-            }
-
-            emitter.emit(dometer::dns::event::stop_session_event(session_id));
-        }
-    }
-
-    std::x::expected<void, util::error> server::serve(std::string address, uint16_t port) {
+    std::x::expected<void, util::error> server::start(std::string address, uint16_t port) {
         asio::error_code error;
         asio::ip::address address_ = asio::ip::make_address(address, error);
         if(error) {
@@ -135,10 +140,10 @@ namespace dometer::dns::server {
 
         ip::udp::endpoint endpoint(address_, port);
 
-        return serve(endpoint);
+        return start(endpoint);
     }
 
-    std::x::expected<void, util::error> server::serve(ip::udp::endpoint endpoint) {
+    std::x::expected<void, util::error> server::start(ip::udp::endpoint endpoint) {
         std::x::expected<void, util::error> result = open_and_bind_socket(endpoint);
         if(!result) {
             return std::x::unexpected<util::error>(util::error(
@@ -147,7 +152,10 @@ namespace dometer::dns::server {
             ));
         }
 
-        listen();
+        acceptor_thread = std::thread([&]{
+            accept_requests();
+            io_context->run();
+        });
 
         return {};
     }
