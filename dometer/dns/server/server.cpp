@@ -21,6 +21,10 @@ namespace ip = asio::ip;
 namespace util = dometer::util;
 
 namespace dometer::dns::server {
+    server::server(std::shared_ptr<dns::handler::handler> handler)
+        : server(dometer::event::emitter<dometer::dns::event::any_event>(), handler)
+    {}
+
     server::server(
             dometer::event::emitter<dometer::dns::event::any_event> emitter, 
             std::shared_ptr<dns::handler::handler> handler

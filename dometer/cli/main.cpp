@@ -72,8 +72,15 @@ namespace dometer::cli {
             metric_recording_event_functor(event);
         });
 
-        auto resolver = dns::resolver::resolver_factory::make_resolver(app_options.dns.resolver);
-        auto resolving_handler = std::make_shared<dns::handler::resolving_handler>(emitter, resolver);
+        auto resolver_result = dns::resolver::resolver_factory::make_resolver(app_options.dns.resolver);
+        if(!resolver_result) {
+            std::cerr << error_encoder.encode(util::error(
+                "Failed to create resolver.",
+                resolver_result.error()
+            ));
+            return 1;
+        }
+        auto resolving_handler = std::make_shared<dns::handler::resolving_handler>(emitter, *resolver_result);
         dns::server::server server(emitter, resolving_handler);
         auto start_result = server.start(app_options.dns.server.transport.bind_address);
         if(!start_result) {

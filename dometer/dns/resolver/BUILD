@@ -61,11 +61,11 @@ cc_test(
     srcs = ["libresolv_resolver_test.cpp"],
     deps = [
         "@com_github_google_googletest//:gtest_main",
-        "//cwrap/resolv_wrapper:builder",
-        "//cwrap/resolv_wrapper:resolv_wrapper",
         "//dometer/dns:class",
         "//dometer/dns:type",
+        "//dometer/dns/handler:mock_handler",
         "//dometer/dns/message:parser",
+        "//dometer/dns/server:server",
         "//dometer/util:human_error_encoder",
         ":libresolv_resolver",
     ],

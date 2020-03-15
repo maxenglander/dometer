@@ -22,11 +22,16 @@ namespace Dns = dometer::dns;
 using namespace std::x;
 
 namespace dometer::dns::resolver {
-    libresolv_resolver::libresolv_resolver()
-        : libresolv_resolver(libresolv_function::query) {}
+    libresolv_resolver::libresolv_resolver(struct __res_state stat)
+        : libresolv_resolver(libresolv_function::query, stat) {}
 
-    libresolv_resolver::libresolv_resolver(libresolv_function function)
-        : function(function) {
+    libresolv_resolver::libresolv_resolver(libresolv_function function, struct __res_state stat)
+        : function(function),
+          stat(stat)
+    {}
+
+    libresolv_resolver::~libresolv_resolver() {
+        res_nclose(&stat);
     }
 
     expected<std::vector<uint8_t>, error> libresolv_resolver::resolve(
@@ -36,10 +41,11 @@ namespace dometer::dns::resolver {
         memset(buffer, 0, PACKETSZ);
 
         int length;
+        struct __res_state stat = this->stat;
         if(function == libresolv_function::query) {
-            length = res_query(qname.c_str(), qclass, qtype, buffer, PACKETSZ);
+            length = res_nquery(&stat, qname.c_str(), qclass, qtype, buffer, PACKETSZ);
         } else {
-            length = res_search(qname.c_str(), qclass, qtype, buffer, PACKETSZ);
+            length = res_nsearch(&stat, qname.c_str(), qclass, qtype, buffer, PACKETSZ);
         }
 
         if(length > PACKETSZ) {

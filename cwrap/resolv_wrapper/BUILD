@@ -31,6 +31,7 @@ cc_library(
     ],
     hdrs = ["resolv_wrapper.hpp"],
     srcs = ["resolv_wrapper.cpp"],
+    testonly = 1,
     visibility = [
         "//visibility:public",
     ],

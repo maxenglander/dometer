@@ -8,7 +8,18 @@ cc_library(
         "//std/x:expected",
     ],
     hdrs = ["handler.hpp"],
-    srcs = [],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "mock_handler",
+    hdrs = ["mock_handler.hpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest",
+        "//dometer/dns/message:message",
+        "//dometer/util:error",
+        ":handler",
+    ],
     visibility = ["//visibility:public"],
 )
 

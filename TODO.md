@@ -25,12 +25,13 @@ TODO
  - [x] use cpp std coding style, lower cases
  - [x] compile on mac os x
  - [x] get resolv\_wrapper to compile on os x
+ - [ ] switch to res\_{=\>n}init, res\_{=\>n}query, etc.
  - [ ] write tests
  - [ ] switch summary to histogram
  - [ ] write documentation
  - [ ] build cmake with bazel
  - [ ] build envsubst with bazel (for generating schema)
- - [ ] rename libresolv => bind
+ - [ ] rename libresolv => glibc
  - [ ] make nice getter/setters for dns events
  - [ ] add logging
  - [ ] replace arpa methods with more robust dns packet manipulation library like ldns

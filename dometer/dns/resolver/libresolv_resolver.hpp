@@ -1,5 +1,6 @@
 #pragma once
 
+#include <resolv.h>
 #include <string>
 #include <vector>
 
@@ -15,10 +16,12 @@ namespace dns = dometer::dns;
 namespace dometer::dns::resolver {
     class libresolv_resolver : public resolver {
         public:
-            libresolv_resolver();
-            libresolv_resolver(libresolv_function);
+            libresolv_resolver(struct __res_state);
+            libresolv_resolver(libresolv_function, struct __res_state);
+            ~libresolv_resolver();
             std::x::expected<std::vector<uint8_t>, error> resolve(const std::string&, const class_&, const type&) const;
         private:
             const libresolv_function function;
+            struct __res_state stat;
     };
 }
