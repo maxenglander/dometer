@@ -186,6 +186,7 @@ namespace dometer::dns::message {
     };
 
     message::operator uint8_t*() const {
+        std::cout << "getting bytes" << std::endl;
         return bytes.get();
     }
 }

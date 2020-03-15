@@ -12,6 +12,8 @@ RUN apt-get update \
       pkg-config \
       zip \
       g++ \
+      gdb \
+      valgrind \
       libtool \
       make \
       zlib1g-dev \
@@ -20,6 +22,7 @@ RUN apt-get update \
       ca-certificates \
       ctags \
       curl \
+      wget \
       git \
       socat \
       procps \
