@@ -36,35 +36,30 @@ namespace dometer::dns::server {
             worker_pool(4)
     { }
 
-    void server::accept_requests() {
-        asio::error_code error;
+    void server::handle_request() {
+        socket->async_receive_from(
+            asio::buffer(request_buffer, sizeof(request_buffer)), remote_endpoint,
+            [this](asio::error_code ec, size_t bytes_received) {
+                if(!ec && bytes_received > 0) {
+                    const uint64_t session_id = ++session_counter;
+                    emitter.emit(dometer::dns::event::start_session_event(session_id));
 
-        for(;;) {
-            unsigned char query_buffer[4096];
-            size_t query_length = 0;
+                    auto reply = handler->handle(session_id,
+                                                 std::vector<uint8_t>(request_buffer, request_buffer + bytes_received));
+                    if(reply) {
+                        socket->send_to(asio::buffer(reply->data(), reply->size()), remote_endpoint, 0, ec);
+                    }
 
-            ip::udp::endpoint remote_endpoint;
-            query_length = socket->receive_from(
-                    asio::buffer(query_buffer, sizeof(query_buffer)), remote_endpoint, 0, error);
-
-            const uint64_t session_id = ++session_counter;
-            emitter.emit(dometer::dns::event::start_session_event(session_id));
-
-            if(!error) {
-                auto reply = handler->handle(session_id, std::vector<uint8_t>(query_buffer, query_buffer + query_length));
-                if(reply) {
-                    socket->send_to(asio::buffer(reply->data(), reply->size()), remote_endpoint, 0, error);
-                } else {
-                    std::cerr << "Did not receive a UDP reply" << std::endl;
+                    emitter.emit(dometer::dns::event::stop_session_event(session_id));
                 }
-            }
 
-            emitter.emit(dometer::dns::event::stop_session_event(session_id));
-        }
+                handle_request();
+            }
+        );
     }
 
     void server::join() {
-        acceptor_thread.join();
+        background_thread.join();
     }
 
     std::x::expected<void, util::error> server::open_and_bind_socket(ip::udp::endpoint endpoint) {
@@ -156,11 +151,16 @@ namespace dometer::dns::server {
             ));
         }
 
-        acceptor_thread = std::thread([&]{
-            accept_requests();
+        background_thread = std::thread([&]{
+            handle_request();
             io_context->run();
         });
 
         return {};
+    }
+
+    void server::stop() {
+        io_context->stop();
+        join();
     }
 }

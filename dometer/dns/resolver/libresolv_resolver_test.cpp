@@ -1,5 +1,8 @@
+#include <arpa/inet.h>
 #include <iostream>
 #include <memory>
+#include <netinet/in.h>
+#include <resolv.h>
 #include <stdlib.h>
 
 #include "dometer/dns/class.hpp"
@@ -10,6 +13,11 @@
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
 #include "dometer/dns/server/server.hpp"
 #include "gtest/gtest.h"
+
+using ::testing::_;
+using ::testing::DoAll;
+using ::testing::Return;
+using ::testing::SaveArg;
 
 namespace dometer::dns::resolver {
     class LibresolvResolverTest : public ::testing::Test {
@@ -24,31 +32,48 @@ namespace dometer::dns::resolver {
             }
 
             void TearDown() override {
-                _server.join();
+                _server.stop();
             }
-        private:
+        protected:
             std::shared_ptr<dometer::dns::handler::mock_handler> _handler;
             dometer::dns::server::server _server;
     };
 
-    TEST_F(LibresolvResolverTest, ResolvesValidQuery) {
-        /*
-        libresolv_resolver resolver(libresolv_function::query);
+    MATCHER(ParsesToDnsMessage, "") {
+        auto parse_result = dometer::dns::message::parser::parse(arg);
+        return !!parse_result;
+    };
 
-        auto resolve_result = resolver.resolve("xhello.world", class_::in, type::a);
-        ASSERT_TRUE(resolve_result) << resolve_result.error().message;
+    TEST_F(LibresolvResolverTest, SendsQueryToNameserver) {
+        struct in_addr addr;
+        ASSERT_EQ(inet_pton(AF_INET, "127.0.0.1", &addr), 1);
 
-        auto bytes = *resolve_result;
-        auto parse_result = dometer::dns::message::parser::parse(bytes);
-        ASSERT_TRUE(parse_result) << parse_result.error().message;
+        struct __res_state stat;
+        stat.nscount = 1;
+        stat.nsaddr_list[0] = (struct sockaddr_in) {
+            .sin_family = AF_INET,
+            .sin_port = htons(6353),
+            .sin_addr = addr,
+        };
+        stat.retry = 1;
+        stat._u._ext.nscount = 0;
+        stat._u._ext.nsaddrs[0] = NULL;
 
-        auto answers = parse_result->get_answers();
-        ASSERT_TRUE(answers) << answers.error().message;
+        libresolv_resolver resolver(libresolv_function::query, stat);
 
-        auto record = answers->front();
-        ASSERT_EQ(record.name, "hello.world");
-        ASSERT_EQ((std::string)record.type, "A");
-        ASSERT_EQ(record.rdata, "1.2.3.4");
-        */
+        std::vector<uint8_t> request_bytes(4096, 0);
+        EXPECT_CALL(*_handler, handle)
+            .WillOnce(DoAll(SaveArg<1>(&request_bytes), Return(std::vector<uint8_t>())));
+        resolver.resolve("hello.world", class_::in, type::a);
+
+        auto parse_result = dometer::dns::message::parser::parse(request_bytes);
+        EXPECT_TRUE(parse_result) << parse_result.error().message;
+        EXPECT_EQ(parse_result->get_qd_count(), 1);
+
+        auto question_result = parse_result->get_question();
+        EXPECT_TRUE(question_result) << question_result.error().message;
+        EXPECT_EQ(question_result->qname, "hello.world");
+        EXPECT_EQ(question_result->qclass, class_::in);
+        EXPECT_EQ(question_result->qtype, type::a);
     }
 }

@@ -69,6 +69,12 @@ cc_test(
         "//dometer/util:human_error_encoder",
         ":libresolv_resolver",
     ],
+    copts = [
+        "-DBIND_8_COMPAT",
+    ],
+    linkopts = [
+        "-lresolv",
+    ],
 )
 
 cc_library(

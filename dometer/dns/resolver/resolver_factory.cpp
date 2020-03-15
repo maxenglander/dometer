@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cstring>
+#include <errno.h>
 #include <memory>
 #include <resolv.h>
 #include <type_traits>
