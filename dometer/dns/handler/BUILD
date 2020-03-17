@@ -1,4 +1,19 @@
 cc_library(
+    name = "error",
+    hdrs = ["error.hpp"],
+    srcs = ["error.cpp"],
+    deps = [
+        "//dometer/util:error",
+        ":error_code",
+    ],
+)
+
+cc_library(
+    name = "error_code",
+    hdrs = ["error_code.hpp"],
+)
+
+cc_library(
     name = "handler",
     deps = [
         "//dometer/dns/message:message",
@@ -6,6 +21,7 @@ cc_library(
         "//dometer/event:emitter",
         "//dometer/util:error",
         "//std/x:expected",
+        ":error",
     ],
     hdrs = ["handler.hpp"],
     visibility = ["//visibility:public"],
@@ -41,7 +57,23 @@ cc_library(
         "//dometer/util:error",
         "//dometer/util:human_error_encoder",
         "//std/x:expected",
+        ":error",
         ":handler",
     ],
     visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "resolving_handler_test",
+    srcs = ["resolving_handler_test.cpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest_main",
+        "//dometer/dns:opcode",
+        "//dometer/dns/event:any_event",
+        "//dometer/dns/handler:error_code",
+        "//dometer/dns/handler:resolving_handler",
+        "//dometer/dns/message:builder",
+        "//dometer/dns/resolver:mock_resolver",
+        "//dometer/event:mock_emitter",
+    ],
 )

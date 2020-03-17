@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "dometer/dns/qr.hpp"
+#include "dometer/dns/opcode.hpp"
 #include "dometer/dns/rcode.hpp"
 #include "dometer/dns/record.hpp"
 #include "dometer/dns/message/builder.hpp"
@@ -135,30 +136,35 @@ namespace dometer::dns::message {
         return *this;
     }
 
+    builder& builder::set_opcode(dns::opcode opcode) {
+        // Includes "qr", "opcode", "aa" and "tc" flags
+        uint8_t byte = _bytes[2];
+        uint8_t mask = 0x87; // 10000111;
+        byte &= mask;
+        byte |= (int)opcode << 7;
+        _bytes[2] = byte;
+        return *this;
+    }
+
     builder& builder::set_rcode(dns::rcode rcode) {
         // Includes "ra", "z", and "rcode" flags
         uint8_t byte = _bytes[3];
-
         // Overwrite "rcode" flag
         byte |= static_cast<uint16_t>(rcode) & /*2^4*/0x000f;
         _bytes[3] = byte;
-
         return *this;
     }
 
     builder& builder::set_qr(dns::qr qr) {
         // Includes "qr", "opcode", "aa" and "tc" flags
         uint8_t byte = _bytes[2];
-
         // Overwrite "qr" flag
         if(qr == qr::query) {
             byte &= ~(1UL << 7);
         } else {
             byte |= 1UL << 7;
         }
-
         _bytes[2] = byte;
-
         return *this;
     }
 }

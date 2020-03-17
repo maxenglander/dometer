@@ -2,6 +2,7 @@
 
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/rcode.hpp"
+#include "dometer/dns/opcode.hpp"
 #include "dometer/dns/record.hpp"
 #include "dometer/dns/message/message.hpp"
 #include "dometer/util/error.hpp"
@@ -25,6 +26,7 @@ namespace dometer::dns::message {
             std::x::expected<message, util::error> build();
             std::x::expected<std::vector<uint8_t>, util::error> record_to_bytes(dns::record);
             builder& set_id(uint16_t);
+            builder& set_opcode(dns::opcode);
             builder& set_qr(dns::qr);
             builder& set_rcode(dns::rcode);
         private:

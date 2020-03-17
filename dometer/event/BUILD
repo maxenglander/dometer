@@ -12,3 +12,12 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
 )
+
+cc_library(
+    name = "mock_emitter",
+    hdrs = ["mock_emitter.hpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest",
+    ],
+    visibility = ["//visibility:public"],
+)

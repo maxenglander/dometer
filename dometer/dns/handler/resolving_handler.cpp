@@ -11,6 +11,7 @@
 #include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/message/parser.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
+#include "dometer/dns/handler/error.hpp"
 #include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/event/callback.hpp"
 #include "dometer/event/emitter.hpp"
@@ -34,7 +35,7 @@ namespace dometer::dns::handler {
             resolver(resolver)
     {}
 
-    std::x::expected<std::vector<uint8_t>, util::error> resolving_handler::handle(
+    std::x::expected<std::vector<uint8_t>, error> resolving_handler::handle(
         uint64_t session_id, std::vector<uint8_t> query_bytes
     ) {
         auto query = parse_query(session_id, query_bytes);
@@ -45,19 +46,23 @@ namespace dometer::dns::handler {
         }
 
         if(!reply) {
-            return std::x::unexpected<util::error>(reply.error());
+            return std::x::unexpected<error>(reply.error());
         }
 
         const uint8_t* reply_ptr = *reply;
         return std::vector<uint8_t>(reply_ptr, reply_ptr + reply->size());
     }
 
-    std::x::expected<dns::message::message, util::error> resolving_handler::handle(
+    std::x::expected<dns::message::message, error> resolving_handler::handle(
         uint64_t session_id,
         std::x::expected<dns::message::message, util::error> &query
     ) {
         if(!query) {
-            return std::x::unexpected<util::error>(util::error("The query is not valid.", query.error()));
+            return std::x::unexpected<error>(error(
+                "The query is not valid.",
+                error_code::INVALID_QUERY,
+                query.error())
+            );
         }
 
         if(query->get_opcode() != dns::opcode::query) {
@@ -67,7 +72,7 @@ namespace dometer::dns::handler {
         return handle(session_id, *query);
     }
 
-    std::x::expected<dns::message::message, util::error> resolving_handler::handle(
+    std::x::expected<dns::message::message, error> resolving_handler::handle(
         uint64_t session_id, dns::message::message& query
     ) {
         auto question = query.get_question();
@@ -78,18 +83,26 @@ namespace dometer::dns::handler {
         return handle(session_id, *question);
     }
 
-    std::x::expected<dns::message::message, util::error> resolving_handler::handle(
+    std::x::expected<dns::message::message, error> resolving_handler::handle(
         uint64_t session_id, dometer::dns::question question
     ) {
         auto resolution = resolve_query(session_id, question);
 
         if(!resolution) {
-            return std::x::unexpected<dometer::util::error>(static_cast<dometer::util::error>(resolution.error()));
+            return std::x::unexpected<error>(error(
+                "Failed to resolve query.",
+                error_code::RESOLVER_FAILURE,
+                resolution.error()
+            ));
         }
 
         auto reply = parse_reply(session_id, *resolution);
         if(!reply) {
-            return std::x::unexpected<dometer::util::error>(reply.error());
+            return std::x::unexpected<error>(error(
+                "The reply is not valid.",
+                error_code::INVALID_REPLY,
+                reply.error()
+            ));
         }
 
         return *reply;

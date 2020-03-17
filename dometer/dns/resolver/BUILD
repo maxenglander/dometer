@@ -62,11 +62,14 @@ cc_test(
     deps = [
         "@com_github_google_googletest//:gtest_main",
         "//dometer/dns:class",
+        "//dometer/dns:rcode",
         "//dometer/dns:type",
         "//dometer/dns/handler:mock_handler",
+        "//dometer/dns/message:builder",
+        "//dometer/dns/message:message_factory",
         "//dometer/dns/message:parser",
         "//dometer/dns/server:server",
-        "//dometer/util:human_error_encoder",
+        "//dometer/util:error",
         ":libresolv_resolver",
     ],
     copts = [
@@ -114,5 +117,15 @@ cc_library(
     copts = [
         "-Werror=unreachable-code",
     ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "mock_resolver",
+    hdrs = ["mock_resolver.hpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest",
+    ],
+
     visibility = ["//visibility:public"],
 )

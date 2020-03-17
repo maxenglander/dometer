@@ -42,6 +42,13 @@ namespace dometer::dns::message {
         return reply;
     }
 
+    message message_factory::nxdomain(const message& query) {
+        auto reply = copy_message(query);;
+        reply.set_qr(qr::reply);
+        reply.set_rcode(rcode::nxdomain);
+        return reply;
+    }
+
     message message_factory::server_failure(const message& query) {
         auto reply = copy_message(query);
         reply.set_qr(qr::reply);

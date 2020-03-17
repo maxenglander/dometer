@@ -6,6 +6,7 @@
 
 #include "dometer/dns/event/any_event.hpp"
 #include "dometer/dns/handler/handler.hpp"
+#include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/event/callback.hpp"
 #include "dometer/event/emitter.hpp"
@@ -23,15 +24,15 @@ namespace dometer::dns::handler {
             resolving_handler(std::chrono::steady_clock,
                     dometer::event::emitter<dometer::dns::event::any_event>,
                     std::shared_ptr<dns::resolver::resolver>);
-            std::x::expected<std::vector<uint8_t>, util::error> handle(uint64_t, std::vector<uint8_t>);
+            std::x::expected<std::vector<uint8_t>, error> handle(uint64_t, std::vector<uint8_t>);
         private:
-            std::x::expected<dns::message::message, util::error> handle(
+            std::x::expected<dns::message::message, error> handle(
                 uint64_t, std::x::expected<dns::message::message, util::error>& query
             );
-            std::x::expected<dns::message::message, util::error> handle(
+            std::x::expected<dns::message::message, error> handle(
                 uint64_t, dns::message::message& query
             );
-            std::x::expected<dns::message::message, util::error> handle(
+            std::x::expected<dns::message::message, error> handle(
                 uint64_t, dometer::dns::question question
             );
             std::x::expected<dometer::dns::message::message, util::error> parse_query(
