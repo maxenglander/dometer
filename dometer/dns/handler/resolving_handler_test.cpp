@@ -27,7 +27,7 @@ namespace dometer::dns::handler {
     TEST_F(ResolvingHandlerTest, ErrorsIfInvalidQuery) {
         auto result = _resolving_handler.handle(0, std::vector<uint8_t>(8, 0));
         ASSERT_FALSE(result) << "Expected handler to reject invalid query.";
-        ASSERT_EQ(result.error().code, error_code::INVALID_QUERY);
+        ASSERT_EQ(result.error().code, error_code::invalid_query);
     }
 
     TEST_F(ResolvingHandlerTest, ReturnsNotImplIfUnsupportedOpcode) {

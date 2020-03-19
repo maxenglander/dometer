@@ -60,7 +60,7 @@ namespace dometer::dns::handler {
         if(!query) {
             return std::x::unexpected<error>(error(
                 "The query is not valid.",
-                error_code::INVALID_QUERY,
+                error_code::invalid_query,
                 query.error())
             );
         }
@@ -91,7 +91,7 @@ namespace dometer::dns::handler {
         if(!resolution) {
             return std::x::unexpected<error>(error(
                 "Failed to resolve query.",
-                error_code::RESOLVER_FAILURE,
+                error_code::resolver_failure,
                 resolution.error()
             ));
         }
@@ -100,7 +100,7 @@ namespace dometer::dns::handler {
         if(!reply) {
             return std::x::unexpected<error>(error(
                 "The reply is not valid.",
-                error_code::INVALID_REPLY,
+                error_code::invalid_reply,
                 reply.error()
             ));
         }

@@ -6,11 +6,13 @@ cc_library(
         "//dometer/util:error",
         ":error_code",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
     name = "error_code",
     hdrs = ["error_code.hpp"],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
@@ -33,7 +35,7 @@ cc_library(
     deps = [
         "@com_github_google_googletest//:gtest",
         "//dometer/dns/message:message",
-        "//dometer/util:error",
+        ":error",
         ":handler",
     ],
     visibility = ["//visibility:public"],

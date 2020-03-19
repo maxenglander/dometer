@@ -28,6 +28,20 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
+cc_test(
+    name = "server_test",
+    srcs = ["server_test.cpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest_main",
+        "//dometer/event:mock_emitter",
+        "//dometer/dns/event:any_event",
+        "//dometer/dns/handler:mock_handler",
+        "//dometer/util:error",
+        ":server",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 cc_library(
     name = "transport_options",
     hdrs = ["transport_options.hpp"],

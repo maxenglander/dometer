@@ -12,12 +12,14 @@
 #include "dometer/dns/message/builder.hpp"
 #include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/message/parser.hpp"
+#include "dometer/dns/handler/error.hpp"
+#include "dometer/dns/handler/error_code.hpp"
 #include "dometer/dns/handler/mock_handler.hpp"
 #include "dometer/dns/resolver/error.hpp"
+#include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/dns/resolver/libresolv_function.hpp"
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
 #include "dometer/dns/server/server.hpp"
-#include "dometer/util/error.hpp"
 #include "gtest/gtest.h"
 
 using ::testing::_;
@@ -37,10 +39,16 @@ namespace dometer::dns::resolver {
             {}
 
             struct __res_state MakeResState() {
+                struct __res_state stat;
+
+                res_ninit(&stat);
+
                 struct in_addr addr;
                 inet_pton(AF_INET, "127.0.0.1", &addr);
 
-                struct __res_state stat;
+                // Normalize options as much as possible.
+                stat.options = 0;
+                stat.ndots = 1;
                 stat.nscount = 1;
                 stat.nsaddr_list[0] = (struct sockaddr_in) {
                     .sin_family = AF_INET,
@@ -48,8 +56,6 @@ namespace dometer::dns::resolver {
                     .sin_addr = addr,
                 };
                 stat.retry = 1;
-                stat._u._ext.nscount = 0;
-                stat._u._ext.nsaddrs[0] = NULL;
 
                 return stat;
             }
@@ -66,12 +72,15 @@ namespace dometer::dns::resolver {
             dometer::dns::server::server _server;
     };
 
-    std::x::expected<std::vector<uint8_t>, util::error> return_nxdomain(
+    std::x::expected<std::vector<uint8_t>, dometer::dns::handler::error> return_nxdomain(
         uint64_t session_id, std::vector<uint8_t> bytes
     ) {
         auto parse_result = dometer::dns::message::parser::parse(bytes);
         if(!parse_result) {
-            return std::x::unexpected<util::error>(util::error{ "Failed to parse request bytes." });
+            return std::x::unexpected<dometer::dns::handler::error>(dometer::dns::handler::error(
+                "Failed to parse request bytes.",
+                dometer::dns::handler::error_code::invalid_query
+            ));
         }
 
         auto reply = dometer::dns::message::message_factory::nxdomain(*parse_result);
