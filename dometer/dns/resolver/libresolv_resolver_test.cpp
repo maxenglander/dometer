@@ -1,9 +1,6 @@
-#include <arpa/inet.h>
 #include <functional>
 #include <iostream>
 #include <memory>
-#include <netinet/in.h>
-#include <resolv.h>
 #include <stdlib.h>
 
 #include "dometer/dns/class.hpp"
@@ -18,6 +15,7 @@
 #include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/dns/resolver/libresolv_function.hpp"
+#include "dometer/dns/resolver/libresolv_helper.hpp"
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
 #include "dometer/dns/server/server.hpp"
 #include "gtest/gtest.h"
@@ -72,23 +70,9 @@ namespace dometer::dns::resolver {
             dometer::dns::server::server _server;
     };
 
-    std::x::expected<std::vector<uint8_t>, dometer::dns::handler::error> return_nxdomain(
-        uint64_t session_id, std::vector<uint8_t> bytes
-    ) {
-        auto parse_result = dometer::dns::message::parser::parse(bytes);
-        if(!parse_result) {
-            return std::x::unexpected<dometer::dns::handler::error>(dometer::dns::handler::error(
-                "Failed to parse request bytes.",
-                dometer::dns::handler::error_code::invalid_query
-            ));
-        }
-
-        auto reply = dometer::dns::message::message_factory::nxdomain(*parse_result);
-        return std::vector<uint8_t>((uint8_t*)reply, (uint8_t*)reply + reply.size());
-    }
-
     TEST_F(LibresolvResolverTest, SendsQueryToNameserver) {
-        libresolv_resolver resolver(libresolv_function::query, MakeResState());
+        libresolv_resolver resolver(libresolv_function::query,
+                                    libresolv_helper::make_res_state_for_nameserver("127.0.0.1", 6353));
 
         std::vector<uint8_t> request_bytes(4096, 0);
         EXPECT_CALL(*_handler, handle)
@@ -109,7 +93,7 @@ namespace dometer::dns::resolver {
     TEST_F(LibresolvResolverTest, ReturnsReplyFromNameserver) {
         libresolv_resolver resolver(libresolv_function::query, MakeResState());
 
-        EXPECT_CALL(*_handler, handle).WillOnce(Invoke(&return_nxdomain));
+        EXPECT_CALL(*_handler, handle).WillOnce(Invoke(&dometer::dns::handler::mock_handler::return_nxdomain));
         auto resolve_result = resolver.resolve("hello.world", class_::in, type::a);
         EXPECT_TRUE(resolve_result) << resolve_result.error().message;
 

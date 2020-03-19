@@ -23,6 +23,19 @@ cc_library(
 )
 
 cc_library(
+    name = "libresolv_helper",
+    hdrs = ["libresolv_helper.hpp"],
+    srcs = ["libresolv_helper.cpp"],
+    copts = [
+        "-DBIND_8_COMPAT=1",
+    ],
+    linkopts = [
+        "-lresolv",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "libresolv_options",
     hdrs = ["libresolv_options.hpp"],
     deps = [
@@ -73,6 +86,7 @@ cc_test(
         "//dometer/dns/server:server",
         ":error",
         ":error_code",
+        ":libresolv_helper",
         ":libresolv_resolver",
     ],
     copts = [

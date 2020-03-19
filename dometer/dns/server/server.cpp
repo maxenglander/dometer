@@ -44,8 +44,10 @@ namespace dometer::dns::server {
                     const uint64_t session_id = ++session_counter;
                     emitter.emit(dometer::dns::event::start_session_event(session_id));
 
+                    std::cout << "Invoking handler" << std::endl;
                     auto reply = handler->handle(session_id,
                                                  std::vector<uint8_t>(request_buffer, request_buffer + bytes_received));
+                    std::cout << "Invoked handler" << std::endl;
                     if(reply) {
                         socket->send_to(asio::buffer(reply->data(), reply->size()), remote_endpoint, 0, ec);
                     }

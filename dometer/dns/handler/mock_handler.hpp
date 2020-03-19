@@ -13,6 +13,7 @@ namespace util = dometer::util;
 namespace dometer::dns::handler {
     class mock_handler : public handler {
         public:
+            static std::x::expected<std::vector<uint8_t>, error> return_nxdomain(uint64_t, std::vector<uint8_t>);
             mock_handler() {};
             mock_handler(mock_handler&&) {};
             MOCK_METHOD((std::x::expected<std::vector<uint8_t>, error>), handle, (uint64_t, std::vector<uint8_t>));

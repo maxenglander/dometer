@@ -32,10 +32,14 @@ cc_library(
 cc_library(
     name = "mock_handler",
     hdrs = ["mock_handler.hpp"],
+    srcs = ["mock_handler.cpp"],
     deps = [
         "@com_github_google_googletest//:gtest",
         "//dometer/dns/message:message",
+        "//dometer/dns/message:message_factory",
+        "//dometer/dns/message:parser",
         ":error",
+        ":error_code",
         ":handler",
     ],
     visibility = ["//visibility:public"],
