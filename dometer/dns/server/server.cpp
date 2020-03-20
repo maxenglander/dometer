@@ -41,7 +41,7 @@ namespace dometer::dns::server {
             asio::buffer(request_buffer, sizeof(request_buffer)), remote_endpoint,
             [this](asio::error_code ec, size_t bytes_received) {
                 if(!ec && bytes_received > 0) {
-                    const uint64_t session_id = ++session_counter;
+                    const uint64_t session_id = session_counter++;
                     emitter->emit(dometer::dns::event::start_session_event(session_id));
 
                     auto reply = handler->handle(session_id,

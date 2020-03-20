@@ -20,8 +20,10 @@
 #include "gtest/gtest.h"
 
 using ::testing::_;
+using ::testing::Eq;
 using ::testing::Invoke;
 using ::testing::InSequence;
+using ::testing::Property;
 using ::testing::VariantWith;
 
 namespace dometer::dns::server {
@@ -85,6 +87,34 @@ namespace dometer::dns::server {
 
         auto resolver = dometer::dns::resolver::libresolv_resolver(
                 dometer::dns::resolver::libresolv_helper::make_res_state_for_nameserver("127.0.0.1", 6353));
+        resolver.resolve("hello.world", dometer::dns::class_::in, dometer::dns::type::a);
+    }
+
+    TEST_F(AutoServerTest, IncrementsSessionCounterBetweenCalls) {
+        InSequence s;
+
+        auto message = dometer::dns::message::builder::new_builder()
+            .set_id(54321)
+            .set_qr(dometer::dns::qr::query)
+            .set_opcode(dometer::dns::opcode::query)
+            .build();
+
+        EXPECT_CALL(*_emitter, emit(VariantWith<dometer::dns::event::start_session_event>(
+            Property(&dometer::dns::event::start_session_event::get_session_id, Eq(0))
+        )));
+        EXPECT_CALL(*_emitter, emit(VariantWith<dometer::dns::event::stop_session_event>(
+            Property(&dometer::dns::event::stop_session_event::get_session_id, Eq(0))
+        )));
+        EXPECT_CALL(*_emitter, emit(VariantWith<dometer::dns::event::start_session_event>(
+            Property(&dometer::dns::event::start_session_event::get_session_id, Eq(1))
+        )));
+        EXPECT_CALL(*_emitter, emit(VariantWith<dometer::dns::event::stop_session_event>(
+            Property(&dometer::dns::event::stop_session_event::get_session_id, Eq(1))
+        )));
+
+        auto resolver = dometer::dns::resolver::libresolv_resolver(
+                dometer::dns::resolver::libresolv_helper::make_res_state_for_nameserver("127.0.0.1", 6353));
+        resolver.resolve("hello.world", dometer::dns::class_::in, dometer::dns::type::a);
         resolver.resolve("hello.world", dometer::dns::class_::in, dometer::dns::type::a);
     }
 }
