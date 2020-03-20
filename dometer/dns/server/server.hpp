@@ -17,7 +17,8 @@ namespace dometer::dns::server {
     class server {
         public:
             server(std::shared_ptr<dns::handler::handler>);
-            server(dometer::event::emitter<dometer::dns::event::any_event>, std::shared_ptr<dns::handler::handler>);
+            server(std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>>,
+                   std::shared_ptr<dns::handler::handler>);
             void join();
             std::x::expected<void, util::error> start(std::string);
             std::x::expected<void, util::error> start(std::string, uint16_t port);
@@ -29,7 +30,7 @@ namespace dometer::dns::server {
 
             std::thread background_thread;
             char request_buffer[4096];
-            dometer::event::emitter<dometer::dns::event::any_event> emitter;
+            const std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>> emitter;
             const std::shared_ptr<dns::handler::handler> handler;
             const std::unique_ptr<asio::io_context> io_context;
             asio::ip::udp::endpoint remote_endpoint;

@@ -19,10 +19,10 @@ namespace dometer::dns::handler {
     class resolving_handler : public handler {
         public:
             resolving_handler(
-                    dometer::event::emitter<dometer::dns::event::any_event>,
+                    std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>>,
                     std::shared_ptr<dns::resolver::resolver>);
             resolving_handler(std::chrono::steady_clock,
-                    dometer::event::emitter<dometer::dns::event::any_event>,
+                    std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>>,
                     std::shared_ptr<dns::resolver::resolver>);
             std::x::expected<std::vector<uint8_t>, error> handle(uint64_t, std::vector<uint8_t>);
         private:
@@ -46,7 +46,7 @@ namespace dometer::dns::handler {
             );
 
             const std::chrono::steady_clock clock;
-            dometer::event::emitter<dometer::dns::event::any_event> emitter;
+            const std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>> emitter;
             const std::shared_ptr<dns::resolver::resolver> resolver;
     };
 }

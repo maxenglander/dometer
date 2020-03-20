@@ -66,9 +66,9 @@ namespace dometer::cli {
             return 1;
         }
         auto observer = std::make_shared<metrics::observer>(*handlers_result);
-        auto emitter = event::emitter<dns::event::any_event>();
+        auto emitter = std::make_shared<event::emitter<dns::event::any_event>>();
         auto metric_recording_event_functor = dometer::dns::eventmetrics::metric_recording_event_functor(observer);
-        emitter.on([&metric_recording_event_functor](dns::event::any_event event) {
+        emitter->on([&metric_recording_event_functor](dns::event::any_event event) {
             metric_recording_event_functor(event);
         });
 

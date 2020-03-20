@@ -22,11 +22,11 @@ namespace util = dometer::util;
 
 namespace dometer::dns::server {
     server::server(std::shared_ptr<dns::handler::handler> handler)
-        : server(dometer::event::emitter<dometer::dns::event::any_event>(), handler)
+        : server(std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>>(), handler)
     {}
 
     server::server(
-            dometer::event::emitter<dometer::dns::event::any_event> emitter, 
+            std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>> emitter, 
             std::shared_ptr<dns::handler::handler> handler
     )   :   emitter(emitter),
             handler(handler),
@@ -42,17 +42,15 @@ namespace dometer::dns::server {
             [this](asio::error_code ec, size_t bytes_received) {
                 if(!ec && bytes_received > 0) {
                     const uint64_t session_id = ++session_counter;
-                    emitter.emit(dometer::dns::event::start_session_event(session_id));
+                    emitter->emit(dometer::dns::event::start_session_event(session_id));
 
-                    std::cout << "Invoking handler" << std::endl;
                     auto reply = handler->handle(session_id,
                                                  std::vector<uint8_t>(request_buffer, request_buffer + bytes_received));
-                    std::cout << "Invoked handler" << std::endl;
                     if(reply) {
                         socket->send_to(asio::buffer(reply->data(), reply->size()), remote_endpoint, 0, ec);
                     }
 
-                    emitter.emit(dometer::dns::event::stop_session_event(session_id));
+                    emitter->emit(dometer::dns::event::stop_session_event(session_id));
                 }
 
                 handle_request();

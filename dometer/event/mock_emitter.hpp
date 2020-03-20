@@ -8,7 +8,9 @@ namespace dometer::event {
     template <class T>
     class mock_emitter : public emitter<T> {
         public:
+            mock_emitter() {};
+            mock_emitter(mock_emitter&&) {};
             MOCK_METHOD(void, emit, (T));
-            MOCK_METHOD(void, on, (T));
+            MOCK_METHOD(void, on, (callback<T>));
     };
 }

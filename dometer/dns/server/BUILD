@@ -39,6 +39,8 @@ cc_test(
         "//dometer/dns:opcode",
         "//dometer/dns:type",
         "//dometer/dns/event:any_event",
+        "//dometer/dns/event:start_session_event",
+        "//dometer/dns/event:stop_session_event",
         "//dometer/dns/handler:handler",
         "//dometer/dns/handler:mock_handler",
         "//dometer/dns/message:builder",
