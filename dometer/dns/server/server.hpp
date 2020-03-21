@@ -16,7 +16,6 @@ namespace util = dometer::util;
 namespace dometer::dns::server {
     class server {
         public:
-            server(std::shared_ptr<dns::handler::handler>);
             server(std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>>,
                    std::shared_ptr<dns::handler::handler>);
             void join();

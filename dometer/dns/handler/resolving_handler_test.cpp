@@ -13,13 +13,13 @@ namespace dometer::dns::handler {
     class ResolvingHandlerTest : public ::testing::Test {
         public:
             ResolvingHandlerTest()
-                : _emitter(),
+                : _emitter(std::make_shared<dometer::event::mock_emitter<dometer::dns::event::any_event>>()),
                   _resolver(std::make_shared<dometer::dns::resolver::mock_resolver>(dometer::dns::resolver::mock_resolver())),
                   _resolving_handler(_emitter,
                                      std::static_pointer_cast<dometer::dns::resolver::resolver>(_resolver))
             {}
         protected:
-            dometer::event::mock_emitter<dometer::dns::event::any_event> _emitter;
+            std::shared_ptr<dometer::event::mock_emitter<dometer::dns::event::any_event>> _emitter;
             std::shared_ptr<dometer::dns::resolver::mock_resolver> _resolver;
             resolving_handler _resolving_handler;
     };

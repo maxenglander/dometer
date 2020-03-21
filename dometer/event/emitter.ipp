@@ -22,7 +22,6 @@ namespace dometer::event {
 
     template <class T>
     void emitter<T>::emit(T t) {
-        std::cout << "emit called" << std::endl;
         for(auto it = callbacks.begin(); it != callbacks.end(); it++) {
             callback<T> callback = *it;
             callback(t);

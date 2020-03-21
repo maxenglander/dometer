@@ -6,6 +6,7 @@
 #include "dometer/dns/class.hpp"
 #include "dometer/dns/rcode.hpp"
 #include "dometer/dns/type.hpp"
+#include "dometer/dns/event/any_event.hpp"
 #include "dometer/dns/message/builder.hpp"
 #include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/message/parser.hpp"
@@ -18,6 +19,7 @@
 #include "dometer/dns/resolver/libresolv_helper.hpp"
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
 #include "dometer/dns/server/server.hpp"
+#include "dometer/event/emitter.hpp"
 #include "gtest/gtest.h"
 
 using ::testing::_;
@@ -33,30 +35,10 @@ namespace dometer::dns::resolver {
         public:
             LibresolvResolverTest()
                 : _handler(std::make_shared<dometer::dns::handler::mock_handler>()),
-                  _server(std::static_pointer_cast<dometer::dns::handler::handler>(_handler))
+                  _emitter(std::make_shared<dometer::event::emitter<dometer::dns::event::any_event>>()),
+                  _res_state(libresolv_helper::make_res_state_for_nameserver("127.0.0.1", 6353)),
+                  _server(_emitter, _handler)
             {}
-
-            struct __res_state MakeResState() {
-                struct __res_state stat;
-
-                res_ninit(&stat);
-
-                struct in_addr addr;
-                inet_pton(AF_INET, "127.0.0.1", &addr);
-
-                // Normalize options as much as possible.
-                stat.options = 0;
-                stat.ndots = 1;
-                stat.nscount = 1;
-                stat.nsaddr_list[0] = (struct sockaddr_in) {
-                    .sin_family = AF_INET,
-                    .sin_port = htons(6353),
-                    .sin_addr = addr,
-                };
-                stat.retry = 1;
-
-                return stat;
-            }
 
             void SetUp() override {
                 _server.start("127.0.0.1", 6353);
@@ -66,13 +48,14 @@ namespace dometer::dns::resolver {
                 _server.stop();
             }
         protected:
+            std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>> _emitter;
             std::shared_ptr<dometer::dns::handler::mock_handler> _handler;
+            struct __res_state _res_state;
             dometer::dns::server::server _server;
     };
 
     TEST_F(LibresolvResolverTest, SendsQueryToNameserver) {
-        libresolv_resolver resolver(libresolv_function::query,
-                                    libresolv_helper::make_res_state_for_nameserver("127.0.0.1", 6353));
+        libresolv_resolver resolver(libresolv_function::query, _res_state);
 
         std::vector<uint8_t> request_bytes(4096, 0);
         EXPECT_CALL(*_handler, handle)
@@ -91,7 +74,7 @@ namespace dometer::dns::resolver {
     }
 
     TEST_F(LibresolvResolverTest, ReturnsReplyFromNameserver) {
-        libresolv_resolver resolver(libresolv_function::query, MakeResState());
+        libresolv_resolver resolver(libresolv_function::query, _res_state);
 
         EXPECT_CALL(*_handler, handle).WillOnce(Invoke(&dometer::dns::handler::mock_handler::return_nxdomain));
         auto resolve_result = resolver.resolve("hello.world", class_::in, type::a);
