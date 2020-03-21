@@ -4,6 +4,7 @@ cc_library(
     srcs = ["builder.cpp"],
     deps = [
         "//dometer/dns:qr",
+        "//dometer/dns:question",
         "//dometer/dns:rcode",
         "//dometer/dns:record",
         "//dometer/util:error",

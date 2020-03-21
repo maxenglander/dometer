@@ -65,6 +65,7 @@ namespace dometer::dns::handler {
             );
         }
 
+        std::cout << "checking opcode " << std::to_string((int)query->get_opcode()) << std::endl;
         if(query->get_opcode() != dns::opcode::query) {
             return dns::message::message_factory::not_implemented(*query);
         }
@@ -77,6 +78,7 @@ namespace dometer::dns::handler {
     ) {
         auto question = query.get_question();
         if(!question) {
+            std::cout << "returning formerr" << std::endl;
             return dns::message::message_factory::format_error(query);
         }
 

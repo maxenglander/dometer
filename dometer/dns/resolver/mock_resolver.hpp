@@ -14,8 +14,6 @@ namespace dns = dometer::dns;
 namespace dometer::dns::resolver {
     class mock_resolver : public resolver {
         public:
-            mock_resolver() {}
-            mock_resolver(mock_resolver&&) {}
             MOCK_METHOD((std::x::expected<std::vector<uint8_t>, error>),
                         resolve,
                         (const std::string&, const dns::class_&, const dns::type&),

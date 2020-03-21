@@ -74,8 +74,13 @@ cc_test(
     srcs = ["resolving_handler_test.cpp"],
     deps = [
         "@com_github_google_googletest//:gtest_main",
+        "//dometer/dns:class",
         "//dometer/dns:opcode",
+        "//dometer/dns:question",
+        "//dometer/dns:rcode",
+        "//dometer/dns:type",
         "//dometer/dns/event:any_event",
+        "//dometer/dns/event:parse_query_event",
         "//dometer/dns/handler:error_code",
         "//dometer/dns/handler:resolving_handler",
         "//dometer/dns/message:builder",
