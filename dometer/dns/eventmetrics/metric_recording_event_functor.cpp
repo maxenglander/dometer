@@ -13,16 +13,16 @@
 #include "dometer/dns/metrics/lookup_observation.hpp"
 #include "dometer/dns/metrics/lookup_summary.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
-#include "dometer/metrics/observer.hpp"
+#include "dometer/metrics/recorder.hpp"
 #include "std/x/variant.hpp"
 
 namespace dometer::dns::eventmetrics {
-    metric_recording_event_functor::metric_recording_event_functor(std::shared_ptr<dometer::metrics::observer> observer)
-        : observer(observer) 
+    metric_recording_event_functor::metric_recording_event_functor(std::shared_ptr<dometer::metrics::recorder> recorder)
+        : recorder(recorder) 
     {}
 
     metric_recording_event_functor::metric_recording_event_functor(const metric_recording_event_functor& functor)
-        : observer(functor.observer),
+        : recorder(functor.recorder),
           sessions(functor.sessions)
     {
     }
@@ -53,11 +53,11 @@ namespace dometer::dns::eventmetrics {
                 search->second.set_resolve_query_event(resolve_query_event);
             },
 
-            [&](const dometer::dns::event::start_session_event stop_session_event) {
+            [&](const dometer::dns::event::start_session_event start_session_event) {
                 this->sessions.emplace(
                     std::piecewise_construct,
-                    std::forward_as_tuple<uint64_t>(stop_session_event.get_session_id()),
-                    std::forward_as_tuple<uint64_t>(stop_session_event.get_session_id())
+                    std::forward_as_tuple<uint64_t>(start_session_event.get_session_id()),
+                    std::forward_as_tuple<uint64_t>(start_session_event.get_session_id())
                 );
             },
 
@@ -91,7 +91,7 @@ namespace dometer::dns::eventmetrics {
                     }
                 }
 
-                this->observer->observe(dometer::dns::metrics::lookup_summary::instance, builder.build());
+                this->recorder->record(dometer::dns::metrics::lookup_summary::instance, builder.build());
             }
         ), any_event);
     }

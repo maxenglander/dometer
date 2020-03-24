@@ -12,7 +12,7 @@
 #include "dometer/cli/options.hpp"
 #include "dometer/cli/options_parser.hpp"
 #include "dometer/event/emitter.hpp"
-#include "dometer/metrics/observer.hpp"
+#include "dometer/metrics/recorder.hpp"
 #include "dometer/metrics/handler/handler_factory.hpp"
 #include "dometer/util/error.hpp"
 #include "dometer/util/error_encoder.hpp"
@@ -65,9 +65,9 @@ namespace dometer::cli {
             ));
             return 1;
         }
-        auto observer = std::make_shared<metrics::observer>(*handlers_result);
+        auto recordr = std::make_shared<metrics::recorder>(*handlers_result);
         auto emitter = std::make_shared<event::emitter<dns::event::any_event>>();
-        auto metric_recording_event_functor = dometer::dns::eventmetrics::metric_recording_event_functor(observer);
+        auto metric_recording_event_functor = dometer::dns::eventmetrics::metric_recording_event_functor(recordr);
         emitter->on([&metric_recording_event_functor](dns::event::any_event event) {
             metric_recording_event_functor(event);
         });

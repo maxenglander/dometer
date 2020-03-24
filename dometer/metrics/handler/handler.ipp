@@ -21,7 +21,7 @@ namespace dometer::metrics::handler {
     }
 
     template<typename... L>
-    handler::summary_observer<L...>::summary_observer(
+    handler::summary_recorder<L...>::summary_recorder(
             const dometer::metrics::summary<L...>& summary,
             dometer::metrics::observation<double, L...>& observation)
         :   summary(summary),
@@ -30,8 +30,8 @@ namespace dometer::metrics::handler {
 
     template<typename... L>
     template<class ConcreteHandler>
-    void handler::summary_observer<L...>::operator()(ConcreteHandler& handler) {
-        handler.observe(summary, observation);
+    void handler::summary_recorder<L...>::operator()(ConcreteHandler& handler) {
+        handler.record(summary, observation);
     }
 
     template<typename... L>
@@ -42,9 +42,9 @@ namespace dometer::metrics::handler {
     }
 
     template<typename... L>
-    void handler::observe(const dometer::metrics::summary<L...>& summary,
+    void handler::record(const dometer::metrics::summary<L...>& summary,
                           dometer::metrics::observation<double, L...> observation) {
-        summary_observer<L...> observe_summary(summary, observation);
-        std::x::visit(observe_summary, this->concrete_handler);
+        summary_recorder<L...> record_summary(summary, observation);
+        std::x::visit(record_summary, this->concrete_handler);
     }
 }

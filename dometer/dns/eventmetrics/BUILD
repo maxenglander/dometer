@@ -13,8 +13,18 @@ cc_library(
         "//dometer/dns/metrics:lookup_observation",
         "//dometer/dns/metrics:lookup_summary",
         "//dometer/dns/resolver:error_code",
-        "//dometer/metrics:observer",
+        "//dometer/metrics:recorder",
         "//std/x:variant",
     ],
     visibility = ["//visibility:public"],
 )
+
+cc_test(
+    name = "metric_recording_event_functor_test",
+    srcs = ["metric_recording_event_functor_test.cpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest_main",
+        ":metric_recording_event_functor",
+    ],
+)
+

@@ -4,14 +4,14 @@
 
 #include "dometer/metrics/handler/handler.hpp"
 #include "dometer/metrics/handler/handler_factory.hpp"
-#include "dometer/metrics/observer.hpp"
-#include "dometer/metrics/observer_factory.hpp"
+#include "dometer/metrics/recorder.hpp"
+#include "dometer/metrics/recorder_factory.hpp"
 #include "dometer/metrics/options.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 
 namespace dometer::metrics {
-    std::x::expected<std::shared_ptr<observer>, util::error> observer_factory::make_observer(options _options) {
+    std::x::expected<std::shared_ptr<recorder>, util::error> recorder_factory::make_recorder(options _options) {
         std::vector<dometer::metrics::handler::handler> handlers;
 
         for(auto it = _options.handlers.begin(); it < _options.handlers.end(); it++) {
@@ -24,6 +24,6 @@ namespace dometer::metrics {
             handlers.push_back(*handler);
         }
 
-        return std::make_shared<observer>(handlers);
+        return std::make_shared<recorder>(handlers);
     }
 }

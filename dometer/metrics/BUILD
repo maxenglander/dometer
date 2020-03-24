@@ -74,38 +74,6 @@ cc_library(
 )
 
 cc_library(
-    name = "observer",
-    deps = [
-        "//dometer/metrics/handler:handler",
-        ":counter",
-        ":observation",
-        ":summary",
-    ],
-    hdrs = [
-        "observer.hpp",
-        "observer.ipp",
-    ],
-    srcs = ["observer.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "observer_factory",
-    deps = [
-        "//dometer/metrics/handler:handler_factory",
-        "//dometer/util:error",
-        "//std/x:expected",
-        ":observer",
-        ":options",
-    ],
-    hdrs = [
-        "observer_factory.hpp",
-    ],
-    srcs = ["observer_factory.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "observation",
     deps = [
         ":metric",
@@ -121,6 +89,38 @@ cc_library(
 cc_library(
     name = "options",
     hdrs = ["options.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "recorder",
+    deps = [
+        "//dometer/metrics/handler:handler",
+        ":counter",
+        ":observation",
+        ":summary",
+    ],
+    hdrs = [
+        "recorder.hpp",
+        "recorder.ipp",
+    ],
+    srcs = ["recorder.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "recorder_factory",
+    deps = [
+        "//dometer/metrics/handler:handler_factory",
+        "//dometer/util:error",
+        "//std/x:expected",
+        ":options",
+        ":recorder",
+    ],
+    hdrs = [
+        "recorder_factory.hpp",
+    ],
+    srcs = ["recorder_factory.cpp"],
     visibility = ["//visibility:public"],
 )
 

@@ -8,15 +8,15 @@
 #include "dometer/metrics/summary.hpp"
 
 namespace dometer::metrics {
-    class observer {
+    class recorder {
         public:
-            observer() = delete;
-            observer(std::vector<dometer::metrics::handler::handler>);
+            recorder() = delete;
+            recorder(std::vector<dometer::metrics::handler::handler>);
             template<typename... L> void increment(const counter<L...>&, observation<uint64_t, L...>);
-            template<typename... L> void observe(const summary<L...>&, observation<double, L...>);
+            template<typename... L> void record(const summary<L...>&, observation<double, L...>);
         private:
             std::vector<dometer::metrics::handler::handler> handlers;
     };
 }
 
-#include "dometer/metrics/observer.ipp"
+#include "dometer/metrics/recorder.ipp"

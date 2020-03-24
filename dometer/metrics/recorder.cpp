@@ -2,10 +2,10 @@
 #include <vector>
 
 #include "dometer/metrics/handler/handler.hpp"
-#include "dometer/metrics/observer.hpp"
+#include "dometer/metrics/recorder.hpp"
 
 namespace dometer::metrics {
-    observer::observer(std::vector<dometer::metrics::handler::handler> handlers)
+    recorder::recorder(std::vector<dometer::metrics::handler::handler> handlers)
         : handlers(handlers) {
     }
 }

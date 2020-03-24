@@ -10,7 +10,7 @@ cc_binary(
         "//dometer/dns/handler:resolving_handler",
         "//dometer/dns/server:server",
         "//dometer/event:emitter",
-        "//dometer/metrics:observer",
+        "//dometer/metrics:recorder",
         "//dometer/metrics/handler:handler_factory",
         "//dometer/util:error",
         "//dometer/util:error_encoder",
