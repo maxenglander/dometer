@@ -78,9 +78,11 @@ cc_test(
         "//dometer/dns:opcode",
         "//dometer/dns:question",
         "//dometer/dns:rcode",
+        "//dometer/dns:record",
         "//dometer/dns:type",
         "//dometer/dns/event:any_event",
         "//dometer/dns/event:parse_query_event",
+        "//dometer/dns/event:parse_reply_event",
         "//dometer/dns/event:resolve_query_event",
         "//dometer/dns/handler:error_code",
         "//dometer/dns/handler:resolving_handler",
@@ -89,5 +91,6 @@ cc_test(
         "//dometer/dns/resolver:error_code",
         "//dometer/dns/resolver:mock_resolver",
         "//dometer/event:mock_emitter",
+        "//std/x:expected",
     ],
 )

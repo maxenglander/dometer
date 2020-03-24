@@ -5,9 +5,11 @@
 #include "dometer/dns/opcode.hpp"
 #include "dometer/dns/question.hpp"
 #include "dometer/dns/rcode.hpp"
+#include "dometer/dns/record.hpp"
 #include "dometer/dns/type.hpp"
 #include "dometer/dns/event/any_event.hpp"
 #include "dometer/dns/event/parse_query_event.hpp"
+#include "dometer/dns/event/parse_reply_event.hpp"
 #include "dometer/dns/event/resolve_query_event.hpp"
 #include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/dns/message/builder.hpp"
@@ -17,6 +19,7 @@
 #include "dometer/dns/resolver/mock_resolver.hpp"
 #include "dometer/event/mock_emitter.hpp"
 #include "gtest/gtest.h"
+#include "std/x/expected.hpp"
 
 using ::testing::_;
 using ::testing::AnyNumber;
@@ -37,7 +40,7 @@ namespace dometer::dns::handler {
             resolving_handler _resolving_handler;
     };
 
-    TEST_F(ResolvingHandlerTest, EmitsAParseQueryEvent) {
+    TEST_F(ResolvingHandlerTest, EmitsAParseQueryEventIfQueryValid) {
         auto message = dometer::dns::message::builder::new_builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
@@ -73,7 +76,20 @@ namespace dometer::dns::handler {
         _resolving_handler.handle(0, std::vector<uint8_t>((uint8_t*)*query, (uint8_t*)*query + query->size()));
     }
 
-    TEST_F(ResolvingHandlerTest, EmitsAResolveQueryEvent) {
+    TEST_F(ResolvingHandlerTest, DoesNotResolveQueryIfInvalid) {
+        auto query = dometer::dns::message::builder::new_builder()
+            .add_question(dometer::dns::question{
+                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            })
+            .set_id(54321)
+            .set_opcode(dometer::dns::opcode::iquery)
+            .build();
+
+        EXPECT_CALL(*_resolver, resolve).Times(0);
+        _resolving_handler.handle(0, std::vector<uint8_t>((uint8_t*)*query, (uint8_t*)*query + query->size()));
+    }
+
+    TEST_F(ResolvingHandlerTest, EmitsAResolveQueryEventIfQueryValid) {
         auto message = dometer::dns::message::builder::new_builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
@@ -92,16 +108,58 @@ namespace dometer::dns::handler {
         _resolving_handler.handle(0, std::vector<uint8_t>((uint8_t*)*message, (uint8_t*)*message + message->size()));
     }
 
-    TEST_F(ResolvingHandlerTest, DoesNotResovleQueryIfInvalid) {
+    TEST_F(ResolvingHandlerTest, EmitsParsesReplyEventIfResolverSucceeds) {
         auto query = dometer::dns::message::builder::new_builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
             })
             .set_id(54321)
-            .set_opcode(dometer::dns::opcode::iquery)
+            .set_opcode(dometer::dns::opcode::query)
+            .set_qr(dometer::dns::qr::query)
             .build();
 
-        EXPECT_CALL(*_resolver, resolve).Times(0);
+        auto reply = dometer::dns::message::builder::new_builder()
+            .add_question(dometer::dns::question{
+                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            })
+            .add_answer(dometer::dns::record{
+                "hello.world", dometer::dns::type::a, dometer::dns::class_::in, 300, "80.70.60.50"
+            })
+            .set_id(54321)
+            .set_opcode(dometer::dns::opcode::query)
+            .set_qr(dometer::dns::qr::reply)
+            .build();
+
+        /* Set up catch-all */
+        EXPECT_CALL(*_emitter, emit(_)).Times(AnyNumber());
+
+        EXPECT_CALL(*_emitter, emit(VariantWith<dometer::dns::event::parse_reply_event>(_))).Times(1);
+        EXPECT_CALL(*_resolver, resolve).Times(1)
+            .WillOnce(Return(std::vector<uint8_t>((uint8_t*)*reply, (uint8_t*)*reply + reply->size())));
+        _resolving_handler.handle(0, std::vector<uint8_t>((uint8_t*)*query, (uint8_t*)*query + query->size()));
+    }
+
+    TEST_F(ResolvingHandlerTest, DoesNotEmitParsesReplyEventIfResolverFails) {
+        auto query = dometer::dns::message::builder::new_builder()
+            .add_question(dometer::dns::question{
+                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            })
+            .set_id(54321)
+            .set_opcode(dometer::dns::opcode::query)
+            .set_qr(dometer::dns::qr::query)
+            .build();
+
+        /* Set up catch-all */
+        EXPECT_CALL(*_emitter, emit(_)).Times(AnyNumber());
+
+        EXPECT_CALL(*_emitter, emit(VariantWith<dometer::dns::event::parse_reply_event>(_))).Times(0);
+        EXPECT_CALL(*_resolver, resolve).Times(1)
+            .WillOnce(Return(std::x::unexpected<dometer::dns::resolver::error>(
+                dometer::dns::resolver::error(
+                    "Resolver failure.",
+                    dometer::dns::resolver::error_code::timedout
+                )
+            )));
         _resolving_handler.handle(0, std::vector<uint8_t>((uint8_t*)*query, (uint8_t*)*query + query->size()));
     }
 
