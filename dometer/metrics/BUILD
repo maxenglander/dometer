@@ -65,24 +65,8 @@ cc_library(
         ":type",
         ":unit",
     ],
-    hdrs = [
-        "metric.hpp",
-        "metric.ipp",
-    ],
-    srcs = [],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "observation",
-    deps = [
-        ":metric",
-    ],
-    hdrs = [
-        "observation.hpp",
-        "observation.ipp",
-    ],
-    srcs = [],
+    hdrs = ["metric.hpp"],
+    srcs = ["metric.cpp"], 
     visibility = ["//visibility:public"],
 )
 
@@ -97,13 +81,9 @@ cc_library(
     deps = [
         "//dometer/metrics/handler:handler",
         ":counter",
-        ":observation",
         ":summary",
     ],
-    hdrs = [
-        "recorder.hpp",
-        "recorder.ipp",
-    ],
+    hdrs = ["recorder.hpp"],
     srcs = ["recorder.cpp"],
     visibility = ["//visibility:public"],
 )
@@ -142,11 +122,8 @@ cc_library(
         ":type",
         ":unit",
     ],
-    hdrs = [
-        "summary.hpp",
-        "summary.ipp",
-    ],
-    srcs = [],
+    hdrs = ["summary.hpp"],
+    srcs = ["summary.cpp"],
     visibility = ["//visibility:public"],
 )
 

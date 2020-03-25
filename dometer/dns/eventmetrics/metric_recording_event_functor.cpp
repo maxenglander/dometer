@@ -1,4 +1,6 @@
+#include <chrono>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <utility>
 #include <tuple>
@@ -10,7 +12,6 @@
 #include "dometer/dns/event/start_session_event.hpp"
 #include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/eventmetrics/metric_recording_event_functor.hpp"
-#include "dometer/dns/metrics/lookup_observation.hpp"
 #include "dometer/dns/metrics/lookup_summary.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/metrics/recorder.hpp"
@@ -71,27 +72,27 @@ namespace dometer::dns::eventmetrics {
                 if(!session.get_resolve_query_event()) return;
                 auto resolve_query_event = session.get_resolve_query_event();
 
-                auto builder = dometer::dns::metrics::lookup_observation::new_builder();
+                std::map<std::string, std::string> labels;
 
                 auto question = resolve_query_event->get_question();
-                builder.qclass(question.qclass)
-                       .qname(question.qname)
-                       .qtype(question.qtype);
+                labels["qclass"] = static_cast<std::string>(question.qclass);
+                labels["qname"] = question.qname;
+                labels["qtype"] = static_cast<std::string>(question.qtype);
 
+                labels["error"] = "-";
+                labels["rcode"] = "-";
                 auto resolution = resolve_query_event->get_resolution();
-                builder.duration(resolve_query_event->get_duration().count());
-
-                builder.error("-");
-                builder.rcode("-");
                 if(!resolution) {
-                    builder.error(dometer::dns::resolver::to_string(resolution.error().code));
+                    labels["error"] = dometer::dns::resolver::to_string(resolution.error().code);
                 } else if(auto parse_reply_event = session.get_parse_reply_event()) {
                     if(auto reply = parse_reply_event->get_message()) {
-                        builder.rcode(reply->get_rcode());
+                        labels["rcode"] = static_cast<std::string>(reply->get_rcode());
                     }
                 }
 
-                this->recorder->record(dometer::dns::metrics::lookup_summary::instance, builder.build());
+                double value = resolve_query_event->get_duration().count();
+                std::cout << "Recording lookup summary observation with value " << value << std::endl;
+                this->recorder->record(dometer::dns::metrics::lookup_summary::instance, labels, value);
             }
         ), any_event);
     }

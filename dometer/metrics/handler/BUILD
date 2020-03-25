@@ -1,12 +1,9 @@
 cc_library(
     name = "handler",
-    hdrs = ["handler.hpp", "handler.ipp"],
-    srcs = ["handler.cpp"],
+    hdrs = ["handler.hpp"],
     deps = [
         "//dometer/metrics:counter",
-        "//dometer/metrics:observation",
         "//dometer/metrics:summary",
-        "//dometer/metrics/handler/prometheus:handler",
         "//std/x:variant",
     ],
     visibility = ["//visibility:public"],

@@ -1,3 +1,5 @@
+#include <memory>
+#include <utility>
 #include <vector>
 
 #include "dometer/metrics/handler/handler.hpp"
@@ -11,35 +13,35 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler {
-    std::x::expected<handler, util::error> handler_factory::make_handler(options options) {
-        auto concrete_handler = std::x::visit(std::x::overloaded(
+    std::x::expected<std::unique_ptr<handler>, util::error> handler_factory::make_handler(options options) {
+        auto result = std::x::visit(std::x::overloaded(
             [](dometer::metrics::handler::prometheus::options po) {
                 return dometer::metrics::handler::prometheus::handler_factory::make_handler(po);
             }
         ), options);
 
-        if(concrete_handler) {
-            return handler(*concrete_handler);
-        } else {
+        if(!result) {
             return std::x::unexpected<util::error>(util::error(
-                "Failed to create prometheus metrics handler.",
-                concrete_handler.error()
+                "Failed to create metrics handler.",
+                result.error()
             ));
         }
+
+        return std::move(*result);
     }
 
-    std::x::expected<std::vector<handler>, util::error> handler_factory::make_handlers(std::vector<options> optionss) {
-        std::vector<dometer::metrics::handler::handler> handlers;
+    std::x::expected<std::vector<std::unique_ptr<handler>>, util::error> handler_factory::make_handlers(std::vector<options> optionss) {
+        std::vector<std::unique_ptr<dometer::metrics::handler::handler>> handlers;
 
         for(auto it = optionss.begin(); it < optionss.end(); it++) {
-            auto handler = make_handler(*it);
-            if(!handler) {
+            auto result = make_handler(*it);
+            if(!result) {
                 return std::x::unexpected<util::error>(util::error(
                     "Failed to create metrics handler.",
-                    handler.error()
+                    result.error()
                 ));
             }
-            handlers.push_back(*handler);
+            handlers.push_back(std::move(*result));
         }
 
         return handlers;

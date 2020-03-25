@@ -1,5 +1,5 @@
-#include <iostream>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include "dometer/metrics/handler/handler.hpp"
@@ -12,7 +12,7 @@
 
 namespace dometer::metrics {
     std::x::expected<std::shared_ptr<recorder>, util::error> recorder_factory::make_recorder(options _options) {
-        std::vector<dometer::metrics::handler::handler> handlers;
+        std::vector<std::unique_ptr<dometer::metrics::handler::handler>> handlers;
 
         for(auto it = _options.handlers.begin(); it < _options.handlers.end(); it++) {
             auto handler = dometer::metrics::handler::handler_factory::make_handler(*it);
@@ -21,9 +21,9 @@ namespace dometer::metrics {
                     "Failed to create metrics handler.",
                     handler.error()
                 ));
-            handlers.push_back(*handler);
+            handlers.push_back(std::move(*handler));
         }
 
-        return std::make_shared<recorder>(handlers);
+        return std::make_shared<recorder>(std::move(handlers));
     }
 }

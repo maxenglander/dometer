@@ -1,12 +1,24 @@
+#include <functional>
 #include <iostream>
+#include <map>
 #include <memory>
+#include <string>
 #include <type_traits>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
+#include "dometer/metrics/counter.hpp"
 #include "dometer/metrics/handler/prometheus/handler.hpp"
-#include "prometheus/registry.h"
-#include "prometheus/x/types.hpp"
+#include "dometer/metrics/handler/prometheus/lru_map.hpp"
+#include "dometer/metrics/metric.hpp"
+#include "dometer/util/error.hpp"
 #include "dometer/util/lru_map.hpp"
+#include "prometheus/counter.h"
+#include "prometheus/registry.h"
+#include "prometheus/summary.h"
+#include "prometheus/x/types.hpp"
+#include "std/x/expected.hpp"
 
 namespace util = dometer::util;
 
@@ -16,9 +28,21 @@ namespace dometer::metrics::handler::prometheus {
             ::prometheus::x::FamilyNameAndTimeSeriesCount& meta)
         :   metric_families(metric_families),
             meta(meta)
-    {
+    { }
+
+    template <class MetricPtr>
+    void handler::cache_evictor::operator()(MetricPtr&& metric_ptr) {
+        auto search = metric_families.find(meta.family_name);
+        if(search == metric_families.end()) return;
+        auto any_family_ref = search->second;
+
+        using MetricType = typename std::decay<decltype(*metric_ptr)>::type;
+        if(auto family_ptr = std::x::get_if<::prometheus::x::FamilyRef<MetricType>>(&any_family_ref)) {
+            ::prometheus::Family<MetricType>& family = *family_ptr;
+            family.Remove(metric_ptr);
+        }
     }
-                       
+                      
     handler::handler(size_t max_time_series,
                 std::shared_ptr<::prometheus::Registry> registry,
                 std::vector<std::shared_ptr<::prometheus::x::Transport>> transports)
@@ -36,6 +60,71 @@ namespace dometer::metrics::handler::prometheus {
           metric_families(handler.metric_families),
           registry(handler.registry),
           transports(handler.transports)
-    {
+    {}
+
+    template<typename T>
+    void handler::cache_metric(T* metric, ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
+        metric_cache.put(metric, meta);
+    }
+
+    template<typename T, typename BuilderFn>
+    std::x::expected<::prometheus::x::FamilyRef<T>, util::error> handler::get_or_build_metric_family(
+            std::string name, std::string description, BuilderFn new_builder) {
+        auto search = metric_families.find(name);
+        if(search == metric_families.end()) {
+            const ::prometheus::x::FamilyRef<T> family_ref
+                = std::ref(new_builder().Name(name).Help(description).Register(*registry));
+            metric_families.insert({name, ::prometheus::x::AnyFamilyRef(family_ref)});
+            search = metric_families.find(name);
+        }
+
+        const ::prometheus::x::AnyFamilyRef any_family_ref = search->second;
+        if(auto family_ref_ptr = std::x::get_if<::prometheus::x::FamilyRef<T>>(&any_family_ref)) {
+            ::prometheus::x::FamilyRef<T> family_ref = *family_ref_ptr;
+            return family_ref;
+        }
+
+        return std::x::unexpected<util::error>(util::error(
+            "A metric with this name, but a different type, already exists"
+        ));
+    }
+
+    void handler::increment(const dometer::metrics::counter& counter,
+                            std::map<std::string, std::string> labels,
+                            uint64_t value) {
+        auto metric_family_ref = get_or_build_metric_family<::prometheus::Counter, decltype(::prometheus::BuildCounter)>(
+            counter.name, counter.description, ::prometheus::BuildCounter
+        );
+        
+        if(metric_family_ref) {
+            ::prometheus::Family<::prometheus::Counter>& metric_family = *metric_family_ref;
+            ::prometheus::Counter& prom_counter = metric_family.Add(labels);
+            std::cout << "Incrementing counter" << std::endl;
+            prom_counter.Increment(value);
+            cache_metric(&prom_counter, { counter.name, 1 });
+        } else {
+        }
+    }
+
+    void handler::record(const dometer::metrics::summary& summary,
+                         std::map<std::string, std::string> labels,
+                         double value) {
+        auto metric_family_ref = get_or_build_metric_family<::prometheus::Summary, decltype(::prometheus::BuildSummary)>(
+            summary.name, summary.description, ::prometheus::BuildSummary
+        );
+        
+        if(metric_family_ref) {
+            ::prometheus::Family<::prometheus::Summary>& metric_family = *metric_family_ref;
+            ::prometheus::Summary& prom_summary = metric_family.Add(labels,
+                ::prometheus::Summary::Quantiles{
+                    {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
+                }
+            );
+            std::cout << "Observing summary: " << value << " with labels: " << labels.size() << std::endl;
+            prom_summary.Observe(value);
+            cache_metric(&prom_summary, { summary.name, 2 + 4});
+        } else {
+            std::cerr << "Metric family ref not found or build" << std::endl;
+        }
     }
 }

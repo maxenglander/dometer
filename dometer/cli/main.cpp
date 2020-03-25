@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <utility>
 
 #include "dometer/config/parser.hpp"
 #include "dometer/dns/eventmetrics/metric_recording_event_functor.hpp"
@@ -65,7 +66,7 @@ namespace dometer::cli {
             ));
             return 1;
         }
-        auto recordr = std::make_shared<metrics::recorder>(*handlers_result);
+        auto recordr = std::make_shared<metrics::recorder>(std::move(*handlers_result));
         auto emitter = std::make_shared<event::emitter<dns::event::any_event>>();
         auto metric_recording_event_functor = dometer::dns::eventmetrics::metric_recording_event_functor(recordr);
         emitter->on([&metric_recording_event_functor](dns::event::any_event event) {

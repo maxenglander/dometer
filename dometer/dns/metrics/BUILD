@@ -22,35 +22,10 @@ cc_library(
 )
 
 cc_library(
-    name = "lookup_observation",
-    deps = [
-        "//dometer/dns:class",
-        "//dometer/dns:type",
-        "//dometer/dns:rcode",
-        "//dometer/metrics:labels",
-        "//dometer/metrics:observation",
-        "//dometer/metrics:unit",
-        ":class_label",
-        ":labels",
-        ":lookup_summary",
-        ":type_label",
-    ],
-    hdrs = ["lookup_observation.hpp"],
-    srcs = ["lookup_observation.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "lookup_summary",
     deps = [
-        "//dometer/dns:class",
-        "//dometer/dns:type",
-        "//dometer/metrics:labels",
         "//dometer/metrics:summary",
         "//dometer/metrics:unit",
-        ":class_label",
-        ":labels",
-        ":type_label",
     ],
     hdrs = ["lookup_summary.hpp"],
     srcs = ["lookup_summary.cpp"],

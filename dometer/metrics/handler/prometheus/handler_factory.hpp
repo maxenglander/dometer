@@ -22,6 +22,6 @@ namespace dometer::metrics::handler::prometheus {
         };
 
         public:
-            static std::x::expected<handler, util::error> make_handler(options options);
+            static std::x::expected<std::unique_ptr<handler>, util::error> make_handler(options options);
     };
 }

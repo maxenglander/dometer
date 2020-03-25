@@ -10,10 +10,9 @@
 #include "dometer/metrics/unit.hpp"
 
 namespace dometer::metrics {
-    template<typename... L>
-    counter<L...>::counter(std::string name, std::string description,
-                                               std::tuple<std::shared_ptr<label<L>>...> labels)
-            :   metric<uint64_t, L...>::metric(name, description, labels, type::counter, unit::none)
+    counter::counter(std::string name, std::string description,
+                     std::tuple<std::shared_ptr<label<L>>...> labels)
+        :   metric::metric(name, description, labels, type::counter, unit::none)
     {
     }
 }

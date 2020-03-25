@@ -10,7 +10,6 @@ cc_library(
         "//dometer/dns/event:session",
         "//dometer/dns/event:start_session_event",
         "//dometer/dns/event:stop_session_event",
-        "//dometer/dns/metrics:lookup_observation",
         "//dometer/dns/metrics:lookup_summary",
         "//dometer/dns/resolver:error_code",
         "//dometer/metrics:recorder",
