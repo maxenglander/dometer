@@ -13,9 +13,9 @@ namespace dometer::metrics::handler::prometheus {
     template <class MetricPtr, class Meta>
     void lru_map::time_series_changer::operator()(MetricPtr metric_ptr, Meta meta) {
         if(increment) {
-            parent.num_time_series -= meta.time_series_count;
-        } else {
             parent.num_time_series += meta.time_series_count;
+        } else {
+            parent.num_time_series -= meta.time_series_count;
         }
     }
 
@@ -33,7 +33,17 @@ namespace dometer::metrics::handler::prometheus {
                      ::prometheus::x::FamilyNameAndTimeSeriesCount>::on_insert(increment_time_series);
     }
 
+    lru_map::lru_map(const lru_map& src)
+        : util::lru_map<::prometheus::x::AnyMetricPtr,
+                        ::prometheus::x::FamilyNameAndTimeSeriesCount>(src),
+          decrement_time_series(src.decrement_time_series),
+          increment_time_series(src.increment_time_series),
+          max_time_series(src.max_time_series),
+          num_time_series(src.num_time_series)
+    {}
+
     bool lru_map::should_evict() {
+        std::cout << "checking if num time series (" << num_time_series << ") is greater than max time series (" << max_time_series << ")" << std::endl;
         return num_time_series > max_time_series;
     }
 }

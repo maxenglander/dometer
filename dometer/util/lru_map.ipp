@@ -1,4 +1,5 @@
 #include <functional>
+#include <iostream>
 #include <list>
 #include <unordered_map>
 #include <vector>
@@ -10,7 +11,18 @@ namespace dometer::util {
     lru_map<K, V>::lru_map(size_t max_size) : max_size(max_size) {}
 
     template<typename K, typename V>
+    lru_map<K, V>::lru_map(const lru_map& src)
+        : eviction_listeners(src.eviction_listeners),
+          insertion_listeners(src.insertion_listeners),
+          list(src.list),
+          map(src.map),
+          max_size(src.max_size)
+    {}
+
+
+    template<typename K, typename V>
     void lru_map<K, V>::evict_one() {
+        std::cout << "evicting one" << std::endl;
         auto kv_node = list.back();
         auto key = list.back().first;
         auto value = list.back().second;
@@ -34,6 +46,7 @@ namespace dometer::util {
     template<typename K, typename V>
     void lru_map<K, V>::maybe_evict() {
         while(should_evict()) {
+            std::cout << "we should evict" << std::endl;
             evict_one();
         }
     }
@@ -74,11 +87,13 @@ namespace dometer::util {
             insert(key, value);
         }
 
+        std::cout << "maybe evicting" << std::endl;
         maybe_evict();
     }
 
     template<typename K, typename V>
     bool lru_map<K, V>::should_evict() {
+        std::cout << "checking if should evict (size = " << size() << ", max size = "  << max_size << std::endl;
         return size() > max_size;
     }
 

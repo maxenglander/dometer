@@ -10,10 +10,8 @@
 
 #include "dometer/metrics/counter.hpp"
 #include "dometer/metrics/handler/prometheus/handler.hpp"
-#include "dometer/metrics/handler/prometheus/lru_map.hpp"
 #include "dometer/metrics/metric.hpp"
 #include "dometer/util/error.hpp"
-#include "dometer/util/lru_map.hpp"
 #include "prometheus/counter.h"
 #include "prometheus/registry.h"
 #include "prometheus/summary.h"
@@ -50,6 +48,7 @@ namespace dometer::metrics::handler::prometheus {
     {
         metric_cache.on_evict([this](::prometheus::x::AnyMetricPtr any_metric_ptr,
                                    ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
+            std::cout << "Evicting metric from cache" << std::endl;
             cache_evictor evict_from_cache(metric_families, meta);
             visit(evict_from_cache, any_metric_ptr);
         });

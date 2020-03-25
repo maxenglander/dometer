@@ -13,6 +13,8 @@ namespace dometer::util {
 
         public:
             lru_map(size_t max_size);
+            lru_map(const lru_map&);
+            lru_map(lru_map&&) = delete;
             void on_evict(std::function<void(K, V)>);
             void on_insert(std::function<void(K, V)>);
             void put(K, V);

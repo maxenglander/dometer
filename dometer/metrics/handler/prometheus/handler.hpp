@@ -16,7 +16,6 @@
 #include "prometheus/summary.h"
 #include "prometheus/x/types.hpp"
 #include "dometer/util/error.hpp"
-#include "dometer/util/lru_map.hpp"
 #include "std/x/expected.hpp"
 
 namespace util = dometer::util;
