@@ -1,7 +1,7 @@
 cc_library(
-    name = "metric_recording_event_functor",
-    hdrs = ["metric_recording_event_functor.hpp"],
-    srcs = ["metric_recording_event_functor.cpp"],
+    name = "metric_recording_callback",
+    hdrs = ["metric_recording_callback.hpp"],
+    srcs = ["metric_recording_callback.cpp"],
     deps = [
         "//dometer/dns/event:any_event",
         "//dometer/dns/event:parse_query_event",
@@ -19,11 +19,22 @@ cc_library(
 )
 
 cc_test(
-    name = "metric_recording_event_functor_test",
-    srcs = ["metric_recording_event_functor_test.cpp"],
+    name = "metric_recording_callback_test",
+    srcs = ["metric_recording_callback_test.cpp"],
     deps = [
         "@com_github_google_googletest//:gtest_main",
-        ":metric_recording_event_functor",
+        "//dometer/dns:class",
+        "//dometer/dns:opcode",
+        "//dometer/dns:qr",
+        "//dometer/dns:question",
+        "//dometer/dns:type",
+        "//dometer/dns/event:parse_query_event",
+        "//dometer/dns/event:parse_reply_event",
+        "//dometer/dns/event:resolve_query_event",
+        "//dometer/dns/event:start_session_event",
+        "//dometer/dns/event:stop_session_event",
+        "//dometer/dns/message:message_factory",
+        "//dometer/metrics:mock_recorder",
+        ":metric_recording_callback",
     ],
 )
-

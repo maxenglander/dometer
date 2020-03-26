@@ -15,8 +15,6 @@ namespace util = dometer::util;
 namespace dometer::dns::message {
     class builder {
         public:
-            static builder new_builder();
-
             builder();
             builder(const builder&);
             builder(builder&&);

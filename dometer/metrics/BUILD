@@ -71,6 +71,18 @@ cc_library(
 )
 
 cc_library(
+    name = "mock_recorder",
+    hdrs = ["mock_recorder.hpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest",
+        ":counter",
+        ":recorder",
+        ":summary",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "options",
     hdrs = ["options.hpp"],
     visibility = ["//visibility:public"],

@@ -41,7 +41,7 @@ namespace dometer::dns::handler {
     };
 
     TEST_F(ResolvingHandlerTest, EmitsAParseQueryEventIfQueryValid) {
-        auto message = dometer::dns::message::builder::new_builder()
+        auto message = dometer::dns::message::builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
             })
@@ -65,7 +65,7 @@ namespace dometer::dns::handler {
     }
 
     TEST_F(ResolvingHandlerTest, ResolvesQueryIfValid) {
-        auto query = dometer::dns::message::builder::new_builder()
+        auto query = dometer::dns::message::builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
             })
@@ -77,7 +77,7 @@ namespace dometer::dns::handler {
     }
 
     TEST_F(ResolvingHandlerTest, DoesNotResolveQueryIfInvalid) {
-        auto query = dometer::dns::message::builder::new_builder()
+        auto query = dometer::dns::message::builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
             })
@@ -90,7 +90,7 @@ namespace dometer::dns::handler {
     }
 
     TEST_F(ResolvingHandlerTest, EmitsAResolveQueryEventIfQueryValid) {
-        auto message = dometer::dns::message::builder::new_builder()
+        auto message = dometer::dns::message::builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
             })
@@ -109,7 +109,7 @@ namespace dometer::dns::handler {
     }
 
     TEST_F(ResolvingHandlerTest, EmitsParsesReplyEventIfResolverSucceeds) {
-        auto query = dometer::dns::message::builder::new_builder()
+        auto query = dometer::dns::message::builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
             })
@@ -118,7 +118,7 @@ namespace dometer::dns::handler {
             .set_qr(dometer::dns::qr::query)
             .build();
 
-        auto reply = dometer::dns::message::builder::new_builder()
+        auto reply = dometer::dns::message::builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
             })
@@ -140,7 +140,7 @@ namespace dometer::dns::handler {
     }
 
     TEST_F(ResolvingHandlerTest, DoesNotEmitParsesReplyEventIfResolverFails) {
-        auto query = dometer::dns::message::builder::new_builder()
+        auto query = dometer::dns::message::builder()
             .add_question(dometer::dns::question{
                 "hello.world", dometer::dns::type::a, dometer::dns::class_::in
             })
@@ -164,7 +164,7 @@ namespace dometer::dns::handler {
     }
 
     TEST_F(ResolvingHandlerTest, ReturnsNotImplIfUnsupportedOpcode) {
-        auto query = dometer::dns::message::builder::new_builder()
+        auto query = dometer::dns::message::builder()
             .set_id(54321)
             .set_opcode(dometer::dns::opcode::iquery)
             .build();

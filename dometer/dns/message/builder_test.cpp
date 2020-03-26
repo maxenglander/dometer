@@ -12,12 +12,12 @@ namespace dns = dometer::dns;
 
 namespace dometer::dns::message {
     TEST(BuilderTest, BuildsAMessage) {
-        auto build_result = builder::new_builder().build();
+        auto build_result = builder().build();
         ASSERT_TRUE(build_result) << build_result.error().message;
     }
 
     TEST(BuilderTest, CanSetHeaderValues) {
-        auto build_result = builder::new_builder()
+        auto build_result = builder()
             .set_id(54321)
             .set_qr(dns::qr::reply)
             .set_rcode(dns::rcode::nxdomain)
@@ -30,7 +30,7 @@ namespace dometer::dns::message {
     }
 
     TEST(BuilderTest, CanAddARecord) {
-        auto build_result = builder::new_builder()
+        auto build_result = builder()
             .set_id(54321)
             .set_qr(dns::qr::reply)
             .set_rcode(dns::rcode::noerror)

@@ -20,10 +20,6 @@ namespace dns = dometer::dns;
 namespace util = dometer::util;
 
 namespace dometer::dns::message {
-    builder builder::new_builder() {
-        return builder();
-    }
-
     builder::builder()
         : _bytes(12, 0)
     {}

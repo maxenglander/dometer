@@ -10,6 +10,10 @@
 #include "dometer/dns/opcode.hpp"
 #include "dometer/dns/qr.hpp"
 #include "dometer/dns/rcode.hpp"
+#include "dometer/dns/record.hpp"
+#include "dometer/dns/question.hpp"
+#include "dometer/dns/type.hpp"
+#include "dometer/dns/message/builder.hpp"
 #include "dometer/dns/message/message.hpp"
 #include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/message/parser.hpp"
@@ -33,6 +37,33 @@ namespace dometer::dns::message {
         reply.set_qr(qr::reply);
         reply.set_rcode(rcode::formerr);
         return reply;
+    }
+
+    std::x::expected<message, dometer::util::error>  message_factory::make_query(
+        std::string qname, dometer::dns::type qtype, dometer::dns::class_ qclass
+    ) {
+        return dometer::dns::message::builder()
+            .set_opcode(dometer::dns::opcode::query)
+            .set_qr(dometer::dns::qr::query)
+            .add_question(dometer::dns::question{
+                qname, qtype, qclass
+            })
+            .build();
+    }
+
+    std::x::expected<message, dometer::util::error>  message_factory::make_reply(
+        std::string qname, dometer::dns::type qtype, dometer::dns::class_ qclass, uint16_t ttl, std::string rdata
+    ) {
+        return dometer::dns::message::builder()
+            .set_opcode(dometer::dns::opcode::query)
+            .set_qr(dometer::dns::qr::query)
+            .add_question(dometer::dns::question{
+                qname, qtype, qclass
+            })
+            .add_answer(dometer::dns::record{
+                qname, qtype, qclass, ttl, rdata
+            })
+            .build();
     }
 
     message message_factory::not_implemented(const message& query) {

@@ -8,6 +8,10 @@
 #include "dometer/metrics/summary.hpp"
 
 namespace dometer::metrics {
+    recorder::recorder()
+        : handlers()
+    {}
+
     recorder::recorder(std::vector<std::unique_ptr<dometer::metrics::handler::handler>> handlers)
         : handlers(std::move(handlers))
     {}

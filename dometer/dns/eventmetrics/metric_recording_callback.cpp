@@ -11,27 +11,27 @@
 #include "dometer/dns/event/resolve_query_event.hpp"
 #include "dometer/dns/event/start_session_event.hpp"
 #include "dometer/dns/event/stop_session_event.hpp"
-#include "dometer/dns/eventmetrics/metric_recording_event_functor.hpp"
+#include "dometer/dns/eventmetrics/metric_recording_callback.hpp"
 #include "dometer/dns/metrics/lookup_summary.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/metrics/recorder.hpp"
 #include "std/x/variant.hpp"
 
 namespace dometer::dns::eventmetrics {
-    metric_recording_event_functor::metric_recording_event_functor(std::shared_ptr<dometer::metrics::recorder> recorder)
+    metric_recording_callback::metric_recording_callback(std::shared_ptr<dometer::metrics::recorder> recorder)
         : recorder(recorder) 
     {}
 
-    metric_recording_event_functor::metric_recording_event_functor(const metric_recording_event_functor& functor)
+    metric_recording_callback::metric_recording_callback(const metric_recording_callback& functor)
         : recorder(functor.recorder),
           sessions(functor.sessions)
     {
     }
 
-    metric_recording_event_functor::~metric_recording_event_functor() {
+    metric_recording_callback::~metric_recording_callback() {
     }
 
-    void metric_recording_event_functor::operator() (dometer::dns::event::any_event any_event) {
+    void metric_recording_callback::operator() (dometer::dns::event::any_event any_event) {
         std::x::visit(std::x::overloaded(
             [&](const dometer::dns::event::parse_query_event parse_query_event) {
                 const uint64_t session_id = parse_query_event.get_session_id();

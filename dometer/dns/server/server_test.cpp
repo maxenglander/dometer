@@ -56,7 +56,7 @@ namespace dometer::dns::server {
     }
 
     TEST_F(AutoServerTest, ReceivesAndHandlesRequests) {
-        auto message = dometer::dns::message::builder::new_builder()
+        auto message = dometer::dns::message::builder()
             .set_id(54321)
             .set_qr(dometer::dns::qr::query)
             .set_opcode(dometer::dns::opcode::query)
@@ -75,7 +75,7 @@ namespace dometer::dns::server {
     TEST_F(AutoServerTest, EmitsAStartAndStopSessionEvent) {
         InSequence s;
 
-        auto message = dometer::dns::message::builder::new_builder()
+        auto message = dometer::dns::message::builder()
             .set_id(54321)
             .set_qr(dometer::dns::qr::query)
             .set_opcode(dometer::dns::opcode::query)
@@ -93,7 +93,7 @@ namespace dometer::dns::server {
     TEST_F(AutoServerTest, IncrementsSessionCounterBetweenCalls) {
         InSequence s;
 
-        auto message = dometer::dns::message::builder::new_builder()
+        auto message = dometer::dns::message::builder()
             .set_id(54321)
             .set_qr(dometer::dns::qr::query)
             .set_opcode(dometer::dns::opcode::query)
