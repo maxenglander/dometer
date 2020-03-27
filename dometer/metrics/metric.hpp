@@ -9,6 +9,7 @@
 namespace dometer::metrics {
     struct metric {
         metric(std::string, std::string, dometer::metrics::type, unit);
+
         const std::string name;
         const std::string description;
         const dometer::metrics::type type;

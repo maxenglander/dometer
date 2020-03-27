@@ -34,6 +34,8 @@ cc_test(
         "//dometer/dns/event:start_session_event",
         "//dometer/dns/event:stop_session_event",
         "//dometer/dns/message:message_factory",
+        "//dometer/dns/metrics:lookup_summary",
+        "//dometer/metrics:summary",
         "//dometer/metrics:mock_recorder",
         ":metric_recording_callback",
     ],
