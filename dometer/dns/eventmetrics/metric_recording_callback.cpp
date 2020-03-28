@@ -90,8 +90,16 @@ namespace dometer::dns::eventmetrics {
                     }
                 }
 
-                double value = resolve_query_event->get_duration().count();
-                std::cout << "Recording lookup summary observation with value " << value << std::endl;
+                double value = 0.0;
+                switch(dometer::dns::metrics::lookup_summary::instance.unit) {
+                    case dometer::metrics::unit::seconds:
+                        value = std::chrono::duration_cast<std::chrono::duration<double>>(resolve_query_event->get_duration()).count();
+                        break;
+                    default:
+                        /* Unsupported unit. */
+                        return;
+                }
+
                 this->recorder->record(dometer::dns::metrics::lookup_summary::instance, labels, value);
             }
         ), any_event);

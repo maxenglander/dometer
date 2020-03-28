@@ -10,14 +10,14 @@ namespace dometer::dns::event {
             const uint64_t session_id,
             const dometer::dns::question question,
             const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::error> resolution,
-            const std::chrono::microseconds duration)
+            const std::chrono::duration<double, std::milli> duration)
         :   session_id(session_id),
             question(question),
             resolution(resolution),
             duration(duration)
     {}
 
-    const std::chrono::microseconds resolve_query_event::get_duration() const {
+    const std::chrono::duration<double, std::milli> resolve_query_event::get_duration() const {
         return duration;
     }
 

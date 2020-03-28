@@ -43,7 +43,6 @@ namespace dometer::metrics::handler::prometheus {
     {}
 
     bool lru_map::should_evict() {
-        std::cout << "checking if num time series (" << num_time_series << ") is greater than max time series (" << max_time_series << ")" << std::endl;
         return num_time_series > max_time_series;
     }
 }

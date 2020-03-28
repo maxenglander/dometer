@@ -16,8 +16,8 @@ namespace dometer::dns::event {
                     const uint64_t session_id,
                     const dometer::dns::question question,
                     const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::error> resolution,
-                    const std::chrono::microseconds duration);
-            const std::chrono::microseconds get_duration() const;
+                    const std::chrono::duration<double, std::milli> duration);
+            const std::chrono::duration<double, std::milli> get_duration() const;
             const dns::question& get_question() const;
             const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::error>& get_resolution() const;
             const uint64_t get_session_id() const;
@@ -25,6 +25,6 @@ namespace dometer::dns::event {
             const uint64_t session_id;
             const dometer::dns::question question;
             const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::error> resolution;
-            const std::chrono::microseconds duration;
+            const std::chrono::duration<double, std::milli> duration;
     };
 }

@@ -48,7 +48,6 @@ namespace dometer::metrics::handler::prometheus {
     {
         metric_cache.on_evict([this](::prometheus::x::AnyMetricPtr any_metric_ptr,
                                    ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
-            std::cout << "Evicting metric from cache" << std::endl;
             cache_evictor evict_from_cache(metric_families, meta);
             visit(evict_from_cache, any_metric_ptr);
         });
@@ -98,7 +97,6 @@ namespace dometer::metrics::handler::prometheus {
         if(metric_family_ref) {
             ::prometheus::Family<::prometheus::Counter>& metric_family = *metric_family_ref;
             ::prometheus::Counter& prom_counter = metric_family.Add(labels);
-            std::cout << "Incrementing counter" << std::endl;
             prom_counter.Increment(value);
             cache_metric(&prom_counter, { counter.name, 1 });
         } else {
@@ -119,11 +117,8 @@ namespace dometer::metrics::handler::prometheus {
                     {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
                 }
             );
-            std::cout << "Observing summary: " << value << " with labels: " << labels.size() << std::endl;
             prom_summary.Observe(value);
             cache_metric(&prom_summary, { summary.name, 2 + 4});
-        } else {
-            std::cerr << "Metric family ref not found or build" << std::endl;
         }
     }
 }

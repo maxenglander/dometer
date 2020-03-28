@@ -109,7 +109,6 @@ namespace dometer::dns::message {
                 util::error{ strerror(errno), errno }
             });
         }
-        std::cout << "Compressed dname, compressed size: " + std::to_string(cdnamelen) << std::endl;
 
         uint16_t type = record.type;
         uint16_t class_ = record.class_;
@@ -158,7 +157,6 @@ namespace dometer::dns::message {
 
             // Increment and update question count
             uint16_t qd_count = 1 + ns_get16(&_bytes[4]);
-            std::cout << "setting question count to " + std::to_string(qd_count) << std::endl;
             ns_put16(qd_count, &_bytes[4]);
         }
 
@@ -171,11 +169,9 @@ namespace dometer::dns::message {
 
             // Increment and update answer count
             uint16_t an_count = 1 + ns_get16(&_bytes[6]);
-            std::cout << "setting answer count to " + std::to_string(an_count) << std::endl;
             ns_put16(an_count, &_bytes[6]);
         }
 
-        std::cout << "Trying to parse message from byte array of size: " + std::to_string(_bytes.size()) << std::endl;
         return parser::parse(_bytes);
     }
 

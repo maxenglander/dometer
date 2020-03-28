@@ -22,7 +22,6 @@ namespace dometer::util {
 
     template<typename K, typename V>
     void lru_map<K, V>::evict_one() {
-        std::cout << "evicting one" << std::endl;
         auto kv_node = list.back();
         auto key = list.back().first;
         auto value = list.back().second;
@@ -46,7 +45,6 @@ namespace dometer::util {
     template<typename K, typename V>
     void lru_map<K, V>::maybe_evict() {
         while(should_evict()) {
-            std::cout << "we should evict" << std::endl;
             evict_one();
         }
     }
@@ -87,13 +85,11 @@ namespace dometer::util {
             insert(key, value);
         }
 
-        std::cout << "maybe evicting" << std::endl;
         maybe_evict();
     }
 
     template<typename K, typename V>
     bool lru_map<K, V>::should_evict() {
-        std::cout << "checking if should evict (size = " << size() << ", max size = "  << max_size << std::endl;
         return size() > max_size;
     }
 

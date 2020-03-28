@@ -65,9 +65,7 @@ namespace dometer::dns::handler {
             );
         }
 
-        std::cout << "checking opcode " << std::to_string((int)query->get_opcode()) << std::endl;
         if(query->get_opcode() != dns::opcode::query) {
-            std::cout << "invalid opcode" << std::endl;
             return dns::message::message_factory::not_implemented(*query);
         }
 
@@ -79,7 +77,6 @@ namespace dometer::dns::handler {
     ) {
         auto question = query.get_question();
         if(!question) {
-            std::cout << "returning formerr" << std::endl;
             return dns::message::message_factory::format_error(query);
         }
 
@@ -114,11 +111,8 @@ namespace dometer::dns::handler {
     std::x::expected<dometer::dns::message::message, util::error> resolving_handler::parse_query(
         uint64_t session_id, std::vector<uint8_t> bytes
     ) {
-        std::cout << "parsing query" << std::endl;
         auto query = dometer::dns::message::parser::parse(bytes);
-        std::cout << "parsed query, emitting event" << std::endl;
         emitter->emit(dometer::dns::event::parse_query_event(session_id, query));
-        std::cout << "emitted parse query event" << std::endl;
         return query;
     }
 
@@ -134,21 +128,15 @@ namespace dometer::dns::handler {
         uint64_t session_id, dometer::dns::question& question
     ) {
         auto start = clock.now();
-        std::cout << "resolving query: " << question.qname << std::endl;
         auto resolution = resolver->resolve(question.qname, question.qclass, question.qtype);
-        std::cout << "resolved query" << std::endl;
         auto end = clock.now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        std::cout << "constructing resolve query event" << std::endl;
         auto event = dometer::dns::event::resolve_query_event(
             session_id, question, resolution, duration
         );
-        std::cout << "constructed resolve query event" << std::endl;
 
-        std::cout << "emitting resolve query event" << std::endl;
         emitter->emit(event);
-        std::cout << "emitted resolve query event" << std::endl;
 
         return resolution;
     }
