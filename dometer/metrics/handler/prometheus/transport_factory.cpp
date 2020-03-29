@@ -27,7 +27,7 @@ namespace dometer::metrics::handler::prometheus {
             ), options);
         } catch(std::exception& e) {
             return std::x::unexpected<util::error>(util::error(
-                "Failed to construct  pull transport.",
+                "Failed to construct pull transport.",
                 std::vector<std::string>{ std::string(e.what()) }
             ));
         }

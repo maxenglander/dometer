@@ -2,6 +2,7 @@ cc_binary(
     name = "main",
     srcs = ["main.cpp"],
     deps = [
+        "//dometer/app:app_factory",
         "//dometer/config:parser",
         "//dometer/dns/eventmetrics:metric_recording_callback",
         "//dometer/dns/resolver:resolver",

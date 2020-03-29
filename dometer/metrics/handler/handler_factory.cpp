@@ -36,10 +36,7 @@ namespace dometer::metrics::handler {
         for(auto it = optionss.begin(); it < optionss.end(); it++) {
             auto result = make_handler(*it);
             if(!result) {
-                return std::x::unexpected<util::error>(util::error(
-                    "Failed to create metrics handler.",
-                    result.error()
-                ));
+                return std::x::unexpected<util::error>(result.error());
             }
             handlers.push_back(std::move(*result));
         }

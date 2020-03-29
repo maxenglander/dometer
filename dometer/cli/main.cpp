@@ -2,6 +2,7 @@
 #include <memory>
 #include <utility>
 
+#include "dometer/app/app_factory.hpp"
 #include "dometer/config/parser.hpp"
 #include "dometer/dns/eventmetrics/metric_recording_callback.hpp"
 #include "dometer/dns/handler/handler.hpp"
@@ -26,9 +27,6 @@ namespace metrics = dometer::metrics;
 
 namespace dometer::cli {
     int main(int argc, char **argv) {
-        char myenv[] = "RESOLV_WRAPPER_HOSTS=/tmp/fakehosts";
-        putenv(myenv);
-
         util::human_error_encoder error_encoder;
 
         auto cli_options = dometer::cli::options_parser::parse(argc, argv);
@@ -57,6 +55,7 @@ namespace dometer::cli {
             return 1;
         }
         auto app_options = *parse_results;
+        auto app = dometer::app::app_factory::make_app(app_options);
 
         auto handlers_result = metrics::handler::handler_factory::make_handlers(app_options.metrics.handlers);
         if(!handlers_result) {
