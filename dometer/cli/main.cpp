@@ -55,8 +55,32 @@ namespace dometer::cli {
             return 1;
         }
         auto app_options = *parse_results;
-        auto app = dometer::app::app_factory::make_app(app_options);
 
+        auto app_result = dometer::app::app_factory::make_app(app_options);
+        if(!app_result) {
+            std::cerr << error_encoder.encode(util::error(
+                "Failed to start create app.",
+                app_result.error()
+            ));
+            return 1;
+
+        }
+        auto app = *app_result;
+
+        auto start_result = app->start();
+        if(!start_result) {
+            std::cerr << error_encoder.encode(util::error(
+                "Failed to start DNS server",
+                start_result.error()
+            ));
+            return 1;
+        }
+
+        app->join();
+
+        return 0;
+
+        /**
         auto handlers_result = metrics::handler::handler_factory::make_handlers(app_options.metrics.handlers);
         if(!handlers_result) {
             std::cerr << error_encoder.encode(util::error(
@@ -91,6 +115,7 @@ namespace dometer::cli {
             return 1;
         }
         server.join();
+        */
 
         return 0;
     }
