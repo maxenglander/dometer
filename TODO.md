@@ -26,8 +26,8 @@ TODO
  - [x] compile on mac os x
  - [x] get resolv\_wrapper to compile on os x
  - [x] switch to res\_{=\>n}init, res\_{=\>n}query, etc.
+ - [x] make sure time is in seconds
  - [ ] write tests
- - [ ] make sure time is in seconds
  - [ ] switch summary to histogram
  - [ ] write documentation
  - [ ] build cmake with bazel

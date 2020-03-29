@@ -46,6 +46,16 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
+cc_test(
+    name = "lru_map_test",
+    srcs = ["lru_map_test.cpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest_main",
+        ":lru_map", 
+    ],
+    visibility = ["//visibility:public"],
+)
+
 cc_library(
     name = "string_helper",
     hdrs = ["string_helper.hpp"],

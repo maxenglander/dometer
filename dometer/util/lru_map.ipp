@@ -4,8 +4,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "dometer/util/lru_map.hpp"
-
 namespace dometer::util {
     template<typename K, typename V>
     lru_map<K, V>::lru_map(size_t max_size) : max_size(max_size) {}
@@ -14,6 +12,7 @@ namespace dometer::util {
     lru_map<K, V>::lru_map(const lru_map& src)
         : eviction_listeners(src.eviction_listeners),
           insertion_listeners(src.insertion_listeners),
+          update_listeners(src.update_listeners),
           list(src.list),
           map(src.map),
           max_size(src.max_size)
@@ -64,6 +63,13 @@ namespace dometer::util {
     }
 
     template<typename K, typename V>
+    void lru_map<K, V>::notify_update_listeners(K key, V old_value, V value) {
+        for(auto listener : update_listeners) {
+            listener(key, old_value, value);
+        }
+    }
+
+    template<typename K, typename V>
     void lru_map<K, V>::on_evict(std::function<void(K, V)> listener) {
         eviction_listeners.push_back(listener);
     }
@@ -71,6 +77,11 @@ namespace dometer::util {
     template<typename K, typename V>
     void lru_map<K, V>::on_insert(std::function<void(K, V)> listener) {
         insertion_listeners.push_back(listener);
+    }
+
+    template<typename K, typename V>
+    void lru_map<K, V>::on_update(std::function<void(K, V, V)> listener) {
+        update_listeners.push_back(listener);
     }
 
     template<typename K, typename V>
@@ -82,7 +93,9 @@ namespace dometer::util {
             notify_insertion_listeners(key, value);
         } else {
             erase(search->first);
+            auto old_value = search->second->second;
             insert(key, value);
+            notify_update_listeners(key, old_value, value);
         }
 
         maybe_evict();
