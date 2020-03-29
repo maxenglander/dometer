@@ -1,3 +1,5 @@
+#include <string>
+
 #include "dometer/metrics/handler/prometheus/lru_map.hpp"
 #include "prometheus/counter.h"
 #include "prometheus/x/types.hpp"

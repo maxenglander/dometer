@@ -26,7 +26,7 @@ namespace dometer::metrics::handler::prometheus {
             ::prometheus::x::FamilyNameAndTimeSeriesCount& meta)
         :   metric_families(metric_families),
             meta(meta)
-    { }
+    {}
 
     template <class MetricPtr>
     void handler::cache_evictor::operator()(MetricPtr&& metric_ptr) {
@@ -44,13 +44,7 @@ namespace dometer::metrics::handler::prometheus {
     handler::handler(size_t max_time_series,
                 std::shared_ptr<::prometheus::Registry> registry,
                 std::vector<std::shared_ptr<::prometheus::x::Transport>> transports)
-        :   handler(lru_map(max_time_series), registry, transports)
-    {}
-
-    handler::handler(lru_map metric_cache,
-                std::shared_ptr<::prometheus::Registry> registry,
-                std::vector<std::shared_ptr<::prometheus::x::Transport>> transports)
-        :   metric_cache(metric_cache), registry(registry), transports(transports)
+        :   metric_cache(max_time_series), registry(registry), transports(transports)
     {
         metric_cache.on_evict([this](::prometheus::x::AnyMetricPtr any_metric_ptr,
                                      ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {

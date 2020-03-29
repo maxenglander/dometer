@@ -24,7 +24,7 @@ cc_test(
         "@com_github_google_googletest//:gtest_main",
         "@com_github_jupp0r_prometheus_cpp//core",
         "//prometheus/x:types",
-        "//dometer/metrics:example_counter",
+        "//dometer/metrics:counter",
         ":handler",
         ":lru_map",
     ],
