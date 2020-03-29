@@ -47,7 +47,7 @@ namespace dometer::metrics::handler::prometheus {
         :   metric_cache(max_time_series), registry(registry), transports(transports)
     {
         metric_cache.on_evict([this](::prometheus::x::AnyMetricPtr any_metric_ptr,
-                                   ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
+                                     ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
             cache_evictor evict_from_cache(metric_families, meta);
             visit(evict_from_cache, any_metric_ptr);
         });
@@ -99,7 +99,6 @@ namespace dometer::metrics::handler::prometheus {
             ::prometheus::Counter& prom_counter = metric_family.Add(labels);
             prom_counter.Increment(value);
             cache_metric(&prom_counter, { counter.name, 1 });
-        } else {
         }
     }
 

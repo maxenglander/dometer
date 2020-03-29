@@ -11,6 +11,7 @@
 
 namespace prometheus::x {
     struct FamilyNameAndTimeSeriesCount {
+        bool operator==(const FamilyNameAndTimeSeriesCount& other) const;
         std::string family_name;
         uint8_t time_series_count;
     };

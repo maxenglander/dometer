@@ -18,6 +18,17 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
+cc_test(
+    name = "handler_test",
+    deps = [
+        "@com_github_google_googletest//:gtest_main",
+        "@com_github_jupp0r_prometheus_cpp//core",
+        ":handler",
+    ],
+    srcs = ["handler_test.cpp"],
+    visibility = ["//visibility:public"],
+)
+
 cc_library(
     name = "handler_factory",
     hdrs = ["handler_factory.hpp"],
@@ -46,6 +57,18 @@ cc_library(
         "lru_map.hpp",
     ],
     srcs = ["lru_map.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "lru_map_test",
+    deps = [
+        "@com_github_google_googletest//:gtest_main",
+        "//prometheus/x:types",
+        "//std/x:variant",
+        ":lru_map",
+    ],
+    srcs = ["lru_map_test.cpp"],
     visibility = ["//visibility:public"],
 )
 
