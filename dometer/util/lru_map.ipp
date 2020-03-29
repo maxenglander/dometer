@@ -2,6 +2,7 @@
 #include <iostream>
 #include <list>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 namespace dometer::util {
@@ -18,6 +19,15 @@ namespace dometer::util {
           max_size(src.max_size)
     {}
 
+    template<typename K, typename V>
+    lru_map<K, V>::lru_map(lru_map&& src)
+        : eviction_listeners(std::move(src.eviction_listeners)),
+          insertion_listeners(std::move(src.insertion_listeners)),
+          update_listeners(std::move(src.update_listeners)),
+          list(std::move(src.list)),
+          map(std::move(src.map)),
+          max_size(src.max_size)
+    {}
 
     template<typename K, typename V>
     void lru_map<K, V>::evict_one() {

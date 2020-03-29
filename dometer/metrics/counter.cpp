@@ -10,9 +10,7 @@
 #include "dometer/metrics/unit.hpp"
 
 namespace dometer::metrics {
-    counter::counter(std::string name, std::string description,
-                     std::tuple<std::shared_ptr<label<L>>...> labels)
-        :   metric::metric(name, description, labels, type::counter, unit::none)
-    {
-    }
+    counter::counter(std::string name, std::string description)
+        :   metric::metric(name, description, type::counter, unit::none)
+    {}
 }

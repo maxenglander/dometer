@@ -23,7 +23,10 @@ cc_test(
     deps = [
         "@com_github_google_googletest//:gtest_main",
         "@com_github_jupp0r_prometheus_cpp//core",
+        "//prometheus/x:types",
+        "//dometer/metrics:example_counter",
         ":handler",
+        ":lru_map",
     ],
     srcs = ["handler_test.cpp"],
     visibility = ["//visibility:public"],

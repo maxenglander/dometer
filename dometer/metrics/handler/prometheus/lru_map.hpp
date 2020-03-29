@@ -22,7 +22,7 @@ namespace dometer::metrics::handler::prometheus {
 
         public:
             lru_map(size_t);
-            lru_map(lru_map&&) = delete;
+            lru_map(lru_map&&);
             lru_map(const lru_map&);
         protected:
             bool should_evict() override;

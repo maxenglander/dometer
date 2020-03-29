@@ -42,6 +42,15 @@ namespace dometer::metrics::handler::prometheus {
           num_time_series(src.num_time_series)
     {}
 
+    lru_map::lru_map(lru_map&& src)
+        : util::lru_map<::prometheus::x::AnyMetricPtr,
+                        ::prometheus::x::FamilyNameAndTimeSeriesCount>(src),
+          decrement_time_series(src.decrement_time_series),
+          increment_time_series(src.increment_time_series),
+          max_time_series(src.max_time_series),
+          num_time_series(src.num_time_series)
+    {}
+
     bool lru_map::should_evict() {
         return num_time_series > max_time_series;
     }

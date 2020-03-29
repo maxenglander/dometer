@@ -11,16 +11,20 @@ cc_library(
 cc_library(
     name = "counter",
     deps = [
-        ":label",
         ":metric",
-        ":type",
-        ":unit",
     ],
-    hdrs = [
-        "counter.hpp",
-        "counter.ipp",
+    hdrs = ["counter.hpp"],
+    srcs = ["counter.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "example_counter",
+    deps = [
+        ":counter",
     ],
-    srcs = [],
+    hdrs = ["example_counter.hpp"],
+    srcs = ["example_counter.cpp"],
     visibility = ["//visibility:public"],
 )
 

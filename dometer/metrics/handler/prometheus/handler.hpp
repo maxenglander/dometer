@@ -37,6 +37,9 @@ namespace dometer::metrics::handler::prometheus {
             handler(size_t,
                     std::shared_ptr<::prometheus::Registry>,
                     std::vector<std::shared_ptr<::prometheus::x::Transport>>);
+            handler(lru_map,
+                    std::shared_ptr<::prometheus::Registry>,
+                    std::vector<std::shared_ptr<::prometheus::x::Transport>>);
             handler(const handler&);
             handler(handler&&) = delete;
 
