@@ -8,7 +8,7 @@
 
 #include "dometer/metrics/counter.hpp"
 #include "dometer/metrics/handler/handler.hpp"
-#include "dometer/metrics/handler/prometheus/lru_map.hpp"
+#include "dometer/metrics/handler/prometheus/metric_cache.hpp"
 #include "dometer/metrics/metric.hpp"
 #include "dometer/metrics/summary.hpp"
 #include "prometheus/counter.h"
@@ -29,8 +29,8 @@ namespace dometer::metrics::handler::prometheus {
                 template <class MetricPtr>
                 void operator()(MetricPtr&&);
             private:
-                std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>& metric_families;
-                ::prometheus::x::FamilyNameAndTimeSeriesCount& meta;
+                std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>& _metric_families;
+                ::prometheus::x::FamilyNameAndTimeSeriesCount& _meta;
         };
 
         public:
@@ -49,9 +49,9 @@ namespace dometer::metrics::handler::prometheus {
             template<typename T, typename BuilderFn>
             std::x::expected<::prometheus::x::FamilyRef<T>, util::error> get_or_build_metric_family(std::string, std::string, BuilderFn);
 
-            lru_map metric_cache;
-            std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef> metric_families;
-            std::shared_ptr<::prometheus::Registry> registry;
-            std::vector<std::shared_ptr<::prometheus::x::Transport>> transports;
+            metric_cache _metric_cache;
+            std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef> _metric_families;
+            std::shared_ptr<::prometheus::Registry> _registry;
+            std::vector<std::shared_ptr<::prometheus::x::Transport>> _transports;
     };
 }

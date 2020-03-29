@@ -4,7 +4,7 @@
 
 #include "dometer/metrics/counter.hpp"
 #include "dometer/metrics/handler/prometheus/handler.hpp"
-#include "dometer/metrics/handler/prometheus/lru_map.hpp"
+#include "dometer/metrics/handler/prometheus/metric_cache.hpp"
 #include "prometheus/registry.h"
 #include "prometheus/x/types.hpp"
 #include "gtest/gtest.h"

@@ -24,14 +24,14 @@ namespace dometer::metrics::handler::prometheus {
     handler::cache_evictor::cache_evictor(
             std::unordered_map<std::string, ::prometheus::x::AnyFamilyRef>& metric_families,
             ::prometheus::x::FamilyNameAndTimeSeriesCount& meta)
-        :   metric_families(metric_families),
-            meta(meta)
+        :   _metric_families(metric_families),
+            _meta(meta)
     {}
 
     template <class MetricPtr>
     void handler::cache_evictor::operator()(MetricPtr&& metric_ptr) {
-        auto search = metric_families.find(meta.family_name);
-        if(search == metric_families.end()) return;
+        auto search = _metric_families.find(_meta.family_name);
+        if(search == _metric_families.end()) return;
         auto any_family_ref = search->second;
 
         using MetricType = typename std::decay<decltype(*metric_ptr)>::type;
@@ -44,36 +44,36 @@ namespace dometer::metrics::handler::prometheus {
     handler::handler(size_t max_time_series,
                 std::shared_ptr<::prometheus::Registry> registry,
                 std::vector<std::shared_ptr<::prometheus::x::Transport>> transports)
-        :   metric_cache(max_time_series), registry(registry), transports(transports)
+        :   _metric_cache(max_time_series), _registry(registry), _transports(transports)
     {
-        metric_cache.on_evict([this](::prometheus::x::AnyMetricPtr any_metric_ptr,
-                                     ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
-            cache_evictor evict_from_cache(metric_families, meta);
+        _metric_cache.on_evict([this](::prometheus::x::AnyMetricPtr any_metric_ptr,
+                                      ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
+            cache_evictor evict_from_cache(_metric_families, meta);
             visit(evict_from_cache, any_metric_ptr);
         });
     }
 
     handler::handler(const handler& handler)
-        : metric_cache(handler.metric_cache),
-          metric_families(handler.metric_families),
-          registry(handler.registry),
-          transports(handler.transports)
+        : _metric_cache(handler._metric_cache),
+          _metric_families(handler._metric_families),
+          _registry(handler._registry),
+          _transports(handler._transports)
     {}
 
     template<typename T>
     void handler::cache_metric(T* metric, ::prometheus::x::FamilyNameAndTimeSeriesCount meta) {
-        metric_cache.put(metric, meta);
+        _metric_cache.put(metric, meta);
     }
 
     template<typename T, typename BuilderFn>
     std::x::expected<::prometheus::x::FamilyRef<T>, util::error> handler::get_or_build_metric_family(
             std::string name, std::string description, BuilderFn new_builder) {
-        auto search = metric_families.find(name);
-        if(search == metric_families.end()) {
+        auto search = _metric_families.find(name);
+        if(search == _metric_families.end()) {
             const ::prometheus::x::FamilyRef<T> family_ref
-                = std::ref(new_builder().Name(name).Help(description).Register(*registry));
-            metric_families.insert({name, ::prometheus::x::AnyFamilyRef(family_ref)});
-            search = metric_families.find(name);
+                = std::ref(new_builder().Name(name).Help(description).Register(*_registry));
+            _metric_families.insert({name, ::prometheus::x::AnyFamilyRef(family_ref)});
+            search = _metric_families.find(name);
         }
 
         const ::prometheus::x::AnyFamilyRef any_family_ref = search->second;

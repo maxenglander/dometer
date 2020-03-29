@@ -1,6 +1,6 @@
 #include <string>
 
-#include "dometer/metrics/handler/prometheus/lru_map.hpp"
+#include "dometer/metrics/handler/prometheus/metric_cache.hpp"
 #include "prometheus/counter.h"
 #include "prometheus/x/types.hpp"
 #include "std/x/variant.hpp"
@@ -8,12 +8,12 @@
 namespace util = dometer::util;
 
 namespace dometer::metrics::handler::prometheus {
-    lru_map::time_series_changer::time_series_changer(lru_map& parent, bool increment)
+    metric_cache::time_series_changer::time_series_changer(metric_cache& parent, bool increment)
         : parent(parent), increment(increment) {
     }
 
     template <class MetricPtr, class Meta>
-    void lru_map::time_series_changer::operator()(MetricPtr metric_ptr, Meta meta) {
+    void metric_cache::time_series_changer::operator()(MetricPtr metric_ptr, Meta meta) {
         if(increment) {
             parent.num_time_series += meta.time_series_count;
         } else {
@@ -21,7 +21,7 @@ namespace dometer::metrics::handler::prometheus {
         }
     }
 
-    lru_map::lru_map(size_t max_time_series)
+    metric_cache::metric_cache(size_t max_time_series)
         :    util::lru_map<::prometheus::x::AnyMetricPtr, ::prometheus::x::FamilyNameAndTimeSeriesCount>(0),
              decrement_time_series(time_series_changer(*this, false)),
              increment_time_series(time_series_changer(*this, true)),
@@ -35,7 +35,7 @@ namespace dometer::metrics::handler::prometheus {
                      ::prometheus::x::FamilyNameAndTimeSeriesCount>::on_insert(increment_time_series);
     }
 
-    lru_map::lru_map(const lru_map& src)
+    metric_cache::metric_cache(const metric_cache& src)
         : util::lru_map<::prometheus::x::AnyMetricPtr,
                         ::prometheus::x::FamilyNameAndTimeSeriesCount>(src),
           decrement_time_series(src.decrement_time_series),
@@ -44,7 +44,7 @@ namespace dometer::metrics::handler::prometheus {
           num_time_series(src.num_time_series)
     {}
 
-    lru_map::lru_map(lru_map&& src)
+    metric_cache::metric_cache(metric_cache&& src)
         : util::lru_map<::prometheus::x::AnyMetricPtr,
                         ::prometheus::x::FamilyNameAndTimeSeriesCount>(src),
           decrement_time_series(src.decrement_time_series),
@@ -53,7 +53,7 @@ namespace dometer::metrics::handler::prometheus {
           num_time_series(src.num_time_series)
     {}
 
-    bool lru_map::should_evict() {
+    bool metric_cache::should_evict() {
         return num_time_series > max_time_series;
     }
 }

@@ -7,11 +7,10 @@ cc_library(
         "//dometer/metrics:summary",
         "//dometer/metrics/handler:handler",
         "//dometer/util:error",
-        "//dometer/util:lru_map",
         "//prometheus/x:types",
         "//std/x:expected",
         "//std/x:variant",
-        ":lru_map",
+        ":metric_cache",
     ],
     hdrs = ["handler.hpp"],
     srcs = ["handler.cpp"],
@@ -26,7 +25,7 @@ cc_test(
         "//prometheus/x:types",
         "//dometer/metrics:counter",
         ":handler",
-        ":lru_map",
+        ":metric_cache",
     ],
     srcs = ["handler_test.cpp"],
     visibility = ["//visibility:public"],
@@ -49,29 +48,27 @@ cc_library(
 )
 
 cc_library(
-    name = "lru_map",
+    name = "metric_cache",
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
         "//dometer/util:lru_map",
         "//prometheus/x:types",
         "//std/x:variant",
     ],
-    hdrs = [
-        "lru_map.hpp",
-    ],
-    srcs = ["lru_map.cpp"],
+    hdrs = ["metric_cache.hpp"],
+    srcs = ["metric_cache.cpp"],
     visibility = ["//visibility:public"],
 )
 
 cc_test(
-    name = "lru_map_test",
+    name = "metric_cache_test",
     deps = [
         "@com_github_google_googletest//:gtest_main",
         "//prometheus/x:types",
         "//std/x:variant",
-        ":lru_map",
+        ":metric_cache",
     ],
-    srcs = ["lru_map_test.cpp"],
+    srcs = ["metric_cache_test.cpp"],
     visibility = ["//visibility:public"],
 )
 
