@@ -31,6 +31,7 @@ TODO
  - [ ] write tests
  - [ ] switch summary to histogram
  - [ ] write documentation
+ - [ ] make nicer metric observation api
  - [ ] build cmake with bazel
  - [ ] build envsubst with bazel (for generating schema)
  - [ ] rename libresolv => glibc
