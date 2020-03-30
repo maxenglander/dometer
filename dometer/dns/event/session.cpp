@@ -22,9 +22,6 @@ namespace dometer::dns::event {
         }
     }
 
-    session::~session() {
-    }
-
     const uint64_t session::get_session_id() const {
         return session_id;
     }

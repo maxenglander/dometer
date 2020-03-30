@@ -9,7 +9,6 @@ namespace dometer::dns::event {
         public:
             session(uint64_t session_id);
             session(const session&);
-            ~session();
 
             const uint64_t get_session_id() const;
             std::x::optional<parse_message_event> get_parse_query_event() const;

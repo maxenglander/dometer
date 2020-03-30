@@ -27,7 +27,7 @@ TODO
  - [x] get resolv\_wrapper to compile on os x
  - [x] switch to res\_{=\>n}init, res\_{=\>n}query, etc.
  - [x] make sure time is in seconds
- - [ ] move app-building logic of cli/main to app/
+ - [x] move app-building logic of cli/main to app/
  - [ ] write tests
  - [ ] switch summary to histogram
  - [ ] write documentation

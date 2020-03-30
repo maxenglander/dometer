@@ -40,10 +40,7 @@ namespace dometer::app {
     std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>> app_factory::make_emitter(
             std::shared_ptr<dometer::metrics::recorder> recorder) {
         auto emitter = std::make_shared<event::emitter<dometer::dns::event::any_event>>();
-        auto metric_recording_callback = dometer::dns::eventmetrics::metric_recording_callback(recorder);
-        emitter->on([&metric_recording_callback](dometer::dns::event::any_event event) {
-            metric_recording_callback(event);
-        });
+        emitter->on(dometer::dns::eventmetrics::metric_recording_callback(recorder));
         return emitter;
     }
 

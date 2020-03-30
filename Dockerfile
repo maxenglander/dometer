@@ -16,6 +16,7 @@ RUN apt-get update \
       valgrind \
       libtool \
       make \
+      cmake \
       zlib1g-dev \
       unzip \
       python3 \

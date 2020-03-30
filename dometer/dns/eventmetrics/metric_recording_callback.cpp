@@ -19,17 +19,19 @@
 
 namespace dometer::dns::eventmetrics {
     metric_recording_callback::metric_recording_callback(std::shared_ptr<dometer::metrics::recorder> recorder)
-        : recorder(recorder) 
+        : recorder(recorder),
+          sessions()
     {}
 
-    metric_recording_callback::metric_recording_callback(const metric_recording_callback& functor)
-        : recorder(functor.recorder),
-          sessions(functor.sessions)
-    {
-    }
+    metric_recording_callback::metric_recording_callback(const metric_recording_callback& src)
+        : recorder(src.recorder),
+          sessions(src.sessions)
+    {}
 
-    metric_recording_callback::~metric_recording_callback() {
-    }
+    metric_recording_callback::metric_recording_callback(metric_recording_callback&& src)
+        : recorder(std::move(src.recorder)),
+          sessions(std::move(src.sessions))
+    {}
 
     void metric_recording_callback::operator() (dometer::dns::event::any_event any_event) {
         std::x::visit(std::x::overloaded(
@@ -55,7 +57,7 @@ namespace dometer::dns::eventmetrics {
             },
 
             [&](const dometer::dns::event::start_session_event start_session_event) {
-                this->sessions.emplace(
+                sessions.emplace(
                     std::piecewise_construct,
                     std::forward_as_tuple<uint64_t>(start_session_event.get_session_id()),
                     std::forward_as_tuple<uint64_t>(start_session_event.get_session_id())
