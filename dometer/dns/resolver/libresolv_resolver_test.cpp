@@ -18,7 +18,7 @@
 #include "dometer/dns/resolver/libresolv_function.hpp"
 #include "dometer/dns/resolver/libresolv_helper.hpp"
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
-#include "dometer/dns/server/server.hpp"
+#include "dometer/dns/server/basic_server.hpp"
 #include "dometer/event/emitter.hpp"
 #include "gtest/gtest.h"
 
@@ -41,7 +41,7 @@ namespace dometer::dns::resolver {
             {}
 
             void SetUp() override {
-                _server.start("127.0.0.1", 6353);
+                _server.start("127.0.0.1:6353");
             }
 
             void TearDown() override {
@@ -51,7 +51,7 @@ namespace dometer::dns::resolver {
             std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>> _emitter;
             std::shared_ptr<dometer::dns::handler::mock_handler> _handler;
             struct __res_state _res_state;
-            dometer::dns::server::server _server;
+            dometer::dns::server::basic_server _server;
     };
 
     TEST_F(LibresolvResolverTest, SendsQueryToNameserver) {

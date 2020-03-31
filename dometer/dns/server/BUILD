@@ -1,16 +1,6 @@
 cc_library(
-    name = "options",
-    hdrs = ["options.hpp"],
-    deps = [
-        ":transport_options",
-    ],
-    visibility = ["//visibility:public"]
-)
-
-
-cc_library(
-    name = "server",
-    hdrs = ["server.hpp"],
+    name = "basic_server",
+    hdrs = ["basic_server.hpp"],
     deps = [
         "@net_sourceforge_asio_asio//:asio",
         "//dometer/event:emitter",
@@ -23,14 +13,15 @@ cc_library(
         "//dometer/util:error",
         "//std/x:expected",
         "//std/x:unique",
+        ":server",
     ],
-    srcs = ["server.cpp"],
+    srcs = ["basic_server.cpp"],
     visibility = ["//visibility:public"],
 )
 
 cc_test(
-    name = "server_test",
-    srcs = ["server_test.cpp"],
+    name = "basic_server_test",
+    srcs = ["basic_server_test.cpp"],
     deps = [
         "@com_github_google_googletest//:gtest_main",
         "//dometer/event:mock_emitter",
@@ -47,9 +38,40 @@ cc_test(
         "//dometer/dns/resolver:libresolv_helper",
         "//dometer/dns/resolver:libresolv_resolver",
         "//dometer/util:error",
-        ":server",
+        ":basic_server",
     ],
     visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "mock_server",
+    hdrs = ["mock_server.hpp"],
+    deps = [
+        "@com_github_google_googletest//:gtest",
+        "//dometer/util:error",
+        "//std/x:variant",
+        ":server",
+    ],
+    visibility = ["//visibility:public"]
+)
+
+cc_library(
+    name = "options",
+    hdrs = ["options.hpp"],
+    deps = [
+        ":transport_options",
+    ],
+    visibility = ["//visibility:public"]
+)
+
+cc_library(
+    name = "server",
+    hdrs = ["server.hpp"],
+    deps = [
+        "//dometer/util:error",
+        "//std/x:expected",
+    ],
+    visibility = ["//visibility:public"]
 )
 
 cc_library(

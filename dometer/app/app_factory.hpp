@@ -21,8 +21,6 @@ namespace dometer::app {
         public:
             static std::x::expected<std::shared_ptr<dometer::app::app>, dometer::util::error> make_app(options);
         private:
-            static std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>> make_emitter(
-                    std::shared_ptr<dometer::metrics::recorder>);
             static std::x::expected<std::shared_ptr<dometer::metrics::recorder>, dometer::util::error> make_recorder(
                     const dometer::app::metrics::options);
             static std::x::expected<std::shared_ptr<dometer::dns::resolver::resolver>, dometer::util::error> make_resolver(

@@ -84,7 +84,7 @@ cc_test(
         "//dometer/dns/message:builder",
         "//dometer/dns/message:message_factory",
         "//dometer/dns/message:parser",
-        "//dometer/dns/server:server",
+        "//dometer/dns/server:basic_server",
         "//dometer/event:emitter",
         ":error",
         ":error_code",

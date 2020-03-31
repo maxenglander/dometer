@@ -15,7 +15,7 @@
 #include "dometer/dns/resolver/libresolv_helper.hpp"
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
 #include "dometer/event/mock_emitter.hpp"
-#include "dometer/dns/server/server.hpp"
+#include "dometer/dns/server/basic_server.hpp"
 
 #include "gtest/gtest.h"
 
@@ -27,9 +27,9 @@ using ::testing::Property;
 using ::testing::VariantWith;
 
 namespace dometer::dns::server {
-    class ServerTest : public ::testing::Test {
+    class BasicServerTest : public ::testing::Test {
         public:
-            ServerTest()
+            BasicServerTest()
                 : _emitter(std::make_shared<dometer::event::mock_emitter<dometer::dns::event::any_event>>()),
                   _handler(std::make_shared<dometer::dns::handler::mock_handler>()),
                   _server(_emitter, _handler)
@@ -37,25 +37,25 @@ namespace dometer::dns::server {
         protected:
             std::shared_ptr<dometer::event::mock_emitter<dometer::dns::event::any_event>> _emitter;
             std::shared_ptr<dometer::dns::handler::mock_handler> _handler;
-            server _server;
+            basic_server _server;
     };
 
-    class AutoServerTest : public ServerTest {
+    class AutoBasicServerTest : public BasicServerTest {
         public:
             void SetUp() {
-                _server.start("127.0.0.1", 6353);
+                _server.start("127.0.0.1:6353");
             }
             void TearDown() {
                 _server.stop();
             }
     };
 
-    TEST_F(ServerTest, StartsAndStops) {
-        _server.start("127.0.0.1", 6353);
+    TEST_F(BasicServerTest, StartsAndStops) {
+        _server.start("127.0.0.1:6353");
         _server.stop();
     }
 
-    TEST_F(AutoServerTest, ReceivesAndHandlesRequests) {
+    TEST_F(AutoBasicServerTest, ReceivesAndHandlesRequests) {
         auto message = dometer::dns::message::builder()
             .set_id(54321)
             .set_qr(dometer::dns::qr::query)
@@ -72,7 +72,7 @@ namespace dometer::dns::server {
         ASSERT_TRUE(resolve_result) << resolve_result.error().message;
     }
 
-    TEST_F(AutoServerTest, EmitsAStartAndStopSessionEvent) {
+    TEST_F(AutoBasicServerTest, EmitsAStartAndStopSessionEvent) {
         InSequence s;
 
         auto message = dometer::dns::message::builder()
@@ -90,7 +90,7 @@ namespace dometer::dns::server {
         resolver.resolve("hello.world", dometer::dns::class_::in, dometer::dns::type::a);
     }
 
-    TEST_F(AutoServerTest, IncrementsSessionCounterBetweenCalls) {
+    TEST_F(AutoBasicServerTest, IncrementsSessionCounterBetweenCalls) {
         InSequence s;
 
         auto message = dometer::dns::message::builder()

@@ -23,14 +23,9 @@ namespace dometer::dns::eventmetrics {
           sessions()
     {}
 
-    metric_recording_callback::metric_recording_callback(const metric_recording_callback& src)
+    metric_recording_callback::metric_recording_callback(metric_recording_callback&& src)
         : recorder(src.recorder),
           sessions(src.sessions)
-    {}
-
-    metric_recording_callback::metric_recording_callback(metric_recording_callback&& src)
-        : recorder(std::move(src.recorder)),
-          sessions(std::move(src.sessions))
     {}
 
     void metric_recording_callback::operator() (dometer::dns::event::any_event any_event) {
@@ -66,7 +61,9 @@ namespace dometer::dns::eventmetrics {
 
             [&](const dometer::dns::event::stop_session_event stop_session_event) {
                 auto search = this->sessions.find(stop_session_event.get_session_id());
-                if(search == this->sessions.end()) return;
+                if(search == this->sessions.end()) {
+                    return;
+                }
 
                 auto session = search->second;
                 this->sessions.erase(stop_session_event.get_session_id());

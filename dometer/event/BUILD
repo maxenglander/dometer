@@ -18,6 +18,7 @@ cc_library(
     hdrs = ["mock_emitter.hpp"],
     deps = [
         "@com_github_google_googletest//:gtest",
+        ":emitter",
     ],
     visibility = ["//visibility:public"],
 )

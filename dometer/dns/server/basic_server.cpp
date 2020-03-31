@@ -11,7 +11,7 @@
 #include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/message/message.hpp"
 #include "dometer/dns/handler/handler.hpp"
-#include "dometer/dns/server/server.hpp"
+#include "dometer/dns/server/basic_server.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 #include "std/x/unique.hpp"
@@ -21,7 +21,7 @@ namespace ip = asio::ip;
 namespace util = dometer::util;
 
 namespace dometer::dns::server {
-    server::server(
+    basic_server::basic_server(
             std::shared_ptr<dometer::event::emitter<dometer::dns::event::any_event>> emitter, 
             std::shared_ptr<dns::handler::handler> handler
     )   :   emitter(emitter),
@@ -30,9 +30,9 @@ namespace dometer::dns::server {
             session_counter(0),
             socket(std::x::make_unique<ip::udp::socket>(*io_context)),
             worker_pool(4)
-    { }
+    {}
 
-    void server::handle_request() {
+    void basic_server::handle_request() {
         socket->async_receive_from(
             asio::buffer(request_buffer, sizeof(request_buffer)), remote_endpoint,
             [this](asio::error_code ec, size_t bytes_received) {
@@ -54,11 +54,11 @@ namespace dometer::dns::server {
         );
     }
 
-    void server::join() {
+    void basic_server::join() {
         background_thread.join();
     }
 
-    std::x::expected<void, util::error> server::open_and_bind_socket(ip::udp::endpoint endpoint) {
+    std::x::expected<void, util::error> basic_server::open_and_bind_socket(ip::udp::endpoint endpoint) {
         asio::error_code error;
         if(endpoint.address().is_v4()) {
             socket->open(ip::udp::v4(), error);
@@ -86,7 +86,7 @@ namespace dometer::dns::server {
         return {};
     }
 
-    std::x::expected<void, util::error> server::start(std::string bind_address) {
+    std::x::expected<void, util::error> basic_server::start(std::string bind_address) {
         size_t separator = bind_address.find_last_of(':');
         if(separator == std::string::npos) {
             return std::x::unexpected<util::error>(util::error(
@@ -120,7 +120,7 @@ namespace dometer::dns::server {
         return start(host, port);
     }
 
-    std::x::expected<void, util::error> server::start(std::string address, uint16_t port) {
+    std::x::expected<void, util::error> basic_server::start(std::string address, uint16_t port) {
         asio::error_code error;
         asio::ip::address address_ = asio::ip::make_address(address, error);
         if(error) {
@@ -138,7 +138,7 @@ namespace dometer::dns::server {
         return start(endpoint);
     }
 
-    std::x::expected<void, util::error> server::start(ip::udp::endpoint endpoint) {
+    std::x::expected<void, util::error> basic_server::start(ip::udp::endpoint endpoint) {
         std::x::expected<void, util::error> result = open_and_bind_socket(endpoint);
         if(!result) {
             return std::x::unexpected<util::error>(util::error(
@@ -155,7 +155,7 @@ namespace dometer::dns::server {
         return {};
     }
 
-    void server::stop() {
+    void basic_server::stop() {
         io_context->stop();
         join();
     }

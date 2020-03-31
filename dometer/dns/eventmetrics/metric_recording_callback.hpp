@@ -11,7 +11,7 @@ namespace dometer::dns::eventmetrics {
     class metric_recording_callback {
         public:
             metric_recording_callback(std::shared_ptr<dometer::metrics::recorder>);
-            metric_recording_callback(const metric_recording_callback&);
+            metric_recording_callback(const metric_recording_callback&) = delete;
             metric_recording_callback(metric_recording_callback&&);
             void operator () (dometer::dns::event::any_event);
         private:

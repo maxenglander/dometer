@@ -14,7 +14,7 @@ namespace dometer::event {
             emitter(std::vector<callback<T>>);
             emitter(const emitter&);
             virtual void emit(T t);
-            virtual void on(callback<T> v);
+            virtual void on(const callback<T>&);
         private:
             std::vector<callback<T>> callbacks;
     };

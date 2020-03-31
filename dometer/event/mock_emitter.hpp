@@ -11,6 +11,6 @@ namespace dometer::event {
             mock_emitter() {};
             mock_emitter(mock_emitter&&) {};
             MOCK_METHOD(void, emit, (T));
-            MOCK_METHOD(void, on, (callback<T>));
+            MOCK_METHOD(void, on, (const callback<T>&));
     };
 }

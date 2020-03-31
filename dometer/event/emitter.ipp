@@ -29,7 +29,7 @@ namespace dometer::event {
     }
 
     template <class T>
-    void emitter<T>::on(callback<T> v) {
+    void emitter<T>::on(const callback<T>& v) {
         callbacks.push_back(v);
     }
 }
