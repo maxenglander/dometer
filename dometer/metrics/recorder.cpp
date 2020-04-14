@@ -1,5 +1,6 @@
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "dometer/metrics/counter.hpp"
@@ -9,22 +10,31 @@
 
 namespace dometer::metrics {
     recorder::recorder()
-        : handlers()
+        : _additional_labels(), _handlers()
     {}
 
-    recorder::recorder(std::vector<std::unique_ptr<dometer::metrics::handler::handler>> handlers)
-        : handlers(std::move(handlers))
+    recorder::recorder(std::map<std::string, std::string> additional_labels,
+                       std::vector<std::unique_ptr<dometer::metrics::handler::handler>> handlers)
+        : _additional_labels(additional_labels), _handlers(std::move(handlers))
     {}
 
     void recorder::increment(const counter& counter, std::map<std::string, std::string> labels, uint64_t value) {
-        for(auto it = handlers.begin(); it < handlers.end(); it++) {
-            (*it)->increment(counter, labels, value);
+        std::map<std::string, std::string> merged_labels;
+        merged_labels.insert(_additional_labels.begin(), _additional_labels.end());
+        merged_labels.insert(labels.begin(), labels.end());
+
+        for(auto it = _handlers.begin(); it < _handlers.end(); it++) {
+            (*it)->increment(counter, merged_labels, value);
         }
     }
 
     void recorder::record(const summary& summary, std::map<std::string, std::string> labels, double value) {
-        for(auto it = handlers.begin(); it < handlers.end(); it++) {
-            (*it)->record(summary, labels, value);
+        std::map<std::string, std::string> merged_labels;
+        merged_labels.insert(_additional_labels.begin(), _additional_labels.end());
+        merged_labels.insert(labels.begin(), labels.end());
+
+        for(auto it = _handlers.begin(); it < _handlers.end(); it++) {
+            (*it)->record(summary, merged_labels, value);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "dometer/metrics/counter.hpp"
@@ -14,10 +15,12 @@ namespace dometer::metrics {
             recorder();
             recorder(const recorder&) = delete;
             recorder(recorder&&) = delete;
-            recorder(std::vector<std::unique_ptr<dometer::metrics::handler::handler>>);
+            recorder(std::map<std::string, std::string> additional_labels,
+                     std::vector<std::unique_ptr<dometer::metrics::handler::handler>>);
             virtual void increment(const counter&, std::map<std::string, std::string>, uint64_t);
             virtual void record(const summary&, std::map<std::string, std::string>, double);
         private:
-            std::vector<std::unique_ptr<dometer::metrics::handler::handler>> handlers;
+            std::map<std::string, std::string> _additional_labels;
+            std::vector<std::unique_ptr<dometer::metrics::handler::handler>> _handlers;
     };
 }

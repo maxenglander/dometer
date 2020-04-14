@@ -24,6 +24,6 @@ namespace dometer::metrics {
             handlers.push_back(std::move(*handler));
         }
 
-        return std::make_shared<recorder>(std::move(handlers));
+        return std::make_shared<recorder>(_options.additional_labels, std::move(handlers));
     }
 }

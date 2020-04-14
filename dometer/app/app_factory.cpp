@@ -47,7 +47,7 @@ namespace dometer::app {
                 handlers_result.error()
             ));
         } else {
-            return std::make_shared<dometer::metrics::recorder>(std::move(*handlers_result));
+            return std::make_shared<dometer::metrics::recorder>(options.additional_labels, std::move(*handlers_result));
         }
     }
 
