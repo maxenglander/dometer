@@ -28,10 +28,11 @@ TODO
  - [x] switch to res\_{=\>n}init, res\_{=\>n}query, etc.
  - [x] make sure time is in seconds
  - [x] move app-building logic of cli/main to app/
- - [ ] write tests
- - [ ] fix issue where tests don't pass when all run at once
+ - [x] write tests
+ - [ ] allow user-defined labels
  - [ ] switch summary to histogram
  - [ ] write documentation
+ - [ ] fix issue where tests don't pass when all run at once
  - [ ] make nicer metric observation api
  - [ ] build cmake with bazel
  - [ ] build envsubst with bazel (for generating schema)

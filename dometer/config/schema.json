@@ -72,6 +72,13 @@
     },
     "metrics": {
       "properties": {
+        "additionalLabels": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "handlers": {
           "type": "array",
           "items": {
