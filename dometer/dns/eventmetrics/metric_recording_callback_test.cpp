@@ -16,11 +16,11 @@
 #include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/eventmetrics/metric_recording_callback.hpp"
 #include "dometer/dns/message/message_factory.hpp"
-#include "dometer/dns/metrics/lookup_summary.hpp"
+#include "dometer/dns/metrics/lookup_histogram.hpp"
 #include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/metrics/mock_recorder.hpp"
-#include "dometer/metrics/summary.hpp"
+#include "dometer/metrics/histogram.hpp"
 #include "gtest/gtest.h"
 #include "std/x/expected.hpp"
 
@@ -92,30 +92,30 @@ namespace dometer::dns::eventmetrics {
             metric_recording_callback_client _client;
     };
 
-    Matcher<const dometer::metrics::summary&> IsALookupSummary() {
+    Matcher<const dometer::metrics::histogram&> IsALookupHistogram() {
         return AllOf(
-            Field(&dometer::metrics::summary::name, Eq(dometer::dns::metrics::lookup_summary::instance.name)),
-            Field(&dometer::metrics::summary::description, Eq(dometer::dns::metrics::lookup_summary::instance.description)),
-            Field(&dometer::metrics::summary::type, Eq(dometer::dns::metrics::lookup_summary::instance.type)),
-            Field(&dometer::metrics::summary::unit, Eq(dometer::dns::metrics::lookup_summary::instance.unit))
+            Field(&dometer::metrics::histogram::name, Eq(dometer::dns::metrics::lookup_histogram::instance.name)),
+            Field(&dometer::metrics::histogram::description, Eq(dometer::dns::metrics::lookup_histogram::instance.description)),
+            Field(&dometer::metrics::histogram::type, Eq(dometer::dns::metrics::lookup_histogram::instance.type)),
+            Field(&dometer::metrics::histogram::unit, Eq(dometer::dns::metrics::lookup_histogram::instance.unit))
         );
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_RecordsAnObservation) {
-        EXPECT_CALL(*_recorder, record).Times(0);
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, _)).Times(0);
 
         _client.start_session(54321);
         _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
         _client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50", 1000);
         _client.parse_reply(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50");
 
-        EXPECT_CALL(*_recorder, record).Times(1);
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, _)).Times(1);
 
         _client.stop_session(54321);
     }
 
-    TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_TheRecordedObservation_IsALookupSummary) {
-        EXPECT_CALL(*_recorder, record(IsALookupSummary(), _, _));
+    TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_TheRecordedObservation_IsALookupHistogram) {
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, _));
 
         _client.start_session(54321);
         _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
@@ -125,7 +125,7 @@ namespace dometer::dns::eventmetrics {
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_TheRecordedObservation_HasQueryLabels) {
-        EXPECT_CALL(*_recorder, record(_, IsSupersetOf(std::map<std::string, std::string>({
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), IsSupersetOf(std::map<std::string, std::string>({
             {"qname", "hello.world"}, {"qtype", dometer::dns::type::a}, {"qclass", dometer::dns::class_::in}
         })), _));
 
@@ -137,7 +137,7 @@ namespace dometer::dns::eventmetrics {
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_TheRecordedObservation_HasRcodeLabel) {
-        EXPECT_CALL(*_recorder, record(_, IsSupersetOf(std::map<std::string, std::string>({
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), IsSupersetOf(std::map<std::string, std::string>({
             {"rcode", dometer::dns::rcode::noerror}
         })), _));
 
@@ -149,7 +149,7 @@ namespace dometer::dns::eventmetrics {
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_TheRecordedObservation_HasEmptyErrorLabel) {
-        EXPECT_CALL(*_recorder, record(_, IsSupersetOf(std::map<std::string, std::string>({
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), IsSupersetOf(std::map<std::string, std::string>({
             {"error", "-"}
         })), _));
 
@@ -161,7 +161,7 @@ namespace dometer::dns::eventmetrics {
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_TheRecordedObservation_HasExpectedDuration) {
-        EXPECT_CALL(*_recorder, record(_, _, (double)1000/1000000));
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, (double)1000/1000000));
 
         _client.start_session(54321);
         _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
@@ -171,7 +171,7 @@ namespace dometer::dns::eventmetrics {
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_WithResolverError_TheRecordedObservation_HasExpectedErrorLabel) {
-        EXPECT_CALL(*_recorder, record(_, IsSupersetOf(std::map<std::string, std::string>({
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), IsSupersetOf(std::map<std::string, std::string>({
             {"error", "CONNREFUSED"}
         })), _));
 
@@ -184,7 +184,7 @@ namespace dometer::dns::eventmetrics {
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_WithoutResolveQueryEvent_DoesNotRecordAnObservation) {
-        EXPECT_CALL(*_recorder, record).Times(0);
+        EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, _)).Times(0);
 
         _client.start_session(54321);
         _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);

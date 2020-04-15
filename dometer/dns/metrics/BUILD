@@ -22,6 +22,17 @@ cc_library(
 )
 
 cc_library(
+    name = "lookup_histogram",
+    deps = [
+        "//dometer/metrics:histogram",
+        "//dometer/metrics:unit",
+    ],
+    hdrs = ["lookup_histogram.hpp"],
+    srcs = ["lookup_histogram.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "lookup_summary",
     deps = [
         "//dometer/metrics:summary",

@@ -12,7 +12,7 @@
 #include "dometer/dns/event/start_session_event.hpp"
 #include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/eventmetrics/metric_recording_callback.hpp"
-#include "dometer/dns/metrics/lookup_summary.hpp"
+#include "dometer/dns/metrics/lookup_histogram.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/metrics/recorder.hpp"
 #include "std/x/variant.hpp"
@@ -90,7 +90,7 @@ namespace dometer::dns::eventmetrics {
                 }
 
                 double value = 0.0;
-                switch(dometer::dns::metrics::lookup_summary::instance.unit) {
+                switch(dometer::dns::metrics::lookup_histogram::instance.unit) {
                     case dometer::metrics::unit::seconds:
                         value = std::chrono::duration_cast<std::chrono::duration<double>>(resolve_query_event->get_duration()).count();
                         break;
@@ -99,7 +99,7 @@ namespace dometer::dns::eventmetrics {
                         return;
                 }
 
-                this->recorder->record(dometer::dns::metrics::lookup_summary::instance, labels, value);
+                this->recorder->record(dometer::dns::metrics::lookup_histogram::instance, labels, value);
             }
         ), any_event);
     }

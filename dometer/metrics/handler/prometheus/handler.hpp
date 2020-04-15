@@ -10,6 +10,7 @@
 #include "dometer/metrics/handler/handler.hpp"
 #include "dometer/metrics/handler/prometheus/metric_cache.hpp"
 #include "dometer/metrics/metric.hpp"
+#include "dometer/metrics/histogram.hpp"
 #include "dometer/metrics/summary.hpp"
 #include "prometheus/counter.h"
 #include "prometheus/registry.h"
@@ -41,6 +42,7 @@ namespace dometer::metrics::handler::prometheus {
             handler(handler&&) = delete;
 
             virtual void increment(const dometer::metrics::counter&, std::map<std::string, std::string>, uint64_t);
+            virtual void record(const dometer::metrics::histogram&, std::map<std::string, std::string>, double);
             virtual void record(const dometer::metrics::summary&, std::map<std::string, std::string>, double);
         private:
             template<typename T>

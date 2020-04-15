@@ -3,6 +3,7 @@ cc_library(
     hdrs = ["handler.hpp"],
     deps = [
         "//dometer/metrics:counter",
+        "//dometer/metrics:histogram",
         "//dometer/metrics:summary",
         "//std/x:variant",
     ],

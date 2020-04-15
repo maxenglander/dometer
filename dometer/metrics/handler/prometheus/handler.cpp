@@ -102,6 +102,21 @@ namespace dometer::metrics::handler::prometheus {
         }
     }
 
+    void handler::record(const dometer::metrics::histogram& histogram,
+                         std::map<std::string, std::string> labels,
+                         double value) {
+        auto metric_family_ref = get_or_build_metric_family<::prometheus::Histogram, decltype(::prometheus::BuildHistogram)>(
+            histogram.name, histogram.description, ::prometheus::BuildHistogram
+        );
+        
+        if(metric_family_ref) {
+            ::prometheus::Family<::prometheus::Histogram>& metric_family = *metric_family_ref;
+            ::prometheus::Histogram& prom_histogram = metric_family.Add(labels, histogram.buckets);
+            prom_histogram.Observe(value);
+            cache_metric(&prom_histogram, { histogram.name, 2/*count and sum*/ + histogram.buckets.size() + 1/*+Inf*/ });
+        }
+    }
+
     void handler::record(const dometer::metrics::summary& summary,
                          std::map<std::string, std::string> labels,
                          double value) {

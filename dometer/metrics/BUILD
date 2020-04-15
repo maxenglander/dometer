@@ -29,6 +29,19 @@ cc_library(
 )
 
 cc_library(
+    name = "histogram",
+    deps = [
+        ":label",
+        ":metric",
+        ":type",
+        ":unit",
+    ],
+    hdrs = ["histogram.hpp"],
+    srcs = ["histogram.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "label",
     deps = [],
     hdrs = ["label.hpp"],
@@ -97,6 +110,7 @@ cc_library(
     deps = [
         "//dometer/metrics/handler:handler",
         ":counter",
+        ":histogram",
         ":summary",
     ],
     hdrs = ["recorder.hpp"],
