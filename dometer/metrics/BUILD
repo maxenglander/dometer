@@ -19,12 +19,13 @@ cc_library(
 )
 
 cc_library(
-    name = "example_counter",
+    name = "example_histogram",
     deps = [
-        ":counter",
+        ":histogram",
+        ":unit",
     ],
-    hdrs = ["example_counter.hpp"],
-    srcs = ["example_counter.cpp"],
+    hdrs = ["example_histogram.hpp"],
+    srcs = ["example_histogram.cpp"],
     visibility = ["//visibility:public"],
 )
 
@@ -92,7 +93,6 @@ cc_library(
     hdrs = ["mock_recorder.hpp"],
     deps = [
         "@com_github_google_googletest//:gtest",
-        ":counter",
         ":recorder",
     ],
     visibility = ["//visibility:public"],
@@ -111,7 +111,6 @@ cc_library(
     name = "recorder",
     deps = [
         "//dometer/metrics/handler:handler",
-        ":counter",
         ":histogram",
     ],
     hdrs = ["recorder.hpp"],

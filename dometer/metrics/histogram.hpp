@@ -10,9 +10,9 @@
 namespace dometer::metrics {
     struct histogram : metric {
         histogram(std::string,
-                std::string,
-                std::vector<double> buckets,
-                dometer::metrics::unit _unit);
+                  std::string,
+                  std::vector<double> buckets,
+                  dometer::metrics::unit _unit);
         const std::vector<double> buckets;
     };
 }

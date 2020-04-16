@@ -2,7 +2,6 @@ cc_library(
     name = "handler",
     deps = [
         "@com_github_jupp0r_prometheus_cpp//core",
-        "//dometer/metrics:counter",
         "//dometer/metrics:metric",
         "//dometer/metrics/handler:handler",
         "//dometer/util:error",
@@ -22,7 +21,7 @@ cc_test(
         "@com_github_google_googletest//:gtest_main",
         "@com_github_jupp0r_prometheus_cpp//core",
         "//prometheus/x:types",
-        "//dometer/metrics:counter",
+        "//dometer/metrics:example_histogram",
         ":handler",
         ":metric_cache",
     ],

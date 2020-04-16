@@ -8,11 +8,9 @@
 #include <utility>
 #include <vector>
 
-#include "dometer/metrics/counter.hpp"
 #include "dometer/metrics/handler/prometheus/handler.hpp"
 #include "dometer/metrics/metric.hpp"
 #include "dometer/util/error.hpp"
-#include "prometheus/counter.h"
 #include "prometheus/registry.h"
 #include "prometheus/x/types.hpp"
 #include "std/x/expected.hpp"
@@ -84,21 +82,6 @@ namespace dometer::metrics::handler::prometheus {
         return std::x::unexpected<util::error>(util::error(
             "A metric with this name, but a different type, already exists"
         ));
-    }
-
-    void handler::increment(const dometer::metrics::counter& counter,
-                            std::map<std::string, std::string> labels,
-                            uint64_t value) {
-        auto metric_family_ref = get_or_build_metric_family<::prometheus::Counter, decltype(::prometheus::BuildCounter)>(
-            counter.name, counter.description, ::prometheus::BuildCounter
-        );
-        
-        if(metric_family_ref) {
-            ::prometheus::Family<::prometheus::Counter>& metric_family = *metric_family_ref;
-            ::prometheus::Counter& prom_counter = metric_family.Add(labels);
-            prom_counter.Increment(value);
-            cache_metric(&prom_counter, { counter.name, 1 });
-        }
     }
 
     void handler::record(const dometer::metrics::histogram& histogram,
