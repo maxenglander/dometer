@@ -11,10 +11,8 @@
 #include "dometer/metrics/handler/prometheus/metric_cache.hpp"
 #include "dometer/metrics/metric.hpp"
 #include "dometer/metrics/histogram.hpp"
-#include "dometer/metrics/summary.hpp"
 #include "prometheus/counter.h"
 #include "prometheus/registry.h"
-#include "prometheus/summary.h"
 #include "prometheus/x/types.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
@@ -43,7 +41,6 @@ namespace dometer::metrics::handler::prometheus {
 
             virtual void increment(const dometer::metrics::counter&, std::map<std::string, std::string>, uint64_t);
             virtual void record(const dometer::metrics::histogram&, std::map<std::string, std::string>, double);
-            virtual void record(const dometer::metrics::summary&, std::map<std::string, std::string>, double);
         private:
             template<typename T>
             void cache_metric(T* t, ::prometheus::x::FamilyNameAndTimeSeriesCount);

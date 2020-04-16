@@ -33,17 +33,6 @@ cc_library(
 )
 
 cc_library(
-    name = "lookup_summary",
-    deps = [
-        "//dometer/metrics:summary",
-        "//dometer/metrics:unit",
-    ],
-    hdrs = ["lookup_summary.hpp"],
-    srcs = ["lookup_summary.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "type_label",
     deps = [
         "//dometer/dns:type",

@@ -61,9 +61,7 @@ namespace dometer::dns::eventmetrics {
 
             [&](const dometer::dns::event::stop_session_event stop_session_event) {
                 auto search = this->sessions.find(stop_session_event.get_session_id());
-                if(search == this->sessions.end()) {
-                    return;
-                }
+                if(search == this->sessions.end()) return;
 
                 auto session = search->second;
                 this->sessions.erase(stop_session_event.get_session_id());

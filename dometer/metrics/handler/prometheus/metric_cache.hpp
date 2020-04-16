@@ -2,7 +2,6 @@
 
 #include "dometer/util/lru_map.hpp"
 #include "prometheus/counter.h"
-#include "prometheus/summary.h"
 #include "prometheus/x/types.hpp"
 
 namespace util = dometer::util;

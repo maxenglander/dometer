@@ -4,7 +4,6 @@ cc_library(
         "@com_github_jupp0r_prometheus_cpp//core",
         "//dometer/metrics:counter",
         "//dometer/metrics:metric",
-        "//dometer/metrics:summary",
         "//dometer/metrics/handler:handler",
         "//dometer/util:error",
         "//prometheus/x:types",

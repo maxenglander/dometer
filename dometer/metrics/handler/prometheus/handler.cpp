@@ -14,7 +14,6 @@
 #include "dometer/util/error.hpp"
 #include "prometheus/counter.h"
 #include "prometheus/registry.h"
-#include "prometheus/summary.h"
 #include "prometheus/x/types.hpp"
 #include "std/x/expected.hpp"
 
@@ -114,25 +113,6 @@ namespace dometer::metrics::handler::prometheus {
             ::prometheus::Histogram& prom_histogram = metric_family.Add(labels, histogram.buckets);
             prom_histogram.Observe(value);
             cache_metric(&prom_histogram, { histogram.name, 2/*count and sum*/ + histogram.buckets.size() + 1/*+Inf*/ });
-        }
-    }
-
-    void handler::record(const dometer::metrics::summary& summary,
-                         std::map<std::string, std::string> labels,
-                         double value) {
-        auto metric_family_ref = get_or_build_metric_family<::prometheus::Summary, decltype(::prometheus::BuildSummary)>(
-            summary.name, summary.description, ::prometheus::BuildSummary
-        );
-        
-        if(metric_family_ref) {
-            ::prometheus::Family<::prometheus::Summary>& metric_family = *metric_family_ref;
-            ::prometheus::Summary& prom_summary = metric_family.Add(labels,
-                ::prometheus::Summary::Quantiles{
-                    {0.5, 0.5}, {0.9, 0.1}, {0.95, 0.005}, {0.99, 0.001}
-                }
-            );
-            prom_summary.Observe(value);
-            cache_metric(&prom_summary, { summary.name, 2 + 4});
         }
     }
 }

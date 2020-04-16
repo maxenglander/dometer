@@ -4,7 +4,6 @@ cc_library(
     deps = [
         "//dometer/metrics:counter",
         "//dometer/metrics:histogram",
-        "//dometer/metrics:summary",
         "//std/x:variant",
     ],
     visibility = ["//visibility:public"],

@@ -6,7 +6,6 @@
 #include "dometer/metrics/counter.hpp"
 #include "dometer/metrics/histogram.hpp"
 #include "dometer/metrics/recorder.hpp"
-#include "dometer/metrics/summary.hpp"
 #include "gmock/gmock.h"
 
 namespace dometer::metrics {
@@ -15,6 +14,5 @@ namespace dometer::metrics {
             mock_recorder() {}
             MOCK_METHOD(void, increment, (const counter&, (std::map<std::string, std::string>), uint64_t));
             MOCK_METHOD(void, record, (const histogram&, (std::map<std::string, std::string>), double));
-            MOCK_METHOD(void, record, (const summary&, (std::map<std::string, std::string>), double));
     };
 }

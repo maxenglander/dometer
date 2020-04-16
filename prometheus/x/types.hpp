@@ -6,7 +6,6 @@
 #include "prometheus/exposer.h"
 #include "prometheus/family.h"
 #include "prometheus/gateway.h"
-#include "prometheus/summary.h"
 #include "std/x/variant.hpp"
 
 namespace prometheus::x {
@@ -20,9 +19,8 @@ namespace prometheus::x {
     using FamilyRef = std::reference_wrapper<prometheus::Family<T>>;
     using AnyFamilyRef = std::x::variant<
         FamilyRef<prometheus::Counter>,
-        FamilyRef<prometheus::Histogram>,
-        FamilyRef<prometheus::Summary
-    >>;
-    using AnyMetricPtr = std::x::variant<prometheus::Counter*, prometheus::Histogram*, prometheus::Summary*>;
+        FamilyRef<prometheus::Histogram>
+    >;
+    using AnyMetricPtr = std::x::variant<prometheus::Counter*, prometheus::Histogram*>;
     using Transport = std::x::variant<prometheus::Exposer, prometheus::Gateway>;
 }

@@ -7,7 +7,6 @@
 #include "dometer/metrics/handler/handler.hpp"
 #include "dometer/metrics/histogram.hpp"
 #include "dometer/metrics/recorder.hpp"
-#include "dometer/metrics/summary.hpp"
 
 namespace dometer::metrics {
     recorder::recorder()
@@ -36,16 +35,6 @@ namespace dometer::metrics {
 
         for(auto it = _handlers.begin(); it < _handlers.end(); it++) {
             (*it)->record(histogram, merged_labels, value);
-        }
-    }
-
-    void recorder::record(const summary& summary, std::map<std::string, std::string> labels, double value) {
-        std::map<std::string, std::string> merged_labels;
-        merged_labels.insert(_additional_labels.begin(), _additional_labels.end());
-        merged_labels.insert(labels.begin(), labels.end());
-
-        for(auto it = _handlers.begin(); it < _handlers.end(); it++) {
-            (*it)->record(summary, merged_labels, value);
         }
     }
 }

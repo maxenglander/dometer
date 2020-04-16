@@ -94,7 +94,6 @@ cc_library(
         "@com_github_google_googletest//:gtest",
         ":counter",
         ":recorder",
-        ":summary",
     ],
     visibility = ["//visibility:public"],
 )
@@ -114,7 +113,6 @@ cc_library(
         "//dometer/metrics/handler:handler",
         ":counter",
         ":histogram",
-        ":summary",
     ],
     hdrs = ["recorder.hpp"],
     srcs = ["recorder.cpp"],
@@ -144,19 +142,6 @@ cc_library(
     ],
     hdrs = ["string_label.hpp"],
     srcs = ["string_label.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "summary",
-    deps = [
-        ":label",
-        ":metric",
-        ":type",
-        ":unit",
-    ],
-    hdrs = ["summary.hpp"],
-    srcs = ["summary.cpp"],
     visibility = ["//visibility:public"],
 )
 
