@@ -12,6 +12,16 @@ cc_library(
 )
 
 cc_library(
+    name = "options",
+    hdrs = ["options.hpp"],
+    deps = [
+      "//dometer/dns/resolver:options",
+      "//dometer/dns/server:options",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "qr",
     hdrs = ["qr.hpp"],
     visibility = ["//visibility:public"],

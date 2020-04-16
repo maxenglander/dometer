@@ -4,7 +4,7 @@ cc_library(
     srcs = ["parser.cpp"],
     deps = [
         "@com_github_open-source-parsers_jsoncpp//:jsoncpp",
-        "//dometer/app/metrics:options",
+        "//dometer/metrics:options",
         "//dometer/config/metrics/handler:parser",
     ],
     visibility = ["//visibility:public"],

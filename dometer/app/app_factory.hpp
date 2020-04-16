@@ -4,9 +4,8 @@
 
 #include "dometer/app/app.hpp"
 #include "dometer/app/options.hpp"
-#include "dometer/app/dns/options.hpp"
-#include "dometer/app/metrics/options.hpp"
 #include "dometer/dns/event/any_event.hpp"
+#include "dometer/dns/options.hpp"
 #include "dometer/dns/resolver/options.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
 #include "dometer/dns/server/server.hpp"
@@ -22,7 +21,7 @@ namespace dometer::app {
             static std::x::expected<std::shared_ptr<dometer::app::app>, dometer::util::error> make_app(options);
         private:
             static std::x::expected<std::shared_ptr<dometer::metrics::recorder>, dometer::util::error> make_recorder(
-                    const dometer::app::metrics::options);
+                    const dometer::metrics::options);
             static std::x::expected<std::shared_ptr<dometer::dns::resolver::resolver>, dometer::util::error> make_resolver(
                     dometer::dns::resolver::options);
             static std::shared_ptr<dometer::dns::server::server> make_server(

@@ -4,14 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "dometer/app/metrics/options.hpp"
 #include "dometer/config/metrics/handler/parser.hpp"
 #include "dometer/config/metrics/parser.hpp"
 #include "dometer/metrics/handler/options.hpp"
+#include "dometer/metrics/options.hpp"
 #include "json/json.h"
 #include "json/value.h"
-
-namespace app = dometer::app;
 
 namespace dometer::config::metrics {
     parser::parser()
@@ -20,7 +18,7 @@ namespace dometer::config::metrics {
     parser::parser(dometer::config::metrics::handler::parser handler_parser)
         : handler_parser(handler_parser) {}
 
-    dometer::app::metrics::options parser::from_json(const Json::Value& json_value) const {
+    dometer::metrics::options parser::from_json(const Json::Value& json_value) const {
         std::map<std::string, std::string> additional_labels;
         if(json_value.isMember("additionalLabels")) {
             assert(json_value["additionalLabels"].isObject());
@@ -41,7 +39,7 @@ namespace dometer::config::metrics {
             handlers.push_back(handler_parser.from_json(json_value["handlers"][i]));
         }
 
-        return dometer::app::metrics::options{
+        return dometer::metrics::options{
             additional_labels,
             handlers
         };

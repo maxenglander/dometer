@@ -31,9 +31,9 @@ TODO
  - [x] write tests
  - [x] allow user-defined labels
  - [x] switch summary to histogram
- - [ ] allow user-defined histogram buckets
  - [ ] make nicer metric observation api
  - [ ] write documentation
+ - [ ] allow user-defined histogram buckets
  - [ ] fix issue where tests don't pass when all run at once
  - [ ] build cmake with bazel
  - [ ] build envsubst with bazel (for generating schema)

@@ -4,9 +4,8 @@
 #include "dometer/app/app.hpp"
 #include "dometer/app/app_factory.hpp"
 #include "dometer/app/options.hpp"
-#include "dometer/app/dns/options.hpp"
-#include "dometer/app/metrics/options.hpp"
 #include "dometer/dns/event/any_event.hpp"
+#include "dometer/dns/options.hpp"
 #include "dometer/dns/handler/handler.hpp"
 #include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/dns/resolver/options.hpp"
@@ -39,7 +38,7 @@ namespace dometer::app {
     }
 
     std::x::expected<std::shared_ptr<dometer::metrics::recorder>, dometer::util::error> app_factory::make_recorder(
-            const dometer::app::metrics::options options) {
+            const dometer::metrics::options options) {
         auto handlers_result = dometer::metrics::handler::handler_factory::make_handlers(options.handlers);
         if(!handlers_result) {
             return std::x::unexpected<dometer::util::error>(dometer::util::error(

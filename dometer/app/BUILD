@@ -45,6 +45,7 @@ cc_test(
     name = "app_test",
     srcs = ["app_test.cpp"],
     deps = [
+        "@com_github_google_googletest//:gtest_main",
         "//dometer/dns/server:mock_server",
         "//dometer/event:mock_emitter",
         "//dometer/metrics:mock_recorder",
@@ -59,9 +60,8 @@ cc_library(
     name = "options",
     hdrs = ["options.hpp"],
     deps = [
-        "@com_github_google_googletest//:gtest_main",
-        "//dometer/app/dns:options",
-        "//dometer/app/metrics:options",
+        "//dometer/dns:options",
+        "//dometer/metrics:options",
     ],
     visibility = ["//visibility:public"],
 )

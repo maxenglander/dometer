@@ -3,7 +3,7 @@ cc_library(
     hdrs = ["parser.hpp"],
     srcs = ["parser.cpp"],
     deps = [
-      "//dometer/app/dns:options",
+      "//dometer/dns:options",
       "//dometer/config/dns/resolver:parser",
       "//dometer/config/dns/server:parser",
     ],

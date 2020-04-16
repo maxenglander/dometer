@@ -7,7 +7,7 @@
 
 namespace dometer::metrics {
     struct options {
-        const std::map<std::string, std::string> additional_labels;
-        const std::vector<dometer::metrics::handler::options> handlers;
+        std::map<std::string, std::string> additional_labels;
+        std::vector<dometer::metrics::handler::options> handlers;
     };
 }
