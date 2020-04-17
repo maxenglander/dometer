@@ -13,7 +13,9 @@
 #include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/eventmetrics/metric_recording_callback.hpp"
 #include "dometer/dns/metrics/lookup_histogram.hpp"
+#include "dometer/dns/metrics/lookup_observation_builder.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
+#include "dometer/metrics/observation.hpp"
 #include "dometer/metrics/recorder.hpp"
 #include "std/x/variant.hpp"
 
@@ -70,34 +72,28 @@ namespace dometer::dns::eventmetrics {
                 auto resolve_query_event = session.get_resolve_query_event();
 
                 std::map<std::string, std::string> labels;
+                dometer::dns::metrics::lookup_observation_builder lookup_observation_builder;
 
                 auto question = resolve_query_event->get_question();
-                labels["qclass"] = static_cast<std::string>(question.qclass);
-                labels["qname"] = question.qname;
-                labels["qtype"] = static_cast<std::string>(question.qtype);
+                lookup_observation_builder.qclass(question.qclass).qname(question.qname).qtype(question.qtype);
 
-                labels["error"] = "-";
-                labels["rcode"] = "-";
                 auto resolution = resolve_query_event->get_resolution();
                 if(!resolution) {
-                    labels["error"] = dometer::dns::resolver::to_string(resolution.error().code);
+                    lookup_observation_builder.error(resolution.error());
                 } else if(auto parse_reply_event = session.get_parse_reply_event()) {
                     if(auto reply = parse_reply_event->get_message()) {
-                        labels["rcode"] = static_cast<std::string>(reply->get_rcode());
+                        lookup_observation_builder.rcode(reply->get_rcode());
                     }
                 }
 
-                double value = 0.0;
-                switch(dometer::dns::metrics::lookup_histogram::instance.unit) {
-                    case dometer::metrics::unit::seconds:
-                        value = std::chrono::duration_cast<std::chrono::duration<double>>(resolve_query_event->get_duration()).count();
-                        break;
-                    default:
-                        /* Unsupported unit. */
-                        return;
-                }
+                lookup_observation_builder.duration(resolve_query_event->get_duration(),
+                                                    dometer::dns::metrics::lookup_histogram::instance.unit);
 
-                this->recorder->record(dometer::dns::metrics::lookup_histogram::instance, labels, value);
+                auto observation = lookup_observation_builder.build();
+
+                this->recorder->record(dometer::dns::metrics::lookup_histogram::instance,
+                                       observation.labels,
+                                       observation.value);
             }
         ), any_event);
     }

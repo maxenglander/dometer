@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "dometer/metrics/label.hpp"
 #include "dometer/metrics/type.hpp"
 #include "dometer/metrics/unit.hpp"
 

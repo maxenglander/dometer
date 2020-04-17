@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "dometer/metrics/label.hpp"
 #include "dometer/metrics/metric.hpp"
 #include "dometer/metrics/unit.hpp"
 

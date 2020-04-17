@@ -1,27 +1,4 @@
 cc_library(
-    name = "class_label",
-    deps = [
-        "//dometer/dns:class",
-        "//dometer/metrics:label",
-    ],
-    hdrs = ["class_label.hpp"],
-    srcs = ["class_label.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "labels",
-    deps = [
-        "//dometer/metrics:label",
-        ":class_label",
-        ":type_label",
-    ],
-    hdrs = ["labels.hpp"],
-    srcs = ["labels.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "lookup_histogram",
     deps = [
         "//dometer/metrics:histogram",
@@ -33,12 +10,18 @@ cc_library(
 )
 
 cc_library(
-    name = "type_label",
-    deps = [
-        "//dometer/dns:type",
-        "//dometer/metrics:label",
+    name = "lookup_observation_builder",
+    hdrs = [
+        "lookup_observation_builder.hpp",
+        "lookup_observation_builder.ipp"
     ],
-    hdrs = ["type_label.hpp"],
-    srcs = ["type_label.cpp"],
+    deps = [
+        "//dometer/dns:class",
+        "//dometer/dns:rcode",
+        "//dometer/dns:type",
+        "//dometer/dns/resolver:error",
+        "//dometer/metrics:observation_builder",
+        "//dometer/metrics:unit",
+    ],
     visibility = ["//visibility:public"],
 )

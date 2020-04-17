@@ -31,7 +31,7 @@ TODO
  - [x] write tests
  - [x] allow user-defined labels
  - [x] switch summary to histogram
- - [ ] make nicer metric observation api
+ - [x] make nicer metric observation api
  - [ ] write documentation
  - [ ] allow user-defined histogram buckets
  - [ ] fix issue where tests don't pass when all run at once
