@@ -37,7 +37,7 @@ jobs:
           cmake --version
       - id: download_bazel
         name: Download Bazel(isk)
-        if: steps.check_bazel.outcome == "failure"
+        if: steps.check_bazel.outcome == 'failure'
         run: |
           curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.4.0/bazelisk-${{ matrix.os }}-amd64"
           mkdir -p "${GITHUB_WORKSPACE}/bin/"
