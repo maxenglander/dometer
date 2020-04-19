@@ -44,3 +44,11 @@ jobs:
           mv bazelisk-${{ matrix.os }}-amd64 "${GITHUB_WORKSPACE}/bin/bazel"
           chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
           "${GITHUB_WORKSPACE}/bin/bazel" version
+      - id: build_all
+        name: Build all sources and tests
+        run: |
+          bazel build ...
+      - id: test_all
+        name: Run all tests
+        run: |
+          bazel test ...
