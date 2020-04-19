@@ -14,14 +14,18 @@ jobs:
         include:
           - platform: macos-latest
             os: darwin
-          - platform: ubuntu-latet
+          - platform: ubuntu-latest
             os: linux
     runs-on: ${{ matrix.platform }}    
     steps:
       - id: checkout
         name: Checkout
         uses: actions/checkout@v1
-      - id: download-bazelisk
-        name: Download Bazelisk
+      - id: download-bazel
+        name: Download Bazel(isk)
         run: |
-          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.4.0/bazelisk-${{matrix.os}}-amd64"
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.4.0/bazelisk-${{ matrix.os }}-amd64"
+          mkdir -p "${GITHUB_WORKSPACE}/bin/"
+          mv bazelisk-${{ matrix.os }}-amd64 "${GITHUB_WORKSPACE}/bin/bazel"
+          chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
+          "${GITHUB_WORKSPACE}/bin/bazel" version
