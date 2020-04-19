@@ -7,12 +7,12 @@
 #include <string.h>
 #include <utility>
 
-#include "dometer/dns/class.hpp"
-#include "dometer/dns/opcode.hpp"
-#include "dometer/dns/qr.hpp"
-#include "dometer/dns/rcode.hpp"
-#include "dometer/dns/record.hpp"
+#include "dometer/dns/message/opcode.hpp"
+#include "dometer/dns/message/qr.hpp"
+#include "dometer/dns/message/rcode.hpp"
 #include "dometer/dns/message/message.hpp"
+#include "dometer/dns/record/class.hpp"
+#include "dometer/dns/record/record.hpp"
 #include "dometer/util/array_helper.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
@@ -25,8 +25,7 @@ namespace dometer::dns::message {
         :   message(std::move(util::array_helper::make_unique_copy<uint8_t>(
                 _message.bytes.get(), _message.size())), _message.size()
             )
-    {
-    }
+    {}
 
     message::message(message&& message)
         :   bytes(std::move(message.bytes)),
@@ -59,9 +58,6 @@ namespace dometer::dns::message {
             handle(handle)
     {}
 
-    message::~message() {
-    }
-
     bool message::get_aa() const {
         return ns_msg_getflag(handle, ns_f_aa);
     }
@@ -70,8 +66,8 @@ namespace dometer::dns::message {
         return ns_msg_count(handle, ns_s_an);
     }
 
-    std::x::expected<std::vector<dometer::dns::record>, util::error> message::get_answers() const {
-        std::vector<dometer::dns::record> answers;
+    std::x::expected<std::vector<dometer::dns::record::record>, util::error> message::get_answers() const {
+        std::vector<dometer::dns::record::record> answers;
 
         ns_msg handle_ = handle;
         for(int i = 0; i < get_an_count(); i++) {
@@ -84,10 +80,10 @@ namespace dometer::dns::message {
                 ));
             }
 
-            answers.push_back(dometer::dns::record{
+            answers.push_back(dometer::dns::record::record{
                 std::string(ns_rr_name(answer)),
-                dometer::dns::type(ns_rr_type(answer)),
-                dometer::dns::class_(ns_rr_class(answer)),
+                dometer::dns::record::type(ns_rr_type(answer)),
+                dometer::dns::record::class_(ns_rr_class(answer)),
                 ns_rr_ttl(answer),
                 std::string(inet_ntoa(*(struct in_addr*)ns_rr_rdata(answer)))
             });
@@ -112,7 +108,7 @@ namespace dometer::dns::message {
         return static_cast<qr>(ns_msg_getflag(handle, ns_f_qr));
     }
 
-    std::x::expected<dometer::dns::question, util::error> message::get_question() const {
+    std::x::expected<dometer::dns::message::question, util::error> message::get_question() const {
         if(get_qd_count() != 1)
             return std::x::unexpected<util::error>(util::error("Message qd count is not equal to 1."));
 
@@ -125,10 +121,10 @@ namespace dometer::dns::message {
                 util::error(strerror(errno), errno)
             ));
         }
-        return dometer::dns::question{
+        return dometer::dns::message::question{
             std::string(ns_rr_name(question)),
-            type(ns_rr_type(question)),
-            class_(ns_rr_class(question))
+            dometer::dns::record::type(ns_rr_type(question)),
+            dometer::dns::record::class_(ns_rr_class(question))
         };
     }
 

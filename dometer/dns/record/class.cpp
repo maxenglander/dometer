@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <string>
 
-#include "dometer/dns/class.hpp"
+#include "dometer/dns/record/class.hpp"
 
-namespace dometer::dns {
+namespace dometer::dns::record {
     const class_ class_::in = class_(ns_c_in);
 
     class_::class_(uint16_t value) : value(value) {}

@@ -6,17 +6,17 @@
 #include <string.h>
 #include <utility>
 
-#include "dometer/dns/class.hpp"
-#include "dometer/dns/opcode.hpp"
-#include "dometer/dns/qr.hpp"
-#include "dometer/dns/rcode.hpp"
-#include "dometer/dns/record.hpp"
-#include "dometer/dns/question.hpp"
-#include "dometer/dns/type.hpp"
 #include "dometer/dns/message/builder.hpp"
 #include "dometer/dns/message/message.hpp"
 #include "dometer/dns/message/message_factory.hpp"
+#include "dometer/dns/message/opcode.hpp"
 #include "dometer/dns/message/parser.hpp"
+#include "dometer/dns/message/qr.hpp"
+#include "dometer/dns/message/question.hpp"
+#include "dometer/dns/message/rcode.hpp"
+#include "dometer/dns/record/class.hpp"
+#include "dometer/dns/record/record.hpp"
+#include "dometer/dns/record/type.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 #include "std/x/unique.hpp"
@@ -40,27 +40,27 @@ namespace dometer::dns::message {
     }
 
     std::x::expected<message, dometer::util::error>  message_factory::make_query(
-        std::string qname, dometer::dns::type qtype, dometer::dns::class_ qclass
+        std::string qname, dometer::dns::record::type qtype, dometer::dns::record::class_ qclass
     ) {
         return dometer::dns::message::builder()
-            .set_opcode(dometer::dns::opcode::query)
-            .set_qr(dometer::dns::qr::query)
-            .add_question(dometer::dns::question{
+            .set_opcode(dometer::dns::message::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
+            .add_question(dometer::dns::message::question{
                 qname, qtype, qclass
             })
             .build();
     }
 
     std::x::expected<message, dometer::util::error>  message_factory::make_reply(
-        std::string qname, dometer::dns::type qtype, dometer::dns::class_ qclass, uint16_t ttl, std::string rdata
+        std::string qname, dometer::dns::record::type qtype, dometer::dns::record::class_ qclass, uint16_t ttl, std::string rdata
     ) {
         return dometer::dns::message::builder()
-            .set_opcode(dometer::dns::opcode::query)
-            .set_qr(dometer::dns::qr::query)
-            .add_question(dometer::dns::question{
+            .set_opcode(dometer::dns::message::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
+            .add_question(dometer::dns::message::question{
                 qname, qtype, qclass
             })
-            .add_answer(dometer::dns::record{
+            .add_answer(dometer::dns::record::record{
                 qname, qtype, qclass, ttl, rdata
             })
             .build();

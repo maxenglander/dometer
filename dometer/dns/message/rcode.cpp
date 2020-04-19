@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <string>
 
-#include "dometer/dns/rcode.hpp"
+#include "dometer/dns/message/rcode.hpp"
 
-namespace dometer::dns {
+namespace dometer::dns::message {
     const rcode rcode::noerror = rcode(0);
     const rcode rcode::formerr = rcode(1);
     const rcode rcode::servfail = rcode(2);

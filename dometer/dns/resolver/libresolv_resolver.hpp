@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "dometer/dns/class.hpp"
-#include "dometer/dns/type.hpp"
+#include "dometer/dns/record/class.hpp"
+#include "dometer/dns/record/type.hpp"
 #include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/libresolv_function.hpp"
 #include "dometer/dns/resolver/resolver.hpp"
@@ -19,7 +19,9 @@ namespace dometer::dns::resolver {
             libresolv_resolver(struct __res_state);
             libresolv_resolver(libresolv_function, struct __res_state);
             ~libresolv_resolver();
-            std::x::expected<std::vector<uint8_t>, error> resolve(const std::string&, const class_&, const type&) const;
+            std::x::expected<std::vector<uint8_t>, error> resolve(const std::string&,
+                                                                  const dometer::dns::record::class_&,
+                                                                  const dometer::dns::record::type&) const;
         private:
             const libresolv_function function;
             struct __res_state stat;

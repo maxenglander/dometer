@@ -53,7 +53,7 @@ cc_library(
 cc_library(
     name = "resolve_query_event",
     deps = [
-        "//dometer/dns:question",
+        "//dometer/dns/message:question",
         "//dometer/dns/resolver:error",
         "//std/x:expected",
     ],
@@ -63,20 +63,7 @@ cc_library(
 )
 
 cc_library(
-    name = "session",
-    hdrs = ["session.hpp"],
-    srcs = ["session.cpp"],
-    deps = [
-        "//std/x:optional",
-        ":parse_message_event",
-        ":resolve_query_event",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "start_session_event",
-    deps = [],
     hdrs = ["start_session_event.hpp"],
     srcs = ["start_session_event.cpp"],
     visibility = ["//visibility:public"],
@@ -84,7 +71,6 @@ cc_library(
 
 cc_library(
     name = "stop_session_event",
-    deps = [],
     hdrs = ["stop_session_event.hpp"],
     srcs = ["stop_session_event.cpp"],
     visibility = ["//visibility:public"],

@@ -2,7 +2,7 @@
 
 #include "dometer/util/error.hpp"
 
-namespace dometer::dns {
+namespace dometer::dns::message {
     struct error : public dometer::util::error {
     }
 }

@@ -3,12 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "dometer/dns/class.hpp"
-#include "dometer/dns/opcode.hpp"
-#include "dometer/dns/qr.hpp"
-#include "dometer/dns/question.hpp"
-#include "dometer/dns/rcode.hpp"
-#include "dometer/dns/type.hpp"
 #include "dometer/dns/event/parse_query_event.hpp"
 #include "dometer/dns/event/parse_reply_event.hpp"
 #include "dometer/dns/event/resolve_query_event.hpp"
@@ -16,7 +10,13 @@
 #include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/eventmetrics/metric_recording_callback.hpp"
 #include "dometer/dns/message/message_factory.hpp"
+#include "dometer/dns/message/opcode.hpp"
+#include "dometer/dns/message/qr.hpp"
+#include "dometer/dns/message/question.hpp"
+#include "dometer/dns/message/rcode.hpp"
 #include "dometer/dns/metrics/lookup_histogram.hpp"
+#include "dometer/dns/record/class.hpp"
+#include "dometer/dns/record/type.hpp"
 #include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/metrics/mock_recorder.hpp"
@@ -40,20 +40,22 @@ namespace dometer::dns::eventmetrics {
             metric_recording_callback_client(metric_recording_callback& callback)
                 : _callback(callback)
             {}
-            void parse_query(uint64_t session_id, std::string qname, dometer::dns::type qtype, dometer::dns::class_ qclass) {
+            void parse_query(uint64_t session_id, std::string qname,
+                             dometer::dns::record::type qtype,
+                             dometer::dns::record::class_ qclass) {
                 _callback(dometer::dns::event::parse_query_event(session_id, dometer::dns::message::message_factory::make_query(
                     qname, qtype, qclass
                 )));
             }
-            void parse_reply(uint64_t session_id, std::string qname, dometer::dns::type qtype,
-                             dometer::dns::class_ qclass, int ttl, std::string rdata) {
+            void parse_reply(uint64_t session_id, std::string qname, dometer::dns::record::type qtype,
+                             dometer::dns::record::class_ qclass, int ttl, std::string rdata) {
                 auto reply = dometer::dns::message::message_factory::make_reply(
                     qname, qtype, qclass, ttl, rdata
                 );
                 _callback(dometer::dns::event::parse_reply_event(session_id, reply));
             }
-            void resolve_query(uint64_t session_id, std::string qname, dometer::dns::type qtype,
-                               dometer::dns::class_ qclass, int ttl, std::string rdata, uint64_t duration_us) {
+            void resolve_query(uint64_t session_id, std::string qname, dometer::dns::record::type qtype,
+                               dometer::dns::record::class_ qclass, int ttl, std::string rdata, uint64_t duration_us) {
                 auto reply = dometer::dns::message::message_factory::make_reply(
                     qname, qtype, qclass, ttl, rdata
                 );
@@ -61,9 +63,9 @@ namespace dometer::dns::eventmetrics {
                 std::chrono::microseconds duration(duration_us);
                 _callback(dometer::dns::event::resolve_query_event(session_id, *(reply->get_question()), reply_bytes, duration));
             }
-            void resolve_query(uint64_t session_id, std::string qname, dometer::dns::type qtype,
-                               dometer::dns::class_ qclass, dometer::dns::resolver::error error, uint64_t duration_us) {
-                dometer::dns::question question{qname, qtype, qclass};
+            void resolve_query(uint64_t session_id, std::string qname, dometer::dns::record::type qtype,
+                               dometer::dns::record::class_ qclass, dometer::dns::resolver::error error, uint64_t duration_us) {
+                dometer::dns::message::question question{qname, qtype, qclass};
                 std::chrono::microseconds duration(duration_us);
                 _callback(dometer::dns::event::resolve_query_event(session_id, question,
                                                                    std::x::unexpected<dometer::dns::resolver::error>(error),
@@ -105,9 +107,12 @@ namespace dometer::dns::eventmetrics {
         EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, _)).Times(0);
 
         _client.start_session(54321);
-        _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
-        _client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50", 1000);
-        _client.parse_reply(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50");
+        _client.parse_query(54321, "hello.world",
+                dometer::dns::record::type::a, dometer::dns::record::class_::in);
+        _client.resolve_query(54321, "hello.world",
+                dometer::dns::record::type::a, dometer::dns::record::class_::in , 300, "80.70.60.50", 1000);
+        _client.parse_reply(54321, "hello.world",
+                dometer::dns::record::type::a, dometer::dns::record::class_::in , 300, "80.70.60.50");
 
         EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, _)).Times(1);
 
@@ -118,33 +123,40 @@ namespace dometer::dns::eventmetrics {
         EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, _));
 
         _client.start_session(54321);
-        _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
-        _client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50", 1000);
-        _client.parse_reply(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50");
+        _client.parse_query(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in);
+        _client.resolve_query(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50", 1000);
+        _client.parse_reply(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50");
         _client.stop_session(54321);
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_TheRecordedObservation_HasQueryLabels) {
         EXPECT_CALL(*_recorder, record(IsALookupHistogram(), IsSupersetOf(std::map<std::string, std::string>({
-            {"qname", "hello.world"}, {"qtype", dometer::dns::type::a}, {"qclass", dometer::dns::class_::in}
+            {"qname", "hello.world"}, {"qtype", dometer::dns::record::type::a}, {"qclass", dometer::dns::record::class_::in}
         })), _));
 
         _client.start_session(54321);
-        _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
-        _client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50", 1000);
-        _client.parse_reply(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50");
+        _client.parse_query(54321, "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in);
+        _client.resolve_query(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50", 1000);
+        _client.parse_reply(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50");
         _client.stop_session(54321);
     }
 
     TEST_F(MetricRecordingCallbackTest, AfterACompletedSession_TheRecordedObservation_HasRcodeLabel) {
         EXPECT_CALL(*_recorder, record(IsALookupHistogram(), IsSupersetOf(std::map<std::string, std::string>({
-            {"rcode", dometer::dns::rcode::noerror}
+            {"rcode", dometer::dns::message::rcode::noerror}
         })), _));
 
         _client.start_session(54321);
-        _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
-        _client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50", 1000);
-        _client.parse_reply(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50");
+        _client.parse_query(54321, "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in);
+        _client.resolve_query(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50", 1000);
+        _client.parse_reply(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50");
         _client.stop_session(54321);
     }
 
@@ -154,9 +166,12 @@ namespace dometer::dns::eventmetrics {
         })), _));
 
         _client.start_session(54321);
-        _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
-        _client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50", 1000);
-        _client.parse_reply(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50");
+        _client.parse_query(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in);
+        _client.resolve_query(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50", 1000);
+        _client.parse_reply(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50");
         _client.stop_session(54321);
     }
 
@@ -164,9 +179,11 @@ namespace dometer::dns::eventmetrics {
         EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, (double)1000/1000000));
 
         _client.start_session(54321);
-        _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
-        _client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50", 1000);
-        _client.parse_reply(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50");
+        _client.parse_query(54321, "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in);
+        _client.resolve_query(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50", 1000);
+        _client.parse_reply(54321, "hello.world", dometer::dns::record::type::a,
+                dometer::dns::record::class_::in , 300, "80.70.60.50");
         _client.stop_session(54321);
     }
 
@@ -176,10 +193,12 @@ namespace dometer::dns::eventmetrics {
         })), _));
 
         _client.start_session(54321);
-        _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
-        _client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in,
-                              dometer::dns::resolver::error("Resolver error.", dometer::dns::resolver::error_code::connrefused),
-                              1000);
+        _client.parse_query(54321, "hello.world",
+                dometer::dns::record::type::a, dometer::dns::record::class_::in);
+        _client.resolve_query(54321, "hello.world",
+                dometer::dns::record::type::a, dometer::dns::record::class_::in,
+                dometer::dns::resolver::error("Resolver error.", dometer::dns::resolver::error_code::connrefused),
+                1000);
         _client.stop_session(54321);
     }
 
@@ -187,9 +206,10 @@ namespace dometer::dns::eventmetrics {
         EXPECT_CALL(*_recorder, record(IsALookupHistogram(), _, _)).Times(0);
 
         _client.start_session(54321);
-        _client.parse_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in);
+        _client.parse_query(54321, "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in);
+        // Omit resolve query.
         //_client.resolve_query(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50", 1000);
-        _client.parse_reply(54321, "hello.world", dometer::dns::type::a, dometer::dns::class_::in , 300, "80.70.60.50");
+        _client.parse_reply(54321, "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in , 300, "80.70.60.50");
         _client.stop_session(54321);
     }
 }

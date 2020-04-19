@@ -1,12 +1,9 @@
 #include <memory>
 #include <stdexcept>
 
-#include "dometer/dns/class.hpp"
-#include "dometer/dns/opcode.hpp"
-#include "dometer/dns/question.hpp"
-#include "dometer/dns/rcode.hpp"
-#include "dometer/dns/record.hpp"
-#include "dometer/dns/type.hpp"
+#include "dometer/dns/message/opcode.hpp"
+#include "dometer/dns/message/question.hpp"
+#include "dometer/dns/message/rcode.hpp"
 #include "dometer/dns/event/any_event.hpp"
 #include "dometer/dns/event/parse_query_event.hpp"
 #include "dometer/dns/event/parse_reply_event.hpp"
@@ -14,6 +11,9 @@
 #include "dometer/dns/handler/resolving_handler.hpp"
 #include "dometer/dns/message/builder.hpp"
 #include "dometer/dns/message/parser.hpp"
+#include "dometer/dns/record/class.hpp"
+#include "dometer/dns/record/record.hpp"
+#include "dometer/dns/record/type.hpp"
 #include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/dns/resolver/mock_resolver.hpp"
@@ -42,12 +42,12 @@ namespace dometer::dns::handler {
 
     TEST_F(ResolvingHandlerTest, EmitsAParseQueryEventIfQueryValid) {
         auto message = dometer::dns::message::builder()
-            .add_question(dometer::dns::question{
-                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            .add_question(dometer::dns::message::question{
+                "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in
             })
             .set_id(54321)
-            .set_opcode(dometer::dns::opcode::query)
-            .set_qr(dometer::dns::qr::query)
+            .set_opcode(dometer::dns::message::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
             .build();
         ASSERT_TRUE(message) << "Failed to create test message.";
 
@@ -66,8 +66,8 @@ namespace dometer::dns::handler {
 
     TEST_F(ResolvingHandlerTest, ResolvesQueryIfValid) {
         auto query = dometer::dns::message::builder()
-            .add_question(dometer::dns::question{
-                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            .add_question(dometer::dns::message::question{
+                "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in
             })
             .set_id(54321)
             .build();
@@ -78,11 +78,11 @@ namespace dometer::dns::handler {
 
     TEST_F(ResolvingHandlerTest, DoesNotResolveQueryIfInvalid) {
         auto query = dometer::dns::message::builder()
-            .add_question(dometer::dns::question{
-                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            .add_question(dometer::dns::message::question{
+                "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in
             })
             .set_id(54321)
-            .set_opcode(dometer::dns::opcode::iquery)
+            .set_opcode(dometer::dns::message::opcode::iquery)
             .build();
 
         EXPECT_CALL(*_resolver, resolve).Times(0);
@@ -91,12 +91,12 @@ namespace dometer::dns::handler {
 
     TEST_F(ResolvingHandlerTest, EmitsAResolveQueryEventIfQueryValid) {
         auto message = dometer::dns::message::builder()
-            .add_question(dometer::dns::question{
-                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            .add_question(dometer::dns::message::question{
+                "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in
             })
             .set_id(54321)
-            .set_opcode(dometer::dns::opcode::query)
-            .set_qr(dometer::dns::qr::query)
+            .set_opcode(dometer::dns::message::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
             .build();
 
         ASSERT_TRUE(message) << "Failed to create test message.";
@@ -110,24 +110,24 @@ namespace dometer::dns::handler {
 
     TEST_F(ResolvingHandlerTest, EmitsParsesReplyEventIfResolverSucceeds) {
         auto query = dometer::dns::message::builder()
-            .add_question(dometer::dns::question{
-                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            .add_question(dometer::dns::message::question{
+                "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in
             })
             .set_id(54321)
-            .set_opcode(dometer::dns::opcode::query)
-            .set_qr(dometer::dns::qr::query)
+            .set_opcode(dometer::dns::message::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
             .build();
 
         auto reply = dometer::dns::message::builder()
-            .add_question(dometer::dns::question{
-                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            .add_question(dometer::dns::message::question{
+                "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in
             })
-            .add_answer(dometer::dns::record{
-                "hello.world", dometer::dns::type::a, dometer::dns::class_::in, 300, "80.70.60.50"
+            .add_answer(dometer::dns::record::record{
+                "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in, 300, "80.70.60.50"
             })
             .set_id(54321)
-            .set_opcode(dometer::dns::opcode::query)
-            .set_qr(dometer::dns::qr::reply)
+            .set_opcode(dometer::dns::message::opcode::query)
+            .set_qr(dometer::dns::message::qr::reply)
             .build();
 
         /* Set up catch-all */
@@ -141,12 +141,12 @@ namespace dometer::dns::handler {
 
     TEST_F(ResolvingHandlerTest, DoesNotEmitParsesReplyEventIfResolverFails) {
         auto query = dometer::dns::message::builder()
-            .add_question(dometer::dns::question{
-                "hello.world", dometer::dns::type::a, dometer::dns::class_::in
+            .add_question(dometer::dns::message::question{
+                "hello.world", dometer::dns::record::type::a, dometer::dns::record::class_::in
             })
             .set_id(54321)
-            .set_opcode(dometer::dns::opcode::query)
-            .set_qr(dometer::dns::qr::query)
+            .set_opcode(dometer::dns::message::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
             .build();
 
         /* Set up catch-all */
@@ -166,7 +166,7 @@ namespace dometer::dns::handler {
     TEST_F(ResolvingHandlerTest, ReturnsNotImplIfUnsupportedOpcode) {
         auto query = dometer::dns::message::builder()
             .set_id(54321)
-            .set_opcode(dometer::dns::opcode::iquery)
+            .set_opcode(dometer::dns::message::opcode::iquery)
             .build();
         ASSERT_TRUE(query) << "Failed to create test query.";
 
@@ -175,6 +175,6 @@ namespace dometer::dns::handler {
 
         auto reply = dometer::dns::message::parser::parse(*result);
         ASSERT_TRUE(reply) << reply.error().message;
-        ASSERT_EQ(reply->get_rcode(), dometer::dns::rcode::notimpl);
+        ASSERT_EQ(reply->get_rcode(), dometer::dns::message::rcode::notimpl);
     }
 }

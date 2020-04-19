@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "dometer/dns/class.hpp"
-#include "dometer/dns/type.hpp"
-#include "dometer/dns/rcode.hpp"
+#include "dometer/dns/message/rcode.hpp"
+#include "dometer/dns/record/class.hpp"
+#include "dometer/dns/record/type.hpp"
 #include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/metrics/lookup_observation_builder.hpp"
 #include "dometer/metrics/observation_builder.hpp"
@@ -46,7 +46,7 @@ namespace dometer::dns::metrics {
         return *this;
     }
 
-    lookup_observation_builder& lookup_observation_builder::qclass(dometer::dns::class_ qclass) {
+    lookup_observation_builder& lookup_observation_builder::qclass(dometer::dns::record::class_ qclass) {
         label("qclass", static_cast<std::string>(qclass));
         return *this;
     }
@@ -56,12 +56,12 @@ namespace dometer::dns::metrics {
         return *this;
     }
 
-    lookup_observation_builder& lookup_observation_builder::qtype(dometer::dns::type qtype) {
+    lookup_observation_builder& lookup_observation_builder::qtype(dometer::dns::record::type qtype) {
         label("qtype", static_cast<std::string>(qtype));
         return *this;
     }
 
-    lookup_observation_builder& lookup_observation_builder::rcode(dometer::dns::rcode rcode) {
+    lookup_observation_builder& lookup_observation_builder::rcode(dometer::dns::message::rcode rcode) {
         label("rcode", static_cast<std::string>(rcode));
         return *this;
     }

@@ -65,7 +65,7 @@ namespace dometer::dns::handler {
             );
         }
 
-        if(query->get_opcode() != dns::opcode::query) {
+        if(query->get_opcode() != dns::message::opcode::query) {
             return dns::message::message_factory::not_implemented(*query);
         }
 
@@ -84,7 +84,7 @@ namespace dometer::dns::handler {
     }
 
     std::x::expected<dns::message::message, error> resolving_handler::handle(
-        uint64_t session_id, dometer::dns::question question
+        uint64_t session_id, dometer::dns::message::question question
     ) {
         auto resolution = resolve_query(session_id, question);
 
@@ -125,7 +125,7 @@ namespace dometer::dns::handler {
     }
 
     std::x::expected<std::vector<uint8_t>, util::error> resolving_handler::resolve_query(
-        uint64_t session_id, dometer::dns::question& question
+        uint64_t session_id, dometer::dns::message::question& question
     ) {
         auto start = clock.now();
         auto resolution = resolver->resolve(question.qname, question.qclass, question.qtype);

@@ -4,7 +4,7 @@
 
 #include "dometer/dns/class.hpp"
 
-namespace dometer::dns {
+namespace dometer::dns::message {
     const class_ class_::in = class_(ns_c_in);
 
     class_::class_(uint16_t value) : value(value) {}

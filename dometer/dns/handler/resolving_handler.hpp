@@ -30,10 +30,10 @@ namespace dometer::dns::handler {
                 uint64_t, std::x::expected<dns::message::message, util::error>& query
             );
             std::x::expected<dns::message::message, error> handle(
-                uint64_t, dns::message::message& query
+                uint64_t, dns::message::message::message& query
             );
             std::x::expected<dns::message::message, error> handle(
-                uint64_t, dometer::dns::question question
+                uint64_t, dometer::dns::message::question question
             );
             std::x::expected<dometer::dns::message::message, util::error> parse_query(
                 uint64_t session_id, std::vector<uint8_t> bytes
@@ -42,7 +42,7 @@ namespace dometer::dns::handler {
                 uint64_t session_id, std::vector<uint8_t> bytes
             );
             std::x::expected<std::vector<uint8_t>, util::error> resolve_query(
-                uint64_t session_id, dometer::dns::question&
+                uint64_t session_id, dometer::dns::message::question&
             );
 
             const std::chrono::steady_clock clock;

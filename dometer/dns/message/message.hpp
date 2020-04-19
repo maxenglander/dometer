@@ -5,11 +5,11 @@
 #include <stdint.h>
 #include <vector>
 
-#include "dometer/dns/opcode.hpp"
-#include "dometer/dns/qr.hpp"
-#include "dometer/dns/question.hpp"
-#include "dometer/dns/rcode.hpp"
-#include "dometer/dns/record.hpp"
+#include "dometer/dns/message/opcode.hpp"
+#include "dometer/dns/message/qr.hpp"
+#include "dometer/dns/message/question.hpp"
+#include "dometer/dns/message/rcode.hpp"
+#include "dometer/dns/record/record.hpp"
 #include "dometer/util/error.hpp"
 #include "std/x/expected.hpp"
 
@@ -20,11 +20,10 @@ namespace dometer::dns::message {
         public:
             message(const message&);
             message(message&&);
-            ~message();
 
             bool get_aa() const;
             uint16_t get_an_count() const;
-            std::x::expected<std::vector<record>, util::error> get_answers() const;
+            std::x::expected<std::vector<dometer::dns::record::record>, util::error> get_answers() const;
             uint16_t get_id() const;
             opcode get_opcode() const;
             uint16_t get_qd_count() const;

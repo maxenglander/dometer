@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <string>
 
-#include "dometer/dns/type.hpp"
+#include "dometer/dns/record/type.hpp"
 
-namespace dometer::dns {
+namespace dometer::dns::record {
     const type type::a = type(ns_t_a);
 
     type::type(uint16_t value) : value(value) {}

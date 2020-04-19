@@ -3,16 +3,16 @@
 #include <memory>
 #include <stdlib.h>
 
-#include "dometer/dns/class.hpp"
-#include "dometer/dns/rcode.hpp"
-#include "dometer/dns/type.hpp"
 #include "dometer/dns/event/any_event.hpp"
 #include "dometer/dns/message/builder.hpp"
 #include "dometer/dns/message/message_factory.hpp"
 #include "dometer/dns/message/parser.hpp"
+#include "dometer/dns/message/rcode.hpp"
 #include "dometer/dns/handler/error.hpp"
 #include "dometer/dns/handler/error_code.hpp"
 #include "dometer/dns/handler/mock_handler.hpp"
+#include "dometer/dns/record/class.hpp"
+#include "dometer/dns/record/type.hpp"
 #include "dometer/dns/resolver/error.hpp"
 #include "dometer/dns/resolver/error_code.hpp"
 #include "dometer/dns/resolver/libresolv_function.hpp"
@@ -60,7 +60,7 @@ namespace dometer::dns::resolver {
         std::vector<uint8_t> request_bytes(4096, 0);
         EXPECT_CALL(*_handler, handle)
             .WillOnce(DoAll(SaveArg<1>(&request_bytes), Return(std::vector<uint8_t>())));
-        resolver.resolve("hello.world", class_::in, type::a);
+        resolver.resolve("hello.world", dometer::dns::record::class_::in, dometer::dns::record::type::a);
 
         auto parse_result = dometer::dns::message::parser::parse(request_bytes);
         EXPECT_TRUE(parse_result) << parse_result.error().message;
@@ -69,15 +69,15 @@ namespace dometer::dns::resolver {
         auto question_result = parse_result->get_question();
         EXPECT_TRUE(question_result) << question_result.error().message;
         EXPECT_EQ(question_result->qname, "hello.world");
-        EXPECT_EQ(question_result->qclass, class_::in);
-        EXPECT_EQ(question_result->qtype, type::a);
+        EXPECT_EQ(question_result->qclass, dometer::dns::record::class_::in);
+        EXPECT_EQ(question_result->qtype, dometer::dns::record::type::a);
     }
 
     TEST_F(LibresolvResolverTest, ReturnsReplyFromNameserver) {
         libresolv_resolver resolver(libresolv_function::query, _res_state);
 
         EXPECT_CALL(*_handler, handle).WillOnce(Invoke(&dometer::dns::handler::mock_handler::return_nxdomain));
-        auto resolve_result = resolver.resolve("hello.world", class_::in, type::a);
+        auto resolve_result = resolver.resolve("hello.world", dometer::dns::record::class_::in, dometer::dns::record::type::a);
         EXPECT_TRUE(resolve_result) << resolve_result.error().message;
 
         auto reply_bytes = *resolve_result;
@@ -85,6 +85,6 @@ namespace dometer::dns::resolver {
         EXPECT_TRUE(parse_result);
 
         auto reply = *parse_result;
-        EXPECT_EQ(reply.get_rcode(), dometer::dns::rcode::nxdomain);
+        EXPECT_EQ(reply.get_rcode(), dometer::dns::message::rcode::nxdomain);
     }
 }

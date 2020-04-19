@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include "dometer/dns/event/any_event.hpp"
-#include "dometer/dns/event/session.hpp"
+#include "dometer/dns/session/session.hpp"
 #include "dometer/metrics/recorder.hpp"
 
 namespace dometer::dns::eventmetrics {

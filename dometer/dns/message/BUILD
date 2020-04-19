@@ -3,10 +3,10 @@ cc_library(
     hdrs = ["builder.hpp"],
     srcs = ["builder.cpp"],
     deps = [
-        "//dometer/dns:qr",
-        "//dometer/dns:question",
-        "//dometer/dns:rcode",
-        "//dometer/dns:record",
+        "//dometer/dns/message:qr",
+        "//dometer/dns/message:question",
+        "//dometer/dns/message:rcode",
+        "//dometer/dns/record:record",
         "//dometer/util:error",
         "//std/x:expected",
         ":message",
@@ -23,8 +23,8 @@ cc_test(
     srcs = ["builder_test.cpp"],
     deps = [
         "@com_github_google_googletest//:gtest_main",
-        "//dometer/dns:opcode",
-        "//dometer/dns:rcode",
+        "//dometer/dns/message:opcode",
+        "//dometer/dns/message:rcode",
         "//dometer/util:human_friendly_error_encoder",
         ":builder",
         ":message",
@@ -36,13 +36,13 @@ cc_library(
     name = "message",
     hdrs = ["message.hpp"],
     deps = [
-        "//dometer/dns:class",
-        "//dometer/dns:opcode",
-        "//dometer/dns:qr",
-        "//dometer/dns:question",
-        "//dometer/dns:rcode",
-        "//dometer/dns:record",
-        "//dometer/dns:type",
+        "//dometer/dns/message:opcode",
+        "//dometer/dns/message:qr",
+        "//dometer/dns/message:question",
+        "//dometer/dns/message:rcode",
+        "//dometer/dns/record:class",
+        "//dometer/dns/record:record",
+        "//dometer/dns/record:type",
         "//dometer/util:array_helper",
         "//dometer/util:error",
         "//std/x:expected",
@@ -60,14 +60,14 @@ cc_library(
     hdrs = ["message_factory.hpp"],
     srcs = ["message_factory.cpp"],
     deps = [
-        "//dometer/dns:class",
-        "//dometer/dns:opcode",
-        "//dometer/dns:qr",
-        "//dometer/dns:question",
-        "//dometer/dns:rcode",
-        "//dometer/dns:record",
-        "//dometer/dns:type",
         "//dometer/dns/message:builder",
+        "//dometer/dns/message:opcode",
+        "//dometer/dns/message:qr",
+        "//dometer/dns/message:question",
+        "//dometer/dns/message:rcode",
+        "//dometer/dns/record:class",
+        "//dometer/dns/record:record",
+        "//dometer/dns/record:type",
         "//dometer/util:array_helper",
         "//dometer/util:error",
         "//std/x:expected",
@@ -75,6 +75,12 @@ cc_library(
         ":message",
         ":parser",
     ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "opcode",
+    hdrs = ["opcode.hpp"],
     visibility = ["//visibility:public"],
 )
 
@@ -95,5 +101,28 @@ cc_library(
         "-lresolv",
     ],
     srcs = ["parser.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "qr",
+    hdrs = ["qr.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "question",
+    deps = [
+        "//dometer/dns/record:class",
+        "//dometer/dns/record:type",
+    ],
+    hdrs = ["question.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "rcode",
+    hdrs = ["rcode.hpp"],
+    srcs = ["rcode.cpp"],
     visibility = ["//visibility:public"],
 )

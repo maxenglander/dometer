@@ -1,14 +1,14 @@
 #include <vector>
 
-#include "dometer/dns/question.hpp"
 #include "dometer/dns/event/resolve_query_event.hpp"
+#include "dometer/dns/message/question.hpp"
 #include "dometer/dns/resolver/error.hpp"
 #include "std/x/expected.hpp"
 
 namespace dometer::dns::event {
     resolve_query_event::resolve_query_event(
             const uint64_t session_id,
-            const dometer::dns::question question,
+            const dometer::dns::message::question question,
             const std::x::expected<std::vector<uint8_t>, dometer::dns::resolver::error> resolution,
             const std::chrono::duration<double, std::milli> duration)
         :   session_id(session_id),
@@ -21,7 +21,7 @@ namespace dometer::dns::event {
         return duration;
     }
 
-    const dometer::dns::question& resolve_query_event::get_question() const {
+    const dometer::dns::message::question& resolve_query_event::get_question() const {
         return question;
     }
 

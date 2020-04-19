@@ -8,13 +8,13 @@
 #include <utility>
 #include <vector>
 
-#include "dometer/dns/qr.hpp"
-#include "dometer/dns/opcode.hpp"
-#include "dometer/dns/question.hpp"
-#include "dometer/dns/rcode.hpp"
-#include "dometer/dns/record.hpp"
 #include "dometer/dns/message/builder.hpp"
+#include "dometer/dns/message/opcode.hpp"
 #include "dometer/dns/message/parser.hpp"
+#include "dometer/dns/message/rcode.hpp"
+#include "dometer/dns/message/qr.hpp"
+#include "dometer/dns/message/question.hpp"
+#include "dometer/dns/record/record.hpp"
 
 namespace dns = dometer::dns;
 namespace util = dometer::util;
@@ -36,17 +36,17 @@ namespace dometer::dns::message {
           _questions(std::move(_builder._questions))
     {}
 
-    builder& builder::add_answer(dns::record record) {
+    builder& builder::add_answer(dns::record::record record) {
         _answers.push_back(record);
         return *this;
     }
 
-    builder& builder::add_question(dns::question question) {
+    builder& builder::add_question(dns::message::question question) {
         _questions.push_back(question);
         return *this;
     }
 
-    std::x::expected<std::vector<uint8_t>, util::error> builder::question_to_bytes(dns::question question) {
+    std::x::expected<std::vector<uint8_t>, util::error> builder::question_to_bytes(dns::message::question question) {
         uint8_t cdname[MAXCDNAME];
         unsigned char *dnptrs[20], **dpp, **lastdnptr = nullptr;
         lastdnptr = dnptrs + sizeof(dnptrs) / sizeof(dnptrs[0]);
@@ -85,8 +85,8 @@ namespace dometer::dns::message {
         return std::vector<uint8_t>(question_bytes, question_bytes + i);
     }
 
-    std::x::expected<std::vector<uint8_t>, util::error> builder::record_to_bytes(dns::record record) {
-        if(record.type != dns::type::a) {
+    std::x::expected<std::vector<uint8_t>, util::error> builder::record_to_bytes(dns::record::record record) {
+        if(record.type != dns::record::type::a) {
             return std::x::unexpected<util::error>(util::error{
                 "Records of type A are supported, other types are not supported."
             });
@@ -180,7 +180,7 @@ namespace dometer::dns::message {
         return *this;
     }
 
-    builder& builder::set_opcode(dns::opcode opcode) {
+    builder& builder::set_opcode(dns::message::opcode opcode) {
         // Includes "qr", "opcode", "aa" and "tc" flags
         uint8_t byte = _bytes[2];
         uint8_t mask = 0x87; // 10000111;
@@ -190,7 +190,7 @@ namespace dometer::dns::message {
         return *this;
     }
 
-    builder& builder::set_rcode(dns::rcode rcode) {
+    builder& builder::set_rcode(dns::message::rcode rcode) {
         // Includes "ra", "z", and "rcode" flags
         uint8_t byte = _bytes[3];
         // Overwrite "rcode" flag
@@ -199,7 +199,7 @@ namespace dometer::dns::message {
         return *this;
     }
 
-    builder& builder::set_qr(dns::qr qr) {
+    builder& builder::set_qr(dns::message::qr qr) {
         // Includes "qr", "opcode", "aa" and "tc" flags
         uint8_t byte = _bytes[2];
         // Overwrite "qr" flag

@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace dometer::dns {
+namespace dometer::dns::message {
     class rcode {
         public:
             static const rcode noerror;

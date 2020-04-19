@@ -35,7 +35,7 @@ namespace dometer::dns::resolver {
     }
 
     expected<std::vector<uint8_t>, error> libresolv_resolver::resolve(
-        const std::string& qname, const class_& qclass, const type& qtype
+        const std::string& qname, const dometer::dns::record::class_& qclass, const dometer::dns::record::type& qtype
     ) const {
         unsigned char buffer[PACKETSZ];
         memset(buffer, 0, PACKETSZ);

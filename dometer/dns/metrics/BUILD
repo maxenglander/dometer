@@ -16,9 +16,9 @@ cc_library(
         "lookup_observation_builder.ipp"
     ],
     deps = [
-        "//dometer/dns:class",
-        "//dometer/dns:rcode",
-        "//dometer/dns:type",
+        "//dometer/dns/message:rcode",
+        "//dometer/dns/record:class",
+        "//dometer/dns/record:type",
         "//dometer/dns/resolver:error",
         "//dometer/metrics:observation_builder",
         "//dometer/metrics:unit",

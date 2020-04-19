@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dometer::dns {
+namespace dometer::dns::message {
     enum class opcode {
         query = 0,
         iquery = 1,

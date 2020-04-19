@@ -1,17 +1,17 @@
 #include <memory>
 #include <string>
 
-#include "dometer/dns/class.hpp"
-#include "dometer/dns/opcode.hpp"
-#include "dometer/dns/qr.hpp"
-#include "dometer/dns/type.hpp"
 #include "dometer/dns/event/any_event.hpp"
 #include "dometer/dns/event/start_session_event.hpp"
 #include "dometer/dns/event/stop_session_event.hpp"
 #include "dometer/dns/handler/handler.hpp"
 #include "dometer/dns/handler/mock_handler.hpp"
 #include "dometer/dns/message/builder.hpp"
+#include "dometer/dns/message/opcode.hpp"
+#include "dometer/dns/message/qr.hpp"
 #include "dometer/dns/handler/handler.hpp"
+#include "dometer/dns/record/class.hpp"
+#include "dometer/dns/record/type.hpp"
 #include "dometer/dns/resolver/libresolv_helper.hpp"
 #include "dometer/dns/resolver/libresolv_resolver.hpp"
 #include "dometer/event/mock_emitter.hpp"
@@ -58,8 +58,8 @@ namespace dometer::dns::server {
     TEST_F(AutoBasicServerTest, ReceivesAndHandlesRequests) {
         auto message = dometer::dns::message::builder()
             .set_id(54321)
-            .set_qr(dometer::dns::qr::query)
-            .set_opcode(dometer::dns::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
+            .set_opcode(dometer::dns::message::opcode::query)
             .build();
 
         ASSERT_TRUE(message) << message.error().message;
@@ -68,7 +68,7 @@ namespace dometer::dns::server {
 
         auto resolver = dometer::dns::resolver::libresolv_resolver(
                 dometer::dns::resolver::libresolv_helper::make_res_state_for_nameserver("127.0.0.1", 6353));
-        auto resolve_result = resolver.resolve("hello.world", dometer::dns::class_::in, dometer::dns::type::a);
+        auto resolve_result = resolver.resolve("hello.world", dometer::dns::record::class_::in, dometer::dns::record::type::a);
         ASSERT_TRUE(resolve_result) << resolve_result.error().message;
     }
 
@@ -77,8 +77,8 @@ namespace dometer::dns::server {
 
         auto message = dometer::dns::message::builder()
             .set_id(54321)
-            .set_qr(dometer::dns::qr::query)
-            .set_opcode(dometer::dns::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
+            .set_opcode(dometer::dns::message::opcode::query)
             .build();
 
         EXPECT_CALL(*_emitter, emit(VariantWith<dometer::dns::event::start_session_event>(_)));
@@ -87,7 +87,7 @@ namespace dometer::dns::server {
 
         auto resolver = dometer::dns::resolver::libresolv_resolver(
                 dometer::dns::resolver::libresolv_helper::make_res_state_for_nameserver("127.0.0.1", 6353));
-        resolver.resolve("hello.world", dometer::dns::class_::in, dometer::dns::type::a);
+        resolver.resolve("hello.world", dometer::dns::record::class_::in, dometer::dns::record::type::a);
     }
 
     TEST_F(AutoBasicServerTest, IncrementsSessionCounterBetweenCalls) {
@@ -95,8 +95,8 @@ namespace dometer::dns::server {
 
         auto message = dometer::dns::message::builder()
             .set_id(54321)
-            .set_qr(dometer::dns::qr::query)
-            .set_opcode(dometer::dns::opcode::query)
+            .set_qr(dometer::dns::message::qr::query)
+            .set_opcode(dometer::dns::message::opcode::query)
             .build();
 
         EXPECT_CALL(*_emitter, emit(VariantWith<dometer::dns::event::start_session_event>(
@@ -114,7 +114,7 @@ namespace dometer::dns::server {
 
         auto resolver = dometer::dns::resolver::libresolv_resolver(
                 dometer::dns::resolver::libresolv_helper::make_res_state_for_nameserver("127.0.0.1", 6353));
-        resolver.resolve("hello.world", dometer::dns::class_::in, dometer::dns::type::a);
-        resolver.resolve("hello.world", dometer::dns::class_::in, dometer::dns::type::a);
+        resolver.resolve("hello.world", dometer::dns::record::class_::in, dometer::dns::record::type::a);
+        resolver.resolve("hello.world", dometer::dns::record::class_::in, dometer::dns::record::type::a);
     }
 }

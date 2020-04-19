@@ -2,7 +2,7 @@
 
 #include "dometer/dns/event/parse_message_event.hpp"
 #include "dometer/dns/event/resolve_query_event.hpp"
-#include "dometer/dns/event/session.hpp"
+#include "dometer/dns/session/session.hpp"
 #include "std/x/optional.hpp"
 
 namespace dometer::dns::event {
