@@ -21,15 +21,9 @@ cc_library(
 )
 
 cc_library(
-    name = "enum_hasher",
-    hdrs = ["enum_hasher.hpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "human_error_encoder",
-    hdrs = ["human_error_encoder.hpp"],
-    srcs = ["human_error_encoder.cpp"],
+    name = "human_friendly_error_encoder",
+    hdrs = ["human_friendly_error_encoder.hpp"],
+    srcs = ["human_friendly_error_encoder.cpp"],
     deps = [
         ":error",
         ":error_encoder",
@@ -60,11 +54,5 @@ cc_library(
     name = "string_helper",
     hdrs = ["string_helper.hpp"],
     srcs = ["string_helper.cpp"],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "tuple_helper",
-    hdrs = ["tuple_helper.hpp"],
     visibility = ["//visibility:public"],
 )

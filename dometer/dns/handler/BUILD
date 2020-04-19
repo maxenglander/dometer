@@ -61,7 +61,7 @@ cc_library(
         "//dometer/event:callback",
         "//dometer/event:emitter",
         "//dometer/util:error",
-        "//dometer/util:human_error_encoder",
+        "//dometer/util:human_friendly_error_encoder",
         "//std/x:expected",
         ":error",
         ":handler",

@@ -5,7 +5,7 @@
 #include "dometer/dns/rcode.hpp"
 #include "dometer/dns/message/builder.hpp"
 #include "dometer/dns/message/parser.hpp"
-#include "dometer/util/human_error_encoder.hpp"
+#include "dometer/util/human_friendly_error_encoder.hpp"
 #include "gtest/gtest.h"
 
 namespace dns = dometer::dns;

@@ -2,11 +2,12 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "dometer/metrics/handler/prometheus/metric_cache.hpp"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "prometheus/counter.h"
+#include "prometheus/histogram.h"
 #include "prometheus/registry.h"
 #include "prometheus/x/types.hpp"
 
@@ -35,15 +36,15 @@ namespace dometer::metrics::handler::prometheus {
 
         EXPECT_CALL(_insertion_listener, Call(_, _)).Times(0);
 
-        auto& family = ::prometheus::BuildCounter().Name("hello_world").Help("Hello, world!").Register(*_registry);
+        auto& family = ::prometheus::BuildHistogram().Name("hello_world").Help("Hello, world!").Register(*_registry);
         ::prometheus::x::FamilyNameAndTimeSeriesCount meta{"hello_world", 1};
 
         auto labels = std::map<std::string, std::string>();
-        ::prometheus::Counter& counter = family.Add(labels);
+        ::prometheus::Histogram& histogram = family.Add(labels, std::vector<double>({{ 0.1, 10.0 }}));
 
-        EXPECT_CALL(_insertion_listener, Call(VariantWith<::prometheus::Counter*>(&counter), Eq(meta))).Times(1);
+        EXPECT_CALL(_insertion_listener, Call(VariantWith<::prometheus::Histogram*>(&histogram), Eq(meta))).Times(1);
 
-        _metric_cache.put(&counter, meta);
+        _metric_cache.put(&histogram, meta);
     }
 
     TEST_F(MetricCacheTest, WhenMaxSizeIsReached_EvictsLeastRecentlyUsedMetric) {
@@ -52,20 +53,20 @@ namespace dometer::metrics::handler::prometheus {
 
         EXPECT_CALL(_eviction_listener, Call(_, _)).Times(0);
 
-        auto& family = ::prometheus::BuildCounter().Name("hello_world").Help("Hello, world!").Register(*_registry);
+        auto& family = ::prometheus::BuildHistogram().Name("hello_world").Help("Hello, world!").Register(*_registry);
         ::prometheus::x::FamilyNameAndTimeSeriesCount meta{"hello_world", 1};
-        ::prometheus::Counter* first_counter = nullptr;
+        ::prometheus::Histogram* first_histogram = nullptr;
 
         for(int i = 0; i < _max_time_series + 1; i++) {
             auto labels = std::map<std::string, std::string>({{"index", std::to_string(i)}});
-            ::prometheus::Counter& counter = family.Add(labels);
+            ::prometheus::Histogram& histogram = family.Add(labels, std::vector<double>({{ 0.1, 10.0 }}));
   
             if(i == 0)
-                first_counter = &counter;
+                first_histogram = &histogram;
             if(i == _max_time_series)
-                EXPECT_CALL(_eviction_listener, Call(VariantWith<::prometheus::Counter*>(first_counter), Eq(meta))).Times(1);
+                EXPECT_CALL(_eviction_listener, Call(VariantWith<::prometheus::Histogram*>(first_histogram), Eq(meta))).Times(1);
   
-            _metric_cache.put(&counter, meta);
+            _metric_cache.put(&histogram, meta);
         }
     }
 
@@ -75,18 +76,24 @@ namespace dometer::metrics::handler::prometheus {
 
         EXPECT_CALL(_eviction_listener, Call(_, _)).Times(0);
 
-        auto& family = ::prometheus::BuildCounter().Name("hello_world").Help("Hello, world!").Register(*_registry);
+        auto& family = ::prometheus::BuildHistogram().Name("hello_world").Help("Hello, world!").Register(*_registry);
 
-        ::prometheus::Counter& first_counter = family.Add(std::map<std::string, std::string>({{"index", "1"}}));
+        ::prometheus::Histogram& first_histogram = family.Add(
+            std::map<std::string, std::string>({{"index", "1"}}),
+            std::vector<double>({{ 0.1, 10.0 }})
+        );
         ::prometheus::x::FamilyNameAndTimeSeriesCount first_meta{"hello_world", _max_time_series};
 
-        _metric_cache.put(&first_counter, first_meta);
+        _metric_cache.put(&first_histogram, first_meta);
 
-        EXPECT_CALL(_eviction_listener, Call(VariantWith<::prometheus::Counter*>(&first_counter), Eq(first_meta))).Times(1);
+        EXPECT_CALL(_eviction_listener, Call(VariantWith<::prometheus::Histogram*>(&first_histogram), Eq(first_meta))).Times(1);
 
-        ::prometheus::Counter& second_counter = family.Add(std::map<std::string, std::string>({{"index", "2"}}));
+        ::prometheus::Histogram& second_histogram = family.Add(
+            std::map<std::string, std::string>({{"index", "2"}}),
+            std::vector<double>({{ 0.1, 10.0 }})
+        );
         ::prometheus::x::FamilyNameAndTimeSeriesCount second_meta{"hello_world", 1};
 
-        _metric_cache.put(&second_counter, first_meta);
+        _metric_cache.put(&second_histogram, first_meta);
     }
 }

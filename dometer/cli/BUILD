@@ -6,7 +6,7 @@ cc_binary(
         "//dometer/config:parser",
         "//dometer/util:error",
         "//dometer/util:error_encoder",
-        "//dometer/util:human_error_encoder",
+        "//dometer/util:human_friendly_error_encoder",
         ":help",
         ":options",
         ":options_parser",

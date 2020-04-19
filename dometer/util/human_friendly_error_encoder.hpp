@@ -7,7 +7,7 @@
 #include "dometer/util/error_encoder.hpp"
 
 namespace dometer::util {
-    class human_error_encoder : public error_encoder {
+    class human_friendly_error_encoder : public error_encoder {
         public:
           std::string encode(error);
         private:

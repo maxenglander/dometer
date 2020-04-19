@@ -25,7 +25,7 @@ cc_test(
         "@com_github_google_googletest//:gtest_main",
         "//dometer/dns:opcode",
         "//dometer/dns:rcode",
-        "//dometer/util:human_error_encoder",
+        "//dometer/util:human_friendly_error_encoder",
         ":builder",
         ":message",
     ],

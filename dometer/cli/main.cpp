@@ -6,14 +6,14 @@
 #include "dometer/cli/options.hpp"
 #include "dometer/cli/options_parser.hpp"
 #include "dometer/util/error.hpp"
-#include "dometer/util/human_error_encoder.hpp"
+#include "dometer/util/human_friendly_error_encoder.hpp"
 
 namespace config = dometer::config;
 namespace dns = dometer::dns;
 namespace metrics = dometer::metrics;
 
 int main(int argc, char **argv) {
-    util::human_error_encoder error_encoder;
+    util::human_friendly_error_encoder error_encoder;
 
     auto cli_options = dometer::cli::options_parser::parse(argc, argv);
     if(!cli_options) {

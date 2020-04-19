@@ -3,10 +3,10 @@
 #include <vector>
 
 #include "dometer/util/error.hpp"
-#include "dometer/util/human_error_encoder.hpp"
+#include "dometer/util/human_friendly_error_encoder.hpp"
 
 namespace dometer::util {
-    std::string human_error_encoder::encode(error error) {
+    std::string human_friendly_error_encoder::encode(error error) {
         std::size_t depth = 0;
 
         std::string result = encode(error, depth);
@@ -23,7 +23,7 @@ namespace dometer::util {
         return result;
     }
 
-    std::string human_error_encoder::encode(error error, std::size_t depth) {
+    std::string human_friendly_error_encoder::encode(error error, std::size_t depth) {
         std::string result = indent(depth) + error.message + "\n";
 
         if(error.code != 0)
@@ -37,7 +37,7 @@ namespace dometer::util {
         return result;
     }
 
-    std::string human_error_encoder::indent(std::size_t depth) {
+    std::string human_friendly_error_encoder::indent(std::size_t depth) {
         std::string result;
         for(size_t i = 0; i < depth; i++)
             result += "  ";
