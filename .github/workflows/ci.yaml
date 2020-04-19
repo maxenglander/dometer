@@ -16,7 +16,7 @@ jobs:
             os: darwin
           - platform: ubuntu-latest
             os: linux
-    runs-on: ${{ matrix.platform }}    
+    runs-on: ${{ matrix.platform }}
     steps:
       - id: add-github-workspace-bin-to-path
         name: Add ${GITHUB_WORKSPACE}/bin to path
@@ -47,13 +47,13 @@ jobs:
           chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
           "${GITHUB_WORKSPACE}/bin/bazel" version
       - id: install_envsubst_macos
-        name: Install envsubst
+        name: Install envsubst (Mac OS)
         if: steps.check_envsubst.outcome == 'failure' && contains(matrix.platform, 'macos')
         run: |
           brew install gettext
           brew link --force gettext
       - id: install_envsubst_ubuntu
-        name: Install envsubst
+        name: Install envsubst (Ubuntu)
         if: steps.check_envsubst.outcome == 'failure' && contains(matrix.platform, 'ubuntu')
         run: sudo apt-get install envsubst
       - id: build_all
@@ -61,4 +61,4 @@ jobs:
         run: bazel build ...
       - id: test_all
         name: Run all tests
-        run: bazel test ...
+        run: bazel test ... --test_output=all
