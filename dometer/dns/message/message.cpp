@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <resolv.h>
 #include <stdint.h>
 #include <string.h>
 #include <utility>

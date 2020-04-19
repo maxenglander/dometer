@@ -30,7 +30,7 @@ namespace dometer::dns::handler {
                 uint64_t, std::x::expected<dns::message::message, util::error>& query
             );
             std::x::expected<dns::message::message, error> handle(
-                uint64_t, dns::message::message::message& query
+                uint64_t, dns::message::message& query
             );
             std::x::expected<dns::message::message, error> handle(
                 uint64_t, dometer::dns::message::question question

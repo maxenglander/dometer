@@ -51,6 +51,9 @@ cc_library(
     copts = [
         "-DBIND_8_COMPAT=1",
     ],
+    linkopts = [
+        "-lresolv",
+    ],
     srcs = ["message.cpp"],
     visibility = ["//visibility:public"],
 )
