@@ -32,16 +32,18 @@ TODO
  - [x] allow user-defined labels
  - [x] switch summary to histogram
  - [x] make nicer metric observation api
+ - [x] add CI
+ - [ ] fix issue where tests don't always pass when all run at once
  - [ ] write documentation
  - [ ] allow user-defined histogram buckets
- - [ ] fix issue where tests don't pass when all run at once
- - [ ] build cmake with bazel
+ - [ ] build cmake with bazel, or remove cmake dependency entirely (jupp0r)
  - [ ] build envsubst with bazel (for generating schema)
  - [ ] make nice getter/setters for dns events
  - [ ] add logging
  - [ ] replace arpa methods with more robust dns packet manipulation library like ldns
  - [ ] replace #include statements with forward declarations
- - [ ] create internal boundaries (e.g. ::internal or ::detail)
  - [ ] use cpp convention/style enforcer
+ - [ ] move dns/eventmetrics/\* to better location
+ - [ ] create internal boundaries (e.g. ::internal or ::detail)
  - [ ] remove unused deps from build files
  - [ ] decompose handler

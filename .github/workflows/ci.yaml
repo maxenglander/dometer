@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        platform: [macos-latest, ubuntu-latest]
+        include:
+          - platform: macos-latest
+            os: darwin
+          - platform: ubuntu-latet
+            os: linux
+    runs-on: ${{ matrix.platform }}    
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v1
+      - id: download-bazelisk
+        name: Download Bazelisk
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.4.0/bazelisk-${{matrix.os}}-amd64"
