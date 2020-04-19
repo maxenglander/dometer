@@ -47,12 +47,14 @@ jobs:
           chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
           "${GITHUB_WORKSPACE}/bin/bazel" version
       - id: install_envsubst_macos
-        if: steps.check_envsubst.outcome == 'failure' && contains(matrix.platform, "macos")
+        name: Install envsubst
+        if: steps.check_envsubst.outcome == 'failure' && contains(matrix.platform, 'macos')
         run: |
           brew install gettext
           brew link --force gettext
       - id: install_envsubst_ubuntu
-        if: steps.check_envsubst.outcome == 'failure' && contains(matrix.platform, "ubuntu")
+        name: Install envsubst
+        if: steps.check_envsubst.outcome == 'failure' && contains(matrix.platform, 'ubuntu')
         run: sudo apt-get install envsubst
       - id: build_all
         name: Build all sources and tests
