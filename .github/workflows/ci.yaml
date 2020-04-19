@@ -29,3 +29,6 @@ jobs:
           mv bazelisk-${{ matrix.os }}-amd64 "${GITHUB_WORKSPACE}/bin/bazel"
           chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
           "${GITHUB_WORKSPACE}/bin/bazel" version
+      - id: check-for-cmake
+        run: |
+          cmake --version
