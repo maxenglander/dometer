@@ -31,7 +31,7 @@ namespace dometer::metrics::handler {
     }
 
     std::x::expected<std::vector<std::unique_ptr<handler>>, util::error> handler_factory::make_handlers(std::vector<options> optionss) {
-        std::vector<std::unique_ptr<dometer::metrics::handler::handler>> handlers;
+        std::vector<std::unique_ptr<handler>> handlers;
 
         for(auto it = optionss.begin(); it < optionss.end(); it++) {
             auto result = make_handler(*it);
@@ -41,6 +41,6 @@ namespace dometer::metrics::handler {
             handlers.push_back(std::move(*result));
         }
 
-        return handlers;
+        return std::move(handlers);
     }
 }
