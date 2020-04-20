@@ -65,7 +65,7 @@ namespace dometer::config {
             assert(0);
         }
 
-        return std::move(schema);
+        return schema;
     }
 
     std::x::expected<std::unique_ptr<Json::Value>, util::error> schema_validator::parse(std::string input) {
