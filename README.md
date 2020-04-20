@@ -14,9 +14,13 @@
 In order to build `dometer`, the following build-time dependencies are
 required and must be either already present or manually installed.
 
- * Bazel >= 2.2.0
- * CMake >= 3.16.2
- * envsubst >= 0.20.2
+| Dependency | Recommended version |
+| :--------- | :------------------ |
+| Bazel      | 2.2.0               |
+| CMake      | 3.16.2              |
+| envsubst   | 0.20.2              |
+
+Versions other than those recommended above may or may not work.
 
 Once the build-time dependencies are present, run the following command to build
 `dometer`:
