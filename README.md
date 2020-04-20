@@ -43,7 +43,7 @@ Bazel will download and build the following third-party libraries for run-time u
 
 ## Usage
 
-`dometer` started through the command-line.
+`dometer` is started through the command-line.
 
 ```
 dometer $ ./bazel-bin/dometer/cli/main
