@@ -6,6 +6,11 @@
 
 `dometer` has been built and tested on the following platforms:
 
+| Platform | Versions |
+| :------- | :------- |
+| Mac OS   | 10.12.6  |
+| Ubuntu   |          |
+
  * Mac OS
  * Ubuntu
  

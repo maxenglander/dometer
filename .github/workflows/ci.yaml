@@ -18,10 +18,17 @@ jobs:
             os: linux
     runs-on: ${{ matrix.platform }}
     steps:
-      - id: add-github-workspace-bin-to-path
+      - id: log_platform_info_macos
+        if: contains(matrix.platform, 'macos')
+        name: Log platform information (Mac OS)
+        run: sw_vers -productVersion
+      - id: log_platform_info_ubuntu
+        if: contains(matrix.platform, 'ubuntu')
+        name: Log platform information (Ubuntu)
+        run: lsb_release -a
+      - id: add_github_workspace_bin_to_path
         name: Add ${GITHUB_WORKSPACE}/bin to path
-        run: |
-          echo "::add-path::/${GITHUB_WORKSPACE}/bin"
+        run: echo "::add-path::/${GITHUB_WORKSPACE}/bin"
       - id: checkout
         name: Checkout
         uses: actions/checkout@v1
