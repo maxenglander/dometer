@@ -25,8 +25,7 @@ Once the build-time dependencies are present, run the following command to build
 dometer $ bazel build //dometer/cli:main
 ```
 
-Internally, `dometer` will use Bazel to download and build the following
-third-party libraries for run-time use.
+Bazel will download and build the following third-party libraries for run-time use.
 
  * [ThinkAsync/asio (non-Boost version)](http://think-async.com/Asio)
  * [TartanLlama/expected](https://github.com/TartanLlama/expected)
