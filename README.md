@@ -8,8 +8,8 @@
 
 | Platform | Versions |
 | :------- | :------- |
-| Mac OS   | 10.12.6  |
-| Ubuntu   |          |
+| Mac OS   | 10.12.6, 10.15.4 |
+| Ubuntu   | 18.04.4  |
 
  * Mac OS
  * Ubuntu
