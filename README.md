@@ -109,8 +109,8 @@ functions:
 
 ### Metrics
 
-`dometer` collects metrics on DNS resolution attempts and replies for each
-incoming DNS request.
+The `dometer` metrics component collects metrics on DNS resolution attempts and
+replies for each incoming DNS request.
 
 The following metrics are collected:
 
