@@ -34,7 +34,9 @@ TODO
  - [x] make nicer metric observation api
  - [x] add CI
  - [x] write documentation
- - [ ] add example(s)
+ - [ ] create release and attach build artifacts
+ - [ ] create Docker image
+ - [ ] add K8S integration example
  - [ ] allow user-defined histogram buckets
  - [ ] build cmake with bazel, or remove cmake dependency entirely (jupp0r)
  - [ ] build envsubst with bazel (for generating schema)

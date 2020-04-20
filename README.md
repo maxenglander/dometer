@@ -37,35 +37,32 @@ for an example configuration.
 
 ### DNS
 
-`dometer` DNS component accepts and resolves incoming DNS requests.
+The `dometer` DNS component accepts and resolves incoming DNS requests.
 
 #### Server
 
-The `dometer` DNS server listens for incoming UDP DNS requests.
+The `dometer` DNS server listens for incoming UDP DNS requests, by default at
+`udp://0.0.0.0:6353`.
 
 #### Resolver
 
-`dometer` resolves incoming DNS requests using one resolver library. The following
-resolver libraries can be selected:
+`dometer` resolves incoming DNS requests using a resolver. The following
+resolver types can be selected:
 
  * `libresolv`
+
+By default, the `libresolv` resolver is used.
 
 ##### `libresolv`
 
 The `libresolv` resolver library uses the BIND-compatible resolver library native
 to the host platform. It can be configured to use one of the following resolver
-function:
+functions:
 
- * `query`
- * `search`
-
-**query**
-
-The `query` function will use the `res_query(3)` resolver routine.
-
-**search**
-
-The `search` function will use the `res_search(3)` resolver routine.
+| Function | Description |
+| :------- | :---------- |
+| `query`  | Uses the `res_query(3)` resolver routine. |
+| `search` | Uses the `res_search(3)` resolver routine. |
 
 ### Metrics
 
@@ -149,17 +146,13 @@ dometer_dns_lookup_duration_seconds_bucket{
 
 The number of time-series generated or updated by a single DNS request to
 `dometer` is a function of the metric type and other metric options. For
-example, a Prometheus histogram metric generates a time series for the total
-count of collected observations, the sum of collected observations, and a
-time-series for each bucket in the histogram.
+example, a Prometheus histogram metric generates one time series for the total
+count of collected observations, one for the sum of collected observations, and
+one for each each bucket.
 
 ## Usage
 
 The only supported way at present to use `dometer` is through the command-line.
-
-### CLI
-
-`dometer` is started from the command-line.
 
 ```
 dometer $ ./bazel-bin/dometer/cli/main
