@@ -9,7 +9,7 @@ namespace dometer::cli {
     }
 
     void help::print_help(std::ostream& os) {
-        os << "Dometer." << std::endl;
+        os << "dometer" << std::endl;
         os << std::endl;
         os << "Usage:" << std::endl;
         os << "  dometer --config=<path>" << std::endl;

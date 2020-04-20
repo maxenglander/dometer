@@ -47,7 +47,7 @@ namespace dometer::config {
         Json::CharReaderBuilder rbuilder;
         std::unique_ptr<Json::CharReader> const reader(rbuilder.newCharReader());
 
-        // Failure interpret the Dometer JSON schema as a JSON document
+        // Failure interpret the dometer JSON schema as a JSON document
         // indicates either a bug with RapidJSON or (more likely) a
         // improperly defined JSON document.
         assert(reader->parse(&SCHEMA[0], &SCHEMA[SCHEMA.size() - 1], &root, &errs));
@@ -59,7 +59,7 @@ namespace dometer::config {
         try {
             schema_parser.populateSchema(schema_document_adapter, *schema);
         } catch(std::exception &e) {
-            // Failure to interpret the Dometer JSON schema as a
+            // Failure to interpret the dometer JSON schema as a
             // JSON Schema v4 document indivates either a bug with
             // Valijson or (more likely) an improperly defined JSON schema.
             assert(0);
