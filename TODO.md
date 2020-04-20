@@ -33,8 +33,8 @@ TODO
  - [x] switch summary to histogram
  - [x] make nicer metric observation api
  - [x] add CI
- - [ ] fix issue where tests don't always pass when all run at once
- - [ ] write documentation
+ - [x] write documentation
+ - [ ] add example(s)
  - [ ] allow user-defined histogram buckets
  - [ ] build cmake with bazel, or remove cmake dependency entirely (jupp0r)
  - [ ] build envsubst with bazel (for generating schema)

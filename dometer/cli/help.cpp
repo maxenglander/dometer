@@ -16,7 +16,7 @@ namespace dometer::cli {
         os << "  dometer --help" << std::endl;
         os << std::endl;
         os << "Options:" << std::endl;
-        os << "  --config=<file>  Supply configuration file [default: /etc/dometer/config.json]." << std::endl;
+        os << "  --config=<file>  Configuration file." << std::endl;
         os << "  --help           Show this help message." << std::endl;
     }
 }

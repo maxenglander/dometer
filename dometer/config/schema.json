@@ -1,31 +1,51 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://github.com/maxenglander/dometer/tree/v0.1.0/config/schema.json",
-  "title": "Dometer Config Schema",
+  "$id": "https://github.com/maxenglander/dometer/tree/v0.1.0/config/schema.json",
+  "title": "dometer{}",
+  "description": "The dometer{} configuration document sets options for the DNS server used to handle incoming DNS queries, the DNS resolver used to resolve those queries, and telemetry collected and emitted.",
   "type": "object",
+  "version": "0.1.0",
   "properties": {
     "apiVersion": {
       "type": "string",
+      "description": "The apiVersion is used by dometer to select an appropriate schema validator for the configuration object.",
       "enum": ["v0"],
       "default": "v0"
     },
     "dns": {
+      "title": "dometer.dns{}",
+      "description": "The dometer.dns{} configuration section sets options for the DNS server used to handle incoming DNS requests, and the resolver used to resolve those queries.",
       "type": "object",
       "properties": {
         "resolver": {
+          "title": "dometer.dns.resolver{}",
+          "description": "The dometer.dns.resolver{} configuration section selects and sets options for a particular resolver library used to resolve DNS queries received by dometer's DNS server.",
           "type": "object",
           "properties": {
             "type": {
+              "title": "dometer.dns.resolver.type",
+              "description": "The dometer.dns.resolver.type option selects a resolver library to use for resolving DNS queries.",
               "type": "string",
               "enum": ["libresolv"],
+              "meta:enum": {
+                "libresolv": "Selects the BIND-compatible DNS resolver."
+              },
               "default": "libresolv"
             },
             "libresolv": {
+              "title": "dometer.dns.resolver.libresolv{}",
+              "description": "The dometer.dns.resolver.libresolv{} configuration section sets options for the BIND-compatible DNS resolver.",
               "type": "object",
               "properties": {
                 "function": {
+                  "title": "dometer.dns.resolver.libresolv.function",
+                  "description": "The dometer.dns.resolver.libresolv.function option selects a libresolv routine to resolve DNS queries.",
                   "type": "string",
                   "enum": ["query", "search"],
+                  "meta:enum": {
+                    "query": "Uses the res_query(3) routine.",
+                    "search": "Uses the res_search(3) routine."
+                  },
                   "default": "query"
                 }
               },
@@ -35,7 +55,9 @@
           "anyOf": [
             {
               "properties": {
-                "type": { "const": "libresolv" }
+                "type": {
+                  "const": "libresolv"
+                }
               },
               "required": ["libresolv"]
             }
@@ -45,12 +67,18 @@
           ]
         },
         "server": {
+          "title": "dometer.dns.server{}",
+          "description": "The dometer.dns.server{} configuration section sets options for the DNS server that handles DNS requests received by dometer.",
           "type": "object",
           "properties": {
             "transport": {
+              "title": "dometer.dns.server.transport{}",
+              "description": "The dometer.dns.server.transport{} configuration transport options for the DNS server.",
               "type": "object",
               "properties": {
                 "bindAddress": {
+                  "title": "dometer.dns.server.transport.bindAddress",
+                  "description": "The dometer.dns.server.transport.bindAddress configuration option sets the address where the DNS server will listen for incoming DNS queries.",
                   "type": "string",
                   "default": "0.0.0.0:5353"
                 }
@@ -71,8 +99,12 @@
       ]
     },
     "metrics": {
+      "title": "dometer.metrics{}",
+      "description": "The dometer.metrics{} configuration section sets options for the metrics collected and emitted by dometer.",
       "properties": {
         "additionalLabels": {
+          "title": "dometer.metrics.additionalLabels{}",
+          "description": "The dometer.metrics.additionalLabels{} configuration section contains user-defined key-value pairs that are attached as additional labels to every metric time series emitted by dometer.",
           "type": "object",
           "properties": {},
           "additionalProperties": {
@@ -80,43 +112,73 @@
           }
         },
         "handlers": {
+          "title": "dometer.metrics.handlers[]",
+          "description": "The dometer.metrics.handlers[] configuration section configures one or more handlers which emit telemetry collected by dometer.",
           "type": "array",
           "items": {
+            "title": "dometer.metrics.handlers[i]",
+            "description": "The dometer.metrics.handlers[i] configuration section sets options for a single metric system which emits telemtry collected by dometer..",
             "type": "object",
             "properties": {
               "type": {
+                "title": "dometer.metrics.handlers[i].type",
+                "description": "The dometer.metrics.handlers[i].type configuration option selects the metric system for a metric handler.",
                 "type": "string",
-                "enum": ["prometheus"]
+                "enum": ["prometheus"],
+                "meta:enum": {
+                  "prometheus": "Selects the Prometheus metric handler"
+                }
               },
               "prometheus": {
+                "title": "dometer.metrics.handlers[i].prometheus",
+                "description": "The dometer.metrics.handlers[i].prometheus configuration section sets options for a metric handler.",
                 "properties": {
                   "maxTimeSeries": {
+                    "title": "dometer.metrics.handler[i].prometheus.maxTimeSeries",
+                    "description": "dometer.metrics.handler[i].prometheus.maxTimeSeries sets the maximum number of DNS metric time series that the Prometheus metric handler will store before it starts evicting the least-recently updated time series. A Prometheus time series is a unique combination of a metric name and a set of labels.",
                     "type": "integer",
                     "multipleOf": 1.0,
                     "default": 10000,
                     "minimum": 0
                   },
                   "transports": {
+                    "title": "dometer.metrics.handlers[i].prometheus.transports[]",
+                    "description": "The dometer.metrics.handlers[i].prometheus.transports[] configuration section sets options for one or more transports used by the Prometheus handler to expose or push metric data.",
                     "type": "array",
                     "items": {
+                      "title": "dometer.metrics.handlers[i].prometheus.transports[i]",
+                      "description": "The dometer.metrics.handlers[i].prometheus.transports[i] configuration section sets options for a transport used by the Prometheus metric handler to expose or push metric data.",
                       "type": "object",
                       "properties": {
                         "type": {
+                          "title": "dometer.metrics.handlers[i].prometheus.transport[i].type",
+                          "description": "The dometer.metrics.handlers[i].prometheus.transport[i].type configuration option selects the transport type used by the Prometheus metric handler to export or push metric data.",
                           "type": "string",
-                          "enum": ["pull"]
+                          "enum": ["pull"],
+                          "meta:enum": {
+                            "pull": "The pull transport exposes Prometheus metrics via an HTTP server."
+                          }
                         },
                         "exposer": {
+                          "title": "dometer.metrics.handlers[i].prometheus.transports[i].exposer",
+                          "description": "The dometer.metrics.handlers[i].prometheus.transports[i].exposer sets options for the Prometheus metric handler pull transport.",
                           "type": "object",
                           "properties": {
                             "bindAddress": {
+                              "title": "dometer.metrics.handlers[i].prometheus.transports[i].exposer.bindAddress",
+                              "description": "The dometer.metrics.handlers[i].prometheus.transports[i].exposer.bindAddress option sets the bind address where the Prometheus metric handler pull transport will listen for incoming HTTP requests.",
                               "type": "string",
                               "default": "0.0.0.0:9090"
                             },
                             "metricsPath": {
+                              "title": "dometer.metrics.handlers[i].prometheus.transports[i].exposer.path",
+                              "description": "The dometer.metrics.handlers[i].prometheus.transports[i].exposer.path option sets the HTTP path where the Prometheus metric handler pull transport will listen for incoming HTTP requests.",
                               "type": "string",
                               "default": "/metrics"
                             },
                             "numThreads": {
+                              "title": "dometer.metrics.handlers[i].prometheus.transports[i].exposer.numThreads",
+                              "description": "The dometer.metrics.handlers[i].prometheus.transports[i].exposer.numThreads option sets the number of threads that will be used by the Prometheus metric handler pull transport HTTP server to handle incoming HTTP requests.",
                               "type": "integer",
                               "multipleOf": 1.0,
                               "minimum": 2,
