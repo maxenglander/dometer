@@ -186,6 +186,18 @@ In order to test `dometer`, the following dependencies are required:
 dometer $ bazel test ... 
 ```
 
+## API Stability
+
+No guarantees are made about the stability of any part of `dometer`, including:
+
+ * The name and shape of emitted metrics
+ * The command-line interface
+
+## Quality
+
+No guarantees or assertions are made about the performance, reliability, or
+safety of this software. Use at your own risk.
+
 ## Inspiration and motivation
 
 `dometer` is inspired by Envoy and CoreDNS.

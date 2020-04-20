@@ -1,6 +1,6 @@
-## NOTES
+# NOTES
 
-Helpful notes for working with various third-party libraries, system APIs and
+My notes for working with various third-party libraries, system APIs and
 tools used by this project.
 
 ## Useful links
@@ -24,5 +24,3 @@ Code examples and documentation for using `res_query` and related methods.
 
 [JsonCpp Documentation](https://open-source-parsers.github.io/jsoncpp-docs/doxygen/index.html)
 [JsonCpp Wiki](https://en.wikibooks.org/wiki/JsonCpp#Examples_of_work_with_objects_and_arrays)
-
-
