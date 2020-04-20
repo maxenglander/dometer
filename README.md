@@ -21,6 +21,16 @@ In order to build `dometer`, the following dependencies are required:
 dometer $ bazel build //dometer/cli:main
 ```
 
+Internally, `dometer` relies on the following third-party libraries at run-time:
+
+ * [ThinkAsync/asio (non-Boost version)](http://think-async.com/Asio)
+ * [TartanLlama/expected](https://github.com/TartanLlama/expected)
+ * [open-source-parsers/openjsoncpp](https://github.com/open-source-parsers/jsoncpp)
+ * [jupp0r/prometheus-cpp](https://github.com/jupp0r/prometheus-cpp)
+ * [TartanLlama/optional](https://github.com/TartanLlama/optional)
+ * [mpark/variant](https://github.com/mpark/variant)
+ * [tristanpenman/valijson](https://github.com/tristanpenman/valijson)
+
 ## Configuration
 
 `dometer` is configured through a JSON file, e.g.:
@@ -169,15 +179,16 @@ Options:
 
 ## Testing
 
-In order to test `dometer`, the following dependencies are required:
-
- * Bazel >= 2.2.0
- * CMake >= 3.16.2
- * envsubst >= 0.20.2
+In order to test `dometer`, the build depdencies are required.
 
 ```
 dometer $ bazel test ... 
 ```
+
+In addition to the build and run-time dependencies, `dometer` relies internally
+on the following third-party testing libraries for tests:
+
+ * [google/googletest](https://github.com/google/googletest)
 
 ## API Stability
 
