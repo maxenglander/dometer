@@ -11,9 +11,6 @@
 | Mac OS   | 10.12.6, 10.15.4 |
 | Ubuntu   | 18.04.4  |
 
- * Mac OS
- * Ubuntu
- 
 ## Building
 
 In order to build `dometer`, the following build-time dependencies are
