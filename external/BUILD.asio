@@ -1,0 +1,39 @@
+filegroup(
+    name = "asio_headers",
+    srcs = glob([
+        "include/asio.hpp",
+        "include/asio/**/*.hpp",
+        "include/asio/**/*.ipp",
+    ]),
+)
+
+genrule(
+    name = "asio_sources",
+    srcs = [],
+    outs = ["asio.cpp"],
+    cmd = "echo '#include \"asio/impl/src.hpp\"' > $@",
+)
+
+cc_library(
+    name = "asio",
+    data = [
+        ":asio_headers",
+        ":asio_sources",
+    ],
+    copts = [
+        "-DASIO_DYN_LINK=1",
+        "-DASIO_STANDALONE=1",
+        "-Iexternal/net_sourceforge_asio_asio/include",
+    ],
+    hdrs = [
+        ":asio_headers",
+    ],
+    srcs = [
+        ":asio_sources",
+    ],
+    linkopts = [
+        "-lpthread",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+)

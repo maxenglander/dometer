@@ -1,0 +1,51 @@
+TODO
+====
+ - [x] move dns/server/\*event\* to dns/event
+ - [x] move dns/server/\*handler\* to dns/handler
+ - [x] use "canonical" project structure (e.g. dometer/dometer)
+ - [x] move x/ to std/x
+ - [x] move prometheus extensions to prometheus/x
+ - [x] support c++11
+ - [x] move dns/packet.{c,h}pp to dns/packet/
+ - [x] extract dns/packet::make\* methods to separate class
+ - [x] write cli --help
+ - [x] improve cli error messages (cli options)
+ - [x] improve cli error messages (schema validation)
+ - [x] catch prometheus transport exceptions (CivetException)
+ - [x] nest errors for rich error context in metrics/\*
+ - [x] move config/server/server to dns/server/options
+ - [x] move config/config.hpp to app/options.hpp
+ - [x] create rich error context in dns/{handler,message,server,resolver}
+ - [x] rename dometer/main to dometer/cli
+ - [x] add rcode to dns metrics (upstream resolution)
+ - [x] eliminate exception-throwing from dns packet parsing path
+ - [x] separate dns parsing and resolution
+ - [x] create metrics/handler package
+ - [x] create metrics/handler/prometheus package
+ - [x] use cpp std coding style, lower cases
+ - [x] compile on mac os x
+ - [x] get resolv\_wrapper to compile on os x
+ - [x] switch to res\_{=\>n}init, res\_{=\>n}query, etc.
+ - [x] make sure time is in seconds
+ - [x] move app-building logic of cli/main to app/
+ - [x] write tests
+ - [x] allow user-defined labels
+ - [x] switch summary to histogram
+ - [x] make nicer metric observation api
+ - [x] add CI
+ - [x] write documentation
+ - [ ] create release and attach build artifacts
+ - [ ] create Docker image
+ - [ ] add K8S integration example
+ - [ ] allow user-defined histogram buckets
+ - [ ] build cmake with bazel, or remove cmake dependency entirely (jupp0r)
+ - [ ] build envsubst with bazel (for generating schema)
+ - [ ] make nice getter/setters for dns events
+ - [ ] add logging
+ - [ ] replace arpa methods with more robust dns packet manipulation library like ldns
+ - [ ] replace #include statements with forward declarations
+ - [ ] use cpp convention/style enforcer
+ - [ ] move dns/eventmetrics/\* to better location
+ - [ ] create internal boundaries (e.g. ::internal or ::detail)
+ - [ ] remove unused deps from build files
+ - [ ] decompose handler

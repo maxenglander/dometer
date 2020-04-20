@@ -1,0 +1,11 @@
+cc_library(
+    name = "variant",
+    hdrs = [
+        "include/mpark/config.hpp",
+        "include/mpark/in_place.hpp",
+        "include/mpark/lib.hpp",
+        "include/mpark/variant.hpp",
+    ],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+)

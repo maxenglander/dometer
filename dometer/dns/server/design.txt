@@ -1,0 +1,9 @@
+server
+======
+
+I want the server to be non-blocking, e.g.:
+
+server s;
+s.start();
+std::cout << "started";
+s.join();
