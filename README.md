@@ -11,17 +11,22 @@
  
 ## Building
 
-In order to build `dometer`, the following dependencies are required:
+In order to build `dometer`, the following build-time dependencies are
+required and must be either already present or manually installed.
 
  * Bazel >= 2.2.0
  * CMake >= 3.16.2
  * envsubst >= 0.20.2
 
+Once the build-time dependencies are present, run the following command to build
+`dometer`:
+
 ```
 dometer $ bazel build //dometer/cli:main
 ```
 
-Internally, `dometer` relies on the following third-party libraries at run-time:
+Internally, `dometer` will use Bazel to download and build the following
+third-party libraries for run-time use.
 
  * [ThinkAsync/asio (non-Boost version)](http://think-async.com/Asio)
  * [TartanLlama/expected](https://github.com/TartanLlama/expected)
@@ -179,14 +184,14 @@ Options:
 
 ## Testing
 
-In order to test `dometer`, the build depdencies are required.
+The build dependencies listed above must be present in order to test `dometer`.
+Once they are present, run the following command:
 
 ```
 dometer $ bazel test ... 
 ```
 
-In addition to the build and run-time dependencies, `dometer` relies internally
-on the following third-party testing libraries for tests:
+The following testing libraries will be downloaded and built by Bazel.
 
  * [google/googletest](https://github.com/google/googletest)
 
