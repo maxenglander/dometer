@@ -34,7 +34,6 @@ TODO
  - [x] make nicer metric observation api
  - [x] add CI
  - [x] write documentation
- - [ ] add license (and copyright?)
  - [ ] create release and attach build artifacts
  - [ ] create Docker image
  - [ ] add K8S integration example
