@@ -36,6 +36,29 @@ third-party libraries for run-time use.
  * [mpark/variant](https://github.com/mpark/variant)
  * [tristanpenman/valijson](https://github.com/tristanpenman/valijson)
 
+## Usage
+
+`dometer` started through the command-line.
+
+```
+dometer $ ./bazel-bin/dometer/cli/main
+Dometer.
+
+Usage:
+  dometer --config=<path>
+  dometer --help
+
+Options:
+  --config=<file>  Supply configuration file [default: /etc/dometer/config.json].
+  --help           Show this help message.
+```
+
+For example:
+
+```
+dometer $ ./bazel-bin/dometer/cli --config dometer/config/config.json.sample
+```
+
 ## Configuration
 
 `dometer` is configured through a JSON file, e.g.:
@@ -164,23 +187,6 @@ The number of time-series generated or updated by a single DNS request to
 example, a Prometheus histogram metric generates one time series for the total
 count of collected observations, one for the sum of collected observations, and
 one for each each bucket.
-
-## Usage
-
-The only supported way at present to use `dometer` is through the command-line.
-
-```
-dometer $ ./bazel-bin/dometer/cli/main
-Dometer.
-
-Usage:
-  dometer --config=<path>
-  dometer --help
-
-Options:
-  --config=<file>  Supply configuration file [default: /etc/dometer/config.json].
-  --help           Show this help message.
-```
 
 ## Testing
 
